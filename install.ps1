@@ -86,7 +86,8 @@ if (-not $StartOnly) {
             $sc.Arguments = "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$Repo\install.ps1`" -StartOnly"
             $sc.WorkingDirectory = $Repo
             $sc.Description = 'MetaMath Harness 日常启动（自动跳过安装，启动后打开浏览器）'
-            $sc.IconLocation = "$env:SystemRoot\System32\shell32.dll,167"
+            $ico = Join-Path $Repo 'MetaMath-Harness.ico'
+            if (Test-Path $ico) { $sc.IconLocation = "$ico,0" }
             $sc.WindowStyle = 7
             $sc.Save()
             Ok "已创建：$lnk（双击即可日常启动）"
@@ -115,10 +116,10 @@ if ($existing.TcpTestSucceeded) {
 }
 
 $ready = $false
-foreach ($i in 1..450) {
+foreach ($i in 1..900) {
     try { $r = Invoke-WebRequest "http://127.0.0.1:$Port" -UseBasicParsing -TimeoutSec 1; if ($r.StatusCode -eq 200) { $ready = $true; break } } catch { Start-Sleep -Milliseconds 100 }
 }
-if (-not $ready) { Fail "服务在 45 秒内未就绪。请检查弹出的 PowerShell 窗口中的错误信息。" }
+if (-not $ready) { Fail "服务在 90 秒内未就绪。请检查弹出的 PowerShell 窗口中的错误信息。" }
 Ok '服务已就绪'
 Start-Process "http://127.0.0.1:$Port"
 Write-Host "`n==> MetaMath Harness 已启动：http://127.0.0.1:$Port`n" -ForegroundColor Cyan
