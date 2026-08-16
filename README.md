@@ -30,13 +30,17 @@ cd metamath-harness
 .\install.ps1
 ```
 
-看到浏览器自动打开 `http://127.0.0.1:3080` 就成功了。首次使用请在网页设置里填自己的模型供应商和 API Key（Key 只存本机）。
+看到浏览器自动打开 `http://127.0.0.1:3080` 就成功了，桌面会同时出现 **「MetaMath Harness」快捷方式**。首次使用请在网页设置里填自己的模型供应商和 API Key（Key 只存本机）。
 
 ### 服务器 / 没有 winget 和 Git 的机器
 
 Node 改用官网安装包：到 https://nodejs.org 下载 LTS（≥22）MSI 安装，然后直接用上面的"第 2 步替代版"下载本项目，再跑 `.\install.ps1`。
 
 ### 日常启动（装过一次之后）
+
+**双击桌面的「MetaMath Harness」快捷方式**即可（无需打开终端）。
+
+也可以用命令：
 
 ```powershell
 cd metamath-harness    # 进入项目目录
@@ -49,7 +53,7 @@ cd metamath-harness    # 进入项目目录
 
 ## 安装脚本做了什么
 
-检查 Node → 确保 pnpm → 从官方 npm 安装 DeepSeek Harness 本体 → 构建 Mathmodel 插件 → 安装 Web 依赖 → 启动并打开浏览器。全程无需人工干预；所有内容都装在项目文件夹内，删文件夹即完整卸载。
+检查 Node → 确保 pnpm → 从官方 npm 安装 DeepSeek Harness 本体 → 构建 Mathmodel 插件 → 安装 Web 依赖 → 创建桌面快捷方式 → 启动并打开浏览器。全程无需人工干预；所有内容都装在项目文件夹内，删文件夹即完整卸载（桌面快捷方式可一并删除）。
 
 ## 目录结构
 

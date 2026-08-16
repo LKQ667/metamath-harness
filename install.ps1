@@ -74,12 +74,31 @@ if (-not $StartOnly) {
     Pop-Location
     Ok 'Profile 依赖就绪'
 
+    # ---------- 6. 创建桌面快捷方式 ----------
+    Step '创建桌面快捷方式'
+    try {
+        $desktop = [Environment]::GetFolderPath('Desktop')
+        if ($desktop -and (Test-Path $desktop)) {
+            $lnk = Join-Path $desktop 'MetaMath Harness.lnk'
+            $shell = New-Object -ComObject WScript.Shell
+            $sc = $shell.CreateShortcut($lnk)
+            $sc.TargetPath = 'powershell.exe'
+            $sc.Arguments = "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$Repo\install.ps1`" -StartOnly"
+            $sc.WorkingDirectory = $Repo
+            $sc.Description = 'MetaMath Harness 日常启动（自动跳过安装，启动后打开浏览器）'
+            $sc.IconLocation = "$env:SystemRoot\System32\shell32.dll,167"
+            $sc.WindowStyle = 7
+            $sc.Save()
+            Ok "已创建：$lnk（双击即可日常启动）"
+        } else { Write-Host '    未找到桌面目录，已跳过（不影响安装）' -ForegroundColor Yellow }
+    } catch { Write-Host "    快捷方式创建失败（不影响安装）：$($_.Exception.Message)" -ForegroundColor Yellow }
+
     Step '安装完成'
 }
 
 if ($NoStart) { Write-Host "`n未启动（-NoStart）。日常启动：.\install.ps1 -StartOnly`n" -ForegroundColor Yellow; exit 0 }
 
-# ---------- 6. 启动 Web ----------
+# ---------- 7. 启动 Web ----------
 Step "启动 Web 界面（端口 $Port）"
 $env:DSH_HOME = Join-Path $Repo '.dsh'
 Ok "DSH_HOME = $env:DSH_HOME"
