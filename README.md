@@ -36,6 +36,29 @@ cd metamath-harness
 
 Node 改用官网安装包：到 https://nodejs.org 下载 LTS（≥22）MSI 安装，然后直接用上面的"第 2 步替代版"下载本项目，再跑 `.\install.ps1`。
 
+### 安装到指定盘符（如 D 盘）
+
+默认装在你**打开终端时所在的目录**。想装到 D 盘（或 E、F 等任意盘），第 2 步前先切过去即可（以下命令已在 Windows 10 + Node 24 真机验证通过）：
+
+```powershell
+cd D:\
+git clone https://github.com/LKQ667/metamath-harness.git
+cd metamath-harness
+.\install.ps1
+```
+
+ZIP 方式同理：
+
+```powershell
+cd D:\
+Invoke-WebRequest 'https://github.com/LKQ667/metamath-harness/archive/refs/heads/main.zip' -OutFile mmh.zip -UseBasicParsing
+Expand-Archive .\mmh.zip -DestinationPath .
+cd metamath-harness-main
+.\install.ps1
+```
+
+装到哪个盘，快捷方式就指向哪个盘（实测桌面快捷方式工作目录为 `D:\metamath-harness`），全部文件都在该文件夹内，不会在 C 盘留东西。
+
 ### 日常启动（装过一次之后）
 
 **双击桌面的「MetaMath Harness」快捷方式**即可（无需打开终端）。
