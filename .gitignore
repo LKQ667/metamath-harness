@@ -21,3 +21,12 @@ cache/
 evidence/
 .playwright-cli/
 .playwright-mcp/
+
+# DSH 运行时在本仓库 .dsh 内生成的用户状态（对方首次启动后出现，勿提交）
+.dsh/settings.yaml
+.dsh/settings.yaml.bak*
+.dsh/data/
+.dsh/logs/
+.dsh/storages/
+.dsh/sessions/
+.dsh/cache/

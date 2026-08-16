@@ -1,0 +1,104 @@
+# MetaMath Harness 一键安装与启动
+# 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
+# 用法：
+#   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
+#   .\install.ps1 -NoStart   只安装，不启动
+#   .\install.ps1 -StartOnly 跳过安装，直接启动（日常使用）
+#   .\install.ps1 -Port 3081 指定端口（默认 3080）
+[CmdletBinding()]
+param(
+    [switch]$NoStart,
+    [switch]$StartOnly,
+    [int]$Port = 3080
+)
+
+$ErrorActionPreference = 'Stop'
+$Repo = $PSScriptRoot
+$DshVersion = '0.1.0-rc.6'
+
+function Step([string]$msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
+function Ok([string]$msg)   { Write-Host "    $msg" -ForegroundColor Green }
+function Fail([string]$msg) { Write-Host "    $msg" -ForegroundColor Red; exit 1 }
+
+if (-not $StartOnly) {
+    # ---------- 1. 前置工具检查 ----------
+    Step '检查前置工具（Node.js >= 22、Git）'
+    foreach ($tool in 'git', 'node') {
+        if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) {
+            Fail "未找到 $tool。请先运行：winget install $(if ($tool -eq 'git') { 'Git.Git' } else { 'OpenJS.NodeJS' })，完成后重新执行本脚本。"
+        }
+    }
+    $nodeMajor = [int](node -p 'process.versions.node.split(".")[0]')
+    if ($nodeMajor -lt 22) { Fail "Node.js 版本过低（当前主版本 $nodeMajor，需要 >= 22）。请运行：winget install OpenJS.NodeJS" }
+    Ok "Node $(node --version) / Git $(git --version)"
+
+    # ---------- 2. 确保 pnpm 可用 ----------
+    Step '确保 pnpm 可用'
+    function Test-Pnpm { try { pnpm --version *> $null; return $true } catch { return $false } }
+    if (-not (Test-Pnpm)) {
+        try { corepack enable *> $null } catch {}
+        if (-not (Test-Pnpm)) { npm install -g pnpm *> $null }
+    }
+    if (-not (Test-Pnpm)) { Fail 'pnpm 不可用：请手动运行 npm install -g pnpm 后重试。' }
+    Ok "pnpm $(pnpm --version)"
+
+    # ---------- 3. 安装官方 DeepSeek Harness 本体 ----------
+    Step "确保官方 DeepSeek Harness $DshVersion 已安装"
+    $needInstall = $true
+    if (Get-Command dsh -ErrorAction SilentlyContinue) {
+        $v = (dsh --version 2>$null)
+        if ($v -eq $DshVersion) { $needInstall = $false; Ok "已安装官方本体 $v（跳过）" }
+    }
+    if ($needInstall) {
+        npm install -g "@deepseek-ai/dsh@$DshVersion" | Out-Null
+        if ((dsh --version 2>$null) -ne $DshVersion) { Fail "官方本体安装失败，请手动运行：npm install -g @deepseek-ai/dsh@$DshVersion" }
+        Ok "官方本体安装完成 $(dsh --version)"
+    }
+
+    # ---------- 4. 构建 Mathmodel 插件 ----------
+    Step '构建 Mathmodel 插件（plugins/dsh-mathmodel）'
+    Push-Location (Join-Path $Repo 'plugins\dsh-mathmodel')
+    npm install --no-fund --no-audit 2>&1 | Select-Object -Last 1 | Write-Host
+    npm run build 2>&1 | Select-Object -Last 1 | Write-Host
+    if (-not (Test-Path (Join-Path $Repo 'plugins\dsh-mathmodel\lib\index.js'))) { Fail '插件构建失败：lib/index.js 不存在' }
+    Pop-Location
+    Ok '插件构建完成'
+
+    # ---------- 5. 安装 Web Profile 依赖 ----------
+    Step '安装 Web Profile 依赖（.dsh/profiles/web）'
+    Push-Location (Join-Path $Repo '.dsh\profiles\web')
+    pnpm install --frozen-lockfile 2>&1 | Select-Object -Last 1 | Write-Host
+    if ($LASTEXITCODE -ne 0) { pnpm install 2>&1 | Select-Object -Last 1 | Write-Host }
+    Pop-Location
+    Ok 'Profile 依赖就绪'
+
+    Step '安装完成'
+}
+
+if ($NoStart) { Write-Host "`n未启动（-NoStart）。日常启动：.\install.ps1 -StartOnly`n" -ForegroundColor Yellow; exit 0 }
+
+# ---------- 6. 启动 Web ----------
+Step "启动 Web 界面（端口 $Port）"
+$env:DSH_HOME = Join-Path $Repo '.dsh'
+Ok "DSH_HOME = $env:DSH_HOME"
+
+$existing = Test-NetConnection -ComputerName 127.0.0.1 -Port $Port -WarningAction SilentlyContinue
+if ($existing.TcpTestSucceeded) {
+    Ok "端口 $Port 已有服务监听，直接复用"
+} else {
+    $server = Start-Process -WindowStyle Minimized -PassThru powershell -ArgumentList @(
+        '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-NoExit', '-Command',
+        "`$env:DSH_HOME = '$env:DSH_HOME'; dsh web --port $Port"
+    )
+    Ok "服务进程已启动（PID $($server.Id)，关闭其窗口即可停止服务）"
+}
+
+$ready = $false
+foreach ($i in 1..450) {
+    try { $r = Invoke-WebRequest "http://127.0.0.1:$Port" -UseBasicParsing -TimeoutSec 1; if ($r.StatusCode -eq 200) { $ready = $true; break } } catch { Start-Sleep -Milliseconds 100 }
+}
+if (-not $ready) { Fail "服务在 45 秒内未就绪。请检查弹出的 PowerShell 窗口中的错误信息。" }
+Ok '服务已就绪'
+Start-Process "http://127.0.0.1:$Port"
+Write-Host "`n==> MetaMath Harness 已启动：http://127.0.0.1:$Port`n" -ForegroundColor Cyan
+Write-Host "    首次使用请在 Web 设置中配置自己的模型供应商与 API Key（Key 只存本机）。`n" -ForegroundColor Yellow
