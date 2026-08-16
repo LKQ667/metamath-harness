@@ -1,67 +1,79 @@
 # MetaMath Harness
 
-基于 DeepSeek Harness `0.1.0-rc.6` 的数学建模增强套件。不修改官方包，全部能力通过"外置插件 + 用户级 Preset + 手动 Skill 卡片 + Profile 接线"组合接入。
+基于 DeepSeek Harness `0.1.0-rc.6` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
+
+## 🚀 三步装好（普通 Windows 10/11 电脑）
+
+**第 1 步：装 Node.js**（已装可跳过；装完要重开终端）
+
+```powershell
+winget install OpenJS.NodeJS.LTS
+```
+
+**第 2 步：下载本项目并进入目录**
+
+```powershell
+git clone https://github.com/LKQ667/metamath-harness.git
+cd metamath-harness
+```
+
+> 没有 Git？装一个：`winget install Git.Git`；或者用第 2 步替代版（无需 Git）：
+> ```powershell
+> Invoke-WebRequest 'https://github.com/LKQ667/metamath-harness/archive/refs/heads/main.zip' -OutFile mmh.zip -UseBasicParsing
+> Expand-Archive .\mmh.zip -DestinationPath .
+> cd metamath-harness-main
+> ```
+
+**第 3 步：一键安装并启动**
+
+```powershell
+.\install.ps1
+```
+
+看到浏览器自动打开 `http://127.0.0.1:3080` 就成功了。首次使用请在网页设置里填自己的模型供应商和 API Key（Key 只存本机）。
+
+### 服务器 / 没有 winget 和 Git 的机器
+
+Node 改用官网安装包：到 https://nodejs.org 下载 LTS（≥22）MSI 安装，然后直接用上面的"第 2 步替代版"下载本项目，再跑 `.\install.ps1`。
+
+### 日常启动（装过一次之后）
+
+```powershell
+cd metamath-harness    # 进入项目目录
+.\install.ps1 -StartOnly
+```
+
+其他参数：`-NoStart` 只装不启动｜`-Port 3081` 换端口
+
+---
+
+## 安装脚本做了什么
+
+检查 Node → 确保 pnpm → 从官方 npm 安装 DeepSeek Harness 本体 → 构建 Mathmodel 插件 → 安装 Web 依赖 → 启动并打开浏览器。全程无需人工干预；所有内容都装在项目文件夹内，删文件夹即完整卸载。
 
 ## 目录结构
 
 ```text
+install.ps1              一键安装并启动脚本
 plugins/dsh-mathmodel/   外置 Mathmodel 插件（源码、测试、脚本、文档）
 .dsh/.agent-presets/     Agent Preset：mathmodel（数学建模）、imagegen（标准生图）
 .dsh/profiles/web/       Web Profile 接线（package.json、pnpm-lock、cordis.patch.yml）
 .dsh/skills/             17 个手动 Skill，多数带 mathmodel-card.yml 参数卡片
 portable/                Windows 便携版构建、启动、自检脚本
-install.ps1              一键安装并启动（含自动安装官方 DSH 本体）
 构建便携版.ps1            构建便携运行包入口
 启动-DeepSeek-Harness.cmd 便携版启动入口
 依赖自检.cmd              依赖预检入口
 ```
 
-## 环境要求
+## 可选依赖
 
-- Windows 10/11 x64
-- Node.js >= 22（未安装可一行解决：`winget install OpenJS.NodeJS`）
-- Git（未安装可一行解决：`winget install Git.Git`）
-- 官方 DeepSeek Harness **无需预装**——安装脚本会自动从 npm 安装 `@deepseek-ai/dsh@0.1.0-rc.6`
-- 可选：Python 3、TeX Live（XeLaTeX）、Draw.io、Poppler——论文与绘图链路由插件预检提示按需安装
-
-## 一键安装并启动
-
-```powershell
-git clone https://github.com/LKQ667/metamath-harness.git
-cd metamath-harness
-.\install.ps1
-```
-
-脚本自动完成：检查 Node/Git → 确保 pnpm → 安装官方 DeepSeek Harness 本体 → 构建 Mathmodel 插件 → 安装 Web Profile 依赖 → 启动并打开浏览器（http://127.0.0.1:3080）。
-
-没有 Git 的机器（如 Windows Server）可用 ZIP 方式，并从 https://nodejs.org 安装 Node >= 22：
-
-```powershell
-Invoke-WebRequest 'https://github.com/LKQ667/metamath-harness/archive/refs/heads/main.zip' -OutFile mmh.zip -UseBasicParsing
-Expand-Archive .\mmh.zip -DestinationPath .
-cd metamath-harness-main
-.\install.ps1
-```
-
-常用参数：
-
-```powershell
-.\install.ps1 -NoStart      # 只安装，不启动
-.\install.ps1 -StartOnly    # 日常启动（跳过安装，秒起）
-.\install.ps1 -Port 3081    # 换端口
-```
-
-首次使用请在 Web 设置中配置自己的模型供应商与 API Key（Key 只存本机，不进仓库）。
+Python 3、TeX Live（XeLaTeX）、Draw.io、Poppler——用于论文与绘图链路，缺了也不影响安装启动，插件预检会提示按需安装。
 
 插件详细用法、升级与回滚见 [`plugins/dsh-mathmodel/README.md`](plugins/dsh-mathmodel/README.md)。
 
-## 便携版（免安装）
+## 便携版（免安装包）
 
-- `构建便携版.ps1`：构建 Windows 便携运行包（首次会下载并校验 Node、Python、TeX Live、Draw.io、Poppler 等运行时，需约 20 GB 临时空间）；
-- `启动-DeepSeek-Harness.cmd`：启动便携 Web 服务；
-- `依赖自检.cmd`：依赖预检。
-
-详见 [`portable/README.md`](portable/README.md)。
+`构建便携版.ps1` 可构建自带 Node/Python/TeX Live 的完整便携包（解压双击即用，构建需约 20 GB 临时空间），详见 [`portable/README.md`](portable/README.md)。
 
 ## 凭据与安全
 
