@@ -22,15 +22,17 @@ function Fail([string]$msg) { Write-Host "    $msg" -ForegroundColor Red; exit 1
 
 if (-not $StartOnly) {
     # ---------- 1. 前置工具检查 ----------
-    Step '检查前置工具（Node.js >= 22、Git）'
-    foreach ($tool in 'git', 'node') {
-        if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) {
-            Fail "未找到 $tool。请先运行：winget install $(if ($tool -eq 'git') { 'Git.Git' } else { 'OpenJS.NodeJS' })，完成后重新执行本脚本。"
-        }
+    Step '检查前置工具（Node.js >= 22）'
+    if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+        Fail "未找到 Node.js。请先安装 Node >= 22（winget install OpenJS.NodeJS.LTS，或从 https://nodejs.org 下载 MSI），完成后重新打开终端再执行本脚本。"
+    }
+    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+        Write-Host '    提示：未检测到 Git，可继续安装；以后如需 git pull 更新，请自行安装 Git。' -ForegroundColor Yellow
     }
     $nodeMajor = [int](node -p 'process.versions.node.split(".")[0]')
     if ($nodeMajor -lt 22) { Fail "Node.js 版本过低（当前主版本 $nodeMajor，需要 >= 22）。请运行：winget install OpenJS.NodeJS" }
-    Ok "Node $(node --version) / Git $(git --version)"
+    $gitInfo = if (Get-Command git -ErrorAction SilentlyContinue) { ' / ' + (git --version) } else { '' }
+    Ok "Node $(node --version)$gitInfo"
 
     # ---------- 2. 确保 pnpm 可用 ----------
     Step '确保 pnpm 可用'

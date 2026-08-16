@@ -34,6 +34,15 @@ cd metamath-harness
 
 脚本自动完成：检查 Node/Git → 确保 pnpm → 安装官方 DeepSeek Harness 本体 → 构建 Mathmodel 插件 → 安装 Web Profile 依赖 → 启动并打开浏览器（http://127.0.0.1:3080）。
 
+没有 Git 的机器（如 Windows Server）可用 ZIP 方式，并从 https://nodejs.org 安装 Node >= 22：
+
+```powershell
+Invoke-WebRequest 'https://github.com/LKQ667/metamath-harness/archive/refs/heads/main.zip' -OutFile mmh.zip -UseBasicParsing
+Expand-Archive .\mmh.zip -DestinationPath .
+cd metamath-harness-main
+.\install.ps1
+```
+
 常用参数：
 
 ```powershell
