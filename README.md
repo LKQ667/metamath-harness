@@ -2,7 +2,21 @@
 
 基于 DeepSeek Harness `0.1.0-rc.6` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
 
-## 🚀 三步装好（普通 Windows 10/11 电脑）
+## 📦 两种获取方式（任选其一）
+
+### 方式一：AI IDE 一键安装（会用 AI IDE 的用户）
+
+把本仓库链接 `https://github.com/LKQ667/metamath-harness` 发给 AI IDE（Trae、Cursor 等），再说一句"帮我安装这个项目"。AI 会按根目录 [`AGENTS.md`](AGENTS.md) 的指引自动完成安装、创建桌面快捷方式并启动，全程无需手动操作。
+
+### 方式二：ZIP 直接下载（普通用户，可装到任意盘符）
+
+到 [Releases 页面](https://github.com/LKQ667/metamath-harness/releases/latest) 下载最新的 `metamath-harness-v*.zip`（已清理测试文件，更小更干净），解压到任意位置（如 `D:\`），进入文件夹**双击 `install.cmd`** 即可。
+
+> 前提同样是 Node.js >= 22（下载安装：https://nodejs.org ，装完重开终端）。
+
+---
+
+## 🚀 手动安装（三步，普通 Windows 10/11 电脑）
 
 **第 1 步：装 Node.js**（已装可跳过；装完要重开终端）
 
