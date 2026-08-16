@@ -1,8 +1,20 @@
 # MetaMath Harness
 
-基于 DeepSeek Harness `0.1.0-rc.6` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
+把一个能干活的 AI 助手和一整套数学建模工具装进同一个文件夹，双击就能用。
 
-## 📦 两种获取方式（任选其一）
+参加数学建模比赛的同学多半体会过：环境配一天，论文排到凌晨，画图工具东一个西一个。这个项目就是冲着解决这些麻烦来的。底座是 DeepSeek Harness（DeepSeek 官方的本地 AI 编程环境，`0.1.0-rc.6`），我在上面装好了 17 个数学建模 Skill，从技术路线图、论文配图到模型求解都有。不用再一个个找工具、配环境，装完这一个，比赛要用的基本齐了。
+
+## 它好在哪
+
+**开箱即用。** 电脑上只要有 Node.js，双击 `install.cmd`，剩下的安装脚本全包：官方本体、插件、依赖、桌面快捷方式，一次装齐。不需要预装任何 DeepSeek 相关软件。装完双击快捷方式，浏览器自动打开界面，直接开始用。
+
+**对新手友好。** 全程可以不碰命令行。缺 Python、缺 TeX Live 这种事，预检会一条条告诉你缺什么、去哪下、怎么装。README 里每一步都写清楚在什么机器上验证过，出问题照着对就行。
+
+**为数学建模而生。** 17 个 Skill 按比赛流程设计：分析题目、画技术路线图、跑模型、写论文、出配图，各带参数卡片，你确认之后 AI 才动手，不会瞎改你的稿子。切到 mathmodel 预设，AI 就按建模的套路干活。
+
+**自由度高。** 装哪个盘都行（全部文件都在项目文件夹里，C 盘不留东西，删文件夹即完整卸载）；端口能换；模型供应商自己挑，DeepSeek、通义、OpenAI、Gemini 都支持，API Key 只存你自己电脑，不上传任何地方。还能一键构建免安装便携版，整个文件夹拷到别的电脑直接用。
+
+## 两种获取方式（任选其一）
 
 ### 方式一：AI IDE 一键安装（会用 AI IDE 的用户）
 
@@ -16,7 +28,7 @@
 
 ---
 
-## 🚀 手动安装（三步，普通 Windows 10/11 电脑）
+## 手动安装（三步，普通 Windows 10/11 电脑）
 
 **第 1 步：装 Node.js**（已装可跳过；装完要重开终端）
 
@@ -46,7 +58,7 @@ cd metamath-harness
 .\install.ps1
 ```
 
-> 若报红字“因为在此系统上禁止运行脚本”，说明系统脚本策略为 Restricted，改用这条（同样任何机器可用）：
+> 若报红字"因为在此系统上禁止运行脚本"，说明系统脚本策略为 Restricted，改用这条（同样任何机器可用）：
 > ```powershell
 > powershell -ExecutionPolicy Bypass -File .\install.ps1
 > ```
@@ -78,7 +90,7 @@ cd metamath-harness-main
 .\install.ps1
 ```
 
-装到哪个盘，快捷方式就指向哪个盘（实测桌面快捷方式工作目录为 `D:\metamath-harness`），全部文件都在该文件夹内，不会在 C 盘留东西。PowerShell 若报“禁止运行脚本”，把最后一行换成 `.\install.cmd` 即可。
+装到哪个盘，快捷方式就指向哪个盘（实测桌面快捷方式工作目录为 `D:\metamath-harness`），全部文件都在该文件夹内，不会在 C 盘留东西。PowerShell 若报"禁止运行脚本"，把最后一行换成 `.\install.cmd` 即可。
 
 ### 日常启动（装过一次之后）
 
@@ -116,7 +128,7 @@ portable/                Windows 便携版构建、启动、自检脚本
 
 ## 可选依赖
 
-Python 3、TeX Live（XeLaTeX）、Draw.io、Poppler——用于论文与绘图链路，缺了也不影响安装启动，插件预检会提示按需安装。
+Python 3、TeX Live（XeLaTeX）、Draw.io、Poppler，用于论文与绘图链路，缺了也不影响安装启动，插件预检会提示按需安装。
 
 插件详细用法、升级与回滚见 [`plugins/dsh-mathmodel/README.md`](plugins/dsh-mathmodel/README.md)。
 
@@ -137,6 +149,16 @@ cd plugins/dsh-mathmodel
 npm test        # 构建并运行全部单元测试
 npm run check   # 全部源码语法检查
 ```
+
+## 支持作者（完全自愿）
+
+这个项目免费开源，没有广告，也没有任何付费功能。如果你用下来确实省了时间，想请作者喝杯咖啡，可以扫下面任意一个码；不扫也完全没关系，所有功能对所有人都一样。
+
+<p align="center">
+  <img src="donate-wechat.jpg" width="200" alt="微信赞赏码" />
+  <img src="donate-alipay.jpg" width="200" alt="支付宝赞赏码" />
+</p>
+<p align="center">微信（左）｜支付宝（右）</p>
 
 ## 许可
 
