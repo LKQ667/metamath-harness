@@ -1,0 +1,416 @@
+% ============================================================
+% 数学建模竞赛 LaTeX 国赛通用模板，严格参考，可微微创新
+% 参考当前论文主稿的版式结构，并抽象为可复用模板
+% 编译方式：XeLaTeX
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+% ---------- 中文支持 ----------
+\usepackage{ctex}
+\setCJKmainfont{SimSun}
+\setCJKsansfont{SimHei}
+\setmainfont{Times New Roman}
+\usepackage{unicode-math}
+\setmathfont{Cambria Math}
+
+% ---------- 页面与行距 ----------
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.0cm, right=2.0cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{2em}
+
+% ---------- 页眉页脚 ----------
+\usepackage{fancyhdr}
+\usepackage{appendix}
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\fancyfoot[C]{{\fontsize{9pt}{11pt}\selectfont\rmfamily \thepage}}
+\renewcommand{\headrulewidth}{0pt}
+
+% ---------- 数学与符号 ----------
+\usepackage{amsmath,amsthm}
+\usepackage{bm}
+\usepackage{mathrsfs}
+
+% ---------- 图表 ----------
+\usepackage{graphicx}
+\graphicspath{{./}{./figures/}{./images/}}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+
+% ---------- 算法 ----------
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% ---------- 引用与链接 ----------
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black}
+
+% ---------- 代码环境 ----------
+\usepackage{listings}
+\lstset{
+    basicstyle=\footnotesize\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+    language=Python
+}
+
+% ---------- 其他 ----------
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{titlesec}
+
+% ---------- 字体与标题样式 ----------
+\newcommand{\titlefont}{\fontsize{16pt}{20pt}\selectfont\heiti\bfseries}
+\newcommand{\sectiontitlefont}{\fontsize{14pt}{18pt}\selectfont\heiti\bfseries}
+\newcommand{\levelonefont}{\fontsize{14pt}{18pt}\selectfont\heiti\bfseries}
+\newcommand{\leveltwofont}{\fontsize{12pt}{16pt}\selectfont\heiti\bfseries}
+\newcommand{\levelthreefont}{\fontsize{12pt}{16pt}\selectfont\heiti}
+\newcommand{\bodyfont}{\fontsize{12pt}{16pt}\selectfont\songti}
+\newcommand{\keywordfont}{\fontsize{12pt}{16pt}\selectfont\heiti\bfseries}
+\newcommand{\paperstrong}[1]{{\heiti #1}}
+\newcommand{\appendixtitlefont}{\fontsize{14pt}{18pt}\selectfont\heiti\bfseries}
+\newcommand{\stepfont}[1]{{\fontsize{12pt}{16pt}\selectfont\fontspec{Times New Roman}\bfseries Step~#1}}
+\newcommand{\bibfont}{\fontsize{10.6pt}{15pt}\selectfont}
+
+\renewcommand{\thesection}{{\heiti\chinese{section}}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\titleformat{\section}{\centering\levelonefont}{\thesection、}{0.6em}{}
+\titleformat{\subsection}{\leveltwofont}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\levelthreefont}{\thesubsubsection}{0.6em}{}
+
+% ============================================================
+\begin{document}
+\label{body:start}
+
+% ---------- 第一页：标题与摘要 ----------
+\begin{center}
+\vspace*{0.8cm}
+{\titlefont 论文题目（替换为你的赛题标题）\par}
+\vspace{0.45cm}
+\end{center}
+
+\begin{center}
+{\sectiontitlefont 摘要}
+\end{center}
+
+\vspace{0.35cm}
+\bodyfont
+
+\indent 多波束测深系统比单波束测深系统测量范围大、精度高，适合大面积海底地形的勘探。在实际探测中，海底地形起伏大，不能简单地根据海区平均水深设计测线间隔。本文基于对覆盖宽度、重叠率等的分析，建立了适当的数学模型，设计了合理的探测方案，对提高探测效率和准确性有一定作用。
+
+\indent \paperstrong{针对问题一}，本文建立了\paperstrong{二维平面上计算多波束测深的覆盖宽度及条带重叠率的数学模型}。随着坡面条件变化，重叠率的原定义不再完全适用，因此本文给出相应的修正方法。借助三角形中的几何关系，可以推导海水深度、覆盖宽度与重叠率的计算公式；表 1 的数值进一步表明，\paperstrong{最浅的两条测线出现漏测}。
+
+\indent \paperstrong{针对问题二}，本文沿用第一问的几何关系，并从深度与坡度两个角度完善\paperstrong{三维条件下的覆盖宽度模型}。模型提取当前坡度 $\gamma$、当前深度 $D$ 与当前开角 $\theta$ 三个主要参数，在辨明参数关系后推导三维求解公式。题中各位置的覆盖宽度由该公式计算得到，结果汇总于表 2。
+
+\indent \paperstrong{针对问题三}，本文制定了\paperstrong{基于贪心思想的测线设计方案}。若要兼顾最短路径与最佳航向，各点的 $w_i$ 应尽可能大；模型据此将重叠率作为控制条件展开迭代。优化结果给出\paperstrong{平行的测线方向，共 34 条}，并通过横向分析比较不同重叠率下的路线数量与平行方向航线密度。
+
+\indent \paperstrong{针对问题四}，本文\paperstrong{采用微分思想、插值拟合和随机森林模型}完成数据预处理与特征分析，并讨论不同曲面和开角对应的测量状态。第三问的研究为算法改进提供了基础，本文由此调整飞蛾火焰算法并构造路径搜索流程。区域分块后，模型以\paperstrong{重叠率为 10\%}在空间内迭代搜索各分区的最佳路径；整合结果得到最优路线，\paperstrong{覆盖率达 99.96\%，测线总长度为 434662m}。
+
+\indent 综上所述，本文以微分思想和贪心思想构建层层递进的计算与智能搜索模型。研究由二维平面中的覆盖宽度和条带重叠率模型延伸至三维空间，又从简单地形的测线设计推进到复杂真实海底的测量策略优化，最终给出多波束测深系统的最优路线方案及对应图像和数值结果。该方案可为实际海底地形测绘提供参考。
+
+\indent {\keywordfont \paperstrong{关键词：}} \paperstrong{空间几何}；\paperstrong{贪心思想}；\paperstrong{微分}；\paperstrong{随机森林}；\paperstrong{飞蛾火焰算法}；\paperstrong{多波束测深}\label{abstract:end}
+
+\indent %以上内容只做为摘要文风和格式示例，请根据实际情况进行修改和完善。摘要必须严格控制在第一页内，建议800-1000字并尽量写满第一页。
+
+\newpage
+
+\section{问题重述}
+
+在此处用简洁语言重述赛题背景、任务、输入数据、输出目标与约束条件。各段按实际信息密度承担明确功能，避免固定三段式和直接复制题面原文。
+
+\section{问题分析}
+
+在此处分析问题的本质、难点、可行思路与分解层次。可按子问题逐一说明，也可先给出总流程图，再分别展开讨论。
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放总流程图或方法框架图\par 建议导出为 PDF 或高分辨率 PNG，图中文字统一为中文。}}
+    \caption{论文总体流程示意}
+    \label{fig:flow}
+\end{figure}
+
+\section{模型假设}
+
+\begin{enumerate}
+    \item 在这里列出题目所需的关键假设。
+    \item 每条假设都应与题面、数据和模型需求相匹配。
+    \item 若有简化处理，请说明简化原因与影响范围。
+\end{enumerate}
+
+\section{符号说明}
+
+\begin{table}[H]
+    \centering
+    \caption{主要符号说明}
+    \begin{tabular}{clc}
+        \toprule
+        符号 & 含义 & 单位 \\
+        \midrule
+        $x$ & 示例变量 & 1 \\
+        $y$ & 示例变量 & 1 \\
+        $n$ & 样本数量 & 个 \\
+        $\theta$ & 参数 & -- \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{模型建立与求解}
+
+\subsection{数据预处理（按需）}
+
+本节不是固定必写内容。若赛题提供的数据存在缺失值、异常值、重复记录、量纲不统一、时间或空间尺度不一致、噪声较强、格式需要转换等情况，应先在此说明数据清洗、变量构造、归一化或特征筛选过程；若赛题以理论推导为主或原始数据已经可以直接建模，可删除本小节，并让后续问题模型小节按原顺序排列。请根据数据、赛题和建模需要具体分析，避免为了形式强行加入预处理。
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 若保留数据预处理小节，这里放 1--2 张数据预处理相关图片\par 例如缺失值分布、变量分布、异常值处理、相关性热力图或清洗前后对比图。}}
+    \caption{数据预处理结果示意}
+    \label{fig:data-preprocess}
+\end{figure}
+
+\subsection{问题一模型的建立与求解}
+
+
+
+\subsubsection{XXX（根据具体情况、算法、模型取名）}
+本节给出第一个子问题的基础建模框架。可依次说明符号定义、决策变量、目标函数、约束条件以及对应的求解步骤。请根据赛题具体问题具体分析，这里只提供大致方向。
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里可以放置原理图、模型示意图、概念示意图。\par 先判断该段是否真的需要图；若需要，再由本技能内部生成 `手绘图/xxx图.md` 提示词，并在文中明确显示该提示词存放相对路径；缺少该路径或缺少对应提示词文件时，不得作为最终交付通过。}}
+    \caption{xxx图}
+    \label{fig:result}
+\end{figure}
+
+\subsubsection{结果展示}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放结果图、对比图\par 需要时可拆分为多子图，先放图片，后在图片下方进行简洁分析}}
+    \caption{结果展示占位图}
+    \label{fig:result}
+\end{figure}
+
+\subsection{问题二模型的建立与求解}
+
+
+\subsubsection{XXX（根据具体情况、算法、模型取名）}
+本节给出第二个子问题的扩展建模框架。可重点补充新增假设、模型修正项、约束变化以及与之匹配的求解策略。请根据赛题具体问题具体分析，这里只提供大致方向。
+
+\subsubsection{结果展示}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放结果图、对比图\par 需要时可拆分为多子图，先放图片，后在图片下方进行简洁分析}}
+    \caption{结果展示占位图}
+    \label{fig:result}
+\end{figure}
+
+\subsection{问题三模型的建立与求解}
+
+\subsubsection{XXX（根据具体情况、算法、模型取名）}
+本节给出第三个子问题的分解建模框架。若问题规模扩大，可在此说明模块划分、近似处理或分阶段求解思路。请根据赛题具体问题具体分析，这里只提供大致方向。
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里可以放置原理图、模型示意图、概念示意图。\par 先判断该段是否真的需要图；若需要，再由本技能内部生成 `手绘图/xxx图.md` 提示词，并在文中明确显示该提示词存放相对路径；缺少该路径或缺少对应提示词文件时，不得作为最终交付通过。}}
+    \caption{xxx图}
+    \label{fig:result}
+\end{figure}
+
+\subsubsection{结果展示}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放结果图、对比图\par 需要时可拆分为多子图，先放图片，后在图片下方进行简洁分析}}
+    \caption{结果展示占位图}
+    \label{fig:result}
+\end{figure}
+
+\subsection{问题四模型的建立与求解}
+
+\subsubsection{XXX（根据具体情况、算法、模型取名）}
+本节给出第四个子问题的综合建模框架。可在此说明多阶段决策、耦合关系、附加约束及整体协调求解方式。请根据赛题具体问题具体分析，这里只提供大致方向。
+
+\subsubsection{算法流程（选取一个最重要的部分进行展示即可）}
+
+\begin{algorithm}[H]
+\caption{通用求解流程}
+\begin{algorithmic}[1]
+\Require 输入数据、模型参数
+\Ensure 最优方案、结果指标
+\State \stepfont{1} 读取并预处理数据
+\State \stepfont{2} 建立模型并定义目标函数
+\State \stepfont{3} 设置约束条件和参数范围
+\State \stepfont{4} 调用求解算法并输出结果
+\State \stepfont{5} 对结果进行验证和修正
+\State \stepfont{6} \Return 最终方案与统计指标
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{结果展示}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放结果图、对比图\par 需要时可拆分为多子图，先放图片，后在图片下方进行简洁分析}}
+    \caption{结果展示占位图}
+    \label{fig:result}
+\end{figure}
+
+
+
+
+\section{敏感度分析}
+
+
+在此处分析计算结果的含义、与实际场景的一致性、误差来源以及模型适用范围。建议结合表格和图形进行解释，不要只列数字。
+
+\section{模型评价与改进}
+
+\subsection{模型优点}
+
+\begin{enumerate}
+    \item 物理意义清晰或业务逻辑明确。
+    \item 结果可解释、可复现。
+    \item 计算复杂度和精度之间取得平衡。
+\end{enumerate}
+
+\subsection{模型局限与改进}
+
+\begin{enumerate}
+    \item 在此处列出当前模型的局限。
+    \item 在此处给出可行的下一步改进方向。
+\end{enumerate}
+
+% ============================================================
+% 参考文献（计入正文页数）
+% ============================================================
+\renewcommand{\refname}{{\heiti 八、}参考文献}
+\begingroup
+\bibfont
+\begin{thebibliography}{9}
+    \bibitem{ref1}
+    作者. 参考文献题目. \textit{期刊/会议名}, 年份.
+\end{thebibliography}
+\endgroup
+\label{body:end}
+
+% ============================================================
+% 附录（不计入正文页数，具体代码数量请根据实际情况填写）
+% ============================================================
+\newpage
+\label{appendix:start}
+\begin{appendices}
+\begin{center}
+{\appendixtitlefont 附录}
+\end{center}
+\vspace{0.35em}
+
+\par\noindent\hspace{2em}支撑材料文件目录（以下均为模板占位，只填代码名称和重要 Excel 结果名称，不填路径；纯文件名可保留 .py、.xlsx 后缀；附录代码使用 \texttt{scripts/prepare\_appendix\_code.py} 生成并验证的净化副本）：\par
+
+\newcommand{\AppendixCodeName}[1]{待替换文件#1}
+
+\begin{itemize}[label={},leftmargin=1.9em,itemsep=0.25em,topsep=0.25em]
+    \item \textbf{\AppendixCodeName{1}}——附录程序说明1
+    \item \textbf{\AppendixCodeName{2}}——附录程序说明2
+    \item \textbf{\AppendixCodeName{3}}——附录程序说明3
+    \item \textbf{\AppendixCodeName{4}}——附录程序说明4
+    \item \textbf{\AppendixCodeName{5}}——附录程序说明5
+    \item \textbf{\AppendixCodeName{6}}——附录程序说明6
+    \item \textbf{\AppendixCodeName{7}}——附录程序说明7
+    \item \textbf{\AppendixCodeName{8}}——附录程序说明8
+    \item \textbf{\AppendixCodeName{9}}——附录程序说明9
+    \item \textbf{\AppendixCodeName{10}}——附录程序说明10
+    \item \textbf{\AppendixCodeName{11}}——附录程序说明11
+    \item \textbf{\AppendixCodeName{12}}——附录程序说明12
+    \item \textbf{\AppendixCodeName{13}}——附录程序说明13
+    \item \textbf{\AppendixCodeName{14}}——附录程序说明14
+    \item \textbf{\AppendixCodeName{15}}——附录程序说明15
+    \item \textbf{\AppendixCodeName{16}}——附录程序说明16
+    \item \textbf{\AppendixCodeName{17}}——附录程序说明17
+\end{itemize}
+
+\section{附录代码文件}
+
+\subsection{\AppendixCodeName{1}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{2}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{3}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{4}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{5}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{6}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{7}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{8}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{9}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{10}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{11}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{12}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{13}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{14}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{15}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{16}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{17}}
+
+这里引用已通过等价回归的附录净化代码。
+\end{appendices}
+
+\end{document}

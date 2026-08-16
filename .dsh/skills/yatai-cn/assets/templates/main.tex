@@ -1,0 +1,326 @@
+% ============================================================
+% APMCM 亚太地区大学生数学建模竞赛（中文赛项）LaTeX 模板
+% 参考：202x 年第十四届 APMCM 中文赛项 Word 模板
+% 编译方式：XeLaTeX
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+% ---------- 中文与字体 ----------
+\usepackage{ctex}
+\IfFontExistsTF{SimSun}{\setCJKmainfont{SimSun}}{\setCJKmainfont{FandolSong-Regular}}
+\IfFontExistsTF{SimHei}{\setCJKsansfont{SimHei}}{\setCJKsansfont{FandolHei-Regular}}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{texgyretermes-regular.otf}[BoldFont=texgyretermes-bold.otf,ItalicFont=texgyretermes-italic.otf,BoldItalicFont=texgyretermes-bolditalic.otf]}
+\usepackage{unicode-math}
+\IfFontExistsTF{Cambria Math}{\setmathfont{Cambria Math}}{\setmathfont{latinmodern-math.otf}}
+
+% ---------- 页面与行距 ----------
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{setspace}
+\singlespacing
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+% ---------- 页眉页脚 ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\fancyfoot[C]{{\fontsize{9pt}{11pt}\selectfont\rmfamily \thepage}}
+\renewcommand{\headrulewidth}{0pt}
+
+% ---------- 数学与符号 ----------
+\usepackage{amsmath,amsthm}
+\usepackage{bm}
+\usepackage{mathrsfs}
+
+% ---------- 图表 ----------
+\usepackage{graphicx}
+\graphicspath{{./}{./figures/}{./images/}{../手绘图/}}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{makecell}
+
+% ---------- 算法与代码 ----------
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{输入：}}
+\renewcommand{\algorithmicensure}{\textbf{输出：}}
+\usepackage{listings}
+\lstset{
+    basicstyle=\footnotesize\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+    columns=fullflexible,
+    language=Python
+}
+
+% ---------- 引用与链接 ----------
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black}
+
+% ---------- 其他 ----------
+\usepackage{appendix}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+% ---------- APMCM 信息 ----------
+\newcommand{\contestyear}{202x}
+\newcommand{\contestname}{第十四届APMCM}
+\newcommand{\contestfull}{亚太地区大学生数学建模竞赛（中文赛项）}
+\newcommand{\problemchosen}{选题}
+\newcommand{\teamnumber}{apmcm******}
+\newcommand{\papertitle}{标题（此处换成论文的标题）}
+
+% ---------- 字体与标题样式 ----------
+\newcommand{\titlefont}{\fontsize{15pt}{20pt}\selectfont\songti}
+\newcommand{\coverfont}{\fontsize{14pt}{18pt}\selectfont\heiti\bfseries}
+\newcommand{\sectiontitlefont}{\fontsize{14pt}{18pt}\selectfont\heiti}
+\newcommand{\levelonefont}{\fontsize{14pt}{18pt}\selectfont\heiti}
+\newcommand{\leveltwofont}{\fontsize{12pt}{16pt}\selectfont\heiti}
+\newcommand{\levelthreefont}{\fontsize{12pt}{16pt}\selectfont\heiti}
+\newcommand{\bodyfont}{\fontsize{12pt}{16pt}\selectfont\songti}
+\newcommand{\keywordfont}{\fontsize{12pt}{16pt}\selectfont\heiti}
+\newcommand{\paperstrong}[1]{{\heiti #1}}
+\newcommand{\appendixtitlefont}{\fontsize{12pt}{16pt}\selectfont\heiti\bfseries}
+\newcommand{\bibfont}{\fontsize{10.5pt}{15pt}\selectfont\songti}
+
+\renewcommand{\thesection}{\chinese{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\titleformat{\section}{\centering\levelonefont}{\thesection、}{0.6em}{}
+\titleformat{\subsection}{\leveltwofont}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\levelthreefont}{\thesubsubsection}{0.6em}{}
+
+\newcommand{\apmcmcover}{
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}p{0.16\textwidth}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}p{0.18\textwidth}|}
+\hline
+\problemchosen &
+{\coverfont \contestyear 年\contestname\par \contestfull} &
+参赛编号 \\
+\hline
+ & & \teamnumber \\
+\hline
+\end{tabularx}
+\end{center}
+}
+
+% ============================================================
+\begin{document}
+\bodyfont
+
+% ---------- 第一页：APMCM 信息、标题与摘要 ----------
+\apmcmcover
+
+\vspace{1.2cm}
+\begin{center}
+{\titlefont \papertitle\par}
+\end{center}
+
+\vspace{0.8cm}
+\begin{center}
+{\sectiontitlefont 摘要}
+\end{center}
+
+\vspace{0.35cm}
+
+\indent 多波束测深系统比单波束测深系统测量范围大、精度高，适合大面积海底地形的勘探。在实际探测中，海底地形起伏大，不能简单地根据海区平均水深设计测线间隔。本文基于对覆盖宽度、重叠率等的分析，建立了适当的数学模型，设计了合理的探测方案，对提高探测效率和准确性有一定作用。
+
+\indent \paperstrong{针对问题一}，本文建立了\paperstrong{二维平面上计算多波束测深的覆盖宽度及条带重叠率的数学模型}。坡面条件改变了重叠率的几何关系，本文据此修正计算方法并推导海水深度、覆盖宽度和重叠率公式。表 1 的计算结果表明，\paperstrong{最浅两条测线出现漏测}。
+
+\indent \paperstrong{针对问题二}，本文沿用第一问的几何关系，从深度和坡度两个角度建立\paperstrong{三维多波束测深覆盖宽度模型}。模型提取当前坡度 $\gamma$、当前深度 $D$ 和当前开角 $\theta$，在明确参数关系后推导三维求解公式，并据此计算题中各位置的覆盖宽度，结果汇总于表 2。
+
+\indent \paperstrong{针对问题三}，本文制定了\paperstrong{基于贪心思想的测线设计方案}。为兼顾最短路径与最佳航向，模型使各点的 $w_i$ 尽可能大，并以重叠率为控制条件迭代。优化结果得到\paperstrong{平行测线共 34 条}，随后比较不同重叠率下的路线数量与平行方向航线密度。
+
+\indent \paperstrong{针对问题四}，本文\paperstrong{采用微分思想、插值拟合和随机森林模型}完成数据预处理与特征分析，并讨论不同曲面和开角下的测量状态。在第三问基础上改进飞蛾火焰算法并构造路径搜索流程。区域分块后，模型以\paperstrong{重叠率为 10\%}迭代搜索各分区最佳路径；整合结果得到最优路线，\paperstrong{覆盖率达 99.96\%，测线总长度为 434662m}。
+
+\indent 综上所述，本文以微分思想和贪心思想构建递进的计算与智能搜索模型。研究由二维平面的覆盖宽度和条带重叠率模型延伸至三维空间，并从简单地形的测线设计推进到复杂海底的测量策略优化，最终给出多波束测深系统的路线方案及对应图像和数值结果。该方案可为实际海底地形测绘提供参考。
+
+\indent {\keywordfont \paperstrong{关键词：}} \paperstrong{空间几何}；\paperstrong{贪心思想}；\paperstrong{微分}；\paperstrong{随机森林}；\paperstrong{飞蛾火焰算法}；\paperstrong{多波束测深}\label{abstract:end}
+
+% 以上内容只做为摘要文风和格式示例，请根据实际情况进行修改和完善。摘要必须严格控制在第一页内，建议800-1000字并尽量写满第一页。
+
+\newpage
+
+
+% ============================================================
+\label{body:start}
+\section{问题重述}
+
+正文内容原则上不超过 20 页。本节用自己的语言概括赛题背景、已知条件、待解决问题、输出要求和评价标准，不直接复制题面。
+
+\section{问题分析}
+
+本节分析问题本质、数据缺口、建模难点和各子问题之间的递进关系。若赛题未直接提供数据，应说明外部权威数据的检索方向和使用边界。
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放项目锁定模式生成的总流程图或问题分析图\par 必须保留对应的可追溯源、论文可用导出图和 manifest 记录。}}
+    \caption{论文总体流程示意}
+    \label{fig:flow}
+\end{figure}
+
+\section{模型假设}
+
+\begin{enumerate}[itemsep=0.2em,topsep=0.2em]
+    \item 假设一应来自题面、数据事实或必要的简化需求。
+    \item 若使用外部数据，应说明其时间范围、空间范围和适用边界。
+    \item 对缺失数据、估计数据或插值数据必须说明处理依据和影响范围。
+\end{enumerate}
+
+\section{符号说明}
+
+\begin{table}[H]
+    \centering
+    \caption{主要符号说明}
+    \begin{tabular}{clc}
+        \toprule
+        符号 & 含义 & 单位 \\
+        \midrule
+        $x_i$ & 示例决策变量 & -- \\
+        $y_i$ & 示例观测变量 & -- \\
+        $n$ & 样本数量 & 个 \\
+        $\theta$ & 模型参数 & -- \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{模型建立与求解}
+
+\subsection{数据来源与预处理}
+
+若赛题未提供完整数据，必须先列明外部数据来源。所有来源应同步记录在 数据/\texttt{data.md} 与 数据/\texttt{data.xlsx} 中，包括来源机构、可点击链接、访问日期、字段说明、数据作用和清洗记录。
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放数据预处理图\par 可展示缺失值、变量分布、异常值处理、相关性或清洗前后对比。}}
+    \caption{数据预处理结果示意}
+    \label{fig:data-preprocess}
+\end{figure}
+
+\subsection{问题一模型的建立与求解}
+
+\subsubsection{模型建立}
+
+说明本问的变量、参数、目标函数、约束条件和求解流程。若有多个候选模型，应说明筛选理由。
+
+若本段需要原理图、模型图或概念示意图，先生成 \texttt{手绘图/xxx图.md} 提示词并在此处保留该相对路径；提示词必须写清图类型、赛题任务、服务段落、对应问题、论文依据、核心变量/对象、变量/符号来源、代码或结果来源、结构分区、视觉层级、颜色与版式、禁止元素、禁止编造、可核验来源/数值约束。若图内需要公式或符号，必须与本文符号说明、模型公式、唯一结果源和对应问题结果说明一致。Draw.io 模式保留提示词；AI 模式无需二次确认，自动生成并回填，同时保留提示词相对路径用于追溯。
+
+\subsubsection{结果展示}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放问题一结果图或对比图}}
+    \caption{问题一结果展示}
+    \label{fig:q1-result}
+\end{figure}
+
+\subsection{问题二模型的建立与求解}
+
+\subsubsection{模型建立}
+
+说明本问相对问题一的新增变量、约束变化、模型修正和求解策略。
+
+\subsubsection{结果展示}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放问题二结果图或对比图}}
+    \caption{问题二结果展示}
+    \label{fig:q2-result}
+\end{figure}
+
+\subsection{问题三模型的建立与求解}
+
+\subsubsection{模型建立}
+
+说明综合决策、预测、评价或优化模型，给出关键公式和算法步骤。
+
+\subsubsection{结果展示}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.88\textwidth}{\centering 这里放问题三结果图或对比图}}
+    \caption{问题三结果展示}
+    \label{fig:q3-result}
+\end{figure}
+
+\section{灵敏度分析}
+
+分析关键参数扰动对结果的影响，至少说明参数范围、扰动方式、评价指标和结论稳定性。
+
+\section{模型评价与改进}
+
+\subsection{模型优点}
+
+\begin{enumerate}[itemsep=0.2em,topsep=0.2em]
+    \item 数据来源可追溯，处理过程可复现。
+    \item 模型结构清晰，结果具有解释性。
+    \item 求解流程便于扩展到同类问题。
+\end{enumerate}
+
+\subsection{模型局限与改进}
+
+\begin{enumerate}[itemsep=0.2em,topsep=0.2em]
+    \item 说明数据覆盖范围、模型假设或计算精度的限制。
+    \item 给出可行的后续数据补充、模型修正或算法改进方向。
+\end{enumerate}
+
+\newpage
+\label{body:end}
+\renewcommand{\refname}{参考文献}
+\begingroup
+\bibfont
+\begin{thebibliography}{9}
+    \bibitem{book-example}
+    作者. 书名. 出版地：出版社，出版年.
+
+    \bibitem{journal-example}
+    作者. 论文名. 期刊名，卷(期)：起止页码，出版年.
+
+    \bibitem{web-example}
+    机构或作者. 资源标题. \url{https://www.example.com}，访问时间：2026年5月8日.
+\end{thebibliography}
+\endgroup
+
+\newpage
+\begin{appendices}
+\begin{center}
+{\appendixtitlefont 附录（另起一页）}
+\end{center}
+\vspace{0.35em}
+
+\section{支撑材料文件目录}
+
+\par\noindent\hspace{2em}支撑材料文件目录（以下为模板占位，只填允许项纯文件名和简短说明：数据预处理代码、灵敏度分析代码、Q1-Q4 代码、题目明确要求提交或输出且已在清单中放行的 .xlsx/.xls/.csv 结果文件）：\par
+
+\newcommand{\AppendixMaterialName}[1]{待替换文件#1}
+
+\begin{itemize}[label={},leftmargin=1.9em,itemsep=0.25em,topsep=0.25em]
+    \item \textbf{data\_preprocessing.py}——数据预处理代码
+    \item \textbf{q1.py}——问题一代码
+    \item \textbf{q2.py}——问题二代码
+    \item \textbf{q3.py}——问题三代码
+    \item \textbf{q4.py}——问题四代码
+    \item \textbf{sensitivity\_analysis.py}——灵敏度分析代码
+\end{itemize}
+
+\section{附录代码文件}
+
+\subsection{Q1 完整代码}
+
+这里完整收录 Q1-Q4 与灵敏度分析代码。最终论文不得只写“见某文件”，代码块内部必须为纯代码，不保留注释、Markdown 围栏、装饰分隔线或连续大量空行。
+
+\end{appendices}
+
+\end{document}

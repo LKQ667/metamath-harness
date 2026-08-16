@@ -1,0 +1,56 @@
+schema: dsh.mathmodel.card/v1
+skill: grill-ai-review
+title: 数学建模比赛评委审查
+summary: 由三名专项评委和一名主审按官方规则打分、质询并给出整改建议。
+category: 比赛评审
+fields:
+  - id: competition
+    label: 赛事
+    type: text
+    required: true
+  - id: official_rules_path
+    label: 官方规则或评分标准路径
+    type: path
+  - id: submission_path
+    label: 论文或方案路径
+    type: path
+    required: true
+  - id: review_depth
+    label: 评审深度
+    type: select
+    default: 严格完整
+    options: [快速筛查, 严格完整, 决赛级压力测试]
+  - id: panel_mode
+    label: 评委编制
+    type: select
+    default: 3名专项评委+1名主审
+    options: [3名专项评委+1名主审]
+  - id: include_score
+    label: 输出分项评分
+    type: boolean
+    default: true
+  - id: reference_excellent_papers
+    label: 使用优秀论文校准完成度
+    type: boolean
+    default: true
+  - id: focus
+    label: 特别关注维度
+    type: multiselect
+    default: [建模正确性, 结果可信度, 论文表达]
+    options: [建模正确性, 求解与代码, 结果可信度, 论文表达, 创新性, 规范与合规]
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 以专用比赛评委身份审查数学建模论文或方案
+  instructions:
+    - 启动规则与完整性评委、模型与计算评委、论文表达与图表评委和主审共四个角色
+    - 官方赛题与评分规则优先于通用量表
+    - 往年优秀论文只校准完成度，不作为规则或仿写文本
+    - 主审汇总分歧、硬伤、得分依据与按优先级排序的整改建议
+help:
+  purpose: 在提交前模拟严格数学建模竞赛评审。
+  inputs: [赛事规则, 论文或方案, 重点维度]
+  outputs: [三份专项评审, 主审汇总, 分项评分, 整改清单]
+  limits: [无官方规则时明确采用通用量表, 空样本目录不得阻断, 不伪造复现结果]
+  dependencies: [可读取的提交材料, 官方规则优先]

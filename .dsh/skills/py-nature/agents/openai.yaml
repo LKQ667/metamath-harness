@@ -1,0 +1,4 @@
+interface:
+  display_name: "Py-Nature"
+  short_description: "数学建模 Nature 风格 Python 科研绘图技能"
+  default_prompt: "Use $py-nature to create a Nature-style mathematical modeling figure in Python."

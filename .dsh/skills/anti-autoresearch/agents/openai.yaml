@@ -1,0 +1,4 @@
+interface:
+  display_name: "论文诚信审计"
+  short_description: "检查论文数值、实验、引用、证明与评测设计中的可疑不一致"
+  default_prompt: "使用 $anti-autoresearch 对这篇论文做证据优先的科研诚信审计。"

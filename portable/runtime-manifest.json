@@ -1,0 +1,74 @@
+{
+  "schema": "dsh.portable.runtime/v1",
+  "platform": "win-x64",
+  "components": [
+    {
+      "id": "node",
+      "version": "24.12.0",
+      "url": "https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip",
+      "sha256": "9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812",
+      "license": "MIT",
+      "installPath": "runtime/node"
+    },
+    {
+      "id": "python",
+      "version": "3.12.3",
+      "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20240415/cpython-3.12.3%2B20240415-x86_64-pc-windows-msvc-install_only.tar.gz",
+      "sha256": "f7cfa4ad072feb4578c8afca5ba9a54ad591d665a441dd0d63aa366edbe19279",
+      "license": "Python-2.0",
+      "installPath": "runtime/python"
+    },
+    {
+      "id": "drawio",
+      "version": "31.1.5",
+      "url": "https://github.com/jgraph/drawio-desktop/releases/download/v31.1.5/draw.io-31.1.5-windows.zip",
+      "sha256": "8ba9f74ffb5a73945d0bda1eb7b7e822b5c4fe29ebde89a910a9dd80b4a5fb17",
+      "license": "Apache-2.0",
+      "installPath": "runtime/drawio"
+    },
+    {
+      "id": "poppler",
+      "version": "26.05.0",
+      "url": "https://api.anaconda.org/download/conda-forge/poppler/26.05.0/win-64/poppler-26.05.0-h4b9d284_3.conda",
+      "sha256": "378623132f942a83051cedcddd1b1e2ebf01b983d633f1da701cf86bb805009a",
+      "license": "GPL-2.0-or-later",
+      "installPath": "runtime/poppler",
+      "note": "由 conda-forge 锁定包及其运行依赖组装"
+    },
+    {
+      "id": "micromamba",
+      "version": "2.9.0",
+      "url": "https://api.anaconda.org/download/conda-forge/micromamba/2.9.0/win-64/micromamba-2.9.0-0.tar.bz2",
+      "sha256": "97a336f4ab794bd96a6a4da5e6ed63e75a1d31830414a182419b23d3b36f3fe0",
+      "license": "BSD-3-Clause AND MIT AND OpenSSL",
+      "installPath": "build-only/micromamba",
+      "note": "仅用于解析 Poppler 运行依赖，不进入发行版"
+    },
+    {
+      "id": "texlive",
+      "version": "2026",
+      "url": "https://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip",
+      "sha256": "resolved-from-ctan-checksum-at-build",
+      "license": "TeX-Live",
+      "installPath": "runtime/texlive",
+      "note": "构建时保存 CTAN 校验文件与最终 tlpkg 清单；非固定校验不得发布"
+    }
+  ],
+  "pythonPackages": {
+    "numpy": "2.2.4",
+    "matplotlib": "3.10.1",
+    "pandas": "2.2.3",
+    "scipy": "1.13.1",
+    "Pillow": "11.1.0",
+    "openpyxl": "3.1.5",
+    "XlsxWriter": "3.2.9",
+    "scikit-learn": "1.7.2",
+    "statsmodels": "0.14.6",
+    "networkx": "3.6.1",
+    "sympy": "1.14.0",
+    "pypdf": "6.11.0",
+    "PyMuPDF": "1.27.2.3",
+    "seaborn": "0.13.2",
+    "PuLP": "3.3.1"
+  }
+}

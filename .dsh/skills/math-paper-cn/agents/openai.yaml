@@ -1,0 +1,4 @@
+interface:
+  display_name: "中文数学建模论文"
+  short_description: "全自动完成中文数学建模、科研绘图、LaTeX 论文与阶段门禁"
+  default_prompt: "使用 $math-paper-cn 完成这道中文数学建模赛题，并交付通过阶段门禁的最终论文。"

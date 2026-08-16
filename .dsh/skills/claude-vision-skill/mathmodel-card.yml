@@ -1,0 +1,47 @@
+schema: dsh.mathmodel.card/v1
+skill: claude-vision-skill
+title: DeepSeek 视觉理解配置
+summary: 用百炼 Key 配置 DSH 原生识图工具，并提供适合小白的状态与连通性检查。
+category: 视觉配置
+fields:
+  - id: dashscope_key_status
+    label: 百炼 Key 状态
+    type: credential-status
+    default: 未检测
+  - id: primary_model
+    label: 主模型
+    type: select
+    default: qwen3.7-plus
+    options: [qwen3.7-plus]
+  - id: fallback_model
+    label: 回退模型
+    type: select
+    default: qwen3.7-flash-2026-07-15
+    options: [qwen3.7-flash-2026-07-15]
+  - id: test_image
+    label: 连通性测试图片
+    type: path
+  - id: run_connectivity_test
+    label: 配置后运行连通性测试
+    type: boolean
+    default: true
+  - id: beginner_guide
+    label: 显示小白教程
+    type: boolean
+    default: true
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 配置并验证 DeepSeek Harness 原生视觉理解工具
+  instructions:
+    - 密钥只能通过 DSH 凭据服务设置，不得写入 Prompt 或 Skill .env
+    - 先尝试 qwen3.7-plus，失败后使用 qwen3.7-flash-2026-07-15
+    - 配置完成返回原卡片状态，不丢失其他字段
+    - 旧 .env 不读取、不移动、不删除，只提示用户验证后自行清理
+help:
+  purpose: 为不具备原生视觉能力的 DeepSeek 会话配置百炼识图。
+  inputs: [百炼凭据状态, 主备模型, 可选测试图片]
+  outputs: [配置状态, 连通性结果, 小白教程]
+  limits: [不展示或记录Key, 不读取旧Skill .env]
+  dependencies: [DASHSCOPE_API_KEY, 可访问百炼平台]

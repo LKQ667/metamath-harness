@@ -1,0 +1,23 @@
+# 依赖与构建产物
+node_modules/
+lib/
+dist/
+.portable-build/
+.portable-cache/
+
+# 运行时用户状态（严禁提交）
+data/
+sessions/
+storages/
+logs/
+cache/
+.credentials.yaml
+.anonymous-user-id
+.env
+.env.*
+*.log
+
+# 测试与验收证据
+evidence/
+.playwright-cli/
+.playwright-mcp/

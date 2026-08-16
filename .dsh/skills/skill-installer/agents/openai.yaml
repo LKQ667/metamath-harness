@@ -1,0 +1,5 @@
+interface:
+  display_name: "DSH Skill Installer"
+  short_description: "为 DeepSeek Harness 安装 GitHub Skills"
+  icon_small: "./assets/skill-installer-small.svg"
+  icon_large: "./assets/skill-installer.png"

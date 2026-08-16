@@ -1,0 +1,121 @@
+% !TeX program = xelatex
+% ============================================================
+% 2026 年“华数杯”大学生数学建模竞赛论文模板
+% 结构说明：main.tex 负责内容，cls 负责华数杯官方版式。
+% 首页与格式依据 2026 第七届华数杯竞赛论文 DOCX 模板。
+% ============================================================
+\documentclass{JXUSTmodeling}
+
+% JXUSTmodeling.cls 已加载 graphicx、booktabs、multirow、caption、
+% subcaption、float、longtable、placeins、needspace、listings 等宏包。
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+\usepackage{algorithm2e}
+
+% ---------- 首页参赛信息 ----------
+\suoshuleibie{[本科组/研究生组/专科组]}
+\cansaibianhao{CM******}
+\biaoti{[论文标题]}
+\keyword{空间几何；贪心思想；微分；随机森林；飞蛾火焰算法；多波束测深}
+
+% ---------- 引用以上标方括号显示 ----------
+\makeatletter
+\def\@cite#1#2{\textsuperscript{[{#1\if@tempswa , #2\fi}]}}
+\makeatother
+
+\begin{document}
+\label{body:start}
+
+% ============================================================
+% 第一页：官方抬头、论文标题、摘要与关键词
+% 硬约束：摘要与关键词必须全部位于第一页，摘要有效文字不少于 850 字并尽量铺满；
+% 每次改写后必须编译确认 abstract:end 页码为 1，禁止缩字号、压行距或负间距规避。
+% ============================================================
+\begin{abstract}
+
+\indent 多波束测深系统比单波束测深系统测量范围大、精度高，适合大面积海底地形的勘探。在实际探测中，海底地形起伏大，不能简单地根据海区平均水深设计测线间隔。本文基于对覆盖宽度、重叠率等的分析，建立了适当的数学模型，设计了合理的探测方案，对提高探测效率和准确性有一定作用。
+
+\indent \paperstrong{针对问题一}，本文建立了\paperstrong{二维平面上计算多波束测深的覆盖宽度及条带重叠率的数学模型}。随着坡面条件变化，重叠率的原定义不再完全适用，因此本文给出相应的修正方法。借助三角形中的几何关系，可以推导海水深度、覆盖宽度与重叠率的计算公式；表 1 的数值进一步表明，\paperstrong{最浅的两条测线出现漏测}。
+
+\indent \paperstrong{针对问题二}，本文沿用第一问的几何关系，并从深度与坡度两个角度完善\paperstrong{三维条件下的覆盖宽度模型}。模型提取当前坡度 $\gamma$、当前深度 $D$ 与当前开角 $\theta$ 三个主要参数，在辨明参数关系后推导三维求解公式。题中各位置的覆盖宽度由该公式计算得到，结果汇总于表 2。
+
+\indent \paperstrong{针对问题三}，本文制定了\paperstrong{基于贪心思想的测线设计方案}。若要兼顾最短路径与最佳航向，各点的 $w_i$ 应尽可能大；模型据此将重叠率作为控制条件展开迭代。优化结果给出\paperstrong{平行的测线方向，共 34 条}，并通过横向分析比较不同重叠率下的路线数量与平行方向航线密度。
+
+\indent \paperstrong{针对问题四}，本文\paperstrong{采用微分思想、插值拟合和随机森林模型}完成数据预处理与特征分析，并讨论不同曲面和开角对应的测量状态。第三问的研究为算法改进提供了基础，本文由此调整飞蛾火焰算法并构造路径搜索流程。区域分块后，模型以\paperstrong{重叠率为 10\%}在空间内迭代搜索各分区的最佳路径；整合结果得到最优路线，\paperstrong{覆盖率达 99.96\%，测线总长度为 434662m}。
+
+\indent 综上所述，本文以微分思想和贪心思想构建层层递进的计算与智能搜索模型。研究由二维平面中的覆盖宽度和条带重叠率模型延伸至三维空间，又从简单地形的测线设计推进到复杂真实海底的测量策略优化，最终给出多波束测深系统的最优路线方案及对应图像和数值结果。该方案可为实际海底地形测绘提供参考。
+
+\end{abstract}
+
+% ============================================================
+% 正文：原则上不超过 20 页
+% ============================================================
+\input{sections/1_restatement}
+\input{sections/2_analysis}
+\input{sections/3_assumptions}
+\input{sections/4_symbols}
+\input{sections/5_problem1}
+\input{sections/6_problem2}
+\input{sections/7_problem3}
+\input{sections/8_evaluation}
+
+% ============================================================
+% AI 工具使用声明（必须二选一；提交前删除未采用的声明及本注释）
+% ============================================================
+\section*{AI工具使用声明}
+
+% 未使用 AI 工具时保留下句：
+[本参赛队在竞赛过程中未使用任何AI工具。]
+
+% 使用 AI 工具时改为保留下句，并在附录填写详细使用情况：
+% [本参赛队在竞赛过程中使用了AI工具，主要用于【简要用途，如语言润色、代码调试等】，详细使用情况见附录。]
+
+% ============================================================
+% 参考文献：按正文中的引用次序列出，可另起一页
+% ============================================================
+\begin{thebibliography}{99}
+% \bibitem{ref-book} 作者. 书名[M]. 出版地: 出版社, 出版年: 页码.
+% \bibitem{ref-journal} 作者. 论文名[J]. 杂志名, 年, 卷(期): 起止页码.
+% \bibitem{ref-web} 作者. 资源标题[EB/OL]. 网址, 访问日期.
+\end{thebibliography}
+\label{body:end}
+
+% ============================================================
+% 附录：另起一页，放代码、补充材料与 AI 工具使用详情
+% ============================================================
+\clearpage
+\label{appendix:start}
+\begin{appendixx}
+\par\noindent\hspace{2em}支撑材料文件目录（以下均为模板占位，只填代码名称和重要 Excel 结果名称，不填路径；纯文件名可保留 .py、.xlsx 后缀；附录代码使用 \texttt{scripts/prepare\_appendix\_code.py} 生成并验证的净化副本）：\par
+
+\newcommand{\AppendixCodeName}[1]{待替换文件#1}
+
+\begin{itemize}[label={},leftmargin=1.9em,itemsep=0.25em,topsep=0.25em]
+    \item \textbf{\AppendixCodeName{1}}——附录程序说明1
+    \item \textbf{\AppendixCodeName{2}}——附录程序说明2
+    \item \textbf{\AppendixCodeName{3}}——附录程序说明3
+    \item \textbf{\AppendixCodeName{4}}——附录程序说明4
+    \item \textbf{\AppendixCodeName{5}}——附录程序说明5
+    \item \textbf{\AppendixCodeName{6}}——附录程序说明6
+    \item \textbf{\AppendixCodeName{7}}——附录程序说明7
+    \item \textbf{\AppendixCodeName{8}}——附录程序说明8
+    \item \textbf{\AppendixCodeName{9}}——附录程序说明9
+    \item \textbf{\AppendixCodeName{10}}——附录程序说明10
+    \item \textbf{\AppendixCodeName{11}}——附录程序说明11
+    \item \textbf{\AppendixCodeName{12}}——附录程序说明12
+    \item \textbf{\AppendixCodeName{13}}——附录程序说明13
+    \item \textbf{\AppendixCodeName{14}}——附录程序说明14
+    \item \textbf{\AppendixCodeName{15}}——附录程序说明15
+    \item \textbf{\AppendixCodeName{16}}——附录程序说明16
+    \item \textbf{\AppendixCodeName{17}}——附录程序说明17
+\end{itemize}
+
+\input{sections/A_code}
+
+\section*{AI工具使用详情}
+% 如使用 AI 工具，请按赛事发布的《人工智能工具》文档及其模板填写；
+% 如未使用，可删除本小节。
+[填写工具名称、版本、使用时间、使用目的、主要提示词、人工核验与修改情况。]
+\end{appendixx}
+
+\end{document}

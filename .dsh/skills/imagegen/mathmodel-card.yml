@@ -1,0 +1,59 @@
+schema: dsh.mathmodel.card/v1
+skill: imagegen
+title: 图像生成
+summary: 调用已配置的生图模型，保存图片并直接显示在当前会话中。
+category: 科研配图
+fields:
+  - id: prompt
+    label: 图片描述
+    type: text
+    required: true
+    placeholder: 描述主体、构图、风格、色彩和必须避免的内容
+  - id: connection_id
+    label: 指定生图连接（可选）
+    type: text
+    description: 留空使用“设置 > 模型 > 生图模型”中已选定的当前连接
+  - id: aspect_ratio
+    label: 画面比例
+    type: select
+    default: 1:1
+    options: [1:1, 16:9, 4:3, 3:4, 9:16]
+  - id: size
+    label: 图片尺寸
+    type: select
+    default: 模型默认
+    options: [模型默认, 1024x1024, 1536x1024, 1024x1536]
+  - id: count
+    label: 生成数量
+    type: number
+    default: 1
+    min: 1
+    max: 4
+  - id: reference_images
+    label: 参考图（可选）
+    type: text
+    description: 工作区相对路径，最多 4 张，用换行或逗号分隔
+  - id: output_dir
+    label: 保存目录
+    type: path
+    default: .
+  - id: confirm_paid_call
+    label: 我确认本次允许付费生图调用
+    type: boolean
+    required: true
+    default: false
+prompt:
+  objective: 使用 DeepSeek Harness 原生生图工具生成并展示图片
+  instructions:
+    - 只调用 image_generate，不检查环境变量，不用 PIL、SVG 或普通聊天模型冒充生图
+    - confirm_paid_call 只有为 true 才可传 authorizePaid=true，且只授权本次调用
+    - connection_id 留空时省略 connectionId 参数，使用设置页已选定的当前连接；填写时只传该 connectionId，不得改用其他供应商
+    - size 为“模型默认”时省略 size 参数
+    - 成功图片必须由工具结果在当前会话直接显示，并保存在工作区
+    - 失败时显示脱敏错误，不伪造图片或成功状态
+help:
+  purpose: 真正调用已配置的生图模型，并在会话中直接查看结果。
+  inputs: [图片描述, 可选指定连接, 比例与尺寸, 数量, 可选参考图, 本次付费授权]
+  outputs: [工作区图片文件, 会话内图片预览, 连接与模型摘要]
+  limits: [一次最多 4 张, 参考图必须位于工作区, 不支持蒙版局部编辑, 不保证供应商成功]
+  dependencies: [设置页已配置可用的生图 Base URL、模型与受管 Key, 任意 Agent 模式均可调用 image_generate]

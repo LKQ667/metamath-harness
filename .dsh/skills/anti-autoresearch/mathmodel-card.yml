@@ -1,0 +1,45 @@
+schema: dsh.mathmodel.card/v1
+skill: anti-autoresearch
+title: 论文科研诚信风险审查
+summary: 按 L0/L1/L2 可观测证据审查待核查异常，只报告风险，不判定造假。
+category: 科研诚信
+fields:
+  - id: material_path
+    label: 论文与支撑材料路径
+    type: path
+    required: true
+  - id: evidence_level
+    label: 可观测等级
+    type: select
+    default: L1文稿与附件
+    options: [L0仅文稿, L1文稿与附件, L2含原始数据代码日志]
+  - id: audit_scope
+    label: 审计范围
+    type: multiselect
+    default: [数据一致性, 图表异常, 引用可追溯, 方法结果匹配]
+    options: [数据一致性, 图表异常, 引用可追溯, 方法结果匹配, 时间线与元数据, 代码可复现]
+  - id: report_depth
+    label: 报告深度
+    type: select
+    default: 详细证据链
+    options: [快速筛查, 详细证据链, 代码结果级审计]
+  - id: include_recheck_plan
+    label: 给出人工复核计划
+    type: boolean
+    default: true
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 审查论文是否存在需要进一步核查的科研诚信风险
+  instructions:
+    - 严格区分 L0 文本观察、L1 附件交叉核对和 L2 原始材料复现
+    - 每条风险注明证据、替代解释、置信度和所需补充材料
+    - 禁止直接使用造假、伪造、篡改等定罪式结论
+    - 结论必须表述为待核查异常或证据不足
+help:
+  purpose: 发现论文数据、图表、引用和复现链中的可疑异常。
+  inputs: [论文, 附件, 可选原始数据与代码]
+  outputs: [分级风险清单, 证据链, 替代解释, 人工复核计划]
+  limits: [不作造假判定, 不越过可观测证据等级, 不编造缺失材料]
+  dependencies: [可读取的论文与用户授权材料]

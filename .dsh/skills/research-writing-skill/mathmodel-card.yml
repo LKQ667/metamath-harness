@@ -1,0 +1,60 @@
+schema: dsh.mathmodel.card/v1
+skill: research-writing-skill
+title: 中文论文润色与论证优化
+summary: 对指定章节进行中文学术润色、逻辑强化和术语统一，同时保护公式与引用。
+category: 论文润色
+fields:
+  - id: source_path
+    label: 论文或章节路径
+    type: path
+    required: true
+  - id: section
+    label: 目标章节
+    type: select
+    default: 指定范围
+    options: [摘要, 引言, 方法, 结果, 讨论, 结论, 指定范围]
+  - id: polishing_goal
+    label: 润色目标
+    type: multiselect
+    default: [语言自然, 逻辑连贯]
+    options: [语言自然, 逻辑连贯, 论证深化, 术语统一, 精简冗余, 格式规范]
+  - id: revision_strength
+    label: 修改强度
+    type: select
+    default: 中度润色
+    options: [轻度校对, 中度润色, 深度重构]
+  - id: protect_terms
+    label: 保护专业术语
+    type: boolean
+    default: true
+  - id: protect_formulas
+    label: 保护公式和符号
+    type: boolean
+    default: true
+  - id: protect_citations
+    label: 保护引用和参考文献
+    type: boolean
+    default: true
+  - id: output_format
+    label: 输出格式
+    type: select
+    default: 修订稿+修改说明
+    options: [仅修订稿, 修订稿+修改说明, 对照表]
+  - id: target_range
+    label: 指定范围或额外背景
+    type: text
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 润色并优化中文研究论文的指定章节
+  instructions:
+    - 不添加无来源事实、数据、结论或文献
+    - 保持数学符号、术语和引用可追溯
+    - 深度重构时明确列出论证结构变化
+help:
+  purpose: 提升中文论文语言、逻辑和学术表达质量。
+  inputs: [论文章节, 润色目标, 修改强度]
+  outputs: [修订稿, 可选修改说明或对照表]
+  limits: [不编造内容, 不改变未授权结论, 不破坏公式引用]
+  dependencies: [可读取的论文文稿]

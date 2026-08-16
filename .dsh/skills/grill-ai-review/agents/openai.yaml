@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill AI Review"
+  short_description: "Self-review AI code for risk and bloat"
+  default_prompt: "Use $grill-ai-review to self-interrogate and improve your own code changes."

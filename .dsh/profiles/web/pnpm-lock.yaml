@@ -1,0 +1,16 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+overrides:
+  '@deepseek-harness/dsh-mathmodel': link:../../../plugins/dsh-mathmodel
+
+importers:
+
+  .:
+    dependencies:
+      '@deepseek-harness/dsh-mathmodel':
+        specifier: link:../../../plugins/dsh-mathmodel
+        version: link:../../../plugins/dsh-mathmodel

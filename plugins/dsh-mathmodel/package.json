@@ -1,0 +1,72 @@
+{
+  "name": "@deepseek-harness/dsh-mathmodel",
+  "version": "0.1.1",
+  "description": "DeepSeek Harness 0.1.0-rc.6 专用数学建模模式插件",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./tools": {
+      "types": "./lib/types/tools.d.ts",
+      "default": "./lib/tools.js"
+    },
+    "./typert": {
+      "default": "./lib/typert.host.js"
+    },
+    "./remote": {
+      "default": "./lib/typert.remote-client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-input-trigger",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-api-remotes"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/dsh-invariants": "0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "3.18.1",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.0-rc.6",
+    "yaml": "^2.8.1",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh": "0.1.0-rc.6"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "e2e:paper": "python scripts/run-paper-e2e.py",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:environment": "npm run build && node --test test/preflight.environment.mjs",
+    "check": "node --check src/index.js && node --check src/host.js && node --check src/typert-shared.js && node --check src/typert.host.js && node --check src/typert.remote-client.js && node --check src/client-bundle.cjs && node --check src/tools.js && node --check src/version.js && node --check src/cards/schema.js && node --check src/cards/registry.js && node --check src/cards/prompt.js && node --check src/cards/remote.js && node --check src/preflight.js && node --check src/security/redact.js && node --check src/security/credentials.js && node --check src/security/provider-settings.js && node --check src/security/image-connections.js && node --check src/security/image-credentials.js && node --check src/vision.js && node --check src/opencode-rt.js && node --check src/model-discovery.js && node --check src/image/adapters.js && node --check src/image/assets.js && node --check src/image/verify.js && node --check src/image/connections.js && node --check src/image/service.js && node --check src/tool-contracts.js"
+  },
+  "license": "MIT",
+  "private": true
+}

@@ -1,0 +1,64 @@
+schema: dsh.mathmodel.card/v1
+skill: py-nature
+title: Nature 风格数学建模绘图
+summary: 按数据语义选择图型，用 Python 输出中文友好的论文级多格式图。
+category: 数据绘图
+fields:
+  - id: data_path
+    label: 数据路径
+    type: path
+    required: true
+  - id: analysis_goal
+    label: 分析目标
+    type: text
+    required: true
+  - id: chart_type
+    label: 图型
+    type: select
+    default: 由语义分析
+    options: [由语义分析, 趋势演化, 敏感性分析, 多目标优化, 网络传播, 空间分布, 统计比较, 多面板]
+  - id: bar_policy
+    label: 柱状图策略
+    type: select
+    default: 少用
+    options: [禁用, 少用, 正常]
+  - id: three_d_preference
+    label: 三维图偏好
+    type: select
+    default: 适合时建议
+    options: [适合时建议, 优先考虑, 不主动使用]
+  - id: figure_size
+    label: 图像尺寸
+    type: select
+    default: 双栏宽
+    options: [单栏宽, 双栏宽, 自定义]
+  - id: dpi
+    label: PNG DPI
+    type: number
+    default: 300
+    min: 150
+    max: 1200
+  - id: formats
+    label: 导出格式
+    type: multiselect
+    default: [SVG, PDF, PNG]
+    options: [SVG, PDF, PNG]
+  - id: output_dir
+    label: 输出目录
+    type: path
+    required: true
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 生成可直接入数学建模论文的 Nature 风格数据图
+  instructions:
+    - 先按任务语义决定图型，不把复杂结构压成普通柱状图
+    - 检查中文字体、符号、图例、缩印与多格式一致性
+    - 三维图只在确实提升信息密度时采用
+help:
+  purpose: 用 Python 绘制数学建模和科研论文数据图。
+  inputs: [数据文件, 分析目标, 图型偏好]
+  outputs: [SVG, PDF, PNG, 绘图脚本与QA说明]
+  limits: [不篡改数据, 不为美观选择误导性图型]
+  dependencies: [Python, NumPy, Matplotlib, Pandas, SciPy]

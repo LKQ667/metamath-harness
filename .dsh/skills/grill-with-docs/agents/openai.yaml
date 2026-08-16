@@ -1,0 +1,6 @@
+interface:
+  display_name: "Grill with Docs"
+  short_description: "Specialized grilling and domain modeling for plans"
+  default_prompt: "Use $grill-with-docs in Plan mode with its specialized question UI and analysis-only $domain-modeling to produce a complete plan."
+policy:
+  allow_implicit_invocation: false

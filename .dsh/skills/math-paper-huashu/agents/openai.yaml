@@ -1,0 +1,4 @@
+interface:
+  display_name: "华数杯数学建模论文"
+  short_description: "使用华数杯模板完成中文建模、科研绘图、LaTeX 论文与阶段门禁"
+  default_prompt: "使用 $math-paper-huashu 完成这道华数杯数学建模赛题，并交付通过阶段门禁的最终论文。"

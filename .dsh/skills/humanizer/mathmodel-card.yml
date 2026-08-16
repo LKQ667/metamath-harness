@@ -1,0 +1,57 @@
+schema: dsh.mathmodel.card/v1
+skill: humanizer
+title: AI 痕迹定位与局部自然化
+summary: 先定位 AI 味道最浓的段落，再按选择报告或局部改写，不承诺检测率。
+category: 论文润色
+fields:
+  - id: source_path
+    label: 文稿路径
+    type: path
+    required: true
+  - id: scope
+    label: 检测范围
+    type: select
+    default: 全文扫描后只处理高风险段落
+    options: [全文扫描后只处理高风险段落, 指定章节, 指定段落]
+  - id: sensitivity
+    label: 敏感度
+    type: select
+    default: 中等
+    options: [保守, 中等, 严格]
+  - id: rewrite_strength
+    label: 改写强度
+    type: select
+    default: 轻度
+    options: [不改写, 轻度, 中度, 深度]
+  - id: protect_formulas
+    label: 保护公式
+    type: boolean
+    default: true
+  - id: protect_citations
+    label: 保护引用与参考文献
+    type: boolean
+    default: true
+  - id: output_mode
+    label: 输出方式
+    type: select
+    default: 只报告
+    options: [只报告, 局部修订稿, 报告+局部修订稿]
+  - id: target_section
+    label: 指定章节或段落
+    type: text
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 定位文稿中 AI 痕迹高风险段落并按授权局部自然化
+  instructions:
+    - 先逐段检测和解释依据，再决定是否改写
+    - 禁止无差别重写整篇
+    - 不承诺任何 AIGC 检测率或平台规避效果
+    - 保护事实、公式、术语、引文和数值
+help:
+  purpose: 找出论文中措辞机械、套话密集或结构过度模板化的段落。
+  inputs: [论文文本, 检测范围, 改写授权]
+  outputs: [风险段落清单, 依据说明, 可选局部修订稿]
+  limits: [不承诺检测率, 不伪造人类写作来源, 不改动受保护内容]
+  dependencies: [可读取的文稿]

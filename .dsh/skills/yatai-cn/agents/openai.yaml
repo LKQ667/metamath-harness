@@ -1,0 +1,3 @@
+display_name: yatai-cn
+short_description: 亚太杯中文赛建模、权威数据与论文门禁。
+default_prompt: 使用 $yatai-cn 完成亚太杯中文赛项目，先锁定 Draw.io/AI 非数据绘图模式并核验数据来源，再推进建模、Python 数据图、非数据图和论文排版。

@@ -1,0 +1,7 @@
+interface:
+  display_name: "AI-Draw skills"
+  short_description: "按论文段落生成中文顶刊级科研配图提示词与占位框"
+  default_prompt: "Use $ai-draw-skills to 为当前论文段落判断是否需要原理图，并生成 2-4 份中文科研配图提示词。"
+
+policy:
+  allow_implicit_invocation: true

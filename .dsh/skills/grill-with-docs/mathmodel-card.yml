@@ -1,0 +1,50 @@
+schema: dsh.mathmodel.card/v1
+skill: grill-with-docs
+title: 赛题思路启发
+summary: 把用户当作初学者，先清零事实，再提问启发、比较路线并压力测试方案。
+category: 前期思路
+fields:
+  - id: material_path
+    label: 赛题或材料路径
+    type: path
+    required: true
+  - id: objective
+    label: 当前目标
+    type: select
+    default: 读懂赛题
+    options: [读懂赛题, 拆解问题, 生成候选路线, 比较模型, 压力测试已有方案]
+  - id: beginner_level
+    label: 讲解起点
+    type: select
+    default: 完全小白
+    options: [完全小白, 有基础但无思路, 已有初步方案]
+  - id: question_budget
+    label: 最多关键问题数
+    type: number
+    default: 8
+    min: 3
+    max: 15
+  - id: output_depth
+    label: 输出深度
+    type: select
+    default: 候选路线与取舍
+    options: [只澄清问题, 候选路线与取舍, 含压力测试]
+  - id: existing_idea
+    label: 已有想法或困惑
+    type: text
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 启发数学建模赛题前期思路并形成可执行候选路线
+  instructions:
+    - 笛卡尔式清零用于区分事实、目标、未知量和约束
+    - 苏格拉底式提问用于建立假设、指标、模型与验证链
+    - 归谬法只在候选方案成熟后做极限压力测试
+    - 只追问最重要且会改变路线的问题
+help:
+  purpose: 帮助思路混乱的参赛者读题并建立建模方向。
+  inputs: [赛题材料, 当前困惑, 已有想法]
+  outputs: [事实清单, 关键问题, 候选路线, 取舍与压力测试]
+  limits: [不替代官方题意, 不虚构数据, 不为显示深度而无限追问]
+  dependencies: [可读取的赛题或材料]

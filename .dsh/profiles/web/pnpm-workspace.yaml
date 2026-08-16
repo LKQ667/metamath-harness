@@ -1,0 +1,10 @@
+packages:
+  - .
+
+nodeLinker: hoisted
+autoInstallPeers: false
+minimumReleaseAgeExclude:
+  - '@deepseek-ai/dsh-typert-protocol@0.1.0-rc.6'
+  - '@deepseek-ai/dsh-invariants@0.1.0-rc.6'
+overrides:
+  '@deepseek-harness/dsh-mathmodel': link:../../../plugins/dsh-mathmodel

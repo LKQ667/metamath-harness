@@ -1,0 +1,19 @@
+# Your patch layer for this dsh profile, applied after every bundle layer:
+# a top-level YAML array of loader patch entries (id-targeted config
+# overrides, disables, and insert lists; `!!js` expressions allowed).
+- id: ui-skill
+  name: '@deepseek-ai/dsh-client-ui-skill'
+  disabled: true
+
+- insert:
+    - id: mathmodel
+      name: '@deepseek-harness/dsh-mathmodel'
+      inject:
+        - credentials
+        - settings
+      config:
+        skillRoot: !!js dshHomePath('skills')
+    # 生图与视觉工具属于所有 Agent 模式的公共能力；连接配置仍由上面的
+    # Host 插件统一管理，避免各 Preset 重复注册同名工具。
+    - id: mathmodel-tools
+      name: '@deepseek-harness/dsh-mathmodel/tools'

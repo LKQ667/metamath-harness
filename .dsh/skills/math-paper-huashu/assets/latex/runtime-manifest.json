@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "texlive_release": "2026",
+  "minimum_free_bytes": 5368709120,
+  "installer_archive": "install-tl.zip",
+  "installer_checksum": "install-tl.zip.sha512",
+  "offline_archive": "math-paper-cn-texlive-2026-win-x64.zip",
+  "mirrors": [
+    "https://mirror.ctan.org/systems/texlive/tlnet",
+    "https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet",
+    "https://mirrors.ustc.edu.cn/CTAN/systems/texlive/tlnet"
+  ],
+  "required_commands": [
+    "xelatex",
+    "latexmk",
+    "tlmgr"
+  ],
+  "required_fonts": [
+    "SimSun",
+    "SimHei",
+    "Times New Roman",
+    "Cambria Math"
+  ]
+}
