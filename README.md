@@ -26,15 +26,22 @@ cd metamath-harness
 
 **第 3 步：一键安装并启动**
 
+在文件夹里**双击 `install.cmd`**（任何机器都能用），或在 PowerShell 里运行：
+
 ```powershell
 .\install.ps1
 ```
+
+> 若报红字“因为在此系统上禁止运行脚本”，说明系统脚本策略为 Restricted，改用这条（同样任何机器可用）：
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File .\install.ps1
+> ```
 
 看到浏览器自动打开 `http://127.0.0.1:3080` 就成功了，桌面会同时出现 **「MetaMath Harness」快捷方式**。首次使用请在网页设置里填自己的模型供应商和 API Key（Key 只存本机）。
 
 ### 服务器 / 没有 winget 和 Git 的机器
 
-Node 改用官网安装包：到 https://nodejs.org 下载 LTS（≥22）MSI 安装，然后直接用上面的"第 2 步替代版"下载本项目，再跑 `.\install.ps1`。
+Node 改用官网安装包：到 https://nodejs.org 下载 LTS（≥22）MSI 安装，然后直接用上面的"第 2 步替代版"下载本项目，再双击 `install.cmd`（或跑 `.\install.ps1`）。
 
 ### 安装到指定盘符（如 D 盘）
 
@@ -57,17 +64,17 @@ cd metamath-harness-main
 .\install.ps1
 ```
 
-装到哪个盘，快捷方式就指向哪个盘（实测桌面快捷方式工作目录为 `D:\metamath-harness`），全部文件都在该文件夹内，不会在 C 盘留东西。
+装到哪个盘，快捷方式就指向哪个盘（实测桌面快捷方式工作目录为 `D:\metamath-harness`），全部文件都在该文件夹内，不会在 C 盘留东西。PowerShell 若报“禁止运行脚本”，把最后一行换成 `.\install.cmd` 即可。
 
 ### 日常启动（装过一次之后）
 
 **双击桌面的「MetaMath Harness」快捷方式**即可（无需打开终端）。
 
-也可以用命令：
+也可以用命令（PowerShell 或 cmd 均可）：
 
 ```powershell
 cd metamath-harness    # 进入项目目录
-.\install.ps1 -StartOnly
+.\install.cmd -StartOnly
 ```
 
 其他参数：`-NoStart` 只装不启动｜`-Port 3081` 换端口
@@ -82,6 +89,7 @@ cd metamath-harness    # 进入项目目录
 
 ```text
 install.ps1              一键安装并启动脚本
+install.cmd              双击入口（资源管理器/cmd 可用，自动绕过脚本策略限制）
 plugins/dsh-mathmodel/   外置 Mathmodel 插件（源码、测试、脚本、文档）
 .dsh/.agent-presets/     Agent Preset：mathmodel（数学建模）、imagegen（标准生图）
 .dsh/profiles/web/       Web Profile 接线（package.json、pnpm-lock、cordis.patch.yml）

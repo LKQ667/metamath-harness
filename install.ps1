@@ -1,4 +1,4 @@
-# MetaMath Harness 一键安装与启动
+﻿# MetaMath Harness 一键安装与启动
 # 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
 # 用法：
 #   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
@@ -29,7 +29,7 @@ if (-not $StartOnly) {
     if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
         Write-Host '    提示：未检测到 Git，可继续安装；以后如需 git pull 更新，请自行安装 Git。' -ForegroundColor Yellow
     }
-    $nodeMajor = [int](node -p 'process.versions.node.split(".")[0]')
+    $nodeMajor = [int]((node --version).TrimStart('v').Split('.')[0])
     if ($nodeMajor -lt 22) { Fail "Node.js 版本过低（当前主版本 $nodeMajor，需要 >= 22）。请运行：winget install OpenJS.NodeJS" }
     $gitInfo = if (Get-Command git -ErrorAction SilentlyContinue) { ' / ' + (git --version) } else { '' }
     Ok "Node $(node --version)$gitInfo"
