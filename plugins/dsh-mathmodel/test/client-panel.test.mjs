@@ -65,6 +65,28 @@ test('左上角品牌仅由插件覆盖，使用 MetaMath 真实图标且保留�
   assert.match(source, /chip\.textContent = 'HARNESS'/);
 });
 
+test('中央主视觉鲸鱼图标由插件运行时替换为 MetaMath 标记，且不修改官方包', async () => {
+  const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
+  assert.match(source, /metaMathHeroMark/);
+  assert.match(source, /__METAMATH_HERO_MARK__/);
+  assert.match(source, /span\[class\*="_fishHitbox"\]/);
+  assert.match(source, /hitbox\.dataset\.dshMetamathHero = 'true'/);
+  assert.match(source, /officialFish\.style\.display = 'none'/);
+  assert.match(source, /\.dsh-mm-hero-mark\{width:34px;height:34px/);
+});
+
+test('中央主标题替换为“大道至简”金属艺术字图并隐藏预览版徽章', async () => {
+  const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
+  assert.match(source, /metaMathHeroTitle/);
+  assert.match(source, /__METAMATH_HERO_TITLE__/);
+  assert.match(source, /titleImg\.alt = '大道至简'/);
+  assert.match(source, /span\[class\*="_headlineText"\]/);
+  assert.match(source, /span\[class\*="_previewBadge"\]/);
+  assert.match(source, /badge\.style\.display = 'none'/);
+  assert.match(source, /row\.style\.gridTemplateColumns = '34px auto'/);
+  assert.match(source, /\.dsh-mm-hero-title-img\{height:34px/);
+});
+
 test('生图模型设置使用连接级 Remote，浏览器不持有凭据引用或 Key', async () => {
   const calls = [];
   const actions = createImageConnectionActions({

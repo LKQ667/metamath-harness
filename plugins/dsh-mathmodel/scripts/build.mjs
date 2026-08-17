@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const brandMark = await readFile(resolve(root, 'src/assets/metamath-brand-mark.png'), 'base64');
+const heroMark = await readFile(resolve(root, 'src/assets/metamath-hero-mark.png'), 'base64');
+const heroTitle = await readFile(resolve(root, 'src/assets/metamath-hero-title.png'), 'base64');
 const files = [
   ['src/index.js', 'lib/index.js'],
   ['src/host.js', 'lib/host.js'],
@@ -42,7 +44,7 @@ for (const [source, target] of files) {
   await mkdir(dirname(output), { recursive: true });
   if (source === 'src/client-bundle.cjs') {
     const bundle = await readFile(resolve(root, source), 'utf8');
-    await writeFile(output, bundle.replace('__METAMATH_BRAND_MARK__', brandMark));
+    await writeFile(output, bundle.replace('__METAMATH_BRAND_MARK__', brandMark).replace('__METAMATH_HERO_MARK__', heroMark).replace('__METAMATH_HERO_TITLE__', heroTitle));
   } else {
     await copyFile(resolve(root, source), output);
   }

@@ -261,6 +261,8 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
       const React = require('react');
       const ReactDOM = require('react-dom');
       const metaMathBrandMark = 'data:image/png;base64,__METAMATH_BRAND_MARK__';
+      const metaMathHeroMark = 'data:image/png;base64,__METAMATH_HERO_MARK__';
+      const metaMathHeroTitle = 'data:image/png;base64,__METAMATH_HERO_TITLE__';
 
       const styleId = 'dsh-mathmodel-card-style';
       if (!document.getElementById(styleId)) {
@@ -279,7 +281,10 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
           .dsh-mm-vision-draft{height:28px;max-width:132px;overflow:hidden;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:transparent;color:var(--dsw-alias-label-secondary);padding:0 9px;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:550;cursor:pointer}.dsh-mm-vision-draft:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-vision-draft:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary);outline-offset:2px}.dsh-mm-vision-draft:disabled{cursor:default;opacity:.6}
           @media(max-width:760px){.dsh-mm-overlay{inset:52px 10px 116px}.dsh-mm-card{padding:18px 16px 0;border-radius:15px}.dsh-mm-grid{grid-template-columns:1fr;row-gap:11px}.dsh-mm-field{grid-column:1}.dsh-mm-field[data-type=boolean]{margin-top:0}.dsh-mm-actions{margin:16px -16px 0;padding:12px 16px 14px}}
            .dsh-mm-info-button{border:0;background:transparent;color:var(--dsw-alias-label-secondary);border-radius:9px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:550}.dsh-mm-info-button:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-info-button:focus-visible{outline:2px solid var(--dsw-alias-label-tertiary);outline-offset:2px}
-           .hHd-Xa_logoRow>.hHd-Xa_brand[data-dsh-metamath-brand=true]>svg{display:none!important}.dsh-mm-brand-lockup{display:inline-flex;align-items:center;gap:7px;color:#16181d}.dsh-mm-brand-mark{width:28px;height:28px;flex:none;border-radius:8px;object-fit:contain}.dsh-mm-brand-word{font-size:18px;font-weight:650;letter-spacing:-.04em;line-height:1}.dsh-mm-brand-chip{border-radius:4px;background:#181a20;color:#fff;padding:3px 5px 2px;font-size:9px;font-weight:750;letter-spacing:.065em;line-height:1}
+           .dsh-mm-hero-mark{width:34px;height:34px;border-radius:9px;object-fit:contain;display:inline-block;vertical-align:middle}
+          .dsh-mm-hero-title{display:inline-flex;align-items:center}
+          .dsh-mm-hero-title-img{height:34px;width:auto;display:block}
+          .hHd-Xa_logoRow>.hHd-Xa_brand[data-dsh-metamath-brand=true]>svg{display:none!important}.dsh-mm-brand-lockup{display:inline-flex;align-items:center;gap:7px;color:#16181d}.dsh-mm-brand-mark{width:28px;height:28px;flex:none;border-radius:8px;object-fit:contain}.dsh-mm-brand-word{font-size:18px;font-weight:650;letter-spacing:-.04em;line-height:1}.dsh-mm-brand-chip{border-radius:4px;background:#181a20;color:#fff;padding:3px 5px 2px;font-size:9px;font-weight:750;letter-spacing:.065em;line-height:1}
           .dsh-mm-info-launcher{position:fixed;z-index:89;top:12px;right:72px;display:inline-flex;width:36px;height:36px;min-height:36px;box-sizing:border-box;align-items:center;justify-content:center;border:0;border-radius:12px;background:transparent;box-shadow:none;padding:0;line-height:1}.dsh-mm-info-launcher:hover,.dsh-mm-info-launcher[aria-expanded=true]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-info-launcher svg{width:19px;height:19px}
           [data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]{width:36px!important;height:36px!important;min-width:36px!important;box-sizing:border-box!important;justify-content:center!important;gap:0!important;border-radius:12px!important;padding:0!important}[data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]>span{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important}[data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]>svg{width:16px!important;height:16px!important}
           .dsh-mm-info{position:fixed;z-index:90;top:56px;right:12px;bottom:12px;display:flex;width:min(400px,calc(100vw - 24px));box-sizing:border-box;flex-direction:column;overflow:hidden;pointer-events:auto;border:1px solid var(--dsw-alias-border-l1);border-radius:16px;background:var(--dsw-alias-bg-base);box-shadow:0 20px 52px rgba(15,23,42,.18)}
@@ -318,6 +323,51 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
       }
       installMetaMathBrand();
       new MutationObserver(installMetaMathBrand).observe(document.documentElement, { childList: true, subtree: true });
+
+      // 中央主视觉（hero）鲸鱼图标替换为 MetaMath 四象限鲸鱼标记（GOAL-19 同款运行时覆盖思路）
+      function installMetaMathHeroMark() {
+        const hitbox = document.querySelector('span[class*="_fishHitbox"]');
+        if (!hitbox || hitbox.dataset.dshMetamathHero === 'true') return;
+        const officialFish = hitbox.querySelector('svg');
+        if (!officialFish) return;
+        officialFish.style.display = 'none';
+        const mark = document.createElement('img');
+        mark.className = 'dsh-mm-hero-mark';
+        mark.src = metaMathHeroMark;
+        mark.alt = '';
+        mark.setAttribute('aria-hidden', 'true');
+        hitbox.appendChild(mark);
+        hitbox.dataset.dshMetamathHero = 'true';
+      }
+      installMetaMathHeroMark();
+      new MutationObserver(installMetaMathHeroMark).observe(document.documentElement, { childList: true, subtree: true });
+
+      // 中央主标题替换为“大道至简”金属艺术字图（透明底），并移除“预览版”徽章（GOAL-33）
+      function installMetaMathHeroTitle() {
+        const headline = document.querySelector('span[class*="_headlineText"]');
+        if (headline && headline.dataset.dshMetamathTitle !== 'true') {
+          headline.textContent = '';
+          headline.classList.add('dsh-mm-hero-title');
+          const titleImg = document.createElement('img');
+          titleImg.className = 'dsh-mm-hero-title-img';
+          titleImg.src = metaMathHeroTitle;
+          titleImg.alt = '大道至简';
+          headline.appendChild(titleImg);
+          headline.dataset.dshMetamathTitle = 'true';
+          const row = headline.parentElement;
+          if (row && row.dataset.dshMetamathTitleRow !== 'true') {
+            row.style.gridTemplateColumns = '34px auto';
+            row.dataset.dshMetamathTitleRow = 'true';
+          }
+        }
+        const badge = document.querySelector('span[class*="_previewBadge"]');
+        if (badge && badge.dataset.dshMetamathBadge !== 'true') {
+          badge.style.display = 'none';
+          badge.dataset.dshMetamathBadge = 'true';
+        }
+      }
+      installMetaMathHeroTitle();
+      new MutationObserver(installMetaMathHeroTitle).observe(document.documentElement, { childList: true, subtree: true });
 
       function MathmodelInfo({ flow, sessionId, loadSkillHelp, floating = false }) {
         const state = React.useSyncExternalStore(flow.subscribe, flow.getSnapshot, flow.getSnapshot);

@@ -104,15 +104,36 @@ Step "启动 Web 界面（端口 $Port）"
 $env:DSH_HOME = Join-Path $Repo '.dsh'
 Ok "DSH_HOME = $env:DSH_HOME"
 
-$existing = Test-NetConnection -ComputerName 127.0.0.1 -Port $Port -WarningAction SilentlyContinue
-if ($existing.TcpTestSucceeded) {
+# 毫秒级端口探活（Test-NetConnection 在网卡较多的机器上单次可达 13 秒）
+$portOpen = $false
+$tcp = New-Object Net.Sockets.TcpClient
+try {
+    $task = $tcp.ConnectAsync('127.0.0.1', $Port)
+    if ($task.Wait(500) -and $tcp.Connected) { $portOpen = $true }
+} catch {} finally { $tcp.Close() }
+
+if ($portOpen) {
     Ok "端口 $Port 已有服务监听，直接复用"
 } else {
-    $server = Start-Process -WindowStyle Minimized -PassThru powershell -ArgumentList @(
-        '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-NoExit', '-Command',
-        "`$env:DSH_HOME = '$env:DSH_HOME'; dsh web --port $Port"
-    )
-    Ok "服务进程已启动（PID $($server.Id)，关闭其窗口即可停止服务）"
+    # 优先直接拉起 node（省去嵌套 PowerShell 冷启动约 1 秒），找不到时回退原方式
+    $started = $false
+    $dshCmd = Get-Command dsh -ErrorAction SilentlyContinue
+    $nodeCmd = Get-Command node -ErrorAction SilentlyContinue
+    if ($dshCmd -and $nodeCmd) {
+        $dshBin = Join-Path (Split-Path $dshCmd.Source -Parent) 'node_modules\@deepseek-ai\dsh\lib\bin.js'
+        if (Test-Path $dshBin) {
+            $server = Start-Process -WindowStyle Minimized -PassThru -FilePath $nodeCmd.Source -ArgumentList @($dshBin, 'web', '--port', "$Port")
+            Ok "服务进程已启动（PID $($server.Id)，关闭其窗口即可停止服务）"
+            $started = $true
+        }
+    }
+    if (-not $started) {
+        $server = Start-Process -WindowStyle Minimized -PassThru powershell -ArgumentList @(
+            '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-NoExit', '-Command',
+            "`$env:DSH_HOME = '$env:DSH_HOME'; dsh web --port $Port"
+        )
+        Ok "服务进程已启动（PID $($server.Id)，关闭其窗口即可停止服务）"
+    }
 }
 
 $ready = $false
