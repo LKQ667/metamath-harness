@@ -23,6 +23,43 @@
 - **内置 10 张壁纸**：皮肤插件新增"壁纸 01–10"十张内置壁纸（压缩后 base64 内嵌，无需外部文件），在设置 → 皮肤里一键切换；自动提取主色适配界面，支持模糊/变暗/面板不透明度微调，刷新后自动恢复。
 - **主视觉简化**：中央官方紫鲸鱼图标由插件运行时隐藏（不改官方包），"大道至简"标题与对话框水平居中对齐。
 
+## 界面预览
+
+<p align="center">
+  <img src="github展示/微信图片_20260817123927_1956_14.png" width="48%" alt="界面预览1" />
+  <img src="github展示/微信图片_20260817123941_1957_14.png" width="48%" alt="界面预览2" />
+</p>
+
+<p align="center">
+  <img src="github展示/微信图片_20260817123958_1958_14.png" width="48%" alt="界面预览3" />
+  <img src="github展示/微信图片_20260817124009_1959_14.png" width="48%" alt="界面预览4" />
+</p>
+
+<p align="center">
+  <img src="github展示/微信图片_20260817124021_1960_14.png" width="48%" alt="界面预览5" />
+  <img src="github展示/微信图片_20260817124034_1961_14.png" width="48%" alt="界面预览6" />
+</p>
+
+<p align="center">
+  <img src="github展示/微信图片_20260817124052_1962_14.png" width="48%" alt="界面预览7" />
+  <img src="github展示/微信图片_20260817124103_1963_14.png" width="48%" alt="界面预览8" />
+</p>
+
+<p align="center">
+  <img src="github展示/微信图片_20260817124113_1964_14.png" width="48%" alt="界面预览9" />
+  <img src="github展示/微信图片_20260817124122_1965_14.png" width="48%" alt="界面预览10" />
+</p>
+
+<p align="center">
+  <img src="github展示/532ee2ac402c8fe2b10e8ec56cee8b3b.png" width="48%" alt="功能展示1" />
+  <img src="github展示/745929ef903362703feb4f952e73272a.png" width="48%" alt="功能展示2" />
+</p>
+
+<p align="center">
+  <img src="github展示/96214aed34b57d3db5869fd40486fb33.png" width="48%" alt="功能展示3" />
+  <img src="github展示/b6a80005509ba5fa051e6292e427e01e.png" width="48%" alt="功能展示4" />
+</p>
+
 ## 两种获取方式（任选其一）
 
 ### 方式一：AI IDE 一键安装（会用 AI IDE 的用户）
