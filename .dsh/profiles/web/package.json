@@ -2,7 +2,8 @@
   "name": "dsh-profile-web",
   "private": true,
   "dependencies": {
-    "@deepseek-harness/dsh-mathmodel": "file:../../../plugins/dsh-mathmodel"
+    "@deepseek-harness/dsh-mathmodel": "file:../../../plugins/dsh-mathmodel",
+    "dsh-client-ui-skins": "file:../../../plugins/dsh-client-ui-skins"
   },
   "dsh": {
     "profile": {

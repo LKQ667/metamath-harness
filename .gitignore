@@ -4,6 +4,8 @@ lib/
 dist/
 .portable-build/
 .portable-cache/
+# 皮肤插件无构建步骤，lib/ 即源码，需保留
+!plugins/dsh-client-ui-skins/lib/
 
 # 运行时用户状态（严禁提交）
 data/

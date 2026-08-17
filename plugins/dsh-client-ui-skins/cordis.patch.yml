@@ -1,0 +1,5 @@
+# dsh-client-ui-skins bundle patch: registers the skin plugin entry.
+# Install with: dsh plugin --profile web add dsh-client-ui-skins
+- insert:
+    - id: ui-skins
+      name: 'dsh-client-ui-skins'

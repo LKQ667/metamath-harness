@@ -14,3 +14,22 @@ importers:
       '@deepseek-harness/dsh-mathmodel':
         specifier: link:../../../plugins/dsh-mathmodel
         version: link:../../../plugins/dsh-mathmodel
+      dsh-client-ui-skins:
+        specifier: file:../../../plugins/dsh-client-ui-skins
+        version: file:../../../plugins/dsh-client-ui-skins
+
+packages:
+
+  dsh-client-ui-skins@file:../../../plugins/dsh-client-ui-skins:
+    resolution: {directory: ../../../plugins/dsh-client-ui-skins, type: directory}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.1
+      '@deepseek-ai/dsh-client-runtime': ^0.1.0-rc.6
+      '@deepseek-ai/dsh-client-ui-slots': ^0.1.0-rc.6
+      '@deepseek-ai/dsh-settings': ^0.1.0-rc.6
+      '@deepseek-ai/schemastery': ^3.18.1
+      react: ^18.2.0
+
+snapshots:
+
+  dsh-client-ui-skins@file:../../../plugins/dsh-client-ui-skins: {}

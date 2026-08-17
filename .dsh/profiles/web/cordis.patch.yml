@@ -17,3 +17,9 @@
     # Host 插件统一管理，避免各 Preset 重复注册同名工具。
     - id: mathmodel-tools
       name: '@deepseek-harness/dsh-mathmodel/tools'
+
+# 全局皮肤插件（上传图片为全局背景，自动取主色，含 Blur/Dim/面板不透明度微调）。
+# 纯客户端插件：theme.register + settings.general.item 插槽，卸载即恢复官方主题。
+- insert:
+    - id: ui-skins
+      name: 'dsh-client-ui-skins'
