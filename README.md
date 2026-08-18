@@ -141,3 +141,11 @@ npm run check   # 全部源码语法检查
 ## 许可
 
 `plugins/dsh-mathmodel` 为 MIT；其余配置与脚本基于 DeepSeek Harness 插件范式编写，仅供学习与研究使用。
+
+## 捐赠支持
+
+如果本项目对你有帮助，欢迎请作者喝杯咖啡：
+
+| 支付宝 | 微信 |
+|:---:|:---:|
+| ![](donate-alipay.jpg) | ![](donate-wechat.jpg) |
