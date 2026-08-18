@@ -104,6 +104,7 @@ const IMAGE_TEMPLATE_META = Object.freeze([
   Object.freeze({ id: 'sub2api', name: 'Sub2API', baseUrlEditable: true, defaultBaseUrl: 'http://localhost:8080/v1', defaultModel: '', adapters: ['sub2api-async-images', 'openai-images'], capability: 'pending', hint: '默认使用异步 Images API；不预置“必然可用”模型。' }),
   Object.freeze({ id: 'cliproxyapi', name: 'CLIProxyAPI', baseUrlEditable: true, defaultBaseUrl: 'http://127.0.0.1:8317/v1', defaultModel: '', adapters: ['openai-images'], capability: 'pending', hint: '仅提示 gpt-image-2 候选，请按实际服务填写。' }),
   Object.freeze({ id: 'openai-compatible', name: '自定义 OpenAI 兼容', baseUrlEditable: true, defaultBaseUrl: '', defaultModel: '', adapters: ['openai-images', 'openai-chat-image'], capability: 'pending', hint: '通用兼容网关；真实测试可确认是否改用 openai-chat-image 协议。' }),
+  Object.freeze({ id: 'codex-subscription', name: 'ChatGPT 订阅', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'gpt-image-2', adapters: ['codex-images'], capability: 'pending', hint: '复用 OAuth/订阅插件的 openai-codex 登录，无需 API Key；走 ChatGPT 订阅 Codex 生图端点（gpt-image-2）。非官方支持端点，存在账号限制风险。' }),
 ]);
 
 const ADAPTER_LABELS = Object.freeze({
@@ -112,6 +113,7 @@ const ADAPTER_LABELS = Object.freeze({
   'gemini-content': 'Gemini Content',
   'sub2api-async-images': 'Sub2API 异步 Images',
   'openai-chat-image': 'OpenAI Chat 图片',
+  'codex-images': 'Codex 订阅生图',
 });
 
 const CAPABILITY_LABELS = Object.freeze({
@@ -596,7 +598,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
           if (meta.baseUrlEditable) payload.baseUrl = String(draft.baseUrl ?? '').trim();
           await run(async () => {
             const saved = await actions.save(payload, id);
-            if (String(draft.secret ?? '').trim()) await actions.setKey(saved.id, String(draft.secret).trim());
+            if (meta.id !== 'codex-subscription' && String(draft.secret ?? '').trim()) await actions.setKey(saved.id, String(draft.secret).trim());
             await refresh();
             setEditing(null);
           }, '连接已保存。');
@@ -635,13 +637,13 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
             React.createElement('label', { className: 'dsh-mm-image-provider-field' }, React.createElement('span', null, '接口格式'), React.createElement('select', { value: editing.draft.adapter, onChange: (event) => patchDraft({ adapter: event.target.value }) }, meta.adapters.map((adapter) => React.createElement('option', { key: adapter, value: adapter }, ADAPTER_LABELS[adapter] ?? adapter)))),
             React.createElement('label', { className: 'dsh-mm-image-provider-field', 'data-wide': meta.baseUrlEditable }, React.createElement('span', null, '模型'), React.createElement('input', { value: editing.draft.model, maxLength: 160, placeholder: meta.defaultModel || '模型 ID', onChange: (event) => patchDraft({ model: event.target.value }) })),
             meta.baseUrlEditable ? React.createElement('label', { className: 'dsh-mm-image-provider-field', 'data-wide': true }, React.createElement('span', null, 'Base URL'), React.createElement('input', { type: 'url', value: editing.draft.baseUrl, maxLength: 2048, placeholder: 'https://example.com/v1', onChange: (event) => patchDraft({ baseUrl: event.target.value }) })) : null,
-            React.createElement('label', { className: 'dsh-mm-image-provider-field', 'data-wide': true }, React.createElement('span', null, configured ? 'API Key（留空保持原 Key）' : 'API Key'), React.createElement('input', { type: 'password', autoComplete: 'new-password', value: editing.draft.secret, placeholder: configured ? '留空保持原 Key' : '输入 Key（只写入受管存储）', onChange: (event) => patchDraft({ secret: event.target.value }) })),
+            meta.id !== 'codex-subscription' ? React.createElement('label', { className: 'dsh-mm-image-provider-field', 'data-wide': true }, React.createElement('span', null, configured ? 'API Key（留空保持原 Key）' : 'API Key'), React.createElement('input', { type: 'password', autoComplete: 'new-password', value: editing.draft.secret, placeholder: configured ? '留空保持原 Key' : '输入 Key（只写入受管存储）', onChange: (event) => patchDraft({ secret: event.target.value }) })) : null,
             React.createElement('p', { className: 'dsh-mm-image-provider-hint' }, meta.hint),
             React.createElement('p', { className: 'dsh-mm-image-provider-verify-note' }, '“真实测试”会发送一次最小生图请求，可能产生供应商费用；只有测试成功后才能设为当前，测试结果不会写入工作区。'),
             message ? React.createElement('p', { className: 'dsh-mm-image-provider-message', role: 'status' }, message) : null,
             React.createElement('div', { className: 'dsh-mm-image-provider-actions' },
               editing.id ? React.createElement('button', { type: 'button', className: 'dsh-mm-image-provider-button', disabled: !editable, onClick: () => doDiscover(editing.id, editing.draft.name || '该连接') }, '获取可用模型') : null,
-              configured && editing.id ? React.createElement('button', { type: 'button', className: 'dsh-mm-image-provider-button', disabled: !editable, onClick: () => doClearKey(editing.id) }, '清除 Key') : null,
+              configured && editing.id && templateMeta(editing.draft.template)?.id !== 'codex-subscription' ? React.createElement('button', { type: 'button', className: 'dsh-mm-image-provider-button', disabled: !editable, onClick: () => doClearKey(editing.id) }, '清除 Key') : null,
               React.createElement('button', { type: 'button', className: 'dsh-mm-image-provider-button', disabled: !editable, onClick: () => setEditing(null) }, '取消'),
               React.createElement('button', { type: 'button', className: 'dsh-mm-image-provider-button', 'data-primary': true, disabled: !editable, onClick: save }, busy ? '保存中…' : '保存')),
           );

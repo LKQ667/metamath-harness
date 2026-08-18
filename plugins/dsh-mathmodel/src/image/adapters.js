@@ -1,3 +1,5 @@
+import { resolveCodexSession } from './codex-auth.js';
+
 const JSON_HEADERS = { 'content-type': 'application/json' };
 const DEFAULT_SLEEP = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -197,6 +199,51 @@ export async function openaiChatImageAdapter({ endpoint, model, credential, requ
   return assets;
 }
 
+/** ChatGPT 订阅（Codex）生图适配器：镜像 codex-rs images 端点，凭据来自 pi-ai-oauth.json。 */
+export async function codexImagesAdapter({ endpoint, model, credential, request, references, fetchImpl, signal, codexHome }) {
+  if (references.length > 0) throw new Error('codex-images 适配器不支持参考图；请改用其他连接或去掉参考图');
+  let session;
+  try {
+    const parsed = JSON.parse(credential);
+    if (typeof parsed?.access !== 'string' || typeof parsed?.accountId !== 'string') throw new Error('bad shape');
+    session = parsed;
+  } catch {
+    session = await resolveCodexSession({ ...(codexHome ? { home: codexHome } : {}), fetchImpl, signal });
+  }
+  const url = openAiUrl(endpoint ?? 'https://chatgpt.com/backend-api', 'codex/images/generations');
+  const headers = {
+    'authorization': `Bearer ${session.access}`,
+    'chatgpt-account-id': session.accountId,
+    'originator': 'codex_cli_rs',
+    'accept': 'application/json',
+    ...JSON_HEADERS,
+  };
+  const call = () => fetchImpl(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ prompt: request.prompt, model, ...(request.size ? { size: request.size } : {}) }),
+    signal,
+  });
+  let response = await call();
+  if (response.status === 401) {
+    // 未到期但被拒：强刷一次 token 再重试（codex CLI 同款模式）
+    session = await resolveCodexSession({ ...(codexHome ? { home: codexHome } : {}), fetchImpl, signal, force: true });
+    headers.authorization = `Bearer ${session.access}`;
+    response = await call();
+  }
+  const data = await jsonResponse(response, 'codex-images');
+  const assets = genericAssets(data);
+  if (assets.length === 0) throw new Error('codex-images 响应中没有可解析的图片');
+  // Codex 端点单请求单图；count>1 时补足循环调用
+  for (let index = 1; index < request.count; index += 1) {
+    if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+    const extra = genericAssets(await jsonResponse(await call(), 'codex-images'));
+    if (extra.length === 0) break;
+    assets.push(...extra);
+  }
+  return assets;
+}
+
 export const IMAGE_ADAPTERS = Object.freeze({ dashscope: dashscopeAdapter, openai: openaiAdapter, gemini: geminiAdapter, custom: customAdapter });
 
 /** 按协议 ID 的适配器注册表（连接携带 adapter / verification.protocol）。 */
@@ -206,4 +253,5 @@ export const ADAPTER_BY_ID = Object.freeze({
   'gemini-content': geminiAdapter,
   'sub2api-async-images': sub2apiAsyncImagesAdapter,
   'openai-chat-image': openaiChatImageAdapter,
+  'codex-images': codexImagesAdapter,
 });

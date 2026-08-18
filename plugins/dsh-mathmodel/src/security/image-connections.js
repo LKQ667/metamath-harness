@@ -52,6 +52,12 @@ export const IMAGE_TEMPLATES = Object.freeze([
     defaultBaseUrl: '', defaultAdapter: 'openai-images', adapters: ['openai-images', 'openai-chat-image'],
     defaultModel: '', modelHint: '通用兼容网关；测试可确认 openai-chat-image 协议',
   }),
+  Object.freeze({
+    id: 'codex-subscription', name: 'ChatGPT 订阅', capability: 'pending', baseUrlEditable: false,
+    fixedBaseUrl: 'https://chatgpt.com/backend-api', defaultAdapter: 'codex-images', adapters: ['codex-images'],
+    defaultModel: 'gpt-image-2', modelHint: '复用 OAuth/订阅插件的 openai-codex 登录（pi-ai-oauth.json），无需 API Key；'
+      + '走 ChatGPT 订阅 Codex 生图端点（gpt-image-2）。非官方支持端点，存在账号限制风险',
+  }),
 ]);
 
 const TEMPLATE_BY_ID = new Map(IMAGE_TEMPLATES.map((template) => [template.id, template]));

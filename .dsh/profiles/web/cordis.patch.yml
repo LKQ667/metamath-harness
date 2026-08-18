@@ -20,9 +20,8 @@
 
 # 全局皮肤插件（上传图片为全局背景，自动取主色，含 Blur/Dim/面板不透明度微调）。
 # 纯客户端插件：theme.register + settings.general.item 插槽，卸载即恢复官方主题。
-- insert:
-    - id: ui-skins
-      name: 'dsh-client-ui-skins'
+# 激活方式：bundle 层（package.json dsh.profile.bundles + 包自带 cordis.patch.yml），
+# dsh plugin 命令的 reconcile 会按依赖声明自动维护，此处不再手工 insert（同 id 双插会启动失败）。
 
 # 订阅登录插件（Settings → Subscriptions 页，ChatGPT/Claude/Grok OAuth）。
 # 走 bundle 层自激活（package.json dsh.profile.bundles）；此处只做 config 覆盖：
@@ -34,3 +33,14 @@
     providers:
       - claude
       - grok
+
+# ChatGPT/Codex 订阅 OAuth 登录插件（ziyou979/dsh-llm-oauth，bundle 层自激活）。
+# 默认休眠（providers 为空，登录后才注册聊天路由），不注册任何工具 → 与本地
+# mathmodel-tools 的 image_generate 零冲突。catalog 限定 openai-codex：OAuth 设置页
+# 只显示 ChatGPT 登录；Claude/Grok 订阅登录仍由上面的 llm-subscriptions 负责。
+# 登录凭据写入 $DSH_HOME/pi-ai-oauth.json（openai-codex 条目），
+# dsh-mathmodel 的 codex-subscription 生图连接直接复用该凭据。
+- id: llm-oauth
+  config:
+    catalog:
+      - openai-codex

@@ -4,6 +4,7 @@
   "dependencies": {
     "@deepseek-harness/dsh-mathmodel": "file:../../../plugins/dsh-mathmodel",
     "dsh-client-ui-skins": "file:../../../plugins/dsh-client-ui-skins",
+    "dsh-llm-oauth": "github:ziyou979/dsh-llm-oauth",
     "dsh-plugin-subscriptions": "^0.3.0"
   },
   "dsh": {
@@ -11,7 +12,9 @@
       "bundles": [
         "@deepseek-ai/dsh-base",
         "@deepseek-ai/dsh-web-app",
-        "dsh-plugin-subscriptions"
+        "dsh-plugin-subscriptions",
+        "dsh-client-ui-skins",
+        "dsh-llm-oauth"
       ]
     }
   }

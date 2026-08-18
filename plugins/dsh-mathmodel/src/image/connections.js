@@ -3,9 +3,11 @@ import {
   IMAGE_CONNECTIONS_SCHEMA_TAG, MAX_CONNECTIONS, capabilityOf, fail, generateConnectionId,
   isValidConnectionId, migrateFromV1, validateConnectionDraft, validateImageConnections,
 } from '../security/image-connections.js';
+import { describeCodexCredential, resolveCodexSession } from './codex-auth.js';
 import { verifyConnection } from './verify.js';
 
 const LEGACY_CREDENTIAL_REFS = new Set(['DASHSCOPE_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'CUSTOM_IMAGE_API_KEY']);
+const CODEX_TEMPLATE_ID = 'codex-subscription';
 
 function withoutVerification(connection) {
   const { verification: _ignored, ...rest } = connection;
@@ -59,7 +61,7 @@ function summaryFor(connection, credential, verification) {
  * 所有 Remote 错误经脱敏；浏览器只接收脱敏摘要。
  */
 export class ImageConnectionService {
-  constructor({ settings, legacySettings, credentialStore, credentialProvider, hasV2UserSection, fetchImpl = globalThis.fetch, now = () => new Date().toISOString(), sleep } = {}) {
+  constructor({ settings, legacySettings, credentialStore, credentialProvider, hasV2UserSection, fetchImpl = globalThis.fetch, now = () => new Date().toISOString(), sleep, codexHome } = {}) {
     this.settings = settings;
     this.legacySettings = legacySettings;
     this.credentialStore = credentialStore;
@@ -68,6 +70,7 @@ export class ImageConnectionService {
     this.fetch = fetchImpl;
     this.now = now;
     this.sleep = sleep;
+    this.codexHome = codexHome;
   }
 
   value() {
@@ -101,6 +104,7 @@ export class ImageConnectionService {
   }
 
   async describeCredential(connection) {
+    if (connection.template === CODEX_TEMPLATE_ID) return await describeCodexCredential(this.codexHome);
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       const info = await this.credentialProvider.describe(connection.credentialRef);
       return Object.freeze({
@@ -114,6 +118,10 @@ export class ImageConnectionService {
   }
 
   async resolveCredential(connection) {
+    if (connection.template === CODEX_TEMPLATE_ID) {
+      const session = await resolveCodexSession({ ...(this.codexHome ? { home: this.codexHome } : {}), fetchImpl: this.fetch });
+      return { ref: 'pi-ai-oauth', value: JSON.stringify({ access: session.accessToken, accountId: session.accountId }), source: 'pi-ai-oauth' };
+    }
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       const info = await this.credentialProvider.resolve(connection.credentialRef);
       return { ref: connection.credentialRef, value: typeof info?.value === 'string' ? info.value : '', source: typeof info?.source === 'string' ? info.source : 'managed' };
@@ -122,6 +130,9 @@ export class ImageConnectionService {
   }
 
   async setCredential(connection, value) {
+    if (connection.template === CODEX_TEMPLATE_ID) {
+      throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；请到“设置 → OAuth / 订阅”登录 openai-codex');
+    }
     if (typeof value !== 'string' || !value.trim()) throw fail('invalid_key', 'API Key 不能为空');
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       await this.credentialProvider.set(connection.credentialRef, value);
@@ -132,6 +143,9 @@ export class ImageConnectionService {
 
   async clearCredential(id) {
     const connection = await this.requireConnection(id);
+    if (connection.template === CODEX_TEMPLATE_ID) {
+      throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；如需移除请到“设置 → OAuth / 订阅”登出');
+    }
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       await this.credentialProvider.unset(connection.credentialRef);
     } else {
@@ -244,6 +258,10 @@ export class ImageConnectionService {
 
   async discoverModels(id) {
     const connection = await this.requireConnection(id);
+    if (connection.template === CODEX_TEMPLATE_ID) {
+      // Codex 订阅生图端点无 /models 目录；返回连接配置的模型本身
+      return Object.freeze({ connectionId: id, models: Object.freeze([{ id: connection.model }]) });
+    }
     const credential = await this.resolveCredential(connection);
     if (!credential.value) throw fail('credential_missing', '该连接尚未保存 API Key；请先保存后再获取模型');
     const url = `${connection.baseUrl}/models`;
