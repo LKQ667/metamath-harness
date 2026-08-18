@@ -3,13 +3,15 @@
   "private": true,
   "dependencies": {
     "@deepseek-harness/dsh-mathmodel": "file:../../../plugins/dsh-mathmodel",
-    "dsh-client-ui-skins": "file:../../../plugins/dsh-client-ui-skins"
+    "dsh-client-ui-skins": "file:../../../plugins/dsh-client-ui-skins",
+    "dsh-plugin-subscriptions": "^0.3.0"
   },
   "dsh": {
     "profile": {
       "bundles": [
         "@deepseek-ai/dsh-base",
-        "@deepseek-ai/dsh-web-app"
+        "@deepseek-ai/dsh-web-app",
+        "dsh-plugin-subscriptions"
       ]
     }
   }

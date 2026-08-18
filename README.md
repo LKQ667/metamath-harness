@@ -120,6 +120,10 @@ Python 3、TeX Live（XeLaTeX）、Draw.io、Poppler——用于论文与绘图�
 
 插件详细用法、升级与回滚见 [`plugins/dsh-mathmodel/README.md`](plugins/dsh-mathmodel/README.md)。
 
+## 订阅登录（ChatGPT / Claude / Grok）
+
+内置第三方插件 [dsh-plugin-subscriptions](https://github.com/V1ki/dsh-plugin-subscriptions)（npm `0.3.1`，MIT）：在 Web 设置 → 订阅页用 OAuth 登录订阅账号即可作为模型 provider，无需 API Key；登录令牌保存在本机 `~/.dsh/plugins/subscriptions/auth.json`（0600 权限，自动刷新），不进入仓库或归档。默认启用 Claude 与 Grok 路由；ChatGPT (Codex) 路由因其 `image_generate` 工具与本项目 API 生图工具重名而默认关闭，如需启用请先处理工具重名（见项目内 README 3.3a 节说明）。
+
 ## 便携版（免安装包）
 
 `构建便携版.ps1` 可构建自带 Node/Python/TeX Live 的完整便携包（解压双击即用，构建需约 20 GB 临时空间），详见 [`portable/README.md`](portable/README.md)。
@@ -141,11 +145,3 @@ npm run check   # 全部源码语法检查
 ## 许可
 
 `plugins/dsh-mathmodel` 为 MIT；其余配置与脚本基于 DeepSeek Harness 插件范式编写，仅供学习与研究使用。
-
-## 捐赠支持
-
-如果本项目对你有帮助，欢迎请作者喝杯咖啡：
-
-| 支付宝 | 微信 |
-|:---:|:---:|
-| ![](donate-alipay.jpg) | ![](donate-wechat.jpg) |

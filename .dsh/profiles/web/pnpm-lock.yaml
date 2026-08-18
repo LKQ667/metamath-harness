@@ -17,6 +17,9 @@ importers:
       dsh-client-ui-skins:
         specifier: file:../../../plugins/dsh-client-ui-skins
         version: file:../../../plugins/dsh-client-ui-skins
+      dsh-plugin-subscriptions:
+        specifier: ^0.3.0
+        version: 0.3.0
 
 packages:
 
@@ -30,6 +33,18 @@ packages:
       '@deepseek-ai/schemastery': ^3.18.1
       react: ^18.2.0
 
+  dsh-plugin-subscriptions@0.3.0:
+    resolution: {integrity: sha512-HAvO0geq/M90lmeyGCXuh3ViNz55wB7QlXzSXK4W0Vf98oI+4/Qk85VSopSEl6BZCrdzB4ERgknQPz9rauc3SA==}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.1
+      '@deepseek-ai/dsh-attachment': ^0.1.0-rc.5
+      '@deepseek-ai/dsh-home-paths': ^0.1.0-rc.5
+      '@deepseek-ai/dsh-llm': ^0.1.0-rc.5
+      '@deepseek-ai/dsh-tools': ^0.1.0-rc.5
+      '@deepseek-ai/schemastery': ^3.18.1
+
 snapshots:
 
   dsh-client-ui-skins@file:../../../plugins/dsh-client-ui-skins: {}
+
+  dsh-plugin-subscriptions@0.3.0: {}

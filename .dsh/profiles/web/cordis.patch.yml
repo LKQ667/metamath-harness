@@ -23,3 +23,14 @@
 - insert:
     - id: ui-skins
       name: 'dsh-client-ui-skins'
+
+# 订阅登录插件（Settings → Subscriptions 页，ChatGPT/Claude/Grok OAuth）。
+# 走 bundle 层自激活（package.json dsh.profile.bundles）；此处只做 config 覆盖：
+# providers 限定 claude+grok。原因：codex 路由会在启动时注册全局工具 image_generate，
+# 与本地 mathmodel-tools 的 API 生图工具同名冲突（bundle 层先加载，后注册方启动失败）。
+# 需要启用 ChatGPT 订阅时，改回 [codex, claude, grok] 并先处理本地生图工具的重名。
+- id: llm-subscriptions
+  config:
+    providers:
+      - claude
+      - grok
