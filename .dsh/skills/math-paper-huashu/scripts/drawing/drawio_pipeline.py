@@ -26,6 +26,10 @@ ROLE_STYLES = {
     "support": ("#F2F3F5", "#72777D"),
     "header": ("#E5E9EE", "#56616D"),
     "decision": ("#FFF4D9", "#A67B24"),
+    "container": ("none", "#8A8F98"),
+    "zone": ("#F5F3EF", "none"),
+    "action": ("#3D6B99", "none"),
+    "caption": ("none", "none"),
 }
 FONT = "Microsoft YaHei"
 TEMPLATE_FILE = Path(__file__).resolve().parents[2] / "assets" / "drawio" / "template_library.json"
@@ -43,6 +47,14 @@ def choose_template(brief: dict) -> str:
         return "branch-decision"
     if int(brief.get("actors", 0)) > 1:
         return "dual-swimlane"
+    if int(brief.get("panels", 0)) > 1:
+        return "dual-panel-bilevel"
+    if int(brief.get("side_head", 0)) > 0:
+        return "stepwise-sidehead"
+    if int(brief.get("output_banner", 0)) > 0:
+        return "steps-stacked-banner"
+    if int(brief.get("focus_stage", 0)) > 0:
+        return "stage-blocks-l"
     if int(brief.get("support_blocks", 0)) > 0:
         return "main-chain-support"
     if int(brief.get("stages", 0)) >= 5 and brief.get("direction") == "vertical":
@@ -52,6 +64,28 @@ def choose_template(brief: dict) -> str:
 
 def vertex_style(role: str) -> str:
     fill, stroke = ROLE_STYLES.get(role, ROLE_STYLES["process"])
+    # 所有带文字节点必须包含中文字体与自动换行，保证静态校验一致
+    base = f"whiteSpace=wrap;html=1;fontFamily={FONT};"
+    if role == "action":
+        return (
+            f"rounded=1;arcSize=40;{base}fillColor={fill};strokeColor=none;"
+            "fontColor=#FFFFFF;fontStyle=1;fontSize=13;align=center;verticalAlign=middle;spacing=6;"
+        )
+    if role == "caption":
+        return (
+            f"text;{base}strokeColor=none;fillColor=none;"
+            "fontColor=#2B3138;fontStyle=1;fontSize=12;align=left;verticalAlign=middle;spacing=2;"
+        )
+    if role == "container":
+        return (
+            f"rounded=1;arcSize=6;{base}dashed=1;dashPattern=8 6;fillColor=none;"
+            f"strokeColor={stroke};strokeWidth=1.6;fontColor=#2B3138;fontSize=13;align=center;verticalAlign=middle;"
+        )
+    if role == "zone":
+        return (
+            f"rounded=0;{base}fillColor={fill};strokeColor=none;"
+            "fontColor=#2B3138;fontSize=12;align=center;verticalAlign=middle;"
+        )
     shape = "rhombus;" if role == "decision" else "rounded=1;arcSize=10;"
     return (
         f"{shape}whiteSpace=wrap;html=1;fillColor={fill};strokeColor={stroke};"
@@ -156,7 +190,11 @@ def validate_drawio(path: Path) -> list[str]:
     for index, (a_id, ax, ay, aw, ah) in enumerate(boxes):
         for b_id, bx, by, bw, bh in boxes[index + 1:]:
             if ax < bx + bw and ax + aw > bx and ay < by + bh and ay + ah > by:
-                errors.append(f"节点重叠: {a_id} 与 {b_id}")
+                # 完全嵌套（容器/分区包住内容节点）合法，仅部分相交或同尺寸重复框报错
+                a_contains_b = ax <= bx and ay <= by and ax + aw >= bx + bw and ay + ah >= by + bh and aw * ah > bw * bh
+                b_contains_a = bx <= ax and by <= ay and bx + bw >= ax + aw and by + bh >= ay + ah and bw * bh > aw * ah
+                if not (a_contains_b or b_contains_a):
+                    errors.append(f"节点重叠: {a_id} 与 {b_id}")
     return errors
 
 

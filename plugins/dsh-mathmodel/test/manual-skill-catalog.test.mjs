@@ -6,13 +6,13 @@ import { parseDocument } from 'yaml';
 import { CardRegistry } from '../lib/cards/registry.js';
 
 const names = [
-  'math-paper-cn', 'math-paper-huashu', 'grill-with-docs', 'ai-draw-skills', 'py-nature',
+  'math-paper-cn', 'math-paper-huashu', 'math-paper-huawei', 'grill-with-docs', 'ai-draw-skills', 'py-nature',
   'grill-ai-review', 'humanizer', 'research-writing-skill', 'claude-vision-skill', 'anti-autoresearch',
   'imagegen',
 ];
 const root = resolve(import.meta.dirname, '../../../.dsh/skills');
 
-test('十一项卡片 Skill 全部仅手动调用', async () => {
+test('十二项卡片 Skill 全部仅手动调用', async () => {
   for (const name of names) {
     const source = await readFile(resolve(root, name, 'SKILL.md'), 'utf8');
     const match = source.match(/^---\s*\r?\n([\s\S]*?)\r?\n---/);
@@ -22,7 +22,7 @@ test('十一项卡片 Skill 全部仅手动调用', async () => {
   }
 });
 
-test('手动卡片目录恰好发现十一项 Skill', async () => {
+test('手动卡片目录恰好发现十二项 Skill', async () => {
   const cards = await new CardRegistry(root).list();
   assert.deepEqual(cards.map((card) => card.skill), [...names].sort((a, b) => a.localeCompare(b)));
 });

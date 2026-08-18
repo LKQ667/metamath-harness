@@ -1,0 +1,92 @@
+TEMPLATE_REGISTRY = {
+    "causal_effects_line_template": {
+        "task_family": "comparison",
+        "chart_family": "multi_line",
+        "description": "直接因果效应多方法折线模板",
+        "tags": ["comparison", "causal", "multi-line"],
+    },
+    "trend_confidence_template": {
+        "task_family": "evolution",
+        "chart_family": "line_band",
+        "description": "趋势演化与置信带模板",
+        "tags": ["evolution", "trend", "confidence"],
+    },
+    "sensitivity_tornado_template": {
+        "task_family": "sensitivity",
+        "chart_family": "tornado",
+        "description": "敏感性 tornado 模板",
+        "tags": ["sensitivity", "tornado"],
+    },
+    "sensitivity_sobol_heatmap_template": {
+        "task_family": "sensitivity",
+        "chart_family": "heatmap",
+        "description": "Sobol 热图模板",
+        "tags": ["sensitivity", "heatmap", "sobol"],
+    },
+    "optimization_pareto_template": {
+        "task_family": "optimization",
+        "chart_family": "pareto",
+        "description": "Pareto 前沿模板",
+        "tags": ["optimization", "pareto"],
+    },
+    "optimization_convergence_template": {
+        "task_family": "optimization",
+        "chart_family": "line_band",
+        "description": "优化收敛模板",
+        "tags": ["optimization", "convergence", "line-band"],
+    },
+    "network_resilience_template": {
+        "task_family": "network",
+        "chart_family": "network_curve",
+        "description": "网络鲁棒性模板",
+        "tags": ["network", "resilience", "multi-panel"],
+    },
+    "network_curvature_multiscale_template": {
+        "task_family": "network",
+        "chart_family": "network_curvature_multiscale",
+        "description": "网络曲率与多尺度社区模板",
+        "tags": ["network", "curvature", "multiscale"],
+    },
+    "dynamics_phase_portrait_template": {
+        "task_family": "dynamics",
+        "chart_family": "phase_portrait",
+        "description": "动力学相图模板",
+        "tags": ["dynamics", "phase-portrait"],
+    },
+    "spatial_contour_flow_template": {
+        "task_family": "spatial",
+        "chart_family": "contour_quiver",
+        "description": "空间等值线与流向模板",
+        "tags": ["spatial", "contour", "quiver"],
+    },
+    "spatiotemporal_chronological_network_template": {
+        "task_family": "spatiotemporal",
+        "chart_family": "chronological_network",
+        "description": "时空 Chronnet 网络模板",
+        "tags": ["spatiotemporal", "network", "chronological"],
+    },
+    "stats_interval_lollipop_template": {
+        "task_family": "comparison",
+        "chart_family": "interval_lollipop",
+        "description": "区间图与棒棒糖排序模板",
+        "tags": ["comparison", "interval", "lollipop"],
+    },
+    "temporal_bursty_activity_template": {
+        "task_family": "temporal",
+        "chart_family": "bursty_activity",
+        "description": "时间网络突发活动模板",
+        "tags": ["temporal", "burst", "distribution"],
+    },
+    "multi_panel_hero_support_template": {
+        "task_family": "mechanism",
+        "chart_family": "hero_support",
+        "description": "hero + supporting 多面板模板",
+        "tags": ["multi-panel", "hero-support", "mechanism"],
+    },
+    "python_flowchart_topdown": {
+        "task_family": "flowchart",
+        "chart_family": "flowchart",
+        "description": "技术路线图与流程图模板",
+        "tags": ["flowchart", "roadmap", "process"],
+    },
+}

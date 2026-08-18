@@ -1,6 +1,6 @@
 # DeepSeek Harness Mathmodel 插件
 
-这是 DeepSeek Harness `0.1.0-rc.6` 专用的外置数学建模插件。它在不改官方安装包和 `node_modules` 的前提下，增加 `mathmodel` 模式、十张手动 Skill 卡片、右上角可收缩技能说明、依赖预检、视觉理解和受控生图工具。
+这是 DeepSeek Harness `0.1.0-rc.7` 专用的外置数学建模插件。它在不改官方安装包和 `node_modules` 的前提下，增加 `mathmodel` 模式、十张手动 Skill 卡片、右上角可收缩技能说明、依赖预检、视觉理解和受控生图工具。
 
 卡片点击“确定”只把结构化 Prompt 写入输入框，不会发送消息。用户可以继续编辑，并自行决定何时发送。
 
@@ -176,4 +176,4 @@ npm test
 
 ## 兼容性
 
-当前仅支持 DeepSeek Harness `0.1.0-rc.6` 和 Node.js 22 及以上。版本门是有意的失败关闭策略：升级官方 Harness 后，应先针对 Remote、Slot、Input Trigger、Conversation 和 Preset 行为完成回归，再更新兼容版本。
+当前仅支持 DeepSeek Harness `0.1.0-rc.7` 和 Node.js 22 及以上。版本门是有意的失败关闭策略：升级官方 Harness 后，应先针对 Remote、Slot、Input Trigger、Conversation 和 Preset 行为完成回归，再更新兼容版本。

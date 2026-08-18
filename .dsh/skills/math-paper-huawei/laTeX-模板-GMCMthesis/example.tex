@@ -1,0 +1,346 @@
+% !Mode:: "TeX:UTF-8"
+%!TEX program  = xelatex
+
+%\documentclass[bwprint,fontset=windows]{gmcmthesis}
+\documentclass[bwprint]{gmcmthesis}
+
+\hypersetup{hidelinks, allcolors=black}
+\usepackage[framemethod=TikZ]{mdframed}
+
+%\usepackage{fontspec}  % for Consolas & Courier New
+%\lstset{basicstyle=\small\fontspec{Consolas}}
+%\lstset{basicstyle=\small\fontspec{Courier New}}
+%\setmonofont{Consolas}
+%\setcounter{tocdepth}{3}   % 调整目录深度
+
+\usepackage{subfig}
+\usepackage{siunitx}
+
+\usepackage{colortbl}
+\definecolor{color1}{rgb}{0.78,0.88,0.99}
+\definecolor{color2}{rgb}{0.36,0.62,0.84}
+%\definecolor{color3}{rgb}{0.8235,0.8706,0.9373}
+\definecolor{color3}{rgb}{0.88,0.92,0.96}
+\definecolor{color4}{rgb}{0.96,0.97,0.98}%{0.9176,0.9373,0.9686}
+
+% 算法
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithmicx,algorithm}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+%\numberwithin{equation}{section}
+%\numberwithin{figure}{section}
+%\numberwithin{table}{section}
+
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+
+
+%===================== 建模论文题目 ======================
+
+\title{全国研究生数学建模竞赛论文标题}
+\baominghao{\hspace{6em} 20260900001} %参赛队号
+\schoolname{\hspace{5.8em} 学校名称填写} %学校名称
+\membera{\hspace{6em} 成员A} %队员A
+\memberb{\hspace{6em} 成员B} %队员B
+\memberc{\hspace{6em} 成员C} %队员C
+
+%=======================================================
+
+
+\begin{document}
+
+%生成标题
+\maketitle
+
+%填写摘要
+\begin{abstract}
+信道接入机制对无线局域网吞吐有重要影响。本文推广 Bianchi 模型，考虑隐藏终端、暴露终端和自然丢包等复杂场景，得到统一的单节点和网络整体吞吐模型，并比较了不同场景下 RTS/CTS 机制对系统吞吐的影响。为此，本文基于 MATLAB 编写离散事件仿真器，模拟 WLAN 中各节点采用二进制退避算法的分布式信道接入过程，可视化展示各节点的退避、等待、传输、冲突和超时重传状态，可推广至任意复杂场景。
+
+\textbf{针对问题一}中 2 BSS 互听且干扰的网络场景，本文首先对 Bianchi 模型进行了推广，考虑了节点的最大重传次数，得到了理论冲突概率$p$为 10.46\%。通过仿真得到的冲突概率为 11.03\%，与理论值相差 0.57\%，符合实验预期。同时得到了理论吞吐量 67.1744 Mbps，仿真吞吐量 65.4638 Mbps，仿真值与理论值相差 2.55\%。此外，我们分析了不同物理层速率、不同数据成功传输概率下 RTS/CTS 机制对理论吞吐的影响。
+
+\textbf{针对问题二}中 2 BSS 互听但不干扰的网络场景，将其抽象为暴露终端问题。本文推广得到可以适应暴露终端、隐藏终端、自然丢包等复杂网络场景的统一系统吞吐计算模型。本文将问题二的参数代入该模型，验证了在暴露终端场景下，该模型的正确性。此外，本文说明了在这种场景下，RTS/CTS 机制总会使得系统理论吞吐下降。
+
+\textbf{针对问题三}中 2 BSS 不互听、有干扰且系统存在丢包的场景，本文考虑了自然丢包和隐藏终端的影响，定义了脆弱时隙的概念，根据统一系统吞吐计算模型得到各参数下系统理论吞吐量与仿真吞吐量，误差平均在 5\%以内。此外，本文通过理论分析证实了在此场景下，RTS/CTS 机制可以有效提升系统理论吞吐。
+
+\textbf{针对问题四}中 3 BSS 的网络场景，根据本文提出的统一单节点的吞吐模型，明确了网络中每个节点的互听节点和干扰节点，并对每个节点的碰撞概率和吞吐进行分析，得到了此场景下系统理论吞吐量与仿真吞吐量的误差在 5\%左右。
+
+综上，本文统一吞吐模型在四种典型 WLAN 场景下理论与仿真误差均在 5\%左右，能准确刻画 RTS/CTS 机制的吞吐效应，为网络优化提供可靠依据。
+
+\keywords{WLAN\quad 马尔科夫链模型\quad RTS/CTS\quad 隐藏终端\quad 暴露终端}
+
+\end{abstract}
+
+\pagestyle{plain}
+
+%目录 不推荐加
+\maketoc
+
+\clearpage
+
+\section{问题重述}
+
+\subsection{问题背景}
+在此处描述问题的实际背景与研究意义……
+
+\subsection{问题提出}
+在此处明确列出赛题提出的具体问题与要求……
+
+\clearpage
+\section{模型假设与符号说明}
+
+\subsection{模型假设}
+\begin{enumerate}
+\item 假设条件一……
+\item 假设条件二……
+\item 假设条件三……
+\end{enumerate}
+
+\subsection{符号说明}
+\begin{table}[htp!]
+\centering
+\renewcommand\arraystretch{1.2}
+\newcolumntype{L}{>{\quad}X}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\begin{tabularx}{0.9\textwidth}{|P{1cm}|L|}
+  \hline
+  符号    &   \quad 意义 \\
+  \hline
+  $ a $  &  符号1的意义    \\
+  \hline
+  $ b $  &  符号2的意义    \\
+  \hline
+  $ c $  &  符号3的意义    \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\clearpage
+\section{问题一模型建立与求解}
+
+\subsection{问题分析与优化模型建立}
+针对问题一，首先对问题进行深入分析，建立相应的优化模型……
+
+\subsection{方案设计}
+
+\subsubsection{对角矩阵拟合}
+采用对角矩阵拟合方法对数据进行预处理……
+
+\subsubsection{截尾奇异值分解拟合}
+利用截尾奇异值分解（TSVD）进行数值稳定拟合……
+
+\subsubsection{Cooley-Tukey 分解}
+应用 Cooley-Tukey 快速傅里叶变换算法加速计算……
+
+\subsubsection{改进 Winograd 分解}
+在 Winograd 最小乘法算法基础上进行改进，降低计算复杂度……
+
+\subsection{求解结果与分析}
+
+\subsubsection{拟合结果}
+给出各方法的拟合误差对比……
+
+\subsubsection{方案性能对比与分析}
+从精度、速度、稳定性三个维度综合评价各方案……
+
+\subsection{$\beta$ 放置位置影响}
+讨论参数 $\beta$ 不同取值对模型输出的影响……
+
+\clearpage
+\section{问题二模型建立与求解}
+
+\subsection{问题分析与优化模型建立}
+针对问题二，建立相应的多目标优化模型……
+
+\subsection{方案设计与求解结果}
+
+\subsubsection{直接整数映射}
+将连续变量直接离散化为整数映射方案……
+
+\subsubsection{基于奇异值分解的整数映射}
+利用 SVD 分解构造更优的整数近似映射……
+
+\subsection{方案性能对比与分析}
+比较两种整数映射方案的优劣……
+
+\clearpage
+\section{问题三模型建立与求解}
+
+\subsection{问题分析与优化模型建立}
+针对问题三，建立混合整数规划模型……
+
+\subsection{方案设计}
+
+\subsubsection{整数映射算法}
+设计高效的整数映射启发式算法……
+
+\subsubsection{遗传算法}
+采用遗传算法对大规模问题进行全局寻优……
+
+\subsection{求解结果与分析}
+
+\subsubsection{拟合结果}
+给出遗传算法迭代收敛曲线……
+
+\subsubsection{方案性能对比与分析}
+对比精确算法与启发式算法的性能差异……
+
+\clearpage
+\section{问题四模型建立与求解}
+
+\subsection{问题分析与优化模型建立}
+针对问题四，建立动态优化模型……
+
+\subsection{方案设计与求解结果}
+给出问题四的完整求解方案与数值结果……
+
+\clearpage
+\section{问题五模型建立与求解}
+
+\subsection{问题分析与优化模型建立}
+针对问题五，建立鲁棒优化模型……
+
+\subsection{求解结果}
+给出问题五的求解结果与敏感性分析……
+
+\clearpage
+\section{模型总结与评价}
+
+\subsection{模型优点}
+本文所建模型具有以下优点：……
+
+\subsection{模型缺点}
+模型的局限性主要体现在：……
+
+\subsection{展望}
+未来可从以下方向进一步改进：……
+
+\clearpage
+%参考文献
+\begin{thebibliography}{9}
+\bibitem{ref1} Bianchi G. Performance analysis of the IEEE 802.11 distributed coordination function[J]. IEEE Journal on Selected Areas in Communications, 2000, 18(3): 535-547.
+
+\bibitem{ref2} IEEE. IEEE Standard for Information Technology--Telecommunications and Information Exchange between Systems--Local and Metropolitan Area Networks--Specific Requirements--Part 11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Specifications: IEEE Std 802.11-2012[S]. New York: IEEE, 2012.
+
+\bibitem{ref3} Ziouche K, Guitouni A. A survey of MAC layer fairness in wireless LANs[C]//Proceedings of the 2008 International Conference on Wireless Communications and Mobile Computing. New York: ACM, 2008: 1057-1062.
+
+\bibitem{ref4} Chatzimisios P, Boucouvalas A C, Vitsas V. IEEE 802.11 packet delay--a finite retry limit analysis[C]//Proceedings of IEEE Global Telecommunications Conference (GLOBECOM'03). Piscataway: IEEE, 2003: 950-954.
+
+\bibitem{ref5} Tay Y C, Chua K C. A capacity analysis for the IEEE 802.11 MAC protocol[J]. Wireless Networks, 2001, 7(2): 159-171.
+\end{thebibliography}
+
+\clearpage
+%附录
+\begin{appendices}
+%\setcounter{page}{1} %如果需要可以自行重置页码。
+
+\clearpage
+\section{问题X附录} %不一定放代码，大概率是放实验结果、数据，具体按照题目要求
+\vspace{-2ex}
+\begin{Matlab}{code.m}
+clear all
+kk=2;
+[mdd,ndd]=size(dd);
+while ~isempty(V)
+    [tmpd,j]=min(W(i,V));
+    tmpj=V(j);
+    for k=2:ndd
+        [tmp1,jj]=min(dd(1,k)+W(dd(2,k),V));
+        tmp2=V(jj);
+        tt(k-1,:)=[tmp1,tmp2,jj];
+    end
+    tmp=[tmpd,tmpj,j;tt];
+    [tmp3,tmp4]=min(tmp(:,1));
+    if tmp3==tmpd,
+        ss(1:2,kk)=[i;tmp(tmp4,2)];
+    else
+        tmp5=find(ss(:,tmp4)~=0);
+        tmp6=length(tmp5);
+        if dd(2,tmp4)==ss(tmp6,tmp4)
+            ss(1:tmp6+1,kk)=[ss(tmp5,tmp4);tmp(tmp4,2)];
+        else, ss(1:3,kk)=[i;dd(2,tmp4);tmp(tmp4,2)];
+        end
+    end
+    dd=[dd,[tmp3;tmp(tmp4,2)]];
+    V(tmp(tmp4,3))=[];
+    [mdd,ndd]=size(dd);kk=kk+1;
+end;
+S=ss; D=dd(1,:);
+\end{Matlab}
+\vspace{2ex}
+
+\clearpage
+\section{问题X附录} %不一定放代码，大概率是放实验结果、数据，具体按照题目要求
+\vspace{-2ex}
+\begin{Python}{mip1.py}
+# This example formulates and solves the following simple MIP model:
+#  maximize
+#        x +   y + 2 z
+#  subject to
+#        x + 2 y + 3 z <= 4
+#        x +   y       >= 1
+#        x, y, z binary
+
+# import gurobipy as gp
+from gurobipy import * #GRB
+try:
+    # Create a new model
+    m = Model("mip1")
+    # Create variables
+    x = m.addVar(vtype=GRB.BINARY, name="x")
+    y = m.addVar(vtype=GRB.BINARY, name="y")
+    z = m.addVar(vtype=GRB.BINARY, name="z")
+    # Set objective
+    m.setObjective(x + y + 2 * z, GRB.MAXIMIZE)
+    # Add constraint: x + 2 y + 3 z <= 4
+    m.addConstr(x + 2 * y + 3 * z <= 4, "c0")
+    # Add constraint: x + y >= 1
+    m.addConstr(x + y >= 1, "c1")
+    # Optimize model
+    m.optimize()
+    for v in m.getVars():
+        print('%s %g' % (v.varName, v.x))
+    print('Obj: %g' % m.objVal)
+
+except GurobiError as e:
+    print('Error code ' + str(e.errno) + ': ' + str(e))
+
+except AttributeError:
+    print('Encountered an attribute error')
+\end{Python}
+
+\clearpage
+\section{主要实验代码}% 在此处粘贴问题 x 的实验代码,具体看题目要求，是否需要代码，由ai模型自己分析
+\vspace{-2ex} 
+\subsection{问题 2 代码}
+% 在此处粘贴问题 2 的实验代码
+\begin{Matlab}{question2.m}
+% Question 2 code placeholder
+\end{Matlab}
+
+\subsection{问题 3 代码}
+% 在此处粘贴问题 3 的实验代码
+\begin{Matlab}{question3.m}
+% Question 3 code placeholder
+\end{Matlab}
+
+\subsection{问题 4 代码}
+% 在此处粘贴问题 4 的实验代码
+\begin{Matlab}{question4.m}
+% Question 4 code placeholder
+\end{Matlab}
+
+\subsection{问题 5 代码}
+% 在此处粘贴问题 5 的实验代码
+\begin{Matlab}{question5.m}
+% Question 5 code placeholder
+\end{Matlab}
+
+\end{appendices}
+
+
+
+\end{document}

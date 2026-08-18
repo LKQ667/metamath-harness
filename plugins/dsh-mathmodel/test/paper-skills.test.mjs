@@ -7,7 +7,7 @@ import { CardRegistry } from '../lib/cards/registry.js';
 import { MathModelCardsRemote } from '../lib/cards/remote.js';
 
 const root = resolve(import.meta.dirname, '../../../.dsh/skills');
-const names = ['math-paper-cn', 'math-paper-huashu'];
+const names = ['math-paper-cn', 'math-paper-huashu', 'math-paper-huawei'];
 
 function frontmatter(source) {
   const match = source.match(/^---\s*\r?\n([\s\S]*?)\r?\n---/);

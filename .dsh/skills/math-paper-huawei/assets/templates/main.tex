@@ -1,0 +1,238 @@
+% !Mode:: "TeX:UTF-8"
+%!TEX program  = xelatex
+% ============================================================
+% 华为杯（中国研究生数学建模竞赛）论文内置模板基座（2026 年）
+% 版式由 gmcmthesis.cls 提供，本文件只负责内容组织与门禁标签。
+% 编译方式：XeLaTeX；编译前把 gmcmthesis.cls、gmcm.bst 复制到 论文/，
+% 并把 figures/logo.pdf、figures/title.pdf 复制到 论文/figures/。
+% 硬约束：封面由 \maketitle 生成；摘要与关键词必须全部位于第一页；
+% 禁止 \tableofcontents、\maketoc 与目录页；正文不超过 20 页、附录不超过 10 页。
+% ============================================================
+\documentclass[bwprint]{gmcmthesis}
+
+\hypersetup{hidelinks, allcolors=black}
+
+\usepackage{subfig}
+\usepackage{siunitx}
+
+% 算法
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithmicx,algorithm}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+% 引用以上标数字角标显示
+\makeatletter
+\def\@cite#1#2{\textsuperscript{[{#1\if@tempswa , #2\fi}]}}
+\makeatother
+
+%===================== 建模论文题目与封面信息 =====================
+
+\title{替换为实际赛题论文标题}
+\baominghao{\hspace{6em} 20260900001} %参赛队号
+\schoolname{\hspace{5.8em} 学校名称填写} %学校名称
+\membera{\hspace{6em} 成员A} %队员A
+\memberb{\hspace{6em} 成员B} %队员B
+\memberc{\hspace{6em} 成员C} %队员C
+
+%=======================================================
+
+\begin{document}
+\label{body:start}
+
+%生成封面（模板规定动作，不得删除）
+\maketitle
+
+% ============================================================
+% 第一页：摘要与关键词
+% 硬约束：摘要与关键词必须全部位于第一页，摘要有效文字不少于 800 字，
+% 建议 850–1050 字并尽量铺满；每次改写后必须编译确认 abstract:end 页码为 1，
+% 禁止缩字号、压行距或负间距规避门禁。
+% 以下摘要仅为文风和格式示例，请按实际赛题重写，保留“针对问题X”单独加粗
+% 与各问选择性加粗关键模型、结论的写法。
+% ============================================================
+\begin{abstract}
+信道接入机制对无线局域网吞吐有重要影响。本文推广 Bianchi 模型，考虑隐藏终端、暴露终端和自然丢包等复杂场景，得到统一的单节点和网络整体吞吐模型，并比较了不同场景下 RTS/CTS 机制对系统吞吐的影响。为此，本文基于 MATLAB 编写离散事件仿真器，模拟 WLAN 中各节点采用二进制退避算法的分布式信道接入过程，可视化展示各节点的退避、等待、传输、冲突和超时重传状态，可推广至任意复杂场景。
+
+\textbf{针对问题一}中 2 BSS 互听且干扰的网络场景，本文首先对 Bianchi 模型进行了推广，考虑了节点的最大重传次数，得到了理论冲突概率$p$为 10.46\%。通过仿真得到的冲突概率为 11.03\%，与理论值相差 0.57\%，符合实验预期。同时得到了理论吞吐量 67.1744 Mbps，仿真吞吐量 65.4638 Mbps，仿真值与理论值相差 2.55\%。此外，我们分析了不同物理层速率、不同数据成功传输概率下 RTS/CTS 机制对理论吞吐的影响。
+
+\textbf{针对问题二}中 2 BSS 互听但不干扰的网络场景，将其抽象为暴露终端问题。本文推广得到可以适应暴露终端、隐藏终端、自然丢包等复杂网络场景的统一系统吞吐计算模型。本文将问题二的参数代入该模型，验证了在暴露终端场景下，该模型的正确性。此外，本文说明了在这种场景下，RTS/CTS 机制总会使得系统理论吞吐下降。
+
+\textbf{针对问题三}中 2 BSS 不互听、有干扰且系统存在丢包的场景，本文考虑了自然丢包和隐藏终端的影响，定义了脆弱时隙的概念，根据统一系统吞吐计算模型得到各参数下系统理论吞吐量与仿真吞吐量，误差平均在 5\%以内。此外，本文通过理论分析证实了在此场景下，RTS/CTS 机制可以有效提升系统理论吞吐。
+
+\textbf{针对问题四}中 3 BSS 的网络场景，根据本文提出的统一单节点的吞吐模型，明确了网络中每个节点的互听节点和干扰节点，并对每个节点的碰撞概率和吞吐进行分析，得到了此场景下系统理论吞吐量与仿真吞吐量的误差在 5\%左右。
+
+综上，本文统一吞吐模型在四种典型 WLAN 场景下理论与仿真误差均在 5\%左右，能准确刻画 RTS/CTS 机制的吞吐效应，为网络优化提供可靠依据。
+
+\keywords{关键词一\quad 关键词二\quad 关键词三\quad 关键词四\quad 关键词五}\label{abstract:end}
+
+\end{abstract}
+
+\pagestyle{plain}
+
+% ============================================================
+% 正文：原则上不超过 20 页
+% 主结构：一、问题重述；二、模型假设与符号说明；随后按实际问数依次为
+% “问题一至问题 N 模型建立与求解”；最后“模型总结与评价”。
+% 禁止新增主章节，禁止生成目录。
+% ============================================================
+
+\section{问题重述}
+
+\subsection{问题背景}
+在此处用简洁语言重述赛题的实际背景、研究意义与任务来源，按实际信息密度组织段落，避免直接复制题面原文。
+
+\subsection{问题提出}
+在此处明确列出赛题提出的具体问题、输入数据、输出目标与约束条件。
+
+\section{模型假设与符号说明}
+
+\subsection{模型假设}
+\begin{enumerate}
+\item 在这里列出题目所需的关键假设，每条假设都应与题面、数据和模型需求相匹配。
+\item 若有简化处理，请说明简化原因与影响范围。
+\end{enumerate}
+
+\subsection{符号说明}
+\begin{table}[htp!]
+\centering
+\renewcommand\arraystretch{1.2}
+\newcolumntype{L}{>{\quad}X}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\begin{tabularx}{0.9\textwidth}{|P{1cm}|L|}
+  \hline
+  符号    &   \quad 意义 \\
+  \hline
+  $ a $  &  符号1的意义    \\
+  \hline
+  $ b $  &  符号2的意义    \\
+  \hline
+  $ c $  &  符号3的意义    \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\section{问题一模型建立与求解}
+
+\subsection{问题分析与模型建立}
+针对问题一，先说明符号定义、决策变量、目标函数与约束条件，再给出完整建模推导。请根据赛题具体问题具体分析，本节仅提供结构基座。
+
+\subsection{求解结果与分析}
+给出问题一的求解步骤、数值结果与解释；需要时插入结果图并紧跟简洁分析。
+
+\section{问题二模型建立与求解}
+
+\subsection{问题分析与模型建立}
+针对问题二，重点补充新增假设、模型修正项、约束变化以及与之匹配的求解策略。
+
+\subsection{求解结果与分析}
+给出问题二的求解结果、对比分析与图表解释。
+
+\section{问题三模型建立与求解}
+
+\subsection{问题分析与模型建立}
+针对问题三，若问题规模扩大，可说明模块划分、近似处理或分阶段求解思路。
+
+\subsection{算法流程}
+
+\begin{algorithm}[H]
+\caption{通用求解流程}
+\begin{algorithmic}[1]
+\Require 输入数据、模型参数
+\Ensure 最优方案、结果指标
+\State 读取并预处理数据
+\State 建立模型并定义目标函数
+\State 设置约束条件和参数范围
+\State 调用求解算法并输出结果
+\State 对结果进行验证和修正
+\State \Return 最终方案与统计指标
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{求解结果与分析}
+给出问题三的求解结果与灵敏度或对比分析。
+
+\section{问题四模型建立与求解}
+
+\subsection{问题分析与模型建立}
+针对问题四，说明多阶段决策、耦合关系、附加约束及整体协调求解方式。
+
+\subsection{求解结果与分析}
+给出问题四的完整求解方案、数值结果与验证。
+
+\section{模型总结与评价}
+
+\subsection{模型优点}
+本文所建模型的优点：物理意义清晰、结果可解释可复现、计算复杂度与精度取得平衡。
+
+\subsection{模型局限与改进}
+在此处列出当前模型的局限，并给出可行的下一步改进方向。
+
+% ============================================================
+% 参考文献（计入正文页数，按正文引用次序列出）
+% ============================================================
+\begin{thebibliography}{9}
+\bibitem{ref1} 作者. 参考文献题目[J]. 期刊名, 年份, 卷(期): 起止页码.
+\end{thebibliography}
+\label{body:end}
+
+% ============================================================
+% 附录（另起一页，不计入正文页数；不超过 10 页）
+% ============================================================
+\clearpage
+\label{appendix:start}
+\begin{appendices}
+
+\par\noindent\hspace{2em}支撑材料文件目录（以下均为模板占位，只填代码名称和重要 Excel 结果名称，不填路径；纯文件名可保留 .py、.xlsx 后缀；附录代码使用 \texttt{scripts/prepare\_appendix\_code.py} 生成并验证的净化副本）：\par
+
+\newcommand{\AppendixCodeName}[1]{待替换文件#1}
+
+\begin{itemize}[label={},leftmargin=1.9em,itemsep=0.25em,topsep=0.25em]
+    \item \textbf{\AppendixCodeName{1}}——附录程序说明1
+    \item \textbf{\AppendixCodeName{2}}——附录程序说明2
+    \item \textbf{\AppendixCodeName{3}}——附录程序说明3
+    \item \textbf{\AppendixCodeName{4}}——附录程序说明4
+    \item \textbf{\AppendixCodeName{5}}——附录程序说明5
+    \item \textbf{\AppendixCodeName{6}}——附录程序说明6
+    \item \textbf{\AppendixCodeName{7}}——附录程序说明7
+    \item \textbf{\AppendixCodeName{8}}——附录程序说明8
+\end{itemize}
+
+\section{附录代码文件}
+
+\subsection{\AppendixCodeName{1}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{2}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{3}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{4}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{5}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{6}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{7}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\subsection{\AppendixCodeName{8}}
+
+这里引用已通过等价回归的附录净化代码。
+
+\end{appendices}
+
+\end{document}

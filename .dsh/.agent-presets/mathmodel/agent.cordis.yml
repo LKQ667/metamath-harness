@@ -108,7 +108,7 @@
       config:
         provider: codex
         toolName: subagent_codex
-        enableRunInBackground: false
+        backgroundMode: one-shot
         maxDepth: provider-managed
     - id: tool-subagent-claude-code
       name: '@deepseek-ai/dsh-tool-subagent'
@@ -116,7 +116,7 @@
       config:
         provider: claude-code
         toolName: subagent_claude_code
-        enableRunInBackground: false
+        backgroundMode: one-shot
         maxDepth: provider-managed
     - id: workflow-worker-thread
       name: '@deepseek-ai/dsh-workflow-worker-thread'

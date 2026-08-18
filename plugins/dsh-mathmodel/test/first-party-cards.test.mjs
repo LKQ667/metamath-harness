@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { parseAndValidateCard, renderCardPrompt } from '../lib/index.js';
 
 const names = [
-  'math-paper-cn', 'math-paper-huashu', 'grill-with-docs', 'ai-draw-skills', 'py-nature',
+  'math-paper-cn', 'math-paper-huashu', 'math-paper-huawei', 'grill-with-docs', 'ai-draw-skills', 'py-nature',
   'grill-ai-review', 'humanizer', 'research-writing-skill', 'claude-vision-skill', 'anti-autoresearch',
   'imagegen',
 ];
@@ -27,7 +27,7 @@ function requiredFixture(card) {
   ]));
 }
 
-test('十一张手动卡片全部通过严格 schema 且目录同名', async () => {
+test('十二张手动卡片全部通过严格 schema 且目录同名', async () => {
   const cards = await loadCards();
   assert.deepEqual(cards.map((card) => card.skill), names);
   assert.ok(cards.every((card) => card.schema === 'dsh.mathmodel.card/v1'));
@@ -42,6 +42,9 @@ test('关键产品默认值符合需求', async () => {
   );
   assert.equal(defaults('math-paper-huashu').competition_language, '中文');
   assert.equal(defaults('math-paper-huashu').figure_total, 15);
+  assert.equal(defaults('math-paper-huawei').competition_language, '中文');
+  assert.equal(defaults('math-paper-huawei').figure_total, 15);
+  assert.equal(defaults('math-paper-huawei').body_pages, 16);
   assert.equal(defaults('grill-ai-review').panel_mode, '3名专项评委+1名主审');
   assert.equal(defaults('humanizer').output_mode, '只报告');
   assert.equal(defaults('ai-draw-skills').prompt_only, true);
@@ -62,7 +65,7 @@ test('所有必填字段均由渲染器执行失败关闭', async () => {
   }
 });
 
-test('十一张默认 Prompt 快照稳定', async () => {
+test('十二张默认 Prompt 快照稳定', async () => {
   for (const card of await loadCards()) {
     const prompt = renderCardPrompt(card, requiredFixture(card));
     const digest = createHash('sha256').update(prompt).digest('hex');

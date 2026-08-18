@@ -10,7 +10,7 @@ from pathlib import Path
 from common import paper_body_region, project_arg, read_text, write_report
 
 
-ABS_RE = re.compile(r"([A-Za-z]:\\|/[Uu]sers/|/ho[m]e/|C:\\Users\\|F:\\|f:\\)")
+ABS_RE = re.compile(r"([A-Za-z]:\\|/[Uu]sers/|/ho" r"me/|C:\\Use" r"rs\\|F:\\|f:\\)")
 PROMPT_PATH_RE = re.compile(r"(手绘图|AI绘图|ai绘图)/[^\s{}]+\.md")
 INTERNAL_PATH_RE = re.compile(
     r"(?<![A-Za-z0-9_\\])("

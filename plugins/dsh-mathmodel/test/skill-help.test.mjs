@@ -13,7 +13,7 @@ test('技能说明覆盖当前 skills 目录的每一个 Skill', async () => {
     .sort();
   const skills = await new SkillHelpCatalog(skillRoot).list();
   assert.deepEqual(skills.map((item) => item.skill), directories);
-  assert.ok(skills.length >= 16);
+  assert.ok(skills.length >= 17);
   assert.equal(new Set(skills.map((item) => item.skill)).size, skills.length);
   for (const skill of skills) {
     assert.ok(skill.title.length >= 2, `${skill.skill} 缺少通俗标题`);
@@ -31,4 +31,5 @@ test('当前 Skill 都有人工通俗说明', async () => {
   assert.match(summaries.imagegen, /生图模型/);
   assert.match(summaries['skill-installer'], /安装/);
   assert.match(summaries['yatai-cn'], /亚太杯/);
+  assert.match(summaries['math-paper-huawei'], /华为杯/);
 });

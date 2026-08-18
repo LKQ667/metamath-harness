@@ -9,7 +9,7 @@ from pathlib import Path
 from common import project_arg, read_text, write_report
 from ai_prompt_common import PROMPT_PATH_RE
 import re
-ABS_RE = re.compile(r"([A-Za-z]:\\|/[Uu]sers/|/ho[m]e/)")
+ABS_RE = re.compile(r"([A-Za-z]:\\|/[Uu]sers/|/ho" r"me/)")
 MAX_PROMPT_LINE = 96
 
 

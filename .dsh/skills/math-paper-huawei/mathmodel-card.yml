@@ -1,0 +1,85 @@
+schema: dsh.mathmodel.card/v1
+skill: math-paper-huawei
+title: 华为杯论文一键运行
+summary: 使用华为杯 GMCMthesis 模板持续完成建模、绘图、论文和最终 PDF。
+category: 一键论文
+fields:
+  - id: problem_path
+    label: 赛题或材料路径
+    type: path
+    required: true
+  - id: output_dir
+    label: 项目输出目录
+    type: path
+    required: true
+  - id: body_pages
+    label: 正文最低页数
+    type: number
+    default: 16
+    min: 16
+    max: 60
+  - id: competition_language
+    label: 赛事语言
+    type: select
+    default: 中文
+    options: [中文, 英文]
+  - id: drawing_mode
+    label: 非数据图绘制方式
+    type: select
+    default: Draw.io成图+AI概念提示词
+    options: [Draw.io成图+AI概念提示词, Draw.io成图, AI全自动绘图]
+  - id: bar_policy
+    label: 柱状图策略
+    type: select
+    default: 少用
+    options: [禁用, 少用, 正常]
+  - id: three_d_preference
+    label: 三维图偏好
+    type: select
+    default: 适合时建议
+    options: [适合时建议, 优先考虑, 不主动使用]
+  - id: figure_total
+    label: 全文图片总数
+    type: number
+    default: 15
+    min: 1
+    max: 40
+    description: 全文最终入文图片的目标总数，可按赛事要求自定义。
+  - id: reference_excellent_papers
+    label: 参考往届优秀论文完成度
+    type: boolean
+    default: false
+    description: 开启后以技能内置华为杯优秀论文_2023_2024 校准完成度，只读不抄。
+  - id: run_to_pdf
+    label: 全自动持续到最终 PDF
+    type: boolean
+    default: true
+  - id: ai_image_limit
+    label: AI 自动成图总上限
+    type: number
+    default: 0
+    min: 0
+    max: 20
+  - id: confirm_paid_calls
+    label: 已确认允许付费生图调用
+    type: boolean
+    default: false
+  - id: user_notes
+    label: 补充要求
+    type: text
+prompt:
+  objective: 按华为杯规范完成论文并交付最终 PDF
+  instructions:
+    - 严格使用华为杯 GMCMthesis 模板与既有门禁
+    - 已锁定卡片配置不得重复询问
+    - 论文正文、图题、图例、坐标轴与图内文字统一采用赛事语言字段选择的中文或英文
+    - 所有入文图片按所选语言达到顶刊一区 Top 1 的信息密度、排版、配色与可读性标准
+    - 全文图片总数以 figure_total 为统一目标，不再按每问平均分配；按各问信息量动态配置且禁止重复凑图
+    - 默认持续自主推进到可验收 PDF
+    - 未授权付费调用时只生成 AI 绘图提示词
+help:
+  purpose: 面向华为杯（中国研究生数学建模竞赛）的一键论文交付。
+  inputs: [赛题与数据, 输出目录, 篇幅和绘图策略]
+  outputs: [华为杯模板论文, 可复现代码与图表, 最终PDF]
+  limits: [不编造数据, 不绕过官方模板, 不自动产生未授权费用]
+  dependencies: [Python科学计算包, XeLaTeX与latexmk, Draw.io, Poppler]

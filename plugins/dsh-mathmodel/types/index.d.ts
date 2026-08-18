@@ -1,5 +1,5 @@
 export declare const name = "dsh-mathmodel";
-export declare const SUPPORTED_DSH_VERSION = "0.1.0-rc.6";
+export declare const SUPPORTED_DSH_VERSION = "0.1.0-rc.7";
 export declare function detectHarnessVersion(requireFrom?: string | URL): string | null;
 export declare function assertCompatibleHarnessVersion(version?: string | null): string;
 export declare function apply(): void;
