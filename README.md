@@ -122,7 +122,10 @@ Python 3、TeX Live（XeLaTeX）、Draw.io、Poppler——用于论文与绘图�
 
 ## 订阅登录（ChatGPT / Claude / Grok）
 
-内置第三方插件 [dsh-plugin-subscriptions](https://github.com/V1ki/dsh-plugin-subscriptions)（npm `0.3.1`，MIT）：在 Web 设置 → 订阅页用 OAuth 登录订阅账号即可作为模型 provider，无需 API Key；登录令牌保存在本机 `~/.dsh/plugins/subscriptions/auth.json`（0600 权限，自动刷新），不进入仓库或归档。默认启用 Claude 与 Grok 路由；ChatGPT (Codex) 路由因其 `image_generate` 工具与本项目 API 生图工具重名而默认关闭，如需启用请先处理工具重名（见项目内 README 3.3a 节说明）。
+内置两个第三方 OAuth 插件，在 Web 设置 → 订阅页登录订阅账号即可作为 provider，无需 API Key；令牌只保存在本机（0600 权限，自动刷新），不进入仓库或归档：
+
+- [dsh-plugin-subscriptions](https://github.com/V1ki/dsh-plugin-subscriptions)（npm `0.3.1`，MIT）：默认启用 Claude 与 Grok 聊天路由；
+- [dsh-llm-oauth](https://github.com/ziyou979/dsh-llm-oauth)：提供 OpenAI Codex（ChatGPT）登录，目录限定 `openai-codex`；配合 `dsh-mathmodel` 新增的"ChatGPT 订阅"生图连接（`codex-subscription` 模板 + `codex-images` 适配器），token 自动预刷新、统一连接管理 UI、无外部网关。该连接走 ChatGPT 订阅 Codex 生图端点（非官方支持端点，存在账号限制风险）。
 
 ## 便携版（免安装包）
 
