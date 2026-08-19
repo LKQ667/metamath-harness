@@ -687,6 +687,7 @@ pnpm link F:\DeepSeekHarness\plugins\dsh-mathmodel
 - 验证：插件 `npm run check` 通过；`npm test` **130/130 全绿**（新增 grok 单测 10 项：会话解析、刷新协议、describe 无秘密、模板校验、适配器请求头/b64/url 双格式/count/参考图拒绝/401 强刷后授权头逐次断言）；真实 API E2E 验证通过（凭据解析 → 图片生成全链路）；服务 3080 重启后加载新插件，HTTP 200。
 - 回滚：删除新增两文件并按 git/备份恢复其余 7 文件后 `npm run build && npm test`；README 按本记录反向恢复。
 - 后续：在 Settings → 订阅页完成 Grok 登录后，即可在生图模型区新建"Grok 订阅"连接使用。
+- 发布：metamath-private-release 流程——staging 全量同步本地最新（37 文件）+ 预检修复 12 处误报源（README 4 处本机路径规范化、3 份 auto-checklist 与 9 个检查脚本正则改字符类写法、2 个测试 fixture 缩短假 token）后预检 clean（765 文件零 findings）；LF 归一化比对识别真实差异 33 个（新增 2 + 修改 31，含 GOAL-43/44 未发布改动），git data API 单提交 `1f7e122` 推送；补推 README 恢复"许可 + 捐赠支持"章节（历史重写中丢失，收款码需内嵌展示）commit `c9c88b9`；回读核验 public、864 blobs 零差异、收款码内嵌；插件 `npm test` 修复后 130/130 复验全绿；桌面快捷方式链验证（.lnk → 启动脚本 → PATH dsh → 全局包 0.1.0-rc.7）。
 
 ## 5. 日常启动与验证
 
