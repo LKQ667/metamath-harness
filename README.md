@@ -880,3 +880,15 @@ Get-ChildItem $localPaths -File -Recurse |
 ## 10. 当前维护结论
 
 当前 `mathmodel` 改造与官方 DeepSeek Harness 保持外置隔离：官方包和官方 Preset未被修改，本地逻辑集中在插件、用户 Preset、目标 Skill 和 Web Profile 最小接线中。后续官方升级应以“新版官方环境优先、本地插件重新适配”为原则，绝不能用旧官方文件覆盖新版。
+
+## 11. 许可
+
+`plugins/dsh-mathmodel` 为 MIT；其余配置与脚本基于 DeepSeek Harness 插件范式编写，仅供学习与研究使用。
+
+## 12. 捐赠支持
+
+如果本项目对你有帮助，欢迎请作者喝杯咖啡：
+
+| 支付宝 | 微信 |
+|:---:|:---:|
+| ![](donate-alipay.jpg) | ![](donate-wechat.jpg) |
