@@ -123,6 +123,8 @@ disable-model-invocation: true
 
 初始化后只使用项目内入口：每完成一个阶段运行 `python "<项目根目录>/scripts/checks/run_stage_gate.py" --project "<项目根目录>" --stage stepN`。退出码非 0 时只允许修复失败项并重跑当前阶段；不得开始下一阶段、直接编译最终 PDF、伪造状态或用口头说明替代通过。运行器会校验前序报告、状态、输入指纹和启动器完整性。
 
+门禁失败时运行器会在报告同目录生成 `failures_summary.json`（step0–step4 位于 `检查结果/stepN/`，step5 位于 `检查结果/`），并在失败输出 JSON 中给出该清单路径；该清单聚合本阶段全部失败检查、错误码与修复提示。重跑前必须一次性完整读取该清单，并在同一回合内修复全部失败项后重跑门禁；禁止只读取报告片段、只修复部分失败项或凭记忆中的旧清单行动。门禁通过后该清单会被自动清理。
+
 step5 运行全部注册检查并生成 `检查结果/check_report.json`、`check_report.md` 与 `delivery_attestation.json`。最终回复或交付文件前，必须再运行只读命令 `python "<项目根目录>/scripts/checks/verify_delivery.py" --project "<项目根目录>"`；仅当退出码为 0 且输出 `ok: true` 时才能声称完成。报告、凭证或项目状态缺失一律视为失败。
 
 门禁覆盖 LaTeX 环境、阶段契约、唯一结果源、结果一致性、代码目录分区、摘要、图片、绘图模式、Python 数据图、技术路线图、Q 目录、模板、论文结构、页数、留白、附录代码、三轮自查、路径、数据来源和最终交付评分卡。

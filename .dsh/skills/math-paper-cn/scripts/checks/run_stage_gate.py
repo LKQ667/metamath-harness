@@ -288,6 +288,34 @@ def run_one_stage(project: Path, stage: str, state: dict) -> bool:
     (report_dir / summary_name).write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     summary_path = report_dir / summary_name
     write_markdown(report_dir / markdown_name, stage, results, ok)
+    # 门禁失败时聚合全部失败项到单一清单，供单回合一次性读取并修复；通过时清理陈旧清单防止误读。
+    failures_path = report_dir / "failures_summary.json"
+    if ok:
+        failures_path.unlink(missing_ok=True)
+    else:
+        failed_checks = []
+        total_failures = 0
+        for item in results:
+            if item.get("ok") is True:
+                continue
+            issues = list(item.get("issues") or [])
+            errors = list(item.get("errors") or [])
+            total_failures += len(issues) if issues else len(errors)
+            failed_checks.append({"check": item.get("check", "unknown"), "errors": errors, "issues": issues})
+        failures_path.write_text(
+            json.dumps(
+                {
+                    "stage": stage,
+                    "generated_at": utc_now(),
+                    "failed_check_count": len(failed_checks),
+                    "total_failure_count": total_failures,
+                    "failed_checks": failed_checks,
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
     record = state.setdefault("stages", {}).setdefault(stage, {})
     environment = next((item for item in results if item.get("check") == "check_latex_environment"), None)
     if environment and environment.get("ok") is True and environment.get("details", {}).get("source"):
@@ -456,7 +484,12 @@ def run_through(project: Path, target: str) -> int:
         if not run_one_stage(project, stage, state):
             state["status"] = "failed" if target == "step5" else "in_progress"
             save_state(project, state)
-            print(json.dumps({"ok": False, "failed_stage": stage}, ensure_ascii=False, indent=2))
+            failures_rel = (
+                Path("检查结果") / "failures_summary.json"
+                if stage == "step5"
+                else Path("检查结果") / stage / "failures_summary.json"
+            ).as_posix()
+            print(json.dumps({"ok": False, "failed_stage": stage, "failures_summary": failures_rel}, ensure_ascii=False, indent=2))
             return 1
     if target == "step5":
         state["status"] = "completed"

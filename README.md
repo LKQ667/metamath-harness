@@ -4,6 +4,7 @@
 
 ## 最近更新（2026-08-19）
 
+- **全自动论文流程提速：Goal 全程静默 + 门禁失败单回合闭环**：三张论文卡片开启"全自动持续到最终 PDF"后，Goal 存续期间每回合只回"…"不再写中期报告；阶段门禁失败时自动生成 `failures_summary.json` 失败清单，要求一次性读全并单回合修完再重跑，杜绝逐项拉锯。
 - **新增 Grok 订阅生图连接**（第六类生图连接 `grok-subscription`）：走 xAI 官方 Images API（`grok-imagine-image` 系列模型），复用 Grok 订阅登录，无需 API Key；订阅页完成 Grok 登录后，生图模型区新建"Grok 订阅"连接即可用。
 - **修复数学建模全自动流程概率不触发 Goal 的问题**：三张论文卡片（math-paper-cn / huashu / huawei）开启"全自动持续到最终 PDF"时，会在执行要求首条注入 Goal 激活指令。
 - **Grok 订阅模型上下文窗口改为 xAI 官方实测值**：7 个模型逐一取自 `api.x.ai/v1/models` 官方返回（1M / 500k / 256k），不再回退默认 256k。

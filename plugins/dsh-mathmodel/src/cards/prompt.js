@@ -46,8 +46,9 @@ export function renderCardPrompt(card, submitted = {}) {
       ? '柱状图策略为“少用”：仅在 manifest 同源条目具有完整 bar_exception 时允许柱形图。'
       : '';
   // run_to_pdf 卡片把 Goal 激活指令提升到用户消息正文首条，避免依赖模型自觉读取 Skill 文档导致概率不触发。
+  // Goal 存续期间三条铁规：静默收尾（仅“…”）、门禁单回合闭环修复、禁用 Goal 写工具（续轮调用必被 harness 拒绝）。
   const goalInstruction = values.run_to_pdf === true
-    ? '首轮动作：先调用 get_goal 检查当前会话 Goal；当前会话无 Goal 时立即调用 create_goal，objective 固定为“持续完成本数学建模论文项目并交付通过全部门禁的最终 PDF”；已有同一目标的 Goal 则直接继续推进，禁止覆盖无关 Goal'
+    ? '首轮动作：先调用 get_goal；当前会话无 Goal 立即调用 create_goal，objective 固定为“持续完成本数学建模论文项目并交付通过全部门禁的最终 PDF”；已有同目标 Goal 直接继续推进，禁止覆盖无关 Goal。Goal 存续期间铁规：(1) 禁止调用 update_goal 等 Goal 写工具，续轮调用必然被 harness 拒绝，Goal 由 harness 自动续期；(2) 每回合收尾仅输出“…”，禁止中期报告、总结或进展说明，阶段状态只写入项目文件留痕；(3) 门禁退出码非 0 时，先完整读取该阶段 failures_summary.json 清单，同一回合内修复全部失败项再重跑，直至退出码为 0 才允许收尾；(4) 仅两种情况允许输出完整文本：verify_delivery.py 输出 ok: true 后的唯一一次交付报告（此后续轮仅回“…”），或触发数据缺失/矛盾强制报告条款时的阻塞报告'
     : '';
   const instructions = [
     ...(goalInstruction ? [goalInstruction] : []),
