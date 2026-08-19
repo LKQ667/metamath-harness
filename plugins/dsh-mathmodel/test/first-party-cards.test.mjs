@@ -44,7 +44,7 @@ test('关键产品默认值符合需求', async () => {
   assert.equal(defaults('math-paper-huashu').figure_total, 15);
   assert.equal(defaults('math-paper-huawei').competition_language, '中文');
   assert.equal(defaults('math-paper-huawei').figure_total, 15);
-  assert.equal(defaults('math-paper-huawei').body_pages, 16);
+  assert.equal(defaults('math-paper-huawei').body_pages, 26);
   assert.equal(defaults('grill-ai-review').panel_mode, '3名专项评委+1名主审');
   assert.equal(defaults('humanizer').output_mode, '只报告');
   assert.equal(defaults('ai-draw-skills').prompt_only, true);
@@ -73,4 +73,21 @@ test('十二张默认 Prompt 快照稳定', async () => {
     assert.match(prompt, new RegExp(`^/${card.skill}`));
     assert.match(prompt, /dsh\.mathmodel\.request\/v1/);
   }
+});
+
+test('run_to_pdf 卡片把 Goal 激活指令置于执行要求首条', async () => {
+  const cards = new Map((await loadCards()).map((card) => [card.skill, card]));
+  for (const name of ['math-paper-cn', 'math-paper-huashu', 'math-paper-huawei']) {
+    const prompt = renderCardPrompt(cards.get(name), requiredFixture(cards.get(name)));
+    assert.match(prompt, /首轮动作：先调用 get_goal/, name);
+    assert.match(prompt, /create_goal/, name);
+    const firstBullet = prompt.split('执行要求：\n')[1].split('\n')[0];
+    assert.match(firstBullet, /^- 首轮动作：先调用 get_goal/, name);
+  }
+  // 关闭 run_to_pdf 时不注入
+  const off = renderCardPrompt(cards.get('math-paper-cn'), { ...requiredFixture(cards.get('math-paper-cn')), run_to_pdf: false });
+  assert.ok(!off.includes('get_goal'));
+  // 无该字段的卡片不受影响
+  const plain = renderCardPrompt(cards.get('py-nature'), requiredFixture(cards.get('py-nature')));
+  assert.ok(!plain.includes('get_goal'));
 });

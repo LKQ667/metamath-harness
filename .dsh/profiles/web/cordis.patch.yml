@@ -33,6 +33,40 @@
     providers:
       - claude
       - grok
+    # Grok 模型目录覆盖：contextWindow 均为 xAI 官方值（api.x.ai/v1/models
+    # 实测返回的 context_length 字段，2026-08-19 核验）。本机网络无法访问
+    # cli-chat-proxy.grok.com（自动发现 ECONNRESET），未覆盖时全部模型回退
+    # 默认 256k 窗口；配置 models.grok 后插件关闭自动发现，直接采用以下目录。
+    models:
+      grok:
+        - id: grok-4.6
+          name: Grok 4.6
+          contextWindow: 500000
+          inputModalities: [text, image]
+        - id: grok-4.5
+          name: Grok 4.5
+          contextWindow: 500000
+          inputModalities: [text, image]
+        - id: grok-4.3
+          name: Grok 4.3
+          contextWindow: 1000000
+          inputModalities: [text, image]
+        - id: grok-4.20-0309-reasoning
+          name: Grok 4.20 Reasoning
+          contextWindow: 1000000
+          inputModalities: [text, image]
+        - id: grok-4.20-0309-non-reasoning
+          name: Grok 4.20 Non-Reasoning
+          contextWindow: 1000000
+          inputModalities: [text, image]
+        - id: grok-4.20-multi-agent-0309
+          name: Grok 4.20 Multi-Agent
+          contextWindow: 1000000
+          inputModalities: [text, image]
+        - id: grok-build-0.1
+          name: Grok Build 0.1 (Code Fast)
+          contextWindow: 256000
+          inputModalities: [text, image]
 
 # ChatGPT/Codex 订阅 OAuth 登录插件（ziyou979/dsh-llm-oauth，bundle 层自激活）。
 # 默认休眠（providers 为空，登录后才注册聊天路由），不注册任何工具 → 与本地

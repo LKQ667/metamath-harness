@@ -58,6 +58,12 @@ export const IMAGE_TEMPLATES = Object.freeze([
     defaultModel: 'gpt-image-2', modelHint: '复用 OAuth/订阅插件的 openai-codex 登录（pi-ai-oauth.json），无需 API Key；'
       + '走 ChatGPT 订阅 Codex 生图端点（gpt-image-2）。非官方支持端点，存在账号限制风险',
   }),
+  Object.freeze({
+    id: 'grok-subscription', name: 'Grok 订阅', capability: 'pending', baseUrlEditable: false,
+    fixedBaseUrl: 'https://api.x.ai/v1', defaultAdapter: 'grok-images', adapters: ['grok-images'],
+    defaultModel: 'grok-imagine-image', modelHint: '复用订阅插件的 Grok 登录（plugins/subscriptions/auth.json），无需 API Key；'
+      + '走 xAI 官方 Images API（grok-imagine-image / image-2.0 / image-quality）。生图额度随 X Premium 订阅',
+  }),
 ]);
 
 const TEMPLATE_BY_ID = new Map(IMAGE_TEMPLATES.map((template) => [template.id, template]));

@@ -172,11 +172,13 @@ test('codexImagesAdapter：401 强刷一次后重试成功', async () => {
   const b64 = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64').toString('base64');
   const home = await homeWith(credential({ expires: Date.now() + 60 * 60_000, access: 'access-stale' }));
   let imageCalls = 0;
-  const fetchImpl = async (url) => {
+  const imageHeaders = [];
+  const fetchImpl = async (url, init) => {
     if (String(url).startsWith('https://auth.openai.com/')) {
       return { ok: true, status: 200, json: async () => ({ access_token: 'access-rotated', refresh_token: 'refresh-rotated', expires_in: 3600 }) };
     }
     imageCalls += 1;
+    imageHeaders.push(init?.headers?.authorization);
     if (imageCalls === 1) return { ok: false, status: 401, json: async () => ({}) };
     return { ok: true, status: 200, json: async () => ({ data: [{ b64_json: b64 }] }) };
   };
@@ -186,6 +188,9 @@ test('codexImagesAdapter：401 强刷一次后重试成功', async () => {
   });
   assert.equal(assets.length, 1);
   assert.equal(imageCalls, 2);
+  // 重试必须携带刷新后的 token（防止 undefined token 的测试盲区）
+  assert.equal(imageHeaders[0], 'Bearer access-stale');
+  assert.equal(imageHeaders[1], 'Bearer access-rotated');
   const stored = await readCodexCredential(home);
   assert.equal(stored.access, 'access-rotated');
   assert.equal(stored.refresh, 'refresh-rotated');

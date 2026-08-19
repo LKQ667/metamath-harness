@@ -1,4 +1,5 @@
 import { resolveCodexSession } from './codex-auth.js';
+import { resolveGrokSession } from './grok-auth.js';
 
 const JSON_HEADERS = { 'content-type': 'application/json' };
 const DEFAULT_SLEEP = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -210,9 +211,11 @@ export async function codexImagesAdapter({ endpoint, model, credential, request,
   } catch {
     session = await resolveCodexSession({ ...(codexHome ? { home: codexHome } : {}), fetchImpl, signal });
   }
+  // 快照与 resolveCodexSession 返回形状不同（access vs accessToken）；统一取值
+  const accessToken = typeof session.access === 'string' ? session.access : session.accessToken;
   const url = openAiUrl(endpoint ?? 'https://chatgpt.com/backend-api', 'codex/images/generations');
   const headers = {
-    'authorization': `Bearer ${session.access}`,
+    'authorization': `Bearer ${accessToken}`,
     'chatgpt-account-id': session.accountId,
     'originator': 'codex_cli_rs',
     'accept': 'application/json',
@@ -228,7 +231,7 @@ export async function codexImagesAdapter({ endpoint, model, credential, request,
   if (response.status === 401) {
     // 未到期但被拒：强刷一次 token 再重试（codex CLI 同款模式）
     session = await resolveCodexSession({ ...(codexHome ? { home: codexHome } : {}), fetchImpl, signal, force: true });
-    headers.authorization = `Bearer ${session.access}`;
+    headers.authorization = `Bearer ${typeof session.access === 'string' ? session.access : session.accessToken}`;
     response = await call();
   }
   const data = await jsonResponse(response, 'codex-images');
@@ -244,6 +247,45 @@ export async function codexImagesAdapter({ endpoint, model, credential, request,
   return assets;
 }
 
+/** 会话 token 取值：兼容连接快照 {access} 与 resolveGrokSession 返回 {accessToken} 两种形状。 */
+function grokAccessToken(session) {
+  if (typeof session?.access === 'string' && session.access.length > 0) return session.access;
+  if (typeof session?.accessToken === 'string' && session.accessToken.length > 0) return session.accessToken;
+  return undefined;
+}
+
+/** Grok 订阅生图适配器：api.x.ai/v1/images/generations（OpenAI Images 兼容，n 原生支持），凭据来自订阅插件 auth.json。 */
+export async function grokImagesAdapter({ endpoint, model, credential, request, references, fetchImpl, signal, grokHome }) {
+  if (references.length > 0) throw new Error('grok-images 适配器不支持参考图；请改用其他连接或去掉参考图');
+  let session;
+  try {
+    const parsed = JSON.parse(credential);
+    if (typeof parsed?.access !== 'string' || parsed.access.length === 0) throw new Error('bad shape');
+    session = parsed;
+  } catch {
+    session = await resolveGrokSession({ ...(grokHome ? { home: grokHome } : {}), fetchImpl, signal });
+  }
+  const url = openAiUrl(endpoint ?? 'https://api.x.ai/v1', 'images/generations');
+  const headers = { authorization: `Bearer ${grokAccessToken(session)}`, ...JSON_HEADERS };
+  const call = () => fetchImpl(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ model, prompt: request.prompt, n: request.count, response_format: 'b64_json' }),
+    signal,
+  });
+  let response = await call();
+  if (response.status === 401) {
+    // 未到期但被拒：强刷一次 token 再重试（与 grok 插件路由同款模式）
+    session = await resolveGrokSession({ ...(grokHome ? { home: grokHome } : {}), fetchImpl, signal, force: true });
+    headers.authorization = `Bearer ${grokAccessToken(session)}`;
+    response = await call();
+  }
+  const data = await jsonResponse(response, 'grok-images');
+  const assets = genericAssets(data);
+  if (assets.length === 0) throw new Error('grok-images 响应中没有可解析的图片');
+  return assets;
+}
+
 export const IMAGE_ADAPTERS = Object.freeze({ dashscope: dashscopeAdapter, openai: openaiAdapter, gemini: geminiAdapter, custom: customAdapter });
 
 /** 按协议 ID 的适配器注册表（连接携带 adapter / verification.protocol）。 */
@@ -254,4 +296,5 @@ export const ADAPTER_BY_ID = Object.freeze({
   'sub2api-async-images': sub2apiAsyncImagesAdapter,
   'openai-chat-image': openaiChatImageAdapter,
   'codex-images': codexImagesAdapter,
+  'grok-images': grokImagesAdapter,
 });

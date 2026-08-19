@@ -4,10 +4,12 @@ import {
   isValidConnectionId, migrateFromV1, validateConnectionDraft, validateImageConnections,
 } from '../security/image-connections.js';
 import { describeCodexCredential, resolveCodexSession } from './codex-auth.js';
+import { describeGrokCredential, resolveGrokSession } from './grok-auth.js';
 import { verifyConnection } from './verify.js';
 
 const LEGACY_CREDENTIAL_REFS = new Set(['DASHSCOPE_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'CUSTOM_IMAGE_API_KEY']);
 const CODEX_TEMPLATE_ID = 'codex-subscription';
+const GROK_TEMPLATE_ID = 'grok-subscription';
 
 function withoutVerification(connection) {
   const { verification: _ignored, ...rest } = connection;
@@ -61,7 +63,7 @@ function summaryFor(connection, credential, verification) {
  * 所有 Remote 错误经脱敏；浏览器只接收脱敏摘要。
  */
 export class ImageConnectionService {
-  constructor({ settings, legacySettings, credentialStore, credentialProvider, hasV2UserSection, fetchImpl = globalThis.fetch, now = () => new Date().toISOString(), sleep, codexHome } = {}) {
+  constructor({ settings, legacySettings, credentialStore, credentialProvider, hasV2UserSection, fetchImpl = globalThis.fetch, now = () => new Date().toISOString(), sleep, codexHome, grokHome } = {}) {
     this.settings = settings;
     this.legacySettings = legacySettings;
     this.credentialStore = credentialStore;
@@ -71,6 +73,7 @@ export class ImageConnectionService {
     this.now = now;
     this.sleep = sleep;
     this.codexHome = codexHome;
+    this.grokHome = grokHome;
   }
 
   value() {
@@ -105,6 +108,7 @@ export class ImageConnectionService {
 
   async describeCredential(connection) {
     if (connection.template === CODEX_TEMPLATE_ID) return await describeCodexCredential(this.codexHome);
+    if (connection.template === GROK_TEMPLATE_ID) return await describeGrokCredential(this.grokHome);
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       const info = await this.credentialProvider.describe(connection.credentialRef);
       return Object.freeze({
@@ -122,6 +126,10 @@ export class ImageConnectionService {
       const session = await resolveCodexSession({ ...(this.codexHome ? { home: this.codexHome } : {}), fetchImpl: this.fetch });
       return { ref: 'pi-ai-oauth', value: JSON.stringify({ access: session.accessToken, accountId: session.accountId }), source: 'pi-ai-oauth' };
     }
+    if (connection.template === GROK_TEMPLATE_ID) {
+      const session = await resolveGrokSession({ ...(this.grokHome ? { home: this.grokHome } : {}), fetchImpl: this.fetch });
+      return { ref: 'subscriptions-auth', value: JSON.stringify({ access: session.accessToken }), source: 'subscriptions-auth' };
+    }
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       const info = await this.credentialProvider.resolve(connection.credentialRef);
       return { ref: connection.credentialRef, value: typeof info?.value === 'string' ? info.value : '', source: typeof info?.source === 'string' ? info.source : 'managed' };
@@ -132,6 +140,9 @@ export class ImageConnectionService {
   async setCredential(connection, value) {
     if (connection.template === CODEX_TEMPLATE_ID) {
       throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；请到“设置 → OAuth / 订阅”登录 openai-codex');
+    }
+    if (connection.template === GROK_TEMPLATE_ID) {
+      throw fail('subscription_credential_managed', 'Grok 订阅连接的凭据由订阅登录管理；请到“设置 → 订阅”登录 Grok');
     }
     if (typeof value !== 'string' || !value.trim()) throw fail('invalid_key', 'API Key 不能为空');
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
@@ -145,6 +156,9 @@ export class ImageConnectionService {
     const connection = await this.requireConnection(id);
     if (connection.template === CODEX_TEMPLATE_ID) {
       throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；如需移除请到“设置 → OAuth / 订阅”登出');
+    }
+    if (connection.template === GROK_TEMPLATE_ID) {
+      throw fail('subscription_credential_managed', 'Grok 订阅连接的凭据由订阅登录管理；如需移除请到“设置 → 订阅”登出 Grok');
     }
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       await this.credentialProvider.unset(connection.credentialRef);
@@ -261,6 +275,25 @@ export class ImageConnectionService {
     if (connection.template === CODEX_TEMPLATE_ID) {
       // Codex 订阅生图端点无 /models 目录；返回连接配置的模型本身
       return Object.freeze({ connectionId: id, models: Object.freeze([{ id: connection.model }]) });
+    }
+    if (connection.template === GROK_TEMPLATE_ID) {
+      // api.x.ai /models 目录同时含聊天/嵌入模型；仅保留 imagine-image 生图模型
+      const credential = await this.resolveCredential(connection);
+      let token = '';
+      try { token = JSON.parse(credential.value)?.access ?? ''; } catch { /* 快照解析失败按未配置处理 */ }
+      if (!token) throw fail('credential_missing', '尚未登录 Grok 订阅；请到“设置 → 订阅”完成 Grok 登录');
+      const response = await this.fetch(`${connection.baseUrl}/models`, {
+        method: 'GET',
+        headers: { accept: 'application/json', authorization: `Bearer ${token}` },
+      });
+      if (!response?.ok) {
+        const status = response?.status ?? '未知';
+        if (status === 401 || status === 403) throw fail('models_endpoint_rejected', `模型列表接口拒绝了请求（HTTP ${status}）；模型仍可手动填写，且这不等同于生图不可用`);
+        throw fail('models_http_error', `模型列表接口请求失败（HTTP ${status}）`);
+      }
+      const models = parseModels(await response.json())
+        .filter((entry) => /imagine-image/.test(entry.id));
+      return Object.freeze({ connectionId: id, models: Object.freeze(models) });
     }
     const credential = await this.resolveCredential(connection);
     if (!credential.value) throw fail('credential_missing', '该连接尚未保存 API Key；请先保存后再获取模型');

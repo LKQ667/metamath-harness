@@ -45,6 +45,14 @@ export function renderCardPrompt(card, submitted = {}) {
     : values.bar_policy === '少用'
       ? '柱状图策略为“少用”：仅在 manifest 同源条目具有完整 bar_exception 时允许柱形图。'
       : '';
-  const instructions = [...card.prompt.instructions, ...(policyInstruction ? [policyInstruction] : [])];
+  // run_to_pdf 卡片把 Goal 激活指令提升到用户消息正文首条，避免依赖模型自觉读取 Skill 文档导致概率不触发。
+  const goalInstruction = values.run_to_pdf === true
+    ? '首轮动作：先调用 get_goal 检查当前会话 Goal；当前会话无 Goal 时立即调用 create_goal，objective 固定为“持续完成本数学建模论文项目并交付通过全部门禁的最终 PDF”；已有同一目标的 Goal 则直接继续推进，禁止覆盖无关 Goal'
+    : '';
+  const instructions = [
+    ...(goalInstruction ? [goalInstruction] : []),
+    ...card.prompt.instructions,
+    ...(policyInstruction ? [policyInstruction] : []),
+  ];
   return `/${card.skill}\n\n\`\`\`json\n${JSON.stringify(request, null, 2)}\n\`\`\`\n\n执行要求：\n${instructions.map((item) => `- ${item}`).join('\n')}`;
 }

@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { ImageGenerationService } from '../lib/index.js';
 
-const secret = 'sk' + '-image-secret-fixture-long';
+const secret = 'sk-img-secret-fx';
 // 真实 1x1 PNG 字节：供应商 base64 路径必须携带真实图片魔数才能通过嗅探
 const tinyPngBytes = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 const b64 = tinyPngBytes.toString('base64');
@@ -41,7 +41,7 @@ test('默认当前连接只调用一次并写入无秘密连接元数据', async
   const result = await service.generate({ ...request, outputDir: undefined }, { workspace: root });
   assert.equal(result.ok, true); assert.equal(result.connectionId, ready.id); assert.equal(result.provider, ready.template); assert.equal(dirname(result.files[0]), root); assert.equal(fetchCalls.length, 1); assert.equal((await readFile(result.files[0])).toString('base64'), b64);
   const metadata = await readFile(result.metadataFile, 'utf8');
-  assert.match(metadata, /"connectionId": "img_ready_01"/); assert.match(metadata, /"protocol": "openai-images"/); assert.doesNotMatch(metadata, /绘制模型结构图|image-secret-fixture|images\.example/);
+  assert.match(metadata, /"connectionId": "img_ready_01"/); assert.match(metadata, /"protocol": "openai-images"/); assert.doesNotMatch(metadata, /绘制模型结构图|img-secret-fx|images\.example/);
 });
 
 test('显式 connectionId 优先于当前连接且不改变当前状态', async () => {

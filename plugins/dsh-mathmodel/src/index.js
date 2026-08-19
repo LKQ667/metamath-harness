@@ -31,7 +31,11 @@ export {
   CODEX_CREDENTIAL_KEY, accountIdFromAccessToken, codexAuthPath, describeCodexCredential,
   readCodexCredential, refreshCodexCredential, resolveCodexSession, writeCodexCredential,
 } from './image/codex-auth.js';
-export { codexImagesAdapter } from './image/adapters.js';
+export {
+  GROK_CREDENTIAL_KEY, describeGrokCredential, grokAuthPath, readGrokSession,
+  refreshGrokSession, resolveGrokSession, writeGrokSession,
+} from './image/grok-auth.js';
+export { codexImagesAdapter, grokImagesAdapter } from './image/adapters.js';
 export { ManualVisionService, VisionError, VISION_MODELS, VisionService, MANUAL_VISION_LIMITS, MANUAL_VISION_PROMPT } from './vision.js';
 export { ADAPTER_BY_ID, IMAGE_ADAPTERS, customAdapter, dashscopeAdapter, geminiAdapter, openaiAdapter, openaiChatImageAdapter, openaiImagesAdapter, sub2apiAsyncImagesAdapter } from './image/adapters.js';
 export { decodeImageAsset, downloadImage, mimeForPath, requestError } from './image/assets.js';

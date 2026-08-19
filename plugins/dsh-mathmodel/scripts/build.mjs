@@ -29,6 +29,7 @@ const files = [
   ['src/image/adapters.js', 'lib/image/adapters.js'],
   ['src/image/assets.js', 'lib/image/assets.js'],
   ['src/image/codex-auth.js', 'lib/image/codex-auth.js'],
+  ['src/image/grok-auth.js', 'lib/image/grok-auth.js'],
   ['src/image/verify.js', 'lib/image/verify.js'],
   ['src/image/connections.js', 'lib/image/connections.js'],
   ['src/image/service.js', 'lib/image/service.js'],

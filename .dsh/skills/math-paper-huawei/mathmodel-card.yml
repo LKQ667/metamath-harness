@@ -15,9 +15,10 @@ fields:
   - id: body_pages
     label: 正文最低页数
     type: number
-    default: 16
-    min: 16
+    default: 26
+    min: 26
     max: 60
+    description: 硬约束：正文（除附录和代码部分）必须大于 25 页，最低 26 页。
   - id: competition_language
     label: 赛事语言
     type: select

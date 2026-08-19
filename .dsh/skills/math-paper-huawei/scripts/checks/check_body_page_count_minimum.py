@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Check paper body page count is at least 16 pages or user target."""
+"""Check paper body page count is strictly greater than 25 pages (>=26) or user target."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pathlib import Path
 from common import aux_label_page, paper_body_region, project_arg, read_text, write_report
 
 
-DEFAULT_TARGET = 16
+DEFAULT_TARGET = 26
 TARGET_RE = re.compile(r"正文页数(?:目标|不少于)\s*[:：]?\s*(\d+)")
 
 
@@ -26,7 +26,7 @@ def target_pages(project: Path) -> int:
 
 
 def main() -> int:
-    parser = project_arg("检查正文页数不少于 16 页或用户更高目标")
+    parser = project_arg("检查正文页数大于 25 页（不少于 26 页）或用户更高目标")
     args = parser.parse_args()
     project = Path(args.project).resolve()
     tex_path = project / "论文" / "main.tex"
@@ -66,7 +66,7 @@ def main() -> int:
     pages = end - start + 1
     target = target_pages(project)
     if pages < target:
-        errors.append(f"正文页数为 {pages} 页，未达到不少于 {target} 页要求；不足时只能深化模型建立与求解。")
+        errors.append(f"正文页数为 {pages} 页，未达到大于 25 页（不少于 {target} 页）的硬约束；不足时只能深化模型建立与求解。")
 
     return write_report(not errors, "check_body_page_count_minimum", errors, args.output)
 

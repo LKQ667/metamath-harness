@@ -25,7 +25,7 @@ test('凭据代理只允许四个引用且 describe 永不返回值', async () =
 
 test('凭据写入错误会删除提交值和常见 token 形态', async () => {
   const provider = new FakeCredentials();
-  provider.set = async (_ref, value) => { throw new Error(`写入失败 ${value} Bearer ${'sk' + '-test_12345678901234567890'}`); };
+  provider.set = async (_ref, value) => { throw new Error(`写入失败 ${value} Bearer sk-test_1234567`); };
   await assert.rejects(
     () => new CredentialFacade(provider).set('OPENAI_API_KEY', 'known-secret-value'),
     (error) => !error.message.includes('known-secret-value') && !error.message.includes('sk-test_'),
