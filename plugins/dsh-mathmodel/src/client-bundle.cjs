@@ -264,7 +264,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
       const module = { exports: {} };
       const React = require('react');
       const ReactDOM = require('react-dom');
-      const metaMathBrandMark = 'data:image/png;base64,__METAMATH_BRAND_MARK__';
+      const metaMathBrandIcon = 'data:image/x-icon;base64,__METAMATH_BRAND_ICON__';
       const metaMathHeroTitle = 'data:image/png;base64,__METAMATH_HERO_TITLE__';
 
       const styleId = 'dsh-mathmodel-card-style';
@@ -286,7 +286,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
            .dsh-mm-info-button{border:0;background:transparent;color:var(--dsw-alias-label-secondary);border-radius:9px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:550}.dsh-mm-info-button:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-info-button:focus-visible{outline:2px solid var(--dsw-alias-label-tertiary);outline-offset:2px}
            .dsh-mm-hero-title{display:inline-flex;align-items:center}
           .dsh-mm-hero-title-img{height:72px;width:auto;display:block}
-          .hHd-Xa_logoRow>.hHd-Xa_brand[data-dsh-metamath-brand=true]>svg{display:none!important}.dsh-mm-brand-lockup{display:inline-flex;align-items:center;gap:7px;color:#16181d}.dsh-mm-brand-mark{width:28px;height:28px;flex:none;border-radius:8px;object-fit:contain}.dsh-mm-brand-word{font-size:18px;font-weight:650;letter-spacing:-.04em;line-height:1}.dsh-mm-brand-chip{border-radius:4px;background:#181a20;color:#fff;padding:3px 5px 2px;font-size:9px;font-weight:750;letter-spacing:.065em;line-height:1}
+          [data-slot="sidebar.brand.mark"][data-dsh-metamath-brand=true]>:not(.dsh-mm-brand-mark),[data-slot="sidebar.brand.name"][data-dsh-metamath-brand=true]>:not(.dsh-mm-brand-lockup){display:none!important}.dsh-mm-brand-mark{display:block;width:24px;height:24px;flex:none;border-radius:6px;object-fit:contain}.dsh-mm-brand-lockup{display:inline-flex;align-items:center;gap:7px;color:#16181d}.dsh-mm-brand-word{font-size:18px;font-weight:650;letter-spacing:-.04em;line-height:1}.dsh-mm-brand-chip{border-radius:4px;background:#181a20;color:#fff;padding:3px 5px 2px;font-size:9px;font-weight:750;letter-spacing:.065em;line-height:1}
           .dsh-mm-info-launcher{position:fixed;z-index:89;top:12px;right:72px;display:inline-flex;width:36px;height:36px;min-height:36px;box-sizing:border-box;align-items:center;justify-content:center;border:0;border-radius:12px;background:transparent;box-shadow:none;padding:0;line-height:1}.dsh-mm-info-launcher:hover,.dsh-mm-info-launcher[aria-expanded=true]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-info-launcher svg{width:19px;height:19px}
           [data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]{width:36px!important;height:36px!important;min-width:36px!important;box-sizing:border-box!important;justify-content:center!important;gap:0!important;border-radius:12px!important;padding:0!important}[data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]>span{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important}[data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]>svg{width:16px!important;height:16px!important}
           .dsh-mm-info{position:fixed;z-index:90;top:56px;right:12px;bottom:12px;display:flex;width:min(400px,calc(100vw - 24px));box-sizing:border-box;flex-direction:column;overflow:hidden;pointer-events:auto;border:1px solid var(--dsw-alias-border-l1);border-radius:16px;background:var(--dsw-alias-bg-base);box-shadow:0 20px 52px rgba(15,23,42,.18)}
@@ -302,29 +302,56 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
       }
 
       function installMetaMathBrand() {
-        const brand = document.querySelector('.hHd-Xa_logoRow > button.hHd-Xa_brand.hHd-Xa_wide');
-        if (!brand || brand.dataset.dshMetamathBrand === 'true') return;
-        const officialMark = brand.querySelector('svg[width="182"][height="24"]');
-        if (!officialMark) return;
-        const lockup = document.createElement('span');
-        lockup.className = 'dsh-mm-brand-lockup';
-        lockup.setAttribute('aria-hidden', 'true');
-        const mark = document.createElement('img');
-        mark.className = 'dsh-mm-brand-mark';
-        mark.src = metaMathBrandMark;
-        mark.alt = '';
-        const word = document.createElement('span');
-        word.className = 'dsh-mm-brand-word';
-        word.textContent = 'MetaMath';
-        const chip = document.createElement('span');
-        chip.className = 'dsh-mm-brand-chip';
-        chip.textContent = 'HARNESS';
-        lockup.append(mark, word, chip);
-        brand.appendChild(lockup);
-        brand.dataset.dshMetamathBrand = 'true';
+        for (const markSlot of document.querySelectorAll('[data-slot="sidebar.brand.mark"]')) {
+          if (!markSlot.querySelector('.dsh-mm-brand-mark')) {
+            const mark = document.createElement('img');
+            mark.className = 'dsh-mm-brand-mark';
+            mark.src = metaMathBrandIcon;
+            mark.alt = '';
+            mark.draggable = false;
+            markSlot.appendChild(mark);
+          }
+          markSlot.dataset.dshMetamathBrand = 'true';
+        }
+
+        for (const nameSlot of document.querySelectorAll('[data-slot="sidebar.brand.name"]')) {
+          if (!nameSlot.querySelector('.dsh-mm-brand-lockup')) {
+            const lockup = document.createElement('span');
+            lockup.className = 'dsh-mm-brand-lockup';
+            lockup.setAttribute('aria-hidden', 'true');
+            const word = document.createElement('span');
+            word.className = 'dsh-mm-brand-word';
+            word.textContent = 'MetaMath';
+            const chip = document.createElement('span');
+            chip.className = 'dsh-mm-brand-chip';
+            chip.textContent = 'HARNESS';
+            lockup.append(word, chip);
+            nameSlot.appendChild(lockup);
+          }
+          nameSlot.dataset.dshMetamathBrand = 'true';
+        }
       }
-      installMetaMathBrand();
-      new MutationObserver(installMetaMathBrand).observe(document.documentElement, { childList: true, subtree: true });
+
+      function installMetaMathFavicon() {
+        let favicons = [...document.querySelectorAll('link[rel~="icon"]')];
+        if (!favicons.length) {
+          const favicon = document.createElement('link');
+          favicon.rel = 'icon';
+          document.head.appendChild(favicon);
+          favicons = [favicon];
+        }
+        for (const favicon of favicons) {
+          favicon.type = 'image/x-icon';
+          favicon.href = metaMathBrandIcon;
+          favicon.dataset.dshMetamathBrand = 'true';
+        }
+      }
+      function installMetaMathBranding() {
+        installMetaMathBrand();
+        installMetaMathFavicon();
+      }
+      installMetaMathBranding();
+      new MutationObserver(installMetaMathBranding).observe(document.documentElement, { childList: true, subtree: true });
 
       // 中央主视觉：隐藏官方鲸鱼（GOAL-35 用户要求移除紫鲸鱼），标题行整行居中
       function hideMetaMathHeroFish() {

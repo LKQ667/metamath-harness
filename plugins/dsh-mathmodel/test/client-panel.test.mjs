@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 const require = createRequire(import.meta.url);
@@ -55,14 +56,42 @@ test('技能说明与下载按钮使用同一图标行且抽屉保持独立区�
   assert.ok(mobilePanelTop - (desktopLauncherTop + launcherHeight) >= 8, '窄屏入口与抽屉至少保留 8px');
 });
 
-test('左上角品牌仅由插件覆盖，使用 MetaMath 真实图标且保留官方新会话入口', async () => {
+test('品牌与 favicon 使用桌面快捷方式 ICO，覆盖展开和收起侧栏语义插槽', async () => {
   const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
-  assert.match(source, /metaMathBrandMark/);
-  assert.match(source, /__METAMATH_BRAND_MARK__/);
-  assert.match(source, /\.hHd-Xa_logoRow > button\.hHd-Xa_brand\.hHd-Xa_wide/);
-  assert.match(source, /brand\.dataset\.dshMetamathBrand = 'true'/);
+  const build = await readFile(new URL('../scripts/build.mjs', import.meta.url), 'utf8');
+  const built = await readFile(new URL('../lib/client.js', import.meta.url), 'utf8');
+  const shortcutIcon = await readFile(new URL('../../../MetaMath-Harness.ico', import.meta.url));
+  const embeddedIcon = built.match(/data:image\/x-icon;base64,([A-Za-z0-9+/=]+)/)?.[1];
+
+  assert.match(build, /\.\.\/\.\.\/MetaMath-Harness\.ico/);
+  assert.match(source, /metaMathBrandIcon/);
+  assert.match(source, /__METAMATH_BRAND_ICON__/);
+  assert.match(source, /sidebar\.brand\.mark/);
+  assert.match(source, /sidebar\.brand\.name/);
+  assert.match(source, /installMetaMathFavicon/);
+  assert.match(source, /querySelectorAll\('link\[rel~="icon"\]'\)/);
+  assert.match(source, /favicon\.href = metaMathBrandIcon/);
+  assert.doesNotMatch(source, /svg\[width="182"\]\[height="24"\]/);
   assert.match(source, /word\.textContent = 'MetaMath'/);
   assert.match(source, /chip\.textContent = 'HARNESS'/);
+  assert.ok(embeddedIcon, '构建产物必须包含桌面快捷方式 ICO');
+  assert.equal(
+    createHash('sha256').update(Buffer.from(embeddedIcon, 'base64')).digest('hex'),
+    createHash('sha256').update(shortcutIcon).digest('hex'),
+    '构建产物图标必须与桌面快捷方式 ICO 逐字节一致',
+  );
+});
+
+test('品牌修复不改动大道至简相关源码片段', async () => {
+  const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
+  const start = source.indexOf('// 中央主视觉：');
+  const endMarker = 'new MutationObserver(installMetaMathHeroTitle).observe(document.documentElement, { childList: true, subtree: true });';
+  const end = source.indexOf(endMarker, start) + endMarker.length;
+  assert.ok(start >= 0 && end >= endMarker.length, '必须能定位大道至简相关源码片段');
+  assert.equal(
+    createHash('sha256').update(source.slice(start, end)).digest('hex').toUpperCase(),
+    'ACDEB684B7E9A4CD7336BCC8D128381B491078C51F22233BBB661817C7A78FCC',
+  );
 });
 
 test('中央主视觉官方鲸鱼由插件运行时隐藏，且不修改官方包（GOAL-35）', async () => {
