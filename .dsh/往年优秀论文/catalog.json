@@ -1,0 +1,313 @@
+{
+  "schema": "dsh.excellent-papers.catalog/v1",
+  "competitions": {
+    "国赛": [
+      "全国大学生数学建模竞赛",
+      "CUMCM"
+    ],
+    "华数杯": [
+      "华数杯大学生数学建模竞赛"
+    ],
+    "华为杯": [
+      "中国研究生数学建模竞赛",
+      "研究生数模",
+      "GMCM"
+    ],
+    "美赛": [
+      "美国大学生数学建模竞赛",
+      "MCM",
+      "ICM",
+      "MCM/ICM"
+    ],
+    "亚太杯中文赛": [
+      "APMCM中文赛",
+      "亚太地区大学生数学建模竞赛中文赛项"
+    ],
+    "亚太杯英文赛": [
+      "APMCM英文赛",
+      "Asia-Pacific Mathematical Contest in Modeling"
+    ]
+  },
+  "papers": [
+    {
+      "path": "国赛/A092.pdf",
+      "competition": "国赛",
+      "year": null,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "6f19a1e21443043cc30e3ca70ecf41dd41152205ffa143adbbd2e99fd307bc8e"
+    },
+    {
+      "path": "国赛/A127.pdf",
+      "competition": "国赛",
+      "year": null,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "77aae1ffa8d3c2ce29c870ab497b6b284b9ecf4236b2d5a4240c8fa9fc7a1d62"
+    },
+    {
+      "path": "国赛/B226.pdf",
+      "competition": "国赛",
+      "year": null,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "6575167cc2cace9fc4f7a2d9e654128803b4270096fcb2e63b27ef05faf7a33d"
+    },
+    {
+      "path": "国赛/B311.pdf",
+      "competition": "国赛",
+      "year": null,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "b939b88771b288865fef612c613eb1d6a5890049fade34578ba35a66a4e95095"
+    },
+    {
+      "path": "国赛/C228.pdf",
+      "competition": "国赛",
+      "year": null,
+      "problem": "C",
+      "priority": 100,
+      "sha256": "fb3f16b5294a6ea14781d3a824756af39a2700a2333d0df56c31ee3351188b10"
+    },
+    {
+      "path": "国赛/C235.pdf",
+      "competition": "国赛",
+      "year": null,
+      "problem": "C",
+      "priority": 100,
+      "sha256": "84724f950dfe248bddef91071909dead68dd3717f17f580e8b9ea2e5e842a25b"
+    },
+    {
+      "path": "华为杯/2023/A题/A23100070049.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "d33556a20cd948a1a64b448a798d7bd5199ed33e64b8b42f9c9066718709cc1a"
+    },
+    {
+      "path": "华为杯/2023/A题/A23102470073.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "aa54a343324fc710c752ea7b69e867ea0aad0718984b8e6a64bfdcc18c6168cb"
+    },
+    {
+      "path": "华为杯/2023/B题/B23100070010.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "dae1f5b0084b890f57cf5f32d50624813c50142e80facec528dec185b4caf873"
+    },
+    {
+      "path": "华为杯/2023/B题/B23100070173.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "49bb7b3ca5c8350b5183e4222dc2d46bf1682dfb0df499206fdc483ebb02717c"
+    },
+    {
+      "path": "华为杯/2023/C题/C23102540029.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "C",
+      "priority": 100,
+      "sha256": "feb372a7fb5a8688de384182401fe0f642da7763f50f74e7ee0a1a22b7641230"
+    },
+    {
+      "path": "华为杯/2023/C题/C23102890004.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "C",
+      "priority": 100,
+      "sha256": "673a7f1386a6bcf5b57cdfbea26340d48d6c007d8d59c665ce3db9c88dbbc930"
+    },
+    {
+      "path": "华为杯/2023/D题/D23100060041.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "D",
+      "priority": 100,
+      "sha256": "b4e6c7b24c303140b0913928cf352162a050f41c693ec31c014ac1e4cd278ccf"
+    },
+    {
+      "path": "华为杯/2023/D题/D23102690008.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "D",
+      "priority": 100,
+      "sha256": "062fc33a37d6403de410f195362cb031bb301f82875d2b87d64703b6a09c01cc"
+    },
+    {
+      "path": "华为杯/2023/E题/E23100650012.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "E",
+      "priority": 100,
+      "sha256": "8d1abbc798cc27e01322cb36adfe87c716f9425ad3b07d97c822a0c756fc41f3"
+    },
+    {
+      "path": "华为杯/2023/E题/E23102550019.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "E",
+      "priority": 100,
+      "sha256": "7111ae76a0a000ae0667979809bb38eef9ce74f9a05dfbdfaae39cb50889d563"
+    },
+    {
+      "path": "华为杯/2023/F题/F23102520378.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "F",
+      "priority": 100,
+      "sha256": "a1dc5e7fe882f5963dd9d6fe47a24a74b5885f5e37416dc475cff907085e8a66"
+    },
+    {
+      "path": "华为杯/2023/F题/F23102690048.pdf",
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "F",
+      "priority": 100,
+      "sha256": "4a5ac5b0787e4dddb8c2a98e086ad3dc996c04522b3039e6c0ef0bbdf4902d6d"
+    },
+    {
+      "path": "美赛/2400996.pdf",
+      "competition": "美赛",
+      "year": 2024,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "310382aa894d6207a77b2931929eaf39b562dcf5f121410d2db61580382e5bd5"
+    },
+    {
+      "path": "美赛/2405424.pdf",
+      "competition": "美赛",
+      "year": 2024,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "3976866832e31712b42c11a241c413db2f056e48c24a3768ff0c41c1460b44c6"
+    },
+    {
+      "path": "美赛/2407093.pdf",
+      "competition": "美赛",
+      "year": 2024,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "4f93669d170f0e588e5255e33d4adc2fa1703f271fa0850562fff4fd91658d46"
+    },
+    {
+      "path": "美赛/2424371.pdf",
+      "competition": "美赛",
+      "year": 2024,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "908408b56dd26aebbe4e0b0255e0b4aa73197246b445565df4f25f6ac48b51b4"
+    },
+    {
+      "path": "亚太杯英文赛/2022年A题优秀论文.pdf",
+      "competition": "亚太杯英文赛",
+      "year": 2022,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "121683ea07b1d9f48ec6707ab17401615ac31e53e76fac68eba482a041e46971"
+    },
+    {
+      "path": "亚太杯英文赛/2022年B题优秀论文.pdf",
+      "competition": "亚太杯英文赛",
+      "year": 2022,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "7e8972f98f06015b2f0d2f569c59be736116eaf45e211a4238a0479139cd9bfa"
+    },
+    {
+      "path": "亚太杯英文赛/2022年D题优秀论文.pdf",
+      "competition": "亚太杯英文赛",
+      "year": 2022,
+      "problem": "D",
+      "priority": 100,
+      "sha256": "6a922bbee49caadf99bd3b01530ab56c632e4c4845b9d21564955ea0327460f7"
+    },
+    {
+      "path": "亚太杯英文赛/2022年E题优秀论文.pdf",
+      "competition": "亚太杯英文赛",
+      "year": 2022,
+      "problem": "E",
+      "priority": 100,
+      "sha256": "473a2e5c47b81f125d5aa3dad2d75b30c8cca72a668795be0cbcef6d1a95d299"
+    },
+    {
+      "path": "亚太杯英文赛/2023年A题优秀论文.pdf",
+      "competition": "亚太杯英文赛",
+      "year": 2023,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "5126f14d51257a66fbd787c63093ba8ccfe80e89cbbf24cc28484297cae57019"
+    },
+    {
+      "path": "亚太杯英文赛/2023年B题优秀论文.pdf",
+      "competition": "亚太杯英文赛",
+      "year": 2023,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "bd5b6019a7545a9276185aff9fff881ae1aadb4f26204f5e13cfb6c80270e8c7"
+    },
+    {
+      "path": "亚太杯英文赛/2023年C题优秀论文.pdf",
+      "competition": "亚太杯英文赛",
+      "year": 2023,
+      "problem": "C",
+      "priority": 100,
+      "sha256": "3bd28eacd1e6795eee2f7c775fb20b3671d5172484e5bcbf978441780e17ccbf"
+    },
+    {
+      "path": "亚太杯中文赛/A题/A题02838.pdf",
+      "competition": "亚太杯中文赛",
+      "year": 2024,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "8dec30e91b4e1bd6bcf2db57c6747c03c37569523eef04502dbf0d44a7dfa93d"
+    },
+    {
+      "path": "亚太杯中文赛/A题/A题03112.pdf",
+      "competition": "亚太杯中文赛",
+      "year": 2024,
+      "problem": "A",
+      "priority": 100,
+      "sha256": "a95f07c1bc62b520ec023993bf6fbc39eebc72039dd16fbda4186c2379d6b0b0"
+    },
+    {
+      "path": "亚太杯中文赛/B题/B题00536.pdf",
+      "competition": "亚太杯中文赛",
+      "year": 2024,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "587059c12e1d896c40dda63212ea9c057a889fbf34d99d55767b89e9346861d1"
+    },
+    {
+      "path": "亚太杯中文赛/B题/B题02462.pdf",
+      "competition": "亚太杯中文赛",
+      "year": 2024,
+      "problem": "B",
+      "priority": 100,
+      "sha256": "6f80d099aa6a7a1f3be781bbe099a3b5e8419129e5b1aee13583e4834df24e93"
+    },
+    {
+      "path": "亚太杯中文赛/C题/C题00023.pdf",
+      "competition": "亚太杯中文赛",
+      "year": 2024,
+      "problem": "C",
+      "priority": 100,
+      "sha256": "29cba91d1e2d8d9b6d6c01f1f7c4a5bfe571a68a3c4cd82e150c7ffaf9ce9371"
+    },
+    {
+      "path": "亚太杯中文赛/C题/C题02422.pdf",
+      "competition": "亚太杯中文赛",
+      "year": 2024,
+      "problem": "C",
+      "priority": 100,
+      "sha256": "d658bff3ad893a282b4b1449c1fc0705d2921daa401a39732262ed3f511aa1a7"
+    }
+  ]
+}

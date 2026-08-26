@@ -1,0 +1,29 @@
+{
+  "name": "guoyi-cn",
+  "version": 1,
+  "description": "全国大学生数学建模国一论文流程图默认样式",
+  "font": {
+    "family": "Microsoft YaHei",
+    "fallback": "SimSun",
+    "size": 14
+  },
+  "palette": {
+    "data": {"fillColor": "#EAF3F8", "strokeColor": "#4F7F9F"},
+    "model": {"fillColor": "#EEF6EA", "strokeColor": "#5E8C61"},
+    "solve": {"fillColor": "#FFF4E6", "strokeColor": "#B7791F"},
+    "check": {"fillColor": "#F3EEF8", "strokeColor": "#7A5C99"},
+    "output": {"fillColor": "#F8EEEE", "strokeColor": "#A65F5F"},
+    "neutral": {"fillColor": "#F7F7F7", "strokeColor": "#777777"}
+  },
+  "shapes": {
+    "process": "rounded=1;whiteSpace=wrap;html=1;",
+    "decision": "rhombus;whiteSpace=wrap;html=1;",
+    "data": "shape=cylinder3;whiteSpace=wrap;html=1;",
+    "document": "shape=mxgraph.flowchart.document;whiteSpace=wrap;html=1;",
+    "container": "swimlane;horizontal=0;startSize=110;whiteSpace=wrap;html=1;"
+  },
+  "edges": {
+    "style": "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;",
+    "arrow": "endArrow=classic;endFill=1;"
+  }
+}

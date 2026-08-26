@@ -31,6 +31,6 @@ Stop only after verification and a concise report of questions asked, answers fo
 
 主审只在三份专项意见完成后工作，负责统一官方权重、列出分歧及裁决依据、汇总总分/等级、给出一票否决项、前五项整改优先级和复核清单。主审必须追问自己的结论：是否遗漏赛题小问、是否把写作问题误判为模型问题、是否把未复现当成错误、是否有分数与证据不匹配；发现问题时回查材料后修正。
 
-若 `reference_excellent_papers=true`，只读取 DSH Home 下 `往年优秀论文/<赛事>` 目录用于校准完整度、图表密度和论证深度，禁止替代官方规则、复制表达或模仿文本。包括“国赛”在内的任一赛事目录不存在或为空时，都在报告中明确写“暂无样本”，继续使用规则量表，不得阻断评审。
+若 `reference_excellent_papers=true`，先从赛题或提交材料识别题号，再调用 `../_shared/scripts/discover_excellent_papers.py --competition <competition> --problem <识别到的题号> --limit 2`；无法可靠识别题号时省略 `--problem` 并把 `problem_match=false` 明确列为不确定性。只读取 `<DSH_HOME>/往年优秀论文/<赛事>/` 中发现脚本返回的样本，并执行 `../_shared/references/excellent-paper-policy.md`。报告必须列出返回状态、实际样本相对路径、赛事、题号、年份和是否精确匹配；返回 `catalog_missing`、`catalog_invalid`、`no_matching_sample`、`file_missing` 或 `hash_mismatch` 时写明“暂无样本”及原因，继续使用规则量表，不得阻断评审。开关关闭时不得扫描或读取论文库。
 
 评审默认只读，不直接改写提交材料。最终报告必须包含三份专项评审、主审汇总、证据定位、整改顺序与剩余不确定性；若用户随后明确要求修复，再按主审优先级实施并重新评分。

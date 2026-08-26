@@ -5,7 +5,8 @@
     "@deepseek-harness/dsh-mathmodel": "file:../../../plugins/dsh-mathmodel",
     "dsh-client-ui-skins": "file:../../../plugins/dsh-client-ui-skins",
     "dsh-llm-oauth": "github:ziyou979/dsh-llm-oauth",
-    "dsh-plugin-subscriptions": "^0.3.0"
+    "dsh-plugin-subscriptions": "^0.3.0",
+    "dsh-session-link": "^0.1.4"
   },
   "dsh": {
     "profile": {
@@ -14,7 +15,8 @@
         "@deepseek-ai/dsh-web-app",
         "dsh-plugin-subscriptions",
         "dsh-client-ui-skins",
-        "dsh-llm-oauth"
+        "dsh-llm-oauth",
+        "dsh-session-link"
       ]
     }
   }

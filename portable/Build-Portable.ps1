@@ -69,6 +69,37 @@ function Copy-Tree([string]$Source, [string]$Destination, [string[]]$ExcludeDirs
     if ($LASTEXITCODE -ge 8) { throw "复制失败：$Source -> $Destination（robocopy=$LASTEXITCODE）" }
 }
 
+function Get-ExcellentPaperRecords([string]$LibraryRoot) {
+    $root = [IO.Path]::GetFullPath($LibraryRoot).TrimEnd('\')
+    $catalogPath = Join-Path $root 'catalog.json'
+    if (-not (Test-Path -LiteralPath $catalogPath -PathType Leaf)) { throw "优秀论文库缺少 catalog.json：$root" }
+    $catalog = Get-Content -Raw -LiteralPath $catalogPath -Encoding utf8 | ConvertFrom-Json
+    if ($catalog.schema -ne 'dsh.excellent-papers.catalog/v1') { throw "优秀论文 catalog schema 无效：$root" }
+    $records = foreach ($paper in @($catalog.papers)) {
+        $relative = [string]$paper.path
+        if ([IO.Path]::IsPathRooted($relative) -or $relative -match '(^|[/\\])\.\.([/\\]|$)' -or $relative -match '\\') { throw "优秀论文路径非法：$relative" }
+        $file = [IO.Path]::GetFullPath((Join-Path $root ($relative -replace '/', '\')))
+        if (-not $file.StartsWith(($root + '\'), [StringComparison]::OrdinalIgnoreCase)) { throw "优秀论文路径逃逸：$relative" }
+        if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw "优秀论文文件缺失：$relative" }
+        $stream = [IO.File]::OpenRead($file)
+        try { $buffer = [byte[]]::new(5); $read = $stream.Read($buffer, 0, 5) } finally { $stream.Dispose() }
+        if ($read -ne 5 -or [Text.Encoding]::ASCII.GetString($buffer) -ne '%PDF-') { throw "优秀论文不是实际 PDF：$relative" }
+        $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $file).Hash.ToLowerInvariant()
+        if ($actual -ne ([string]$paper.sha256).ToLowerInvariant()) { throw "优秀论文 SHA-256 不一致：$relative" }
+        "$relative|$actual"
+    }
+    $diskCount = @(Get-ChildItem -LiteralPath $root -File -Filter '*.pdf' -Recurse).Count
+    if ($diskCount -ne @($records).Count) { throw "优秀论文磁盘数量与 catalog 不一致：disk=$diskCount catalog=$(@($records).Count)" }
+    return @($records | Sort-Object)
+}
+
+function Assert-SameExcellentPaperLibrary([string]$Expected, [string]$Actual) {
+    $expectedRecords = @(Get-ExcellentPaperRecords $Expected)
+    $actualRecords = @(Get-ExcellentPaperRecords $Actual)
+    $difference = @(Compare-Object $expectedRecords $actualRecords)
+    if ($difference.Count -ne 0) { throw "优秀论文库分发副本与源目录不一致：$Actual" }
+}
+
 function Install-NodeAndPython {
     $node = $manifest.components | Where-Object id -eq 'node'
     $python = $manifest.components | Where-Object id -eq 'python'
@@ -167,6 +198,10 @@ function Copy-Application {
             Copy-Tree $source (Join-Path $template $name) $excluded @('.credentials.yaml','.anonymous-user-id','.env','.env.*','*.log')
         }
     }
+    $paperLibrary = Join-Path $ProjectRoot '.dsh\往年优秀论文'
+    $paperTemplate = Join-Path $template '往年优秀论文'
+    Copy-Tree $paperLibrary $paperTemplate
+    Assert-SameExcellentPaperLibrary $paperLibrary $paperTemplate
     $plugin = Join-Path $app 'plugins\dsh-mathmodel'
     Push-Location $plugin
     try { & $npm install --omit=dev --ignore-scripts --no-audit --no-fund; & $npm run build } finally { Pop-Location }
@@ -284,6 +319,7 @@ Reset-BuildDirectory (Split-Path $unpack -Parent)
 if ($LASTEXITCODE -ne 0) { throw 'ZIP 解压复测失败。' }
 Assert-NoExternalLinks $unpack
 Assert-Sanitized $unpack
+Assert-SameExcellentPaperLibrary (Join-Path $ProjectRoot '.dsh\往年优秀论文') (Join-Path $unpack 'app\dsh-home-template\往年优秀论文')
 if (-not $SkipLargeRuntime) {
     & $powerShellHost -NoLogo -NoProfile -ExecutionPolicy Bypass -File (Join-Path $unpack 'portable\Test-Portable.ps1') -Root $unpack -Json | Set-Content -LiteralPath (Join-Path $unpack 'SELFTEST-UNPACKED.json') -Encoding utf8
     if ($LASTEXITCODE -ne 0) { throw 'ZIP 解压复测失败。' }

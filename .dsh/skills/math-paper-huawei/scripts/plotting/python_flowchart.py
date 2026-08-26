@@ -124,49 +124,75 @@ def build_source_script(title: str, nodes: list[FlowNode], edges: list[FlowEdge]
     payload_text = json.dumps(payload, ensure_ascii=False, indent=4)
     script = f"""from __future__ import annotations
 
-import importlib.util
 from pathlib import Path
-import sys
+import warnings
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 
 FLOW_SPEC = {payload_text}
 
 
-def load_skill_module():
-    candidates = [
-        Path(r"C:\\Users\\Lenovo\\.codex\\skills\\math-paper-huawei\\scripts\\plotting\\python_flowchart.py"),
-        Path(r"D:\\CodexHome\\.codex\\skills\\math-paper-huawei\\scripts\\plotting\\python_flowchart.py"),
-        Path(r"C:\\Users\\Lenovo\\.agents\\skills\\math-paper-huawei\\scripts\\plotting\\python_flowchart.py"),
-    ]
-    current = Path(__file__).resolve()
-    for candidate in candidates:
-        if candidate.exists() and candidate.resolve() != current:
-            spec = importlib.util.spec_from_file_location("math_paper_huawei_python_flowchart", candidate)
-            module = importlib.util.module_from_spec(spec)
-            if spec.loader is None:
-                continue
-            sys.modules[spec.name] = module
-            spec.loader.exec_module(module)
-            return module
-    raise RuntimeError("未找到 math-paper-huawei 的 python_flowchart.py")
-
-
 def main() -> int:
-    module = load_skill_module()
-    nodes = [module.FlowNode(**{{
-        "node_id": item["id"],
-        "label": item["label"],
-        "row": item["row"],
-        "column": item.get("column", 0),
-        "facecolor": item.get("facecolor", "#F4F7FB"),
-        "edgecolor": item.get("edgecolor", module.PALETTE["blue_main"]),
-    }}) for item in FLOW_SPEC["nodes"]]
-    edges = [module.FlowEdge(**item) for item in FLOW_SPEC["edges"]]
-    try:
-        module.validate_spec(nodes, edges)
-        module.draw_flowchart(FLOW_SPEC["title"], nodes, edges, Path(__file__).with_suffix(""))
-    except ValueError as exc:
-        raise SystemExit(str(exc))
+    nodes = FLOW_SPEC["nodes"]
+    node_ids = [item["id"] for item in nodes]
+    if not nodes or len(node_ids) != len(set(node_ids)):
+        raise SystemExit("流程图节点为空或 id 重复。")
+    known = set(node_ids)
+    if any(edge["source"] not in known or edge["target"] not in known for edge in FLOW_SPEC["edges"]):
+        raise SystemExit("流程图边引用了不存在的节点。")
+
+    columns = sorted({{item.get("column", 0) for item in nodes}})
+    max_row = max(item["row"] for item in nodes)
+    x_map = {{
+        column: 0.18 + index * (0.64 / max(1, len(columns) - 1)) if len(columns) > 1 else 0.5
+        for index, column in enumerate(columns)
+    }}
+    positions = {{
+        item["id"]: (x_map[item.get("column", 0)], 0.88 - item["row"] * (0.68 / max(1, max_row)))
+        for item in nodes
+    }}
+
+    plt.rcParams.update({{
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Microsoft YaHei", "SimHei", "Arial", "Helvetica", "DejaVu Sans"],
+        "svg.fonttype": "none",
+        "pdf.fonttype": 42,
+    }})
+    fig, ax = plt.subplots(figsize=(183 / 25.4, max(110, 34 * max(3, len(nodes))) / 25.4))
+    ax.set_axis_off()
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.text(0.5, 0.965, FLOW_SPEC["title"], ha="center", va="top", fontsize=10.5, fontweight="bold")
+    width, height = 0.22, 0.09
+    for item in nodes:
+        x, y = positions[item["id"]]
+        ax.add_patch(FancyBboxPatch(
+            (x - width / 2, y - height / 2), width, height,
+            boxstyle="round,pad=0.012,rounding_size=0.02",
+            linewidth=1.2, edgecolor=item.get("edgecolor", "#0F4D92"),
+            facecolor=item.get("facecolor", "#F4F7FB"),
+        ))
+        ax.text(x, y, item["label"], ha="center", va="center", fontsize=8, wrap=True)
+    for edge in FLOW_SPEC["edges"]:
+        start, end = positions[edge["source"]], positions[edge["target"]]
+        ax.add_patch(FancyArrowPatch(
+            (start[0], start[1] - height / 2), (end[0], end[1] + height / 2),
+            arrowstyle="-|>", mutation_scale=12, linewidth=1.2, color="#324A5F",
+        ))
+        if edge.get("label"):
+            ax.text((start[0] + end[0]) / 2, (start[1] + end[1]) / 2, edge["label"],
+                    ha="center", va="center", fontsize=7.2, color="#3F3F3F")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        fig.tight_layout(pad=1.2)
+    out_base = Path(__file__).with_suffix("")
+    for suffix in ("svg", "pdf", "png"):
+        fig.savefig(out_base.with_suffix("." + suffix), dpi=320, bbox_inches="tight")
+    plt.close(fig)
     return 0
 
 

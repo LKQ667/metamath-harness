@@ -36,6 +36,8 @@ def main() -> int:
             errors.append(f"Python 图未通过导出格式检查: {source or item}")
         if qa.get("editable_text_ok") is not True:
             errors.append(f"Python 图未通过可编辑文本检查: {source or item}")
+        if qa.get("profile") == "research" and qa.get("research_preflight_ok") is not True:
+            errors.append(f"科研图未通过严格导出预检: {source or item}")
 
     return write_report(not errors, "check_python_figure_quality", errors, args.output)
 

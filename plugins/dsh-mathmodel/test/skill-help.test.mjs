@@ -1,16 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readdir } from 'node:fs/promises';
+import { access, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { SkillHelpCatalog } from '../lib/index.js';
 
 const skillRoot = resolve(import.meta.dirname, '../../../.dsh/skills');
 
 test('技能说明覆盖当前 skills 目录的每一个 Skill', async () => {
-  const directories = (await readdir(skillRoot, { withFileTypes: true }))
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
+  const directories = [];
+  for (const entry of (await readdir(skillRoot, { withFileTypes: true })).filter((item) => item.isDirectory())) {
+    try {
+      await access(resolve(skillRoot, entry.name, 'SKILL.md'));
+      directories.push(entry.name);
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error;
+    }
+  }
+  directories.sort();
   const skills = await new SkillHelpCatalog(skillRoot).list();
   assert.deepEqual(skills.map((item) => item.skill), directories);
   assert.ok(skills.length >= 17);

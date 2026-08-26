@@ -52,6 +52,12 @@ FAMILY_PALETTE = {
 
 NATURE_WIDTH_MM = {"single": 89, "double": 183}
 ALLOWED_FORMATS = ("svg", "pdf", "png")
+PROFILE_FONTS = {
+    "competition_cn": ["Microsoft YaHei", "SimHei", "Arial", "Helvetica", "DejaVu Sans", "sans-serif"],
+    "competition_en": ["Arial", "Helvetica", "Microsoft YaHei", "SimHei", "DejaVu Sans", "sans-serif"],
+    "research": ["Arial", "Helvetica", "DejaVu Sans", "Microsoft YaHei", "SimHei", "sans-serif"],
+}
+PROFILE_ALIASES = {"nature": "competition_cn", "cn": "competition_cn", "en": "competition_en"}
 
 
 @dataclass(frozen=True)
@@ -64,16 +70,22 @@ def mm_to_inch(mm: float) -> float:
     return mm / 25.4
 
 
-def apply_py_nature_style(font_size: float = 7.0, axes_linewidth: float = 1.0, dark: bool = False) -> None:
+def normalize_profile(profile: str | None) -> str:
+    normalized = PROFILE_ALIASES.get((profile or "competition_cn").strip().lower(), (profile or "competition_cn").strip().lower())
+    if normalized not in PROFILE_FONTS:
+        raise ValueError(f"未知绘图配置: {profile}；可选值为 {', '.join(PROFILE_FONTS)}")
+    return normalized
+
+
+def apply_py_nature_style(
+    font_size: float = 7.0,
+    axes_linewidth: float = 1.0,
+    dark: bool = False,
+    profile: str = "competition_cn",
+) -> None:
+    profile = normalize_profile(profile)
     plt.rcParams["font.family"] = "sans-serif"
-    plt.rcParams["font.sans-serif"] = [
-        "Microsoft YaHei",
-        "SimHei",
-        "Arial",
-        "Helvetica",
-        "DejaVu Sans",
-        "sans-serif",
-    ]
+    plt.rcParams["font.sans-serif"] = PROFILE_FONTS[profile]
     plt.rcParams["svg.fonttype"] = "none"
     plt.rcParams["pdf.fonttype"] = 42
     plt.rcParams["ps.fonttype"] = 42
@@ -273,7 +285,14 @@ def add_panel_label(ax, label: str, x: float = -0.06, y: float = 1.02, color: st
     )
 
 
-def save_py_nature_figure(fig, out_base: str | Path, dpi: int = 300, formats: tuple[str, ...] = ALLOWED_FORMATS) -> list[Path]:
+def save_py_nature_figure(
+    fig,
+    out_base: str | Path,
+    dpi: int = 300,
+    formats: tuple[str, ...] = ALLOWED_FORMATS,
+    profile: str = "competition_cn",
+) -> list[Path]:
+    profile = normalize_profile(profile)
     out_base = Path(out_base)
     out_base.parent.mkdir(parents=True, exist_ok=True)
     if out_base.suffix:
@@ -286,16 +305,26 @@ def save_py_nature_figure(fig, out_base: str | Path, dpi: int = 300, formats: tu
         target = out_base.with_suffix(f".{fmt}")
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
-            fig.savefig(target, dpi=dpi, bbox_inches="tight")
+            save_options = {} if profile == "research" else {"bbox_inches": "tight"}
+            fig.savefig(target, dpi=dpi, **save_options)
         saved.append(target)
     plt.close(fig)
     return saved
 
 
-def run_py_nature_qa(fig_path_or_fig_object, profile: str = "nature") -> QAResult:
+def run_py_nature_qa(fig_path_or_fig_object, profile: str = "competition_cn") -> QAResult:
+    profile = normalize_profile(profile)
     if hasattr(fig_path_or_fig_object, "savefig"):
-        checks = {"fig_object": True, "cn_font_configured": _cn_font_configured()}
-        return QAResult(True, checks)
+        checks = {
+            "profile": profile,
+            "fig_object": True,
+            "export_preflight_complete": False,
+            "font_profile_ok": _font_profile_configured(profile),
+            "cn_text_ok": _cn_font_configured() if profile == "competition_cn" else True,
+            "research_preflight_ok": False,
+            "issues": ["内存 Figure 尚未完成导出预检。"],
+        }
+        return QAResult(profile != "research" and checks["font_profile_ok"], checks)
 
     base = Path(fig_path_or_fig_object)
     if base.suffix:
@@ -314,6 +343,14 @@ def run_py_nature_qa(fig_path_or_fig_object, profile: str = "nature") -> QAResul
         "pdf_nonempty": False,
         "svg_color_count_reasonable": False,
         "cn_font_configured": _cn_font_configured(),
+        "profile": profile,
+        "export_ok": False,
+        "export_preflight_complete": False,
+        "font_profile_ok": False,
+        "canvas_size_ok": profile != "research",
+        "research_font_size_ok": profile != "research",
+        "research_preflight_ok": False,
+        "issues": [],
     }
 
     for item in stems:
@@ -326,6 +363,13 @@ def run_py_nature_qa(fig_path_or_fig_object, profile: str = "nature") -> QAResul
                 checks["editable_text_ok"] = checks["svg_has_text_nodes"]
                 color_count = _svg_distinct_color_count(item)
                 checks["svg_color_count_reasonable"] = 1 <= color_count <= 128
+                svg_text = item.read_text(encoding="utf-8", errors="ignore")
+                checks["font_profile_ok"] = _svg_font_profile_ok(svg_text, profile)
+                if profile == "research":
+                    checks["canvas_size_ok"] = _svg_canvas_width_ok(root)
+                    font_ok, font_issues = _research_svg_font_sizes(root)
+                    checks["research_font_size_ok"] = font_ok
+                    checks["issues"].extend(font_issues)
         elif item.suffix == ".pdf":
             checks["pdf_exists"] = item.exists()
             checks["pdf_nonempty"] = item.exists() and item.stat().st_size > 1024
@@ -333,7 +377,27 @@ def run_py_nature_qa(fig_path_or_fig_object, profile: str = "nature") -> QAResul
             checks["png_exists"] = item.exists()
             checks["png_nonempty"] = item.exists() and item.stat().st_size > 1024
 
-    passed = all(checks.values())
+    checks["export_ok"] = bool(
+        checks["svg_exists"] and checks["pdf_exists"] and checks["png_exists"]
+        and checks["svg_parse_ok"] and checks["png_nonempty"] and checks["pdf_nonempty"]
+    )
+    checks["export_preflight_complete"] = checks["export_ok"]
+    checks["cn_text_ok"] = checks["font_profile_ok"] if profile == "competition_cn" else True
+    checks["research_preflight_ok"] = bool(
+        profile == "research"
+        and checks["export_ok"]
+        and checks["editable_text_ok"]
+        and checks["font_profile_ok"]
+        and checks["canvas_size_ok"]
+        and checks["research_font_size_ok"]
+    )
+    required = [
+        "export_ok", "editable_text_ok", "font_profile_ok",
+        "svg_color_count_reasonable", "cn_text_ok",
+    ]
+    if profile == "research":
+        required.append("research_preflight_ok")
+    passed = all(bool(checks[key]) for key in required)
     return QAResult(passed, checks)
 
 
@@ -522,6 +586,65 @@ def make_inter_event_ccdf(ax):
 def _cn_font_configured() -> bool:
     fonts = plt.rcParams.get("font.sans-serif", [])
     return any(font in fonts for font in ["Microsoft YaHei", "SimHei"])
+
+
+def _font_profile_configured(profile: str) -> bool:
+    fonts = list(plt.rcParams.get("font.sans-serif", []))
+    preferred = PROFILE_FONTS[profile][:2]
+    return bool(fonts) and any(font in fonts[:2] for font in preferred)
+
+
+def _svg_font_profile_ok(svg_text: str, profile: str) -> bool:
+    preferred = PROFILE_FONTS[profile][:]
+    return any(font.lower() in svg_text.lower() for font in preferred if font != "sans-serif")
+
+
+def _svg_length_to_mm(value: str | None) -> float | None:
+    if not value:
+        return None
+    match = re.fullmatch(r"\s*([0-9.]+)\s*(mm|cm|in|pt|px)?\s*", value)
+    if not match:
+        return None
+    number = float(match.group(1))
+    unit = match.group(2) or "px"
+    return number * {"mm": 1.0, "cm": 10.0, "in": 25.4, "pt": 25.4 / 72.0, "px": 25.4 / 96.0}[unit]
+
+
+def _svg_canvas_width_ok(root: ET.Element, tolerance_mm: float = 1.5) -> bool:
+    width_mm = _svg_length_to_mm(root.attrib.get("width"))
+    return width_mm is not None and any(abs(width_mm - expected) <= tolerance_mm for expected in NATURE_WIDTH_MM.values())
+
+
+def _research_svg_font_sizes(root: ET.Element) -> tuple[bool, list[str]]:
+    issues: list[str] = []
+    for node in root.iter():
+        if not node.tag.endswith("text"):
+            continue
+        style = node.attrib.get("style", "")
+        size_value = node.attrib.get("font-size")
+        if not size_value:
+            match = re.search(r"font(?:-size)?\s*:\s*([0-9.]+)\s*(px|pt)?", style)
+            size_value = "".join(match.groups(default="")) if match else None
+        size_pt = _svg_font_size_to_pt(size_value)
+        label = "".join(node.itertext()).strip()
+        weight = (node.attrib.get("font-weight", "") + " " + style).lower()
+        panel_label = bool(re.fullmatch(r"[a-z]", label)) and ("bold" in weight or "700" in weight)
+        if size_pt is None:
+            issues.append(f"无法解析字号: {label[:20] or '<空文本>'}")
+        elif not (5.0 <= size_pt <= 7.0 or (panel_label and abs(size_pt - 8.0) <= 0.15)):
+            issues.append(f"科研字号越界: {label[:20] or '<空文本>'}={size_pt:.2f} pt")
+    return not issues, issues
+
+
+def _svg_font_size_to_pt(value: str | None) -> float | None:
+    if not value:
+        return None
+    match = re.fullmatch(r"\s*([0-9.]+)\s*(px|pt)?\s*", value)
+    if not match:
+        return None
+    number = float(match.group(1))
+    # Matplotlib writes its point-sized text as SVG px values in the same user-unit scale.
+    return number
 
 
 def _svg_distinct_color_count(svg_path: Path) -> int:

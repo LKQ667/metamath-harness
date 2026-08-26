@@ -2,6 +2,8 @@
 
 ## 模板入口
 
+模板不绑定单一语言配置：默认 competition_cn；英文赛事用 competition_en；仅科研投稿用 research。切换配置不改变数据、图型、色板和布局语义。
+
 内置模板目录：`assets/templates/py-figures/`
 
 - `trend_confidence_template.py`

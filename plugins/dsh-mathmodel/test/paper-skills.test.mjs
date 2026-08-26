@@ -56,3 +56,25 @@ test('手动目录可发现论文卡片并把锁定值写入结构化草稿', as
   assert.match(rendered.text, /"figure_total": 15/);
   assert.match(rendered.text, /"run_to_pdf": true/);
 });
+
+test('三套论文 Skill 使用统一优秀论文发现器并保持默认值', async () => {
+  const expected = new Map([
+    ['math-paper-cn', ['国赛', false]],
+    ['math-paper-huashu', ['华数杯', false]],
+    ['math-paper-huawei', ['华为杯', false]],
+  ]);
+  for (const [name, [competition, defaultValue]] of expected) {
+    const source = await readFile(resolve(root, name, 'SKILL.md'), 'utf8');
+    const card = parseDocument(await readFile(resolve(root, name, 'mathmodel-card.yml'), 'utf8'), { strict: true, uniqueKeys: true }).toJS();
+    assert.match(source, /\.\.\/_shared\/scripts\/discover_excellent_papers\.py/);
+    assert.match(source, new RegExp(`--competition ${competition}`));
+    assert.match(source, /--limit 2/);
+    assert.match(source, /暂无匹配样本/);
+    assert.match(source, /不得[^。]*阻断论文流程/);
+    const field = card.fields.find((item) => item.id === 'reference_excellent_papers');
+    assert.equal(field.type, 'boolean');
+    assert.equal(field.default, defaultValue);
+  }
+  const huawei = await readFile(resolve(root, 'math-paper-huawei', 'SKILL.md'), 'utf8');
+  assert.doesNotMatch(huawei, /华为杯优秀论文_2023_2024/);
+});

@@ -2,8 +2,10 @@
 
 基于 DeepSeek Harness `0.1.0-rc.7` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
 
-## 最近更新（2026-08-19）
+## 最近更新（2026-08-25）
 
+- **技术路线图新四类模板改为原创原型原样直录**：`kind=roadmap` 命中的四个模板（双面板双层 / 阶段块 / 侧标步骤 / 堆叠横幅）不再重绘，改为用户授权原创原型逐项直录——布局、配色、渐变按钮、悬浮边与航点全保真，文字由 AI 按 labels 键替换为项目语境（中文自动雅黑）；配套校验同步支持嵌套布局与悬浮边，并新增 `math-paper-cn-drawio` 绘图技能随包分发。
+- **优秀论文库统一并随程序分发**：国赛、华为杯、美赛和亚太杯等 35 份优秀论文集中在 `.dsh/往年优秀论文/`，源码与便携版都会携带；论文和评审卡片开启优秀论文校准后按赛事、题号最多选两篇，找不到匹配样本会继续按官方规则运行。
 - **全自动论文流程提速：Goal 全程静默 + 门禁失败单回合闭环**：三张论文卡片开启"全自动持续到最终 PDF"后，Goal 存续期间每回合只回"…"不再写中期报告；阶段门禁失败时自动生成 `failures_summary.json` 失败清单，要求一次性读全并单回合修完再重跑，杜绝逐项拉锯。
 - **新增 Grok 订阅生图连接**（第六类生图连接 `grok-subscription`）：走 xAI 官方 Images API（`grok-imagine-image` 系列模型），复用 Grok 订阅登录，无需 API Key；订阅页完成 Grok 登录后，生图模型区新建"Grok 订阅"连接即可用。
 - **修复数学建模全自动流程概率不触发 Goal 的问题**：三张论文卡片（math-paper-cn / huashu / huawei）开启"全自动持续到最终 PDF"时，会在执行要求首条注入 Goal 激活指令。
@@ -153,11 +155,18 @@ plugins/dsh-mathmodel/   外置 Mathmodel 插件（源码、测试、脚本、�
 .dsh/.agent-presets/     Agent Preset：mathmodel（数学建模）、imagegen（标准生图）
 .dsh/profiles/web/       Web Profile 接线（package.json、pnpm-lock、cordis.patch.yml）
 .dsh/skills/             18 个手动 Skill，其中 12 个带 mathmodel-card.yml 参数卡片
+.dsh/往年优秀论文/       随程序分发的统一论文库、目录清单与 35 份 PDF
 portable/                Windows 便携版构建、启动、自检脚本
 构建便携版.ps1            构建便携运行包入口
 启动-DeepSeek-Harness.cmd 便携版启动入口
 依赖自检.cmd              依赖预检入口
 ```
+
+## 内置优秀论文库
+
+程序把可用样本统一放在 `.dsh/往年优秀论文/`，并通过 `catalog.json` 记录赛事、年份、题号和 SHA-256。`math-paper-cn`、`math-paper-huashu`、`math-paper-huawei` 与 `grill-ai-review` 保留原来的 boolean 开关：开启后只选择同赛事、同题号的样本，默认最多两篇；目录为空、题号不匹配或文件校验失败时会说明原因并继续，不会卡住论文或评审流程。
+
+新增或替换 PDF 后，运行 `python .dsh/skills/_shared/scripts/discover_excellent_papers.py --dsh-home .dsh --verify-all` 核验目录清单。内置 PDF 会使源码和发行包增加约 162 MiB。
 
 ## 可选依赖
 

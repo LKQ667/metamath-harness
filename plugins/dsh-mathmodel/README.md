@@ -176,4 +176,4 @@ npm test
 
 ## 兼容性
 
-当前仅支持 DeepSeek Harness `0.1.0-rc.7` 和 Node.js 22 及以上。版本门是有意的失败关闭策略：升级官方 Harness 后，应先针对 Remote、Slot、Input Trigger、Conversation 和 Preset 行为完成回归，再更新兼容版本。
+当前仅支持 DeepSeek Harness `0.1.1-rc.2` 和 Node.js 22 及以上。版本门是有意的失败关闭策略：升级官方 Harness 后，应先针对 Remote、Slot、Input Trigger、Conversation 和 Preset 行为完成回归，再更新兼容版本。

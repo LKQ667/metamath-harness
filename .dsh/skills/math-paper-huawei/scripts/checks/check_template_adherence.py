@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from common import project_arg, read_text, write_report
@@ -33,12 +34,17 @@ def main() -> int:
         return write_report(False, "check_template_adherence", errors, args.output)
 
     text = read_text(tex_path)
-    if "\\tableofcontents" in text or "\\maketoc" in text:
-        errors.append("华为杯论文默认不生成目录，`main.tex` 中禁止出现 `\\tableofcontents` 或 `\\maketoc`。")
-    if (project / "论文" / "main.toc").exists():
-        errors.append("发现 `论文/main.toc`，说明生成过目录页；最终模板不得保留目录产物。")
     if "\\maketitle" not in text:
         errors.append("华为杯封面必须由 GMCMthesis 模板的 `\\maketitle` 生成，不得删除或另造封面。")
+    maketoc_match = re.search(r"(?m)^[ \t]*\\maketoc\b", text)
+    if maketoc_match is None:
+        errors.append("华为杯目录必须由 GMCMthesis 模板原生的 `\\maketoc` 生成（位于摘要之后），不得省略。")
+    else:
+        end_abstract = text.find("\\end{abstract}")
+        if end_abstract != -1 and maketoc_match.start() < end_abstract:
+            errors.append("`\\maketoc` 必须位于摘要之后（官方顺序：封面→摘要→目录→正文，与官方示例 example.tex 一致）。")
+    if "\\tableofcontents" in text:
+        errors.append("目录必须使用模板原生 `\\maketoc`，禁止直接调用 `\\tableofcontents` 或手写目录环境。")
     if "\\begin{abstract}" not in text or "\\end{abstract}" not in text:
         errors.append("华为杯模板必须使用 gmcmthesis 提供的 `abstract` 环境。")
 

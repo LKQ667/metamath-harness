@@ -14,8 +14,8 @@ test('只接受当前锁定的 DeepSeek Harness 版本', () => {
 
 test('错误版本给出可操作的中文错误', () => {
   assert.throws(
-    () => assertCompatibleHarnessVersion('0.1.0-rc.6'),
-    /需要 0\.1\.0-rc\.7，当前 0\.1\.0-rc\.6/,
+    () => assertCompatibleHarnessVersion('0.1.0-rc.7'),
+    /需要 0\.1\.1-rc\.2，当前 0\.1\.0-rc\.7/,
   );
 });
 

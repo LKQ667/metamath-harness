@@ -41,4 +41,13 @@ test('优秀论文目录为空时按“暂无样本”正常回退', async () =>
   const source = await readFile(resolve(skills, 'grill-ai-review', 'SKILL.md'), 'utf8');
   assert.match(source, /暂无样本/);
   assert.match(source, /不得阻断评审/);
+  assert.match(source, /\.\.\/_shared\/scripts\/discover_excellent_papers\.py/);
+  assert.match(source, /--competition <competition>/);
+  assert.match(source, /--limit 2/);
+  assert.match(source, /problem_match=false/);
+  assert.match(source, /实际样本相对路径/);
+  const card = parseDocument(await readFile(resolve(skills, 'grill-ai-review', 'mathmodel-card.yml'), 'utf8'), { strict: true, uniqueKeys: true }).toJS();
+  const field = card.fields.find((item) => item.id === 'reference_excellent_papers');
+  assert.equal(field.type, 'boolean');
+  assert.equal(field.default, true);
 });

@@ -1,0 +1,4 @@
+interface:
+  display_name: "数模论文 Draw.io 绘图"
+  short_description: "生成并严验中文数模论文级 draw.io 图"
+  default_prompt: "Use $math-paper-cn-drawio to create and validate a Chinese mathematical-modeling paper diagram."

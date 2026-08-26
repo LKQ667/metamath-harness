@@ -9,6 +9,8 @@ disable-model-invocation: true
 
 ## Overview
 
+服务顺序固定为：中文数学建模竞赛、英文数学建模竞赛、科研投稿。中文竞赛规则优先，科研期刊硬规则不得反向覆盖竞赛默认。
+
 `Py-Nature` 是一个 **Python-only** 的数学建模论文绘图技能，目标是把“数据语义 -> 图型 -> 多面板布局 -> Nature 规范导出”做成稳定流程。
 
 先判断任务类型，再选图，不先画柱状图再凑解释。
@@ -50,6 +52,7 @@ disable-model-invocation: true
    - 默认禁止把“比较”直接降级成二维竖直柱图
 
 3. **应用统一样式**
+   - 配置：competition_cn（默认，中文字体优先）、competition_en（Arial/Helvetica 优先）、research（科研严格预检）。
    - 用 `scripts/py_nature_core.py` 中的：
      - `apply_py_nature_style(...)`
      - `save_py_nature_figure(...)`
@@ -62,7 +65,9 @@ disable-model-invocation: true
    - 面板不要求等大
    - 先看 [references/layout-recipes.md](references/layout-recipes.md)
 
-5. **导出前 QA**
+5. **导出后 QA**
+   - 对导出基础路径执行 QA；内存 Figure 不等于完成导出预检。
+   - 只有 research 使用 89/183 mm、5–7 pt 普通文字和 8 pt 小写加粗 panel 标签硬规则。
    - 字体、字号、留白、对比度、彩色文字、可编辑文本、文件格式都按 [references/nature-rules.md](references/nature-rules.md) 过一遍
 
 ## 图型决策硬规则
@@ -121,6 +126,8 @@ disable-model-invocation: true
 | [scripts/template_registry.py](scripts/template_registry.py) | 想查模板名、适用任务、推荐场景 |
 
 ## 使用边界
+
+- QA 只证明可自动核查的导出条件，不替代统计正确性、文字重叠和人工视觉审阅
 
 - 本技能强调**论文级**输出，不追求交互特效
 - 可以用中文标签，但仍遵循 Nature 风格的克制排版

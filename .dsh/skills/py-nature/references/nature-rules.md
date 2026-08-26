@@ -1,4 +1,6 @@
-# Nature 官方硬规范
+# 科研严格模式：Nature 官方规范
+
+本文件只约束 profile=research。数学建模竞赛优先遵循赛事模板、语言和缩印可读性。
 
 来源：
 - https://research-figure-guide.nature.com/figures/preparing-figures-our-specifications/
@@ -28,6 +30,9 @@
 - 复杂图例优先改成关键线或直接标注
 
 ## 对 Py-Nature 的落地约束
+
+- 自动 QA 检查 SVG 文字节点、字体声明、89/183 mm 画布、5–7 pt 普通文字、8 pt 小写加粗 panel 标签及三格式非空。
+- 自动 QA 不认证 PDF 字体嵌入、文字重叠、统计正确性或期刊录用条件；这些项目必须人工复核。
 
 - 默认白底
 - 默认去掉 top/right spines

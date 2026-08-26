@@ -36,6 +36,9 @@ def main() -> int:
             errors.append(f"Python 图缺少 chart_family: {source or item}")
         if item.get("paper_ready") is not True:
             errors.append(f"Python 图未标记 paper_ready=true: {source or item}")
+        qa = item.get("qa")
+        if isinstance(qa, dict) and qa.get("profile") == "research" and qa.get("research_preflight_ok") is not True:
+            errors.append(f"科研图的 paper_ready 缺少严格预检证据: {source or item}")
 
         source_path = project / source if source else None
         if not source:

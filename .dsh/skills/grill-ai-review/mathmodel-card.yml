@@ -33,6 +33,7 @@ fields:
     label: 使用优秀论文校准完成度
     type: boolean
     default: true
+    description: 开启后从随程序分发的对应赛事论文库中按识别到的题号最多选取两篇，缺样本不阻断评审。
   - id: focus
     label: 特别关注维度
     type: multiselect

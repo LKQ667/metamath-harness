@@ -15,6 +15,7 @@ disable-model-invocation: true
 
 - 本 Skill 只能由用户手动调用。若调用文本包含 `dsh.mathmodel.request/v1` JSON，先校验 `skill` 必须为 `math-paper-huashu`，再把 `options` 作为本次运行的锁定配置；卡片已经提供的值不得再次询问。`problem_path` 和 `output_dir` 相对路径均以当前工作区解析。
 - 锁定字段必须贯穿项目状态和门禁：`body_pages` 控制正文目标，但不得突破当届华数杯官方页数上限；`competition_language` 锁定赛事语言为中文或英文；`figure_total` 控制全文最终入文图片目标总数，默认 15 张并允许用户自定义；`bar_policy` 分别表示禁用柱状图、仅在既有例外条件成立时少用、按图型决策正常使用；`three_d_preference`、`reference_excellent_papers` 分别控制三维图评估和优秀论文完成度校准；`userNotes` 作为补充约束。卡片值与官方规则冲突时以官方规则为准并记录冲突。
+- 当 `reference_excellent_papers=true` 时，调用 `../_shared/scripts/discover_excellent_papers.py --competition 华数杯 --problem <当前题号> --limit 2`，只读取 `<DSH_HOME>/往年优秀论文/华数杯/` 中发现脚本返回的同题样本，并执行 `../_shared/references/excellent-paper-policy.md`。必须在项目状态中记录返回状态和实际样本；返回 `catalog_missing`、`catalog_invalid`、`no_matching_sample`、`file_missing` 或 `hash_mismatch` 时写明“暂无匹配样本”及原因，继续使用官方规则、华数杯模板、`references/model-writing-b477.md` 的抽象规则和通用量表，不得阻断论文流程。开关关闭时不得扫描或读取论文库。
 - `drawing_mode=Draw.io成图+AI概念提示词` 时用 Draw.io 生成流程类图并只保留概念图提示词；`Draw.io成图` 时仍保留门禁要求的可追溯概念提示词但不调用生图；`AI全自动绘图` 只有在 `image_generate` 健康、`confirm_paid_calls=true` 且 `ai_image_limit>0` 时才能调用，累计数量不得超过上限。任一条件不满足时自动退回 Draw.io 成图加概念提示词并在 manifest 记录原因，不重复追问、不产生费用。
 - `run_to_pdf=true` 时先调用 `get_goal`；当前会话无 Goal 时调用 `create_goal`，目标明确写为持续完成本项目并交付通过门禁的华数杯 PDF。已有同一目标则继续，禁止覆盖无关 Goal。持续推进 step0–step5，只有缺少不可替代的赛题、必要数据或官方赛事规则且同一阻塞连续存在达到 Goal 规则阈值时才可标记 blocked；不得因工作量、普通工具失败或可替代方案而停止。只有最终 PDF、step5 报告与 `verify_delivery.py` 全部通过后才能标记 complete。
 
@@ -25,6 +26,7 @@ disable-model-invocation: true
 - 全流程从零持续推进到格式规范的完整 LaTeX/PDF 论文，禁止中途等待确认、暂停或无界重试。同一失败原因采用同一修复策略最多连续尝试 3 次；仍失败时必须分析根因并切换安全替代方案，继续完成后续工作，禁止重复执行无状态变化的命令。门禁失败必须自动修复并重跑，但不得以 Word 生成或转换作为补救方案。
 - 数学建模图表必须按 `competition_language` 选择的中文或英文达到顶刊一区 Top 1 绘图标准，包括信息密度、构图、配色、字体层级、图例、坐标轴、图注与印刷可读性。优先使用有效的 mathmodel 卡片锁定绘图模式并同步写入 `项目状态.json` 与 `figures/manifest.json`；仅在没有结构化配置的手动调用或旧项目缺记录时询问一次，不得重复询问、猜测或静默切换。数据相关绘图始终沿用既有 Python 链路。
 - 非数据绘图严格按 `references/drawing-pipeline.md` 执行。Draw.io 模式只自动生成流程图、问题分析流程图和技术路线图，概念类图保留 2–4 份提示词且不生图；AI 模式保留 2–4 份概念类提示词并逐份自动调用 Image Gen 生成候选图，另至少生成一张流程类图，不等待二次确认。任一必需成图、工具验证或 QA 缺失均硬阻断交付。
+- 技术路线图必须使用 `drawio_pipeline.py build --brief ... --labels-json ...` 原子选择并生成，禁止手写 XML、回退旧模板或自造 `template_id`；英文原型与当前题目不同只能通过 labels 中文化，最终源文件结构和 manifest 必须通过模板指纹一致性门禁。
 - 所有 Python 绘图必须先按“任务语义 -> 图型”决策，再走本技能内置顶刊绘图链路，导出 `svg + pdf + png` 并完成中文字体、可编辑文本和论文级版式 QA；交付前必须检查标题、坐标轴、图例、注释是否乱码、丢字、方框或问号替代字符，未通过者不得入文；不得依赖外部 `Py-Nature` skill 或外部绘图模板路径。
 - `bar_policy=禁用` 是零例外硬约束：任何数据语义（包括时间轴、甘特图和区间图）都不得调用柱形 API（`bar/Bar`、`barh`、`broken_barh`、`barplot`、`mark_bar`、`vbar/hbar`、`kind="bar/barh"` 等），区间改用 `hlines/plot` 与端点标记；`bar_policy=少用` 仅在“类别很少、必须零基线、核心任务是绝对高度比较”同时成立且同源 manifest 条目写明完整 `bar_exception` 时允许；`bar_policy=正常` 仍须服从任务语义与信息密度。
 - Python 图强烈建议优先评估顶刊一区中文三维图，不是必须采用，但每轮图型决策都要判断是否可用三维曲面、三维散点、三维轨迹、三维场或三维响应面提升信息密度，并在三轮自查中记录“三维图可行性评估”。

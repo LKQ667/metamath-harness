@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Check abstract page boundary and high-risk layout commands."""
+"""Check abstract spans at most two pages (GMCMthesis) plus layout commands."""
 
 from __future__ import annotations
 
@@ -11,8 +11,10 @@ from common import project_arg, read_text, write_report
 
 
 LABEL = "\\label{abstract:end}"
+LABEL_START = "\\label{abstract:start}"
 MIN_ABSTRACT_CHARS = 800
 TARGET_ABSTRACT_CHARS = (850, 1050)
+MAX_ABSTRACT_PAGES = 2
 FORCED_BREAK_RE = re.compile(r"\\(?:newpage|clearpage|pagebreak|vfill)\b")
 VSPACE_RE = re.compile(r"\\vspace\*?\s*\{([^}]*)\}")
 
@@ -31,10 +33,10 @@ def abstract_block(text: str) -> str:
     return text[start : end + len(LABEL)]
 
 
-def abstract_page_from_aux(aux_text: str) -> str | None:
+def abstract_page_from_aux(aux_text: str, label: str = "abstract:end") -> str | None:
     patterns = [
-        r"\\newlabel\{abstract:end\}\{\{[^{}]*\}\{([^{}]+)\}",
-        r"\\newlabel\{abstract:end\}.*?\{([0-9]+)\}",
+        rf"\\newlabel\{{{re.escape(label)}\}}\{{\{{[^{{}}]*\}}\{{([^{{}}]+)\}}",
+        rf"\\newlabel\{{{re.escape(label)}\}}.*?\{{([0-9]+)\}}",
     ]
     for pattern in patterns:
         match = re.search(pattern, aux_text)
@@ -75,12 +77,17 @@ def validate_abstract(text: str, aux_text: str | None) -> tuple[list[str], dict]
     huawei = "\\documentclass[bwprint]{gmcmthesis}" in text or "\\documentclass{gmcmthesis}" in text
     if text.count(LABEL) != 1:
         errors.append(f"论文主文件必须且只能包含 1 个摘要结束标记，当前为 {text.count(LABEL)} 个。")
+    if huawei and text.count(LABEL_START) != 1:
+        errors.append(
+            f"华为杯主稿必须且只能包含 1 个摘要起始标记 `{LABEL_START}`（紧跟 `\\begin{{abstract}}` 之后），当前为 {text.count(LABEL_START)} 个。"
+        )
     block = abstract_block(text)
     length = text_length(block) if block else 0
     details = {
         "effective_chars": length,
         "minimum_chars": MIN_ABSTRACT_CHARS,
         "target_chars": list(TARGET_ABSTRACT_CHARS),
+        "start_page": None,
         "end_page": None,
     }
     if not block:
@@ -92,7 +99,7 @@ def validate_abstract(text: str, aux_text: str | None) -> tuple[list[str], dict]
             label_pos = text.find(LABEL)
             keywords_pos = text.find("\\keywords{")
             if label_pos != -1 and keywords_pos != -1 and label_pos < keywords_pos:
-                errors.append("摘要结束标记必须放在 `\\keywords{}` 之后，确保摘要与关键词都限制在第一页。")
+                errors.append("摘要结束标记必须放在 `\\keywords{}` 之后，确保摘要与关键词都被计入摘要页数。")
         elif "关键词" not in block or block.rfind("关键词") > block.rfind(LABEL):
             errors.append("摘要结束标记必须放在关键词之后，确保摘要与关键词都限制在第一页。")
         for line_no, line in enumerate(block.splitlines(), 1):
@@ -103,24 +110,35 @@ def validate_abstract(text: str, aux_text: str | None) -> tuple[list[str], dict]
                     errors.append(f"摘要区域第 {line_no} 行存在过大的 vspace: {match.group(0)}")
         if length < MIN_ABSTRACT_CHARS:
             errors.append(
-                f"摘要有效文字约 {length} 字，未达到尽量铺满第一页的最低要求 {MIN_ABSTRACT_CHARS} 字；"
+                f"摘要有效文字约 {length} 字，未达到最低要求 {MIN_ABSTRACT_CHARS} 字；"
                 f"建议控制在 {TARGET_ABSTRACT_CHARS[0]}-{TARGET_ABSTRACT_CHARS[1]} 字并重新编译。"
             )
 
     if aux_text is None:
-        errors.append("缺少 `论文/main.aux`，无法确认摘要与关键词是否全部位于第一页；请重新编译 LaTeX。")
+        errors.append("缺少 `论文/main.aux`，无法确认摘要页数；请重新编译 LaTeX。")
     else:
-        page = abstract_page_from_aux(aux_text)
-        details["end_page"] = page
-        if page is None:
+        end_page = abstract_page_from_aux(aux_text, "abstract:end")
+        details["end_page"] = end_page
+        if end_page is None:
             errors.append("`论文/main.aux` 中未找到 `abstract:end` 页码记录，请重新编译 LaTeX。")
-        elif page != "1":
-            errors.append(f"摘要或关键词结束标记位于第 {page} 页，必须压回第一页，禁止交付。")
+        elif huawei:
+            start_page = abstract_page_from_aux(aux_text, "abstract:start")
+            details["start_page"] = start_page
+            if start_page is None:
+                errors.append("`论文/main.aux` 中未找到 `abstract:start` 页码记录，请重新编译 LaTeX。")
+            else:
+                span = int(end_page) - int(start_page) + 1
+                if span > MAX_ABSTRACT_PAGES:
+                    errors.append(
+                        f"摘要与关键词合计跨 {span} 页（第 {start_page}–{end_page} 页），超过华为杯官方允许的 {MAX_ABSTRACT_PAGES} 页上限，必须压缩。"
+                    )
+        elif end_page != "1":
+            errors.append(f"摘要或关键词结束标记位于第 {end_page} 页，必须压回第一页，禁止交付。")
     return errors, details
 
 
 def main() -> int:
-    parser = project_arg("检查摘要限制在第一页并尽量写满")
+    parser = project_arg("检查摘要与关键词合计不超过两页（华为杯官方允许）且不少于最低字数")
     args = parser.parse_args()
     project = Path(args.project).resolve()
     tex_path = project / "论文" / "main.tex"

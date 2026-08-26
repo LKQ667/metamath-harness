@@ -11,7 +11,10 @@ from pathlib import Path
 from common import load_json, project_arg, read_text, write_report
 
 
-LISTING_RE = re.compile(r"\\begin\{lstlisting\}(?:\[[^\]]*\])?(.*?)\\end\{lstlisting\}", re.DOTALL)
+LISTING_RE = re.compile(
+    r"\\begin\{(lstlisting|Python|Matlab)\}(?:\[[^\]]*\])?(?:\{[^{}]*\})?(.*?)\\end\{\1\}",
+    re.DOTALL,
+)
 MARKDOWN_FENCE_RE = re.compile(r"^\s*(```|~~~)")
 DECORATION_RE = re.compile(r"^\s*(?:[#/%*=\\-]\s*){4,}$")
 COMMENT_LINE_RE = re.compile(r"^\s*(#|//|/\*|\*|%|\"\"\"|''')")
@@ -30,8 +33,8 @@ def appendix_text(text: str) -> str:
 def listing_blocks(text: str) -> list[tuple[int, str]]:
     blocks: list[tuple[int, str]] = []
     for match in LISTING_RE.finditer(text):
-        line_no = text[: match.start(1)].count("\n") + 1
-        blocks.append((line_no, match.group(1)))
+        line_no = text[: match.start(2)].count("\n") + 1
+        blocks.append((line_no, match.group(2)))
     return blocks
 
 

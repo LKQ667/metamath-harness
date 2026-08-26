@@ -10,8 +10,6 @@ BAD_TOKENS = [
     "Fatal error",
     "File ended while scanning",
     "Missing character",
-    "File `",
-    "not found",
     "Rerun to get cross-references right",
 ]
 

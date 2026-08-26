@@ -45,6 +45,10 @@ test('关键产品默认值符合需求', async () => {
   assert.equal(defaults('math-paper-huawei').competition_language, '中文');
   assert.equal(defaults('math-paper-huawei').figure_total, 15);
   assert.equal(defaults('math-paper-huawei').body_pages, 26);
+  assert.equal(defaults('math-paper-cn').reference_excellent_papers, false);
+  assert.equal(defaults('math-paper-huashu').reference_excellent_papers, false);
+  assert.equal(defaults('math-paper-huawei').reference_excellent_papers, false);
+  assert.equal(defaults('grill-ai-review').reference_excellent_papers, true);
   assert.equal(defaults('grill-ai-review').panel_mode, '3名专项评委+1名主审');
   assert.equal(defaults('humanizer').output_mode, '只报告');
   assert.equal(defaults('ai-draw-skills').prompt_only, true);

@@ -19,6 +19,7 @@ CONSTRAINT_TOKENS = ("约束", "条件", "可行域", "范围", "边界", "适�
 SOLVE_TOKENS = ("求解", "算法", "迭代", "步骤", "流程", "优化", "计算")
 RESULT_TOKENS = ("结果", "解释", "说明", "验证", "合理性", "结论")
 PARAM_TOKENS = ("变量", "参数", "符号", "定义", "权重", "指标")
+HUAWEI_PROBLEM_RE = re.compile(r"^问题[一二三四五六七八九十百]+模型建立与求解$")
 
 
 def section_block(text: str, title: str) -> str:
@@ -49,6 +50,15 @@ def main() -> int:
     text = read_text(tex_path)
     block = section_block(text, "模型建立与求解")
     if not block:
+        # 兼容按问题分章的写法：合并各“问题X模型建立与求解”章节
+        matches = list(SECTION_RE.finditer(text))
+        blocks = []
+        for index, match in enumerate(matches):
+            if HUAWEI_PROBLEM_RE.match(match.group(1).strip()):
+                end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+                blocks.append(text[match.start():end])
+        block = "\n".join(blocks)
+    if not block:
         errors.append("缺少“五、模型建立与求解”章节。")
         return write_report(False, "check_model_building_rigor", errors, args.output)
 
@@ -69,7 +79,7 @@ def main() -> int:
         if count_any(block, tokens) == 0:
             errors.append(f"“模型建立与求解”缺少{label}证据；不得用新增主章节或套话替代模型深化。")
 
-    if len(re.findall(r"(?m)^\\subsection\*?\{", block)) < 2:
+    if len(re.findall(r"(?m)^\\(?:sub)?section\*?\{", block)) < 2:
         errors.append("“模型建立与求解”应按问题或模型层次展开，至少包含 2 个小节。")
 
     return write_report(not errors, "check_model_building_rigor", errors, args.output)

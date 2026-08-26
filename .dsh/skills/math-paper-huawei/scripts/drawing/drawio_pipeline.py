@@ -8,6 +8,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import struct
 import subprocess
@@ -34,6 +35,12 @@ ROLE_STYLES = {
 FONT = "Microsoft YaHei"
 TEMPLATE_FILE = Path(__file__).resolve().parents[2] / "assets" / "drawio" / "template_library.json"
 SKILL_NAME = Path(__file__).resolve().parents[2].name
+ROADMAP_TEMPLATE_IDS = frozenset({
+    "dual-panel-bilevel",
+    "stage-blocks-l",
+    "stepwise-sidehead",
+    "steps-stacked-banner",
+})
 
 
 def load_library() -> dict:
@@ -41,12 +48,15 @@ def load_library() -> dict:
 
 
 def choose_template(brief: dict) -> str:
-    if int(brief.get("feedback", 0)) > 0:
-        return "feedback-loop"
-    if int(brief.get("branches", 0)) > 0:
-        return "branch-decision"
-    if int(brief.get("actors", 0)) > 1:
-        return "dual-swimlane"
+    if brief.get("kind") == "roadmap":
+        # 技术路线图强制新四类模板，默认三段环抱式
+        if int(brief.get("panels", 0)) > 1:
+            return "dual-panel-bilevel"
+        if int(brief.get("side_head", 0)) > 0:
+            return "stepwise-sidehead"
+        if int(brief.get("output_banner", 0)) > 0:
+            return "steps-stacked-banner"
+        return "stage-blocks-l"
     if int(brief.get("panels", 0)) > 1:
         return "dual-panel-bilevel"
     if int(brief.get("side_head", 0)) > 0:
@@ -55,6 +65,12 @@ def choose_template(brief: dict) -> str:
         return "steps-stacked-banner"
     if int(brief.get("focus_stage", 0)) > 0:
         return "stage-blocks-l"
+    if int(brief.get("feedback", 0)) > 0:
+        return "feedback-loop"
+    if int(brief.get("branches", 0)) > 0:
+        return "branch-decision"
+    if int(brief.get("actors", 0)) > 1:
+        return "dual-swimlane"
     if int(brief.get("support_blocks", 0)) > 0:
         return "main-chain-support"
     if int(brief.get("stages", 0)) >= 5 and brief.get("direction") == "vertical":
@@ -109,6 +125,21 @@ def edge_style(source_node: list, target_node: list) -> str:
     )
 
 
+def _has_cjk(text: str | None) -> bool:
+    """判断文本是否含 CJK 字符（raw 通道字体注入判定）。"""
+    return any("\u4e00" <= ch <= "\u9fff" for ch in (text or ""))
+
+
+def _ensure_cjk_style(style: str) -> str:
+    """CJK 值节点的 raw 样式：剔除旧 fontFamily 后追加雅黑，并确保自动换行。"""
+    style = re.sub(r"fontFamily=[^;]*;?", "", style)
+    parts = [p for p in style.split(";") if p]
+    if not any(p.strip() == "whiteSpace=wrap" for p in parts):
+        parts.append("whiteSpace=wrap")
+    parts.append(f"fontFamily={FONT}")
+    return ";".join(parts) + ";"
+
+
 def build_xml(template_id: str, labels: dict[str, str] | None = None) -> str:
     library = load_library()
     template = next((item for item in library["templates"] if item["id"] == template_id), None)
@@ -118,33 +149,63 @@ def build_xml(template_id: str, labels: dict[str, str] | None = None) -> str:
     page = template["page"]
     mxfile = ET.Element("mxfile", {"host": "app.diagrams.net", "agent": SKILL_NAME, "version": "24.7.17"})
     diagram = ET.SubElement(mxfile, "diagram", {"id": template_id, "name": template["name"]})
-    model = ET.SubElement(
-        diagram,
-        "mxGraphModel",
-        {
-            "dx": "1200", "dy": "800", "grid": "1", "gridSize": "10", "guides": "1",
-            "tooltips": "1", "connect": "1", "arrows": "1", "fold": "1", "page": "1",
-            "pageScale": "1", "pageWidth": str(page["width"]), "pageHeight": str(page["height"]),
-            "math": "0", "shadow": "0",
-        },
-    )
+    model_attrs = {
+        "dx": "1200", "dy": "800", "grid": "1", "gridSize": "10", "guides": "1",
+        "tooltips": "1", "connect": "1", "arrows": "1", "fold": "1", "page": "1",
+        "pageScale": "1", "pageWidth": str(page["width"]), "pageHeight": str(page["height"]),
+        "math": "0", "shadow": "0",
+    }
+    if page.get("background"):
+        model_attrs["background"] = str(page["background"])
+    model = ET.SubElement(diagram, "mxGraphModel", model_attrs)
     root = ET.SubElement(model, "root")
     ET.SubElement(root, "mxCell", {"id": "0"})
     ET.SubElement(root, "mxCell", {"id": "1", "parent": "0"})
     node_map = {node[0]: node for node in template["nodes"]}
-    for node_id, label, x, y, width, height, role in template["nodes"]:
+    for node in template["nodes"]:
+        node_id, label, x, y, width, height, role = node[:7]
+        raw_style = node[7] if len(node) > 7 else None
+        value = labels.get(node_id, label)
+        if raw_style is not None:
+            style = _ensure_cjk_style(raw_style) if _has_cjk(value) else raw_style
+        else:
+            style = vertex_style(role)
         cell = ET.SubElement(
             root,
             "mxCell",
-            {"id": node_id, "value": labels.get(node_id, label), "style": vertex_style(role), "vertex": "1", "parent": "1"},
+            {"id": node_id, "value": value, "style": style, "vertex": "1", "parent": "1"},
         )
         ET.SubElement(cell, "mxGeometry", {"x": str(x), "y": str(y), "width": str(width), "height": str(height), "as": "geometry"})
-    for index, (source, target, label) in enumerate(template["edges"]):
+    for index, edge in enumerate(template["edges"]):
+        raw = edge[3] if len(edge) > 3 else None
+        if raw is not None:
+            edge_id = raw.get("id") or f"e{index + 1}"
+            source, target, label = edge[0], edge[1], edge[2]
+            attrs = {
+                "id": edge_id, "value": labels.get(edge_id, label), "style": raw["style"],
+                "edge": "1", "parent": "1",
+            }
+            if source:
+                attrs["source"] = source
+            if target:
+                attrs["target"] = target
+            cell = ET.SubElement(root, "mxCell", attrs)
+            geo = ET.SubElement(cell, "mxGeometry", {"relative": "1", "as": "geometry"})
+            if raw.get("sourcePoint"):
+                ET.SubElement(geo, "mxPoint", {"x": str(raw["sourcePoint"][0]), "y": str(raw["sourcePoint"][1]), "as": "sourcePoint"})
+            if raw.get("targetPoint"):
+                ET.SubElement(geo, "mxPoint", {"x": str(raw["targetPoint"][0]), "y": str(raw["targetPoint"][1]), "as": "targetPoint"})
+            if raw.get("points"):
+                arr = ET.SubElement(geo, "Array", {"as": "points"})
+                for px, py in raw["points"]:
+                    ET.SubElement(arr, "mxPoint", {"x": str(px), "y": str(py)})
+            continue
+        source, target, label = edge
         cell = ET.SubElement(
             root,
             "mxCell",
             {
-                "id": f"e{index + 1}", "value": label, "style": edge_style(node_map[source], node_map[target]),
+                "id": f"e{index + 1}", "value": labels.get(f"e{index + 1}", label), "style": edge_style(node_map[source], node_map[target]),
                 "edge": "1", "parent": "1", "source": source, "target": target,
             },
         )
@@ -153,7 +214,69 @@ def build_xml(template_id: str, labels: dict[str, str] | None = None) -> str:
     return ET.tostring(mxfile, encoding="unicode", xml_declaration=False)
 
 
-def validate_drawio(path: Path) -> list[str]:
+def _short_ids(values: set[str]) -> str:
+    ordered = sorted(values)
+    shown = ", ".join(ordered[:8])
+    return shown + (f" 等 {len(ordered)} 项" if len(ordered) > 8 else "")
+
+
+def _template_structure_errors(root: ET.Element, template_id: str) -> list[str]:
+    """核对模板身份与结构骨架；允许标签、字体和几何位置按项目调整。"""
+    template = next((item for item in load_library()["templates"] if item["id"] == template_id), None)
+    if template is None:
+        return [f"模板库不存在 template_id: {template_id}"]
+    errors: list[str] = []
+    diagram = root.find(".//diagram")
+    actual_diagram_id = diagram.get("id", "") if diagram is not None else ""
+    if actual_diagram_id != template_id:
+        errors.append(f"diagram id 不一致: 期望 {template_id}，实际 {actual_diagram_id or '<空>'}")
+
+    cells = root.findall(".//mxCell")
+    actual_vertices = {cell.get("id", "") for cell in cells if cell.get("vertex") == "1"}
+    actual_edges = {cell.get("id", "") for cell in cells if cell.get("edge") == "1"}
+    expected_vertices = {str(node[0]) for node in template["nodes"]}
+    expected_topology: dict[str, tuple[str | None, str | None]] = {}
+    for index, edge in enumerate(template["edges"]):
+        raw = edge[3] if len(edge) > 3 else None
+        edge_id = str(raw.get("id") or f"e{index + 1}") if raw is not None else f"e{index + 1}"
+        expected_topology[edge_id] = (edge[0], edge[1])
+    expected_edges = set(expected_topology)
+
+    missing_vertices = expected_vertices - actual_vertices
+    extra_vertices = actual_vertices - expected_vertices
+    missing_edges = expected_edges - actual_edges
+    extra_edges = actual_edges - expected_edges
+    if missing_vertices:
+        errors.append(f"模板节点缺失: {_short_ids(missing_vertices)}")
+    if extra_vertices:
+        errors.append(f"模板节点多余: {_short_ids(extra_vertices)}")
+    if missing_edges:
+        errors.append(f"模板边缺失: {_short_ids(missing_edges)}")
+    if extra_edges:
+        errors.append(f"模板边多余: {_short_ids(extra_edges)}")
+
+    actual_by_id = {cell.get("id", ""): cell for cell in cells if cell.get("edge") == "1"}
+    mismatched = {
+        edge_id
+        for edge_id, endpoints in expected_topology.items()
+        if edge_id in actual_by_id
+        and (actual_by_id[edge_id].get("source"), actual_by_id[edge_id].get("target")) != endpoints
+    }
+    if mismatched:
+        errors.append(f"模板边连接关系不一致: {_short_ids(mismatched)}")
+    return errors
+
+
+def template_structure_errors(path: Path, template_id: str) -> list[str]:
+    """供项目门禁复用的模板结构指纹检查。"""
+    try:
+        root = ET.parse(path).getroot()
+    except Exception as exc:
+        return [f"XML 无法解析: {exc}"]
+    return _template_structure_errors(root, template_id)
+
+
+def validate_drawio(path: Path, expected_template_id: str | None = None) -> list[str]:
     errors: list[str] = []
     try:
         root = ET.parse(path).getroot()
@@ -164,37 +287,53 @@ def validate_drawio(path: Path) -> list[str]:
     if len(ids) != len(set(ids)):
         errors.append("mxCell id 重复")
     id_set = set(ids)
-    boxes: list[tuple[str, float, float, float, float]] = []
+    boxes: list[tuple[str, float, float, float, float, str, str]] = []
     for cell in cells:
         if cell.get("vertex") == "1":
             style = cell.get("style", "")
             value = cell.get("value", "")
-            if value and f"fontFamily={FONT}" not in style:
-                errors.append(f"节点 {cell.get('id')} 缺少中文字体")
-            if value and "whiteSpace=wrap" not in style:
-                errors.append(f"节点 {cell.get('id')} 未启用自动换行")
+            # 仅 CJK 文本要求中文字体与自动换行（raw 直录英文节点保留原型字体）
+            if value and _has_cjk(value):
+                if f"fontFamily={FONT}" not in style:
+                    errors.append(f"节点 {cell.get('id')} 缺少中文字体")
+                if "whiteSpace=wrap" not in style:
+                    errors.append(f"节点 {cell.get('id')} 未启用自动换行")
             geo = cell.find("mxGeometry")
             if geo is not None:
                 try:
-                    boxes.append((cell.get("id", ""), *(float(geo.get(k, "0")) for k in ("x", "y", "width", "height"))))
+                    boxes.append((cell.get("id", ""), *(float(geo.get(k, "0")) for k in ("x", "y", "width", "height")), value, style))
                 except ValueError:
                     errors.append(f"节点 {cell.get('id')} 几何值无效")
         if cell.get("edge") == "1":
-            if cell.get("source") not in id_set or cell.get("target") not in id_set:
-                errors.append(f"边 {cell.get('id')} 端点不存在")
+            source, target = cell.get("source"), cell.get("target")
             style = cell.get("style", "")
-            if "orthogonalEdgeStyle" not in style:
-                errors.append(f"边 {cell.get('id')} 不是正交路由")
-            if "endArrow=block" not in style:
-                errors.append(f"边 {cell.get('id')} 缺少明确箭头")
-    for index, (a_id, ax, ay, aw, ah) in enumerate(boxes):
-        for b_id, bx, by, bw, bh in boxes[index + 1:]:
+            if source or target:
+                # 连接边：已声明端点必须存在，且需显式箭头（路由样式不再强制正交）
+                if source is not None and source not in id_set:
+                    errors.append(f"边 {cell.get('id')} 端点不存在")
+                if target is not None and target not in id_set:
+                    errors.append(f"边 {cell.get('id')} 端点不存在")
+                if "endArrow=" not in style:
+                    errors.append(f"边 {cell.get('id')} 缺少明确箭头")
+            # 悬浮边（无 source 且无 target，靠 sourcePoint/targetPoint 定位）豁免端点与路由检查
+    for index, (a_id, ax, ay, aw, ah, a_value, a_style) in enumerate(boxes):
+        for b_id, bx, by, bw, bh, b_value, b_style in boxes[index + 1:]:
             if ax < bx + bw and ax + aw > bx and ay < by + bh and ay + ah > by:
                 # 完全嵌套（容器/分区包住内容节点）合法，仅部分相交或同尺寸重复框报错
                 a_contains_b = ax <= bx and ay <= by and ax + aw >= bx + bw and ay + ah >= by + bh and aw * ah > bw * bh
                 b_contains_a = bx <= ax and by <= ay and bx + bw >= ax + aw and by + bh >= ay + ah and bw * bh > aw * ah
-                if not (a_contains_b or b_contains_a):
-                    errors.append(f"节点重叠: {a_id} 与 {b_id}")
+                if a_contains_b or b_contains_a:
+                    continue
+                # 装饰豁免：文字标签与虚线装饰层允许叠放，仅实体内容盒部分相交报错
+                if not (a_value and b_value):
+                    continue
+                if a_style.startswith("text;") or b_style.startswith("text;"):
+                    continue
+                if "dashed=1" in a_style or "dashed=1" in b_style:
+                    continue
+                errors.append(f"节点重叠: {a_id} 与 {b_id}")
+    if expected_template_id:
+        errors.extend(_template_structure_errors(root, expected_template_id))
     return errors
 
 
@@ -333,13 +472,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="生成、校验并导出内置 Draw.io 论文模板")
     sub = parser.add_subparsers(dest="command", required=True)
     build = sub.add_parser("build")
-    build.add_argument("--template", required=True)
+    build_source = build.add_mutually_exclusive_group(required=True)
+    build_source.add_argument("--template")
+    build_source.add_argument("--brief")
     build.add_argument("--output", required=True)
     build.add_argument("--labels-json")
     select = sub.add_parser("select")
     select.add_argument("--brief", required=True)
     validate = sub.add_parser("validate")
     validate.add_argument("source")
+    validate.add_argument("--template")
     verify = sub.add_parser("verify-cli")
     verify.add_argument("--executable")
     verify.add_argument("--work-dir", required=True)
@@ -352,19 +494,23 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.command == "build":
+        template_id = args.template
+        if args.brief:
+            brief = json.loads(Path(args.brief).read_text(encoding="utf-8"))
+            template_id = choose_template(brief)
         labels = json.loads(Path(args.labels_json).read_text(encoding="utf-8")) if args.labels_json else {}
         output = Path(args.output)
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(build_xml(args.template, labels), encoding="utf-8")
-        errors = validate_drawio(output)
-        print(json.dumps({"ok": not errors, "template_id": args.template, "source": str(output), "errors": errors}, ensure_ascii=False))
+        output.write_text(build_xml(template_id, labels), encoding="utf-8")
+        errors = validate_drawio(output, template_id)
+        print(json.dumps({"ok": not errors, "template_id": template_id, "source": str(output), "errors": errors}, ensure_ascii=False))
         return 0 if not errors else 1
     if args.command == "select":
         brief = json.loads(Path(args.brief).read_text(encoding="utf-8"))
         print(choose_template(brief))
         return 0
     if args.command == "validate":
-        errors = validate_drawio(Path(args.source))
+        errors = validate_drawio(Path(args.source), args.template)
         print(json.dumps({"ok": not errors, "errors": errors}, ensure_ascii=False, indent=2))
         return 0 if not errors else 1
     if args.command == "verify-cli":

@@ -84,11 +84,17 @@ PALETTE_FAMILY = {
 
 ## 导出与字体
 
+| 配置 | 字体优先 | QA 边界 |
+|---|---|---|
+| competition_cn（默认） | 微软雅黑/黑体 | 中文显示、三格式、可编辑文字与缩印可读性 |
+| competition_en | Arial/Helvetica | 英文术语、单位、三格式与可编辑文字 |
+| research | Arial/Helvetica | 额外检查 89/183 mm 画布及 5–7 pt 普通文字；8 pt 仅用于小写加粗 panel 标签 |
+
 - Python 图统一设置：
   - `svg.fonttype = 'none'`
   - `pdf.fonttype = 42`
   - `ps.fonttype = 42`
-- 字体回退优先：
+- 中文竞赛字体回退优先：
   - `Microsoft YaHei`
   - `SimHei`
   - `Arial`
@@ -106,3 +112,5 @@ PALETTE_FAMILY = {
 - 单栏优先宽度：`89 mm`
 - 双栏优先宽度：`183 mm`
 - 图缩小后仍需保证中文标题、坐标轴、图例和注释清晰可读
+
+QA 不自动证明文字无重叠、统计正确、PDF 字体已嵌入或达到期刊录用水平；这些项目保留人工复核。

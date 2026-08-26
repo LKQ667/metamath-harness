@@ -97,15 +97,15 @@ function createCredentialActions(remote, flow) {
 }
 
 const IMAGE_TEMPLATE_META = Object.freeze([
-  Object.freeze({ id: 'dashscope', name: '百炼', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'wan2.7-image-pro', adapters: ['dashscope-async'], capability: 'official-known', hint: '官方固定接口，仅配置模型与受管 Key。' }),
-  Object.freeze({ id: 'openai', name: 'OpenAI', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'gpt-image-1', adapters: ['openai-images'], capability: 'official-known', hint: '官方固定接口，仅配置模型与受管 Key。' }),
-  Object.freeze({ id: 'gemini', name: 'Gemini', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'gemini-3.1-flash-image', adapters: ['gemini-content'], capability: 'official-known', hint: '官方固定接口，仅配置模型与受管 Key。' }),
-  Object.freeze({ id: 'volcengine-ark', name: '火山引擎 Ark', baseUrlEditable: true, defaultBaseUrl: 'https://ark.cn-beijing.volces.com/api/v3', defaultModel: 'doubao-seedream-5.0-lite', adapters: ['openai-images'], capability: 'pending', hint: '图片专用 Images API；模型可填官方模型 ID 或火山推理接入点 ID。' }),
-  Object.freeze({ id: 'sub2api', name: 'Sub2API', baseUrlEditable: true, defaultBaseUrl: 'http://localhost:8080/v1', defaultModel: '', adapters: ['sub2api-async-images', 'openai-images'], capability: 'pending', hint: '默认使用异步 Images API；不预置“必然可用”模型。' }),
-  Object.freeze({ id: 'cliproxyapi', name: 'CLIProxyAPI', baseUrlEditable: true, defaultBaseUrl: 'http://127.0.0.1:8317/v1', defaultModel: '', adapters: ['openai-images'], capability: 'pending', hint: '仅提示 gpt-image-2 候选，请按实际服务填写。' }),
-  Object.freeze({ id: 'openai-compatible', name: '自定义 OpenAI 兼容', baseUrlEditable: true, defaultBaseUrl: '', defaultModel: '', adapters: ['openai-images', 'openai-chat-image'], capability: 'pending', hint: '通用兼容网关；真实测试可确认是否改用 openai-chat-image 协议。' }),
-  Object.freeze({ id: 'codex-subscription', name: 'ChatGPT 订阅', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'gpt-image-2', adapters: ['codex-images'], capability: 'pending', hint: '复用 OAuth/订阅插件的 openai-codex 登录，无需 API Key；走 ChatGPT 订阅 Codex 生图端点（gpt-image-2）。非官方支持端点，存在账号限制风险。' }),
-  Object.freeze({ id: 'grok-subscription', name: 'Grok 订阅', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'grok-imagine-image', adapters: ['grok-images'], capability: 'pending', hint: '复用订阅插件的 Grok 登录，无需 API Key；走 xAI 官方 Images API（grok-imagine-image / image-2.0 / image-quality）。生图额度随 X Premium 订阅。' }),
+  Object.freeze({ id: 'dashscope', name: '百炼', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'wan2.7-image-pro', adapters: ['dashscope-async'], defaultAdapter: 'dashscope-async', capability: 'official-known', hint: '官方固定接口，仅配置模型与受管 Key。' }),
+  Object.freeze({ id: 'openai', name: 'OpenAI', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'gpt-image-1', adapters: ['openai-images'], defaultAdapter: 'openai-images', capability: 'official-known', hint: '官方固定接口，仅配置模型与受管 Key。' }),
+  Object.freeze({ id: 'gemini', name: 'Gemini', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'gemini-3.1-flash-image', adapters: ['gemini-content'], defaultAdapter: 'gemini-content', capability: 'official-known', hint: '官方固定接口，仅配置模型与受管 Key。' }),
+  Object.freeze({ id: 'volcengine-ark', name: '火山引擎 Ark', baseUrlEditable: true, defaultBaseUrl: 'https://ark.cn-beijing.volces.com/api/v3', defaultModel: 'doubao-seedream-5.0-lite', adapters: ['openai-images'], defaultAdapter: 'openai-images', capability: 'pending', hint: '图片专用 Images API；模型可填官方模型 ID 或火山推理接入点 ID。' }),
+  Object.freeze({ id: 'sub2api', name: 'Sub2API', baseUrlEditable: true, defaultBaseUrl: 'http://localhost:8080/v1', defaultModel: '', adapters: ['sub2api-async-images', 'openai-images'], defaultAdapter: 'sub2api-async-images', capability: 'pending', hint: '默认使用异步 Images API；不预置“必然可用”模型。' }),
+  Object.freeze({ id: 'cliproxyapi', name: 'CLIProxyAPI', baseUrlEditable: true, defaultBaseUrl: 'http://127.0.0.1:8317/v1', defaultModel: '', adapters: ['openai-images'], defaultAdapter: 'openai-images', capability: 'pending', hint: '仅提示 gpt-image-2 候选，请按实际服务填写。' }),
+  Object.freeze({ id: 'openai-compatible', name: '自定义 OpenAI 兼容', baseUrlEditable: true, defaultBaseUrl: '', defaultModel: '', adapters: ['openai-images', 'openai-chat-image'], defaultAdapter: 'openai-images', capability: 'pending', hint: '通用兼容网关；真实测试可确认是否改用 openai-chat-image 协议。' }),
+  Object.freeze({ id: 'codex-subscription', name: 'ChatGPT 订阅', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'gpt-image-2', adapters: ['codex-images'], defaultAdapter: 'codex-images', capability: 'pending', hint: '复用 OAuth/订阅插件的 openai-codex 登录，无需 API Key；走 ChatGPT 订阅 Codex 生图端点（gpt-image-2）。非官方支持端点，存在账号限制风险。' }),
+  Object.freeze({ id: 'grok-subscription', name: 'Grok 订阅', baseUrlEditable: false, defaultBaseUrl: '', defaultModel: 'grok-imagine-image', adapters: ['grok-images'], defaultAdapter: 'grok-images', capability: 'pending', hint: '复用订阅插件的 Grok 登录，无需 API Key；走 xAI 官方 Images API（grok-imagine-image / image-2.0 / image-quality）。生图额度随 X Premium 订阅。' }),
 ]);
 
 const ADAPTER_LABELS = Object.freeze({
@@ -599,8 +599,10 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
           const payload = { name: String(draft.name ?? '').trim(), template: draft.template, adapter: draft.adapter, model: String(draft.model ?? '').trim() };
           if (meta.baseUrlEditable) payload.baseUrl = String(draft.baseUrl ?? '').trim();
           await run(async () => {
-            const saved = await actions.save(payload, id);
-            if (meta.id !== 'codex-subscription' && meta.id !== 'grok-subscription' && String(draft.secret ?? '').trim()) await actions.setKey(saved.id, String(draft.secret).trim());
+            const saved = await actions.save(payload, id ?? '');
+            // upsert 返回完整连接列表而非新连接对象；编辑用原 id，新建取 updatedAt 最新的连接
+            const targetId = id ?? saved?.connections?.reduce((a, b) => ((b.updatedAt ?? '') >= (a.updatedAt ?? '') ? b : a))?.id;
+            if (meta.id !== 'codex-subscription' && meta.id !== 'grok-subscription' && String(draft.secret ?? '').trim() && targetId) await actions.setKey(targetId, String(draft.secret).trim());
             await refresh();
             setEditing(null);
           }, '连接已保存。');

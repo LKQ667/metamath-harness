@@ -4,12 +4,18 @@
 from __future__ import annotations
 import json
 import hashlib
+import sys
 import struct
 import binascii
 import zlib
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from common import project_arg, write_report
+
+DRAWING_DIR = Path(__file__).resolve().parents[1] / "drawing"
+if str(DRAWING_DIR) not in sys.path:
+    sys.path.insert(0, str(DRAWING_DIR))
+from drawio_pipeline import ROADMAP_TEMPLATE_IDS, template_structure_errors
 
 MODES = {"drawio", "ai"}
 FLOW_TOKENS = ("flowchart", "roadmap", "技术路线", "路线图", "流程图", "问题分析")
@@ -44,6 +50,13 @@ def flat(value: object) -> str:
 def is_flow(item: dict) -> bool:
     text = flat(item).lower()
     return "flowchart" in str(item.get("chart_family", "")).lower() or any(token in text for token in FLOW_TOKENS)
+
+
+def is_roadmap(item: dict) -> bool:
+    text = flat(item).lower()
+    return str(item.get("chart_family", "")).lower() == "roadmap" or any(
+        token in text for token in ("roadmap", "技术路线", "路线图")
+    )
 
 
 def is_python_data(item: dict) -> bool:
@@ -114,6 +127,11 @@ def image_size(path: Path) -> tuple[int, int] | None:
     return None
 
 
+def _has_cjk(text: str | None) -> bool:
+    """判断文本是否含 CJK 字符（raw 直录英文节点保留原型字体）。"""
+    return any("\u4e00" <= ch <= "\u9fff" for ch in (text or ""))
+
+
 def drawio_errors(path: Path) -> list[str]:
     try:
         root = ET.parse(path).getroot()
@@ -125,23 +143,40 @@ def drawio_errors(path: Path) -> list[str]:
     if len(ids) != len(set(ids)):
         errors.append("Draw.io XML 存在重复 mxCell id")
     id_set = set(ids)
-    boxes: list[tuple[str, float, float, float, float]] = []
+    boxes: list[tuple[str, float, float, float, float, str, str]] = []
     for cell in cells:
         style = cell.get("style", "")
+        value = cell.get("value") or ""
         if cell.get("vertex") == "1":
-            if cell.get("value") and "fontFamily=Microsoft YaHei" not in style:
+            # 仅 CJK 文本要求中文字体（raw 直录英文节点保留原型字体）
+            if value and _has_cjk(value) and "fontFamily=Microsoft YaHei" not in style:
                 errors.append(f"节点 {cell.get('id')} 缺少 Microsoft YaHei")
             geo = cell.find("mxGeometry")
             if geo is not None:
-                boxes.append((cell.get("id", ""), *(float(geo.get(key, "0")) for key in ("x", "y", "width", "height"))))
+                boxes.append((cell.get("id", ""), *(float(geo.get(key, "0")) for key in ("x", "y", "width", "height")), value, style))
         if cell.get("edge") == "1":
-            if cell.get("source") not in id_set or cell.get("target") not in id_set:
-                errors.append(f"边 {cell.get('id')} 端点不存在")
-            if "orthogonalEdgeStyle" not in style:
-                errors.append(f"边 {cell.get('id')} 不是正交路由")
-    for index, (a, ax, ay, aw, ah) in enumerate(boxes):
-        for b, bx, by, bw, bh in boxes[index + 1:]:
-            if ax < bx + bw and ax + aw > bx and ay < by + bh and ay + ah > by:
+            source, target = cell.get("source"), cell.get("target")
+            if source or target:
+                # 连接边：已声明端点必须存在，且需显式箭头（路由样式不再强制正交）
+                if source is not None and source not in id_set:
+                    errors.append(f"边 {cell.get('id')} 端点不存在")
+                if target is not None and target not in id_set:
+                    errors.append(f"边 {cell.get('id')} 端点不存在")
+                if "endArrow=" not in style:
+                    errors.append(f"边 {cell.get('id')} 缺少明确箭头")
+            # 悬浮边（无 source 且无 target，靠 sourcePoint/targetPoint 定位）豁免端点与路由检查
+    for index, (a, ax, ay, aw, ah, a_value, a_style) in enumerate(boxes):
+        for b, bx, by, bw, bh, b_value, b_style in boxes[index + 1:]:
+            nested = (ax >= bx and ay >= by and ax + aw <= bx + bw and ay + ah <= by + bh) or \
+                     (bx >= ax and by >= ay and bx + bw <= ax + aw and by + bh <= ay + ah)
+            if not nested and ax < bx + bw and ax + aw > bx and ay < by + bh and ay + ah > by:
+                # 装饰豁免：文字标签与虚线装饰层允许叠放，仅实体内容盒部分相交报错
+                if not (a_value and b_value):
+                    continue
+                if a_style.startswith("text;") or b_style.startswith("text;"):
+                    continue
+                if "dashed=1" in a_style or "dashed=1" in b_style:
+                    continue
                 errors.append(f"节点重叠: {a} 与 {b}")
     return errors
 
@@ -209,10 +244,20 @@ def check_drawio(project: Path, items: list[dict], prompts: list[Path], errors: 
             errors.append(f"{label} generator 必须为 drawio")
         if not source.startswith("手绘图/") or not source.endswith(".drawio"):
             errors.append(f"{label} source 必须为 手绘图/*.drawio")
-        elif project_file(project, source) is not None:
-            errors.extend(f"{label}: {message}" for message in drawio_errors(project_file(project, source)))
-        if not item.get("template_id"):
+        source_path = project_file(project, source)
+        if source.startswith("手绘图/") and source.endswith(".drawio") and source_path is not None:
+            errors.extend(f"{label}: {message}" for message in drawio_errors(source_path))
+        template_id = str(item.get("template_id") or "")
+        if not template_id:
             errors.append(f"{label} 缺少 template_id")
+        if is_roadmap(item):
+            if template_id not in ROADMAP_TEMPLATE_IDS:
+                errors.append(f"{label} 技术路线图 template_id 必须属于新四类模板: {template_id or '<空>'}")
+            elif source_path is not None:
+                errors.extend(
+                    f"{label}: {message}"
+                    for message in template_structure_errors(source_path, template_id)
+                )
         if not {".png", ".svg", ".pdf"}.issubset({Path(path).suffix.lower() for path in export_paths(item)}):
             errors.append(f"{label} 必须包含 2× PNG、SVG、PDF")
         if item.get("export_status") != "cli_exported":

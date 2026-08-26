@@ -8,8 +8,9 @@
 
 这是一个端到端华为杯数学建模竞赛技能，将 step0 到 step5 的核心流程整合为一条主线，按阶段推进到最终论文成稿。技能内置：
 
-- **华为杯 GMCMthesis 模板**：`laTeX-模板-GMCMthesis/`（2026 年版，含 `gmcmthesis.cls`、`gmcm.bst`、官方封面图与编译脚本）
-- **往届优秀论文**：`华为杯优秀论文_2023_2024/`（2023、2024 年 A–F 题优秀论文，按题号分组，仅用于完成度校准，严禁抄袭）
+- **华为杯 GMCMthesis 模板**：`assets/templates/`（2026 年版，含 `main.tex` 主稿基座、`gmcmthesis.cls`、`gmcm.bst`、官方封面图 `figures/` 与官方示例 `example.tex`）
+- **往届优秀论文**：统一位于 `<DSH_HOME>/往年优秀论文/华为杯/`，随 MetaMath Harness 分发并按年份、题号组织；开启卡片后最多读取两篇同题样本，仅用于完成度校准，严禁抄袭
+- **赛题原文资料**：`references/problem-statements/`，与优秀论文清单严格分离，不会作为完成度样本读取
 
 ## 功能概览
 
@@ -26,8 +27,8 @@
 
 ### 1. 华为杯官方模板排版
 
-- 内置 `assets/templates/main.tex` 主稿基座 + `laTeX-模板-GMCMthesis/gmcmthesis.cls` 类文件
-- 封面（Logo、标题、学校、队号、队员）、原生 `abstract`、`\keywords{}`、`appendices` 附录均由官方模板排版
+- 模板统一位于 `assets/templates/`：`main.tex` 主稿基座 + `gmcmthesis.cls` 类文件 + `gmcm.bst` + 封面图 `figures/`
+- 封面（Logo、标题、学校、队号、队员）、原生 `abstract`、`\keywords{}`、`\maketoc` 目录、`appendices` 附录（原生 `Matlab`/`Python` 代码环境）均由官方模板排版
 - 正文结构：问题重述 → 模型假设与符号说明 → 问题一至问题 N 模型建立与求解 → 模型总结与评价 → 参考文献
 
 ### 2. 顶刊级 Python 可视化
