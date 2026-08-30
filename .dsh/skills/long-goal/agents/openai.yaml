@@ -1,0 +1,4 @@
+interface:
+  display_name: "Long Goal"
+  short_description: "以单一规格、持久状态和三轮验证记录持续完成复杂长期目标"
+  default_prompt: "使用 $long-goal 按规格、设计、实施、验证和三轮审查完整执行这个长期目标。"

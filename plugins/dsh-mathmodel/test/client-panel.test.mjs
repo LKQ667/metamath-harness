@@ -24,7 +24,7 @@ test('bundle 声明折叠 ARIA、键盘原生按钮与窄屏布局', async () =>
   assert.match(source, /role: 'complementary'/);
   assert.match(source, /@media\(max-width:760px\)/);
   assert.match(source, /dsh-mm-info-launcher/);
-  assert.match(source, /dsh-mm-info-launcher\{position:fixed;z-index:89;top:12px;right:72px/);
+  assert.match(source, /dsh-mm-info-launcher\{position:fixed;z-index:89;top:12px;right:calc\(72px \+ var\(--dsh-sidebar-width,0px\)\)/);
   assert.match(source, /dsh-mm-info\{position:fixed;z-index:90;top:56px/);
   assert.match(source, /button\[class\*="_sessionLogButton"\]/);
   assert.match(source, /'aria-label': '技能说明'/);
@@ -46,12 +46,12 @@ test('bundle 声明折叠 ARIA、键盘原生按钮与窄屏布局', async () =>
 test('技能说明与下载按钮使用同一图标行且抽屉保持独立区间', async () => {
   const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
   const desktopLauncherTop = Number(source.match(/dsh-mm-info-launcher\{[^}]*top:(\d+)px/)?.[1]);
-  const desktopLauncherRight = Number(source.match(/dsh-mm-info-launcher\{[^}]*right:(\d+)px/)?.[1]);
+  const desktopLauncherRight = Number(source.match(/dsh-mm-info-launcher\{[^}]*right:calc\((\d+)px \+ var\(--dsh-sidebar-width,0px\)\)/)?.[1]);
   const desktopPanelTop = Number(source.match(/dsh-mm-info\{[^}]*top:(\d+)px/)?.[1]);
   const mobilePanelTop = Number(source.match(/@media\(max-width:760px\).*?\.dsh-mm-info\{top:(\d+)px/)?.[1]);
   const launcherHeight = 36;
   assert.equal(desktopLauncherTop, 12, '技能说明按钮必须与原生标题栏按钮同一水平行');
-  assert.equal(desktopLauncherRight, 72, '技能说明按钮必须位于下载按钮左侧并预留间距');
+  assert.equal(desktopLauncherRight, 72, '技能说明按钮基准右距必须保持 72px（better-sidebar 展开时再叠加其推挤变量）');
   assert.ok(desktopPanelTop - (desktopLauncherTop + launcherHeight) >= 8, '桌面入口与抽屉至少保留 8px');
   assert.ok(mobilePanelTop - (desktopLauncherTop + launcherHeight) >= 8, '窄屏入口与抽屉至少保留 8px');
 });
@@ -114,6 +114,22 @@ test('中央主标题替换为“大道至简”金属艺术字图并隐藏预�
   assert.match(source, /row\.style\.gridTemplateColumns = 'auto'/);
   assert.match(source, /row\.style\.justifyContent = 'center'/);
   assert.match(source, /\.dsh-mm-hero-title-img\{height:72px/);
+});
+
+test('技能说明入口与说明抽屉跟随 better-sidebar 布局变量避让（GOAL-66）', async () => {
+  const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
+  // 固定定位的右上角入口必须叠加 better-sidebar 写在 <html> 上的推挤宽度；
+  // 变量缺省（未安装该插件或已收起）时回退 0，行为与历史版本一致。
+  assert.match(source, /\.dsh-mm-info-launcher\{position:fixed;z-index:89;top:12px;right:calc\(72px \+ var\(--dsh-sidebar-width,0px\)\)/);
+  assert.match(source, /\.dsh-mm-info\{position:fixed;z-index:90;top:56px;right:calc\(12px \+ var\(--dsh-sidebar-width,0px\)\)/);
+  // 插件在场（panel-host 存在）时四按钮统一为角标簇规格 28×28@y3：
+  // 入口右距 = 64 + var（展开态与 28px Session log 保持 8px）；
+  // 收起态 better-sidebar 把官方头右内边距推到 78px，入口右距 = 78 + 28 + 8 = 114。
+  assert.match(source, /body:has\(\[data-dsh-panel-host\]\) \.dsh-mm-info-launcher\{top:3px;right:calc\(64px \+ var\(--dsh-sidebar-width,0px\)\);width:28px;height:28px;min-height:28px;border-radius:9px\}/);
+  assert.match(source, /body\[data-dsh-sidebar-collapsed\] \.dsh-mm-info-launcher\{right:114px\}/);
+  assert.match(source, /body:has\(\[data-dsh-panel-host\]\) \[data-slot="conversation\.session\.header\.utilities"\]>button\[class\*="_sessionLogButton"\]\{width:28px!important;height:28px!important;min-width:28px!important;border-radius:9px!important;transform:translateY\(-11px\)\}/);
+  // 窄屏媒体查询保持覆盖式定位，不叠加推挤变量。
+  assert.match(source, /@media\(max-width:760px\)\{\.dsh-mm-info\{top:56px;right:6px/);
 });
 
 test('生图模型设置使用连接级 Remote，浏览器不持有凭据引用或 Key', async () => {

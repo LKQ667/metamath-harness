@@ -200,8 +200,8 @@ export async function openaiChatImageAdapter({ endpoint, model, credential, requ
   return assets;
 }
 
-/** ChatGPT 订阅（Codex）生图适配器：镜像 codex-rs images 端点，凭据来自 pi-ai-oauth.json。 */
-export async function codexImagesAdapter({ endpoint, model, credential, request, references, fetchImpl, signal, codexHome }) {
+/** ChatGPT 订阅（Codex）生图适配器：镜像 codex-rs images 端点，会话由订阅插件统一协调。 */
+export async function codexImagesAdapter({ endpoint, model, credential, request, references, fetchImpl, signal, subscriptionSessions }) {
   if (references.length > 0) throw new Error('codex-images 适配器不支持参考图；请改用其他连接或去掉参考图');
   let session;
   try {
@@ -209,7 +209,7 @@ export async function codexImagesAdapter({ endpoint, model, credential, request,
     if (typeof parsed?.access !== 'string' || typeof parsed?.accountId !== 'string') throw new Error('bad shape');
     session = parsed;
   } catch {
-    session = await resolveCodexSession({ ...(codexHome ? { home: codexHome } : {}), fetchImpl, signal });
+    session = await resolveCodexSession({ subscriptionSessions, signal });
   }
   // 快照与 resolveCodexSession 返回形状不同（access vs accessToken）；统一取值
   const accessToken = typeof session.access === 'string' ? session.access : session.accessToken;
@@ -230,7 +230,7 @@ export async function codexImagesAdapter({ endpoint, model, credential, request,
   let response = await call();
   if (response.status === 401) {
     // 未到期但被拒：强刷一次 token 再重试（codex CLI 同款模式）
-    session = await resolveCodexSession({ ...(codexHome ? { home: codexHome } : {}), fetchImpl, signal, force: true });
+    session = await resolveCodexSession({ subscriptionSessions, signal, force: true });
     headers.authorization = `Bearer ${typeof session.access === 'string' ? session.access : session.accessToken}`;
     response = await call();
   }
@@ -254,8 +254,8 @@ function grokAccessToken(session) {
   return undefined;
 }
 
-/** Grok 订阅生图适配器：api.x.ai/v1/images/generations（OpenAI Images 兼容，n 原生支持），凭据来自订阅插件 auth.json。 */
-export async function grokImagesAdapter({ endpoint, model, credential, request, references, fetchImpl, signal, grokHome }) {
+/** Grok 订阅生图适配器：api.x.ai/v1/images/generations（OpenAI Images 兼容，n 原生支持），会话由订阅插件统一协调。 */
+export async function grokImagesAdapter({ endpoint, model, credential, request, references, fetchImpl, signal, subscriptionSessions }) {
   if (references.length > 0) throw new Error('grok-images 适配器不支持参考图；请改用其他连接或去掉参考图');
   let session;
   try {
@@ -263,7 +263,7 @@ export async function grokImagesAdapter({ endpoint, model, credential, request, 
     if (typeof parsed?.access !== 'string' || parsed.access.length === 0) throw new Error('bad shape');
     session = parsed;
   } catch {
-    session = await resolveGrokSession({ ...(grokHome ? { home: grokHome } : {}), fetchImpl, signal });
+    session = await resolveGrokSession({ subscriptionSessions, signal });
   }
   const url = openAiUrl(endpoint ?? 'https://api.x.ai/v1', 'images/generations');
   const headers = { authorization: `Bearer ${grokAccessToken(session)}`, ...JSON_HEADERS };
@@ -276,7 +276,7 @@ export async function grokImagesAdapter({ endpoint, model, credential, request, 
   let response = await call();
   if (response.status === 401) {
     // 未到期但被拒：强刷一次 token 再重试（与 grok 插件路由同款模式）
-    session = await resolveGrokSession({ ...(grokHome ? { home: grokHome } : {}), fetchImpl, signal, force: true });
+    session = await resolveGrokSession({ subscriptionSessions, signal, force: true });
     headers.authorization = `Bearer ${grokAccessToken(session)}`;
     response = await call();
   }

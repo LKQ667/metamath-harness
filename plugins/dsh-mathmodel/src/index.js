@@ -28,12 +28,10 @@ export {
 export { ImageConnectionCredentialStore } from './security/image-credentials.js';
 export { redactText, safeError } from './security/redact.js';
 export {
-  CODEX_CREDENTIAL_KEY, accountIdFromAccessToken, codexAuthPath, describeCodexCredential,
-  readCodexCredential, refreshCodexCredential, resolveCodexSession, writeCodexCredential,
+  CODEX_CREDENTIAL_KEY, describeCodexCredential, resolveCodexSession,
 } from './image/codex-auth.js';
 export {
-  GROK_CREDENTIAL_KEY, describeGrokCredential, grokAuthPath, readGrokSession,
-  refreshGrokSession, resolveGrokSession, writeGrokSession,
+  GROK_CREDENTIAL_KEY, describeGrokCredential, resolveGrokSession,
 } from './image/grok-auth.js';
 export { codexImagesAdapter, grokImagesAdapter } from './image/adapters.js';
 export { ManualVisionService, VisionError, VISION_MODELS, VisionService, MANUAL_VISION_LIMITS, MANUAL_VISION_PROMPT } from './vision.js';

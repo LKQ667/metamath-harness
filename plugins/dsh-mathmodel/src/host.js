@@ -205,6 +205,7 @@ export function installMathmodelHost(ctx, config = {}) {
     legacySettings: settingsScope,
     credentialStore,
     credentialProvider: ctx.credentials,
+    subscriptionSessions: () => ctx.get('subscriptionSessions'),
     hasV2UserSection: () => {
       try {
         const descriptor = ctx.settings.describe({ redactSecrets: true }).find((entry) => entry.ns === IMAGE_CONNECTIONS_NAMESPACE);

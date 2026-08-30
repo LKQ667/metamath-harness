@@ -63,7 +63,7 @@ function summaryFor(connection, credential, verification) {
  * 所有 Remote 错误经脱敏；浏览器只接收脱敏摘要。
  */
 export class ImageConnectionService {
-  constructor({ settings, legacySettings, credentialStore, credentialProvider, hasV2UserSection, fetchImpl = globalThis.fetch, now = () => new Date().toISOString(), sleep, codexHome, grokHome } = {}) {
+  constructor({ settings, legacySettings, credentialStore, credentialProvider, hasV2UserSection, fetchImpl = globalThis.fetch, now = () => new Date().toISOString(), sleep, subscriptionSessions } = {}) {
     this.settings = settings;
     this.legacySettings = legacySettings;
     this.credentialStore = credentialStore;
@@ -72,8 +72,7 @@ export class ImageConnectionService {
     this.fetch = fetchImpl;
     this.now = now;
     this.sleep = sleep;
-    this.codexHome = codexHome;
-    this.grokHome = grokHome;
+    this.subscriptionSessions = subscriptionSessions;
   }
 
   value() {
@@ -107,8 +106,8 @@ export class ImageConnectionService {
   }
 
   async describeCredential(connection) {
-    if (connection.template === CODEX_TEMPLATE_ID) return await describeCodexCredential(this.codexHome);
-    if (connection.template === GROK_TEMPLATE_ID) return await describeGrokCredential(this.grokHome);
+    if (connection.template === CODEX_TEMPLATE_ID) return await describeCodexCredential(this.subscriptionSessions);
+    if (connection.template === GROK_TEMPLATE_ID) return await describeGrokCredential(this.subscriptionSessions);
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
       const info = await this.credentialProvider.describe(connection.credentialRef);
       return Object.freeze({
@@ -123,11 +122,11 @@ export class ImageConnectionService {
 
   async resolveCredential(connection) {
     if (connection.template === CODEX_TEMPLATE_ID) {
-      const session = await resolveCodexSession({ ...(this.codexHome ? { home: this.codexHome } : {}), fetchImpl: this.fetch });
-      return { ref: 'pi-ai-oauth', value: JSON.stringify({ access: session.accessToken, accountId: session.accountId }), source: 'pi-ai-oauth' };
+      const session = await resolveCodexSession({ subscriptionSessions: this.subscriptionSessions });
+      return { ref: 'subscriptions-auth', value: JSON.stringify({ access: session.accessToken, accountId: session.accountId }), source: 'subscriptions-auth' };
     }
     if (connection.template === GROK_TEMPLATE_ID) {
-      const session = await resolveGrokSession({ ...(this.grokHome ? { home: this.grokHome } : {}), fetchImpl: this.fetch });
+      const session = await resolveGrokSession({ subscriptionSessions: this.subscriptionSessions });
       return { ref: 'subscriptions-auth', value: JSON.stringify({ access: session.accessToken }), source: 'subscriptions-auth' };
     }
     if (LEGACY_CREDENTIAL_REFS.has(connection.credentialRef)) {
@@ -139,7 +138,7 @@ export class ImageConnectionService {
 
   async setCredential(connection, value) {
     if (connection.template === CODEX_TEMPLATE_ID) {
-      throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；请到“设置 → OAuth / 订阅”登录 openai-codex');
+      throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；请到“设置 → 订阅”登录 Codex');
     }
     if (connection.template === GROK_TEMPLATE_ID) {
       throw fail('subscription_credential_managed', 'Grok 订阅连接的凭据由订阅登录管理；请到“设置 → 订阅”登录 Grok');
@@ -155,7 +154,7 @@ export class ImageConnectionService {
   async clearCredential(id) {
     const connection = await this.requireConnection(id);
     if (connection.template === CODEX_TEMPLATE_ID) {
-      throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；如需移除请到“设置 → OAuth / 订阅”登出');
+      throw fail('subscription_credential_managed', 'ChatGPT 订阅连接的凭据由订阅登录管理；如需移除请到“设置 → 订阅”登出 Codex');
     }
     if (connection.template === GROK_TEMPLATE_ID) {
       throw fail('subscription_credential_managed', 'Grok 订阅连接的凭据由订阅登录管理；如需移除请到“设置 → 订阅”登出 Grok');
@@ -327,6 +326,7 @@ export class ImageConnectionService {
       fetchImpl: this.fetch,
       now: this.now,
       sleep: this.sleep,
+      subscriptionSessions: this.subscriptionSessions,
     });
     const value = this.value();
     const verification = result.ok
@@ -399,6 +399,7 @@ export class ImageConnectionService {
       adapterId: connection.verification.protocol,
       verifiedProtocol: connection.verification.protocol,
       credentialValue: credential.value,
+      subscriptionSessions: this.subscriptionSessions,
     });
   }
 

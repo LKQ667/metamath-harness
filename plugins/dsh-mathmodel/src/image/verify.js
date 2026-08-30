@@ -49,7 +49,7 @@ export function shouldTryChatImage(connection, protocol, classified) {
  * 协议与身份记录，失败返回分类错误。绝不写入工作区、不挂附件、不进对话。
  */
 export async function verifyConnection({
-  connection, credential, adapters = ADAPTER_BY_ID, fetchImpl, signal, sleep,
+  connection, credential, adapters = ADAPTER_BY_ID, fetchImpl, signal, sleep, subscriptionSessions,
   now = () => new Date().toISOString(),
   request = { prompt: MINIMAL_PROMPT, count: 1, authorizePaid: true },
 } = {}) {
@@ -66,6 +66,7 @@ export async function verifyConnection({
       fetchImpl,
       signal,
       sleep,
+      subscriptionSessions,
     });
     if (!Array.isArray(assets) || assets.length === 0) throw fail('no_image_asset', '测试未返回任何图片');
     const image = assets[0].kind === 'url' ? await downloadImage(fetchImpl, assets[0].url, signal) : decodeImageAsset(assets[0]);

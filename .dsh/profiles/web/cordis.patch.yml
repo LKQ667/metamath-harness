@@ -23,16 +23,17 @@
 # 激活方式：bundle 层（package.json dsh.profile.bundles + 包自带 cordis.patch.yml），
 # dsh plugin 命令的 reconcile 会按依赖声明自动维护，此处不再手工 insert（同 id 双插会启动失败）。
 
-# 订阅登录插件（Settings → Subscriptions 页，ChatGPT/Claude/Grok OAuth）。
-# 走 bundle 层自激活（package.json dsh.profile.bundles）；此处只做 config 覆盖：
-# providers 限定 claude+grok。原因：codex 路由会在启动时注册全局工具 image_generate，
-# 与本地 mathmodel-tools 的 API 生图工具同名冲突（bundle 层先加载，后注册方启动失败）。
-# 需要启用 ChatGPT 订阅时，改回 [codex, claude, grok] 并先处理本地生图工具的重名。
+# 统一订阅登录插件（Settings → Subscriptions 页，ChatGPT/Claude/Grok OAuth）。
+# 走 bundle 层自激活；本地 0.5.2 版本补丁提供 Host-only subscriptionSessions，
+# 并允许关闭上游 image_generate。该名称继续由 mathmodel-tools 独占；上游
+# x_search、video_generate 与 Codex/Claude/Grok 对话路由保持启用。
 - id: llm-subscriptions
   config:
     providers:
+      - codex
       - claude
       - grok
+    registerImageTool: false
     # Grok 模型目录覆盖：contextWindow 均为 xAI 官方值（api.x.ai/v1/models
     # 实测返回的 context_length 字段，2026-08-19 核验）。本机网络无法访问
     # cli-chat-proxy.grok.com（自动发现 ECONNRESET），未覆盖时全部模型回退
@@ -67,14 +68,3 @@
           name: Grok Build 0.1 (Code Fast)
           contextWindow: 256000
           inputModalities: [text, image]
-
-# ChatGPT/Codex 订阅 OAuth 登录插件（ziyou979/dsh-llm-oauth，bundle 层自激活）。
-# 默认休眠（providers 为空，登录后才注册聊天路由），不注册任何工具 → 与本地
-# mathmodel-tools 的 image_generate 零冲突。catalog 限定 openai-codex：OAuth 设置页
-# 只显示 ChatGPT 登录；Claude/Grok 订阅登录仍由上面的 llm-subscriptions 负责。
-# 登录凭据写入 $DSH_HOME/pi-ai-oauth.json（openai-codex 条目），
-# dsh-mathmodel 的 codex-subscription 生图连接直接复用该凭据。
-- id: llm-oauth
-  config:
-    catalog:
-      - openai-codex

@@ -76,7 +76,7 @@ export class ImageGenerationService {
         fallback: { skill: 'ai-draw-skills', prompt: request.prompt },
       };
     }
-    const { connection, adapterId, credentialValue } = resolved;
+    const { connection, adapterId, credentialValue, subscriptionSessions } = resolved;
     const adapter = this.adapters[adapterId];
     if (typeof adapter !== 'function') {
       return {
@@ -97,6 +97,7 @@ export class ImageGenerationService {
         fetchImpl: this.fetch,
         signal,
         sleep: this.sleep,
+        subscriptionSessions,
       });
       if (!Array.isArray(assets) || assets.length < request.count) throw new Error(`供应商只返回 ${assets?.length ?? 0} 张图片`);
       await mkdir(outputDir, { recursive: true });

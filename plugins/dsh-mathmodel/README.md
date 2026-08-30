@@ -1,6 +1,6 @@
 # DeepSeek Harness Mathmodel 插件
 
-这是 DeepSeek Harness `0.1.0-rc.7` 专用的外置数学建模插件。它在不改官方安装包和 `node_modules` 的前提下，增加 `mathmodel` 模式、十张手动 Skill 卡片、右上角可收缩技能说明、依赖预检、视觉理解和受控生图工具。
+这是 DeepSeek Harness `0.1.1-rc.2` 专用的外置数学建模插件。它在不改官方安装包的前提下，增加 `mathmodel` 模式、手动 Skill 卡片、右上角可收缩技能说明、依赖预检、视觉理解和受控生图工具。
 
 卡片点击“确定”只把结构化 Prompt 写入输入框，不会发送消息。用户可以继续编辑，并自行决定何时发送。
 
@@ -120,6 +120,10 @@ prompt: |
 - `test/`：增加 mock 成功、失败、取消、临时 URL 下载、秘密脱敏和路径边界测试。
 
 任何供应商都必须同时满足健康检查、任务数量上限和用户明确付费确认；否则回退到提示词，不进行 live 调用。
+
+### Codex/Grok 订阅生图
+
+两类订阅生图只通过 Host service `subscriptionSessions` 获取会话快照。OAuth 登录、刷新和凭据落盘统一由 `dsh-plugin-subscriptions` 0.5.2 管理；本插件不直接读取或改写订阅凭据文件，也不会接收 `refreshToken`。401 时最多请求一次强制刷新并重试一次。Profile 必须保持 `registerImageTool: false`，由本插件独占全局 `image_generate`；订阅插件的 `x_search` 与 `video_generate` 保持启用。
 
 ## 百炼视觉配置
 
