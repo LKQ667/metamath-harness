@@ -8,6 +8,20 @@
 - **直接复用 DSH 当前生图连接**：专用模式只调用当前已配置的非 Codex 生图模型，不读取 Codex 图像认证、不消耗 Codex 图像额度，也不会在中途要求重复填写 API Key。
 - **AI IDE 一键安装已包含 `editppt`**：根目录安装脚本会在项目内自动准备隔离 Python 与 CLI；用户无需预装 Python、uv、pipx、editppt，也无需配置 PATH。首次安装需要联网下载运行依赖，之后相同版本会自动跳过。
 
+<p align="center">
+  <img src="github展示/图片转可编辑PPT-模式入口.png" width="48%" alt="图片转可编辑 PPT 模式入口" />
+  <img src="github展示/图片转可编辑PPT-原图与结果.png" width="48%" alt="原图与可编辑 PPT 结果对照" />
+</p>
+
+<p align="center">
+  <img src="github展示/图片转可编辑PPT-对象级编辑.png" width="48%" alt="PPT 对象级编辑状态" />
+  <img src="github展示/图片转可编辑PPT-流程图结果.png" width="48%" alt="流程图原图与重建结果" />
+</p>
+
+<p align="center">
+  <img src="github展示/图片转可编辑PPT-流程图对象级编辑.png" width="48%" alt="流程图对象级编辑状态" />
+</p>
+
 ## 最近更新（2026-08-30，新增界面展示）
 
 - **右侧工作台**：聊天时可以在右侧打开文件、PDF、终端和浏览器，底部终端也能继续保留。查资料、看论文或运行命令时，不必反复切换窗口。
