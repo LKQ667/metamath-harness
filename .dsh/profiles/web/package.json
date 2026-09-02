@@ -2,10 +2,12 @@
   "name": "dsh-profile-web",
   "private": true,
   "dependencies": {
+    "@deepseek-harness/dsh-api-key-pool": "file:../../../plugins/dsh-api-key-pool",
     "@deepseek-harness/dsh-mathmodel": "file:../../../plugins/dsh-mathmodel",
     "dsh-better-sidebar": "0.17.1",
     "dsh-client-ui-skins": "file:../../../plugins/dsh-client-ui-skins",
     "dsh-free-search": "file:../../../plugins/dsh-free-search",
+    "dsh-knowledge-sqlite": "file:../../../plugins/dsh-knowledge-sqlite",
     "dsh-plugin-subscriptions": "0.5.2",
     "dsh-session-link": "^0.1.4"
   },
@@ -17,6 +19,8 @@
         "dsh-plugin-subscriptions",
         "dsh-client-ui-skins",
         "dsh-free-search",
+        "@deepseek-harness/dsh-api-key-pool",
+        "dsh-knowledge-sqlite",
         "dsh-session-link",
         "dsh-better-sidebar"
       ]

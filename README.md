@@ -1,6 +1,8 @@
 # MetaMath Harness
 
-基于 DeepSeek Harness `0.1.0-rc.7` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
+基于 DeepSeek Harness `0.1.1-rc.2` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
+
+> 💬 QQ 交流群：**635765940**
 
 ## 最近更新（2026-09-02）
 
@@ -21,6 +23,17 @@
 <p align="center">
   <img src="github展示/图片转可编辑PPT-流程图对象级编辑.png" width="48%" alt="流程图对象级编辑状态" />
 </p>
+
+## 最近更新（2026-09-01）
+
+- **API Key 号池与原生 Web 共存**：开发版新增独立的 `pool-*` Provider，并在设置页提供与原生模型配置一致的号池卡片；可逐枚添加多个 Key、逐行维护模型目录和识图能力，普通 Provider 不会被号池观察或改写。
+- **真实附件与并发一致性**：号池模型已接入 Harness 持久附件服务；同值 Key 并发去重、不同 Key 并发挂池、失败回滚和流式请求固定 Key 均经过自动测试。Key 只由 DSH Credentials 管理，页面、日志和接口不会回显完整值，失败切换有界且不会无限重试。
+- **来源与使用方式**：基于 [xiaozhe7772222/dsh-api-key-pool](https://github.com/xiaozhe7772222/dsh-api-key-pool) `v0.3.0` 适配，作者 `xiaozhe7772222`，MIT 许可证。正常安装后在原生 3080 的设置页使用；需要完全隔离时运行 `启动-DeepSeek-Harness-号池.ps1` 打开 3081 专用 Profile。
+
+## 最近更新（2026-08-30，跨会话知识库）
+
+- **SQLite 跨会话知识库**：开发版接入本地 SQLite FTS5 知识检索，可在不同会话间搜索、列出和维护已保存知识；写入、更新和删除都要求用户确认，默认关闭会产生额外模型调用的查询扩展，数据保存在本机 DSH 数据目录中，不进入源码仓库。
+- **来源与使用方式**：基于 [NinjaSln-labs/dsh-plugins](https://github.com/NinjaSln-labs/dsh-plugins/tree/main/dsh-knowledge-sqlite) 的 `dsh-knowledge-sqlite v0.1.6` 适配，作者/组织 `NinjaSln-labs`；上游源码与 npm 元数据均声明 MIT。正常安装后由 Agent 使用 `knowledge_*` 工具，任何写入、更新或删除都会先请求确认。
 
 ## 最近更新（2026-08-30，新增界面展示）
 

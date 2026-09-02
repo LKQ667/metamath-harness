@@ -14,7 +14,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Repo = $PSScriptRoot
-$DshVersion = '0.1.0-rc.6'
+$DshVersion = '0.1.1-rc.2'
 $EditPptBin = Join-Path $Repo '.dsh\runtime\bin'
 $env:PATH = "$EditPptBin;$env:PATH"
 
@@ -59,22 +59,37 @@ if (-not $StartOnly) {
         Ok "官方本体安装完成 $(dsh --version)"
     }
 
-    # ---------- 4. 构建 Mathmodel 插件 ----------
-    Step '构建 Mathmodel 插件（plugins/dsh-mathmodel）'
-    Push-Location (Join-Path $Repo 'plugins\dsh-mathmodel')
-    npm install --no-fund --no-audit 2>&1 | Select-Object -Last 1 | Write-Host
-    npm run build 2>&1 | Select-Object -Last 1 | Write-Host
-    if (-not (Test-Path (Join-Path $Repo 'plugins\dsh-mathmodel\lib\index.js'))) { Fail '插件构建失败：lib/index.js 不存在' }
-    Pop-Location
-    Ok '插件构建完成'
+    # ---------- 4. 构建本地插件 ----------
+    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库）'
+    $localPlugins = @('dsh-mathmodel', 'dsh-api-key-pool', 'dsh-knowledge-sqlite')
+    foreach ($pluginName in $localPlugins) {
+        $pluginDir = Join-Path $Repo "plugins\$pluginName"
+        Push-Location $pluginDir
+        try {
+            npm install --no-fund --no-audit 2>&1 | Select-Object -Last 1 | Write-Host
+            if ($LASTEXITCODE -ne 0) { Fail "插件依赖安装失败：$pluginName" }
+            npm run build 2>&1 | Select-Object -Last 1 | Write-Host
+            if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $pluginDir 'lib\index.js'))) { Fail "插件构建失败：$pluginName" }
+        } finally {
+            Pop-Location
+        }
+    }
+    Ok '三个本地插件构建完成'
 
     # ---------- 5. 安装 Web Profile 依赖 ----------
-    Step '安装 Web Profile 依赖（.dsh/profiles/web）'
-    Push-Location (Join-Path $Repo '.dsh\profiles\web')
-    pnpm install --frozen-lockfile 2>&1 | Select-Object -Last 1 | Write-Host
-    if ($LASTEXITCODE -ne 0) { pnpm install 2>&1 | Select-Object -Last 1 | Write-Host }
-    Pop-Location
-    Ok 'Profile 依赖就绪'
+    Step '安装 Web Profile 依赖（原生 3080 / 独立号池 3081）'
+    $profileDirs = @('.dsh\profiles\web', '.dsh-key-pool\profiles\web-key-pool')
+    foreach ($relativeProfile in $profileDirs) {
+        Push-Location (Join-Path $Repo $relativeProfile)
+        try {
+            pnpm install --frozen-lockfile 2>&1 | Select-Object -Last 1 | Write-Host
+            if ($LASTEXITCODE -ne 0) { pnpm install 2>&1 | Select-Object -Last 1 | Write-Host }
+            if ($LASTEXITCODE -ne 0) { Fail "Profile 依赖安装失败：$relativeProfile" }
+        } finally {
+            Pop-Location
+        }
+    }
+    Ok '两个 Profile 依赖就绪'
 
     # ---------- 6. 准备图片转可编辑 PPT 运行时 ----------
     Step '准备图片转可编辑 PPT 运行时（项目内隔离）'

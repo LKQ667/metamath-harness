@@ -1,0 +1,8 @@
+# dsh-knowledge-sqlite bundle layer: mounts the ctx.knowledge service
+# (SQLite FTS5 trigram + L1 query expansion), the knowledge_* tools,
+# and the knowledge_probe evaluation harness. Apply as a profile bundle
+# (`dsh plugin add dsh-knowledge-sqlite`) or via a profile overlay.
+
+- insert:
+    - id: knowledge-sqlite
+      name: 'dsh-knowledge-sqlite'

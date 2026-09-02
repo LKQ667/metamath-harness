@@ -1,0 +1,269 @@
+[
+  {
+    "id": "m1",
+    "importance": 8,
+    "keywords": [
+      "部署流程",
+      "pnpm build",
+      "pnpm dsh web",
+      "127.0.0.1:3080"
+    ],
+    "synonyms": [
+      "启动服务",
+      "本地部署",
+      "运行web服务",
+      "访问地址"
+    ],
+    "questions": [
+      "怎么部署这个项目？",
+      "部署后如何访问？",
+      "本地启动服务的步骤是什么？",
+      "pnpm dsh web 是干什么的？"
+    ]
+  },
+  {
+    "id": "m2",
+    "importance": 7,
+    "keywords": [
+      "ctx.knowledge",
+      "记忆检索",
+      "SQLite FTS",
+      "BM25",
+      "relevance"
+    ],
+    "synonyms": [
+      "知识检索",
+      "全文索引",
+      "词法打分",
+      "相关性排序"
+    ],
+    "questions": [
+      "记忆检索是怎么实现的？",
+      "ctx.knowledge 的检索机制是什么？",
+      "relevance 分量如何计算？",
+      "SQLite FTS 是什么？"
+    ]
+  },
+  {
+    "id": "m3",
+    "importance": 6,
+    "keywords": [
+      "node_modules",
+      ".dsh",
+      "git",
+      ".gitignore",
+      "构建生成物"
+    ],
+    "synonyms": [
+      "依赖目录",
+      "构建产物",
+      "忽略文件",
+      "不要提交"
+    ],
+    "questions": [
+      "哪些文件不应该提交到git？",
+      "node_modules 需要提交吗？",
+      ".dsh 目录是什么？",
+      "如何配置.gitignore？"
+    ]
+  },
+  {
+    "id": "m4",
+    "importance": 7,
+    "keywords": [
+      "approval策略",
+      "ask",
+      "never",
+      "bash沙箱",
+      "确认框"
+    ],
+    "synonyms": [
+      "审批策略",
+      "自动执行",
+      "不再确认",
+      "沙箱权限"
+    ],
+    "questions": [
+      "为什么bash命令不再弹确认框？",
+      "approval策略改成什么了？",
+      "如何设置沙箱不弹确认？"
+    ]
+  },
+  {
+    "id": "m5",
+    "importance": 5,
+    "keywords": [
+      "工作区",
+      "deepseekharnesstest",
+      "会话日志",
+      "session-query",
+      "全文索引"
+    ],
+    "synonyms": [
+      "切换工作区",
+      "历史会话",
+      "搜索日志",
+      "索引查询"
+    ],
+    "questions": [
+      "切换工作区后还能搜到旧日志吗？",
+      "session-query 是什么？",
+      "如何搜索历史会话？"
+    ]
+  },
+  {
+    "id": "m6",
+    "importance": 9,
+    "keywords": [
+      "富化字段",
+      "未来问法",
+      "同义改写",
+      "命中率"
+    ],
+    "synonyms": [
+      "检索增强",
+      "问题预测",
+      "查询改写",
+      "搜索优化"
+    ],
+    "questions": [
+      "富化字段中哪个最重要？",
+      "如何提高同义改写查询的命中率？",
+      "未来可能被问到的问法是什么？"
+    ]
+  },
+  {
+    "id": "m7",
+    "importance": 6,
+    "keywords": [
+      "agent预设",
+      "persona",
+      "standard",
+      "agent.cordis.yml",
+      "复制预设"
+    ],
+    "synonyms": [
+      "角色配置",
+      "预设文件",
+      "修改人格",
+      "自定义预设"
+    ],
+    "questions": [
+      "如何修改agent的persona？",
+      "standard预设的配置文件在哪里？",
+      "想改预设需要怎么做？"
+    ]
+  },
+  {
+    "id": "m8",
+    "importance": 7,
+    "keywords": [
+      "web模式",
+      "tool-bash",
+      "禁用",
+      "shell工具",
+      "agent预设",
+      "realm"
+    ],
+    "synonyms": [
+      "浏览器模式",
+      "bash工具",
+      "命令执行",
+      "挂载工具"
+    ],
+    "questions": [
+      "web模式下为什么不能用bash？",
+      "shell工具在哪里挂载？",
+      "tool-bash 在web模式可用吗？"
+    ]
+  },
+  {
+    "id": "m9",
+    "importance": 8,
+    "keywords": [
+      "计划模式",
+      "改文件",
+      "探索",
+      "完整方案",
+      "批准"
+    ],
+    "synonyms": [
+      "规划模式",
+      "只读模式",
+      "审批流程",
+      "先探索后执行"
+    ],
+    "questions": [
+      "计划模式允许修改文件吗？",
+      "计划模式的工作流程是什么？",
+      "为什么不能直接改文件？"
+    ]
+  },
+  {
+    "id": "m10",
+    "importance": 7,
+    "keywords": [
+      "sandbox",
+      "默认权限",
+      "workspace-write",
+      "危险全开模式",
+      "确认"
+    ],
+    "synonyms": [
+      "沙箱权限",
+      "默认设置",
+      "写权限",
+      "安全模式"
+    ],
+    "questions": [
+      "sandbox的默认权限是什么？",
+      "什么情况下会弹确认？",
+      "危险全开模式是什么？"
+    ]
+  },
+  {
+    "id": "m11",
+    "importance": 6,
+    "keywords": [
+      "skill",
+      "会话目录",
+      "名字",
+      "描述",
+      "skill工具",
+      "加载"
+    ],
+    "synonyms": [
+      "技能列表",
+      "技能详情",
+      "调用技能",
+      "加载正文"
+    ],
+    "questions": [
+      "skill的会话目录显示什么？",
+      "如何查看skill的完整内容？",
+      "模型如何加载skill？"
+    ]
+  },
+  {
+    "id": "m12",
+    "importance": 7,
+    "keywords": [
+      "goals工具",
+      "长任务跟踪",
+      "会话重启",
+      "暂停状态",
+      "继续"
+    ],
+    "synonyms": [
+      "目标跟踪",
+      "任务管理",
+      "恢复执行",
+      "暂停恢复"
+    ],
+    "questions": [
+      "goals工具是做什么的？",
+      "会话重启后goals会怎样？",
+      "如何恢复goals的执行？"
+    ]
+  }
+]

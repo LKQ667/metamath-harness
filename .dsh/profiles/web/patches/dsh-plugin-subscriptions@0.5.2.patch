@@ -1,0 +1,120 @@
+diff --git a/lib/client.js b/lib/client.js
+index 32102eca7e8426ba4d20e0a183d1d6e7b6349215..eccb2420e6e66b016fba4634ce663c18d6cf11c4 100644
+--- a/lib/client.js
++++ b/lib/client.js
+@@ -2242,13 +2242,6 @@ function apply(ctx) {
+ 		label: () => t("nav"),
+ 		inject: injected
+ 	}, SubscriptionsSection));
+-	const toolviewInjected = () => ({ load: createImageLoader(connection.rpc) });
+-	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+-		name: "tool.call.toolview",
+-		key: "image_generate",
+-		locale: NS,
+-		inject: toolviewInjected
+-	}, ImageGenerateToolview));
+ 	const videoToolviewInjected = () => ({ loadVideo: createVideoLoader(connection.rpc) });
+ 	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+ 		name: "tool.call.toolview",
+diff --git a/lib/index.d.ts b/lib/index.d.ts
+index ec5fa8965bba6a3ab7bcdd83b48bbbabd4da5792..0838317162c6f3bd4c38e0b84bfd8e71f4ac4f16 100644
+--- a/lib/index.d.ts
++++ b/lib/index.d.ts
+@@ -13,6 +13,19 @@ import type { ModelEntry } from './providers/common.js';
+ export type { ModelEntry, ProviderUsage, UsageWindow } from './providers/common.js';
+ export type { ProviderStatus } from './auth/rpc.js';
+ export type { ClaudeSession, CodexSession, CopilotSession, GrokSession, ProviderId } from './auth/store.js';
++export interface SubscriptionSessionSnapshot {
++    accessToken: string;
++    accountId?: string;
++}
++export interface SubscriptionSessions {
++    describe(provider: 'codex' | 'grok'): Promise<{ configured: boolean }>;
++    resolve(provider: 'codex' | 'grok', options?: { force?: boolean; signal?: AbortSignal }): Promise<SubscriptionSessionSnapshot>;
++}
++declare module '@deepseek-ai/cordis' {
++    interface Context {
++        subscriptionSessions: SubscriptionSessions;
++    }
++}
+ export declare const name = "dsh-plugin-subscriptions";
+ export declare const inject: string[];
+ /** Default maximum provider idle time while one stream read is outstanding. */
+@@ -23,6 +36,8 @@ export interface Config {
+     providers?: ProviderId[];
+     /** Maximum provider idle time while one stream read is outstanding (default five minutes). */
+     streamIdleTimeoutMs?: number;
++    /** Register the package image_generate tool; defaults to true. */
++    registerImageTool?: boolean;
+     /** Advisory model catalogs overriding the built-in defaults, per provider. */
+     models?: {
+         codex?: ModelEntry[];
+diff --git a/lib/index.js b/lib/index.js
+index 146c2b0e6c9f47e77887452c212566903a3c98fa..d189ad3608362244fd957a892ca781ee9c7d68ad 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -5923,6 +5923,7 @@ const Config = z.object({
+ 		"copilot"
+ 	]),
+ 	streamIdleTimeoutMs: z.number().min(1).default(DEFAULT_STREAM_IDLE_TIMEOUT_MS),
++	registerImageTool: z.boolean().default(true),
+ 	models: z.object({
+ 		codex: z.array(modelEntrySchema),
+ 		claude: z.array(modelEntrySchema),
+@@ -6245,6 +6246,7 @@ function apply(ctx, config) {
+ 	let codexTokens;
+ 	let claudeTokens;
+ 	let grokTokens;
++	const subscriptionTokenManagers = /* @__PURE__ */ new Map();
+ 	const usageFetchers = {};
+ 	const speedBySession = /* @__PURE__ */ new Map();
+ 	let codexAdapter;
+@@ -6264,6 +6266,7 @@ function apply(ctx, config) {
+ 				}
+ 			});
+ 			codexTokens = tokens;
++			subscriptionTokenManagers.set("codex", tokens);
+ 			usageFetchers.codex = async (signal) => fetchCodexUsage(await tokens.session(), proxiedFetch, signal);
+ 			let adapter;
+ 			adapter = new CodexAdapter({
+@@ -6321,6 +6324,7 @@ function apply(ctx, config) {
+ 				}
+ 			});
+ 			grokTokens = tokens;
++			subscriptionTokenManagers.set("grok", tokens);
+ 			usageFetchers.grok = async (signal) => fetchGrokUsage(await tokens.session(), proxiedFetch, signal);
+ 			handles.set("grok", ctx.llm.registerAdapter(["grok"], new GrokAdapter({
+ 				models: catalog.grok,
+@@ -6359,6 +6363,23 @@ function apply(ctx, config) {
+ 			break;
+ 		}
+ 	}
++	const subscriptionSessions = Object.freeze({
++		async describe(provider) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			return Object.freeze({ configured: await getSession(provider) !== void 0 });
++		},
++		async resolve(provider, options = {}) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			const tokens = subscriptionTokenManagers.get(provider);
++			if (tokens === void 0) throw new LlmError(`dsh-plugin-subscriptions: provider ${provider} is not enabled`, "MISSING_CREDENTIAL");
++			const session = await tokens.session(options.force === true);
++			return Object.freeze({
++				accessToken: session.accessToken,
++				...provider === "codex" ? { accountId: session.accountId } : {}
++			});
++		}
++	});
++	ctx.effect(() => ctx.reflect.provide("subscriptionSessions", subscriptionSessions), "dsh-plugin-subscriptions: subscription session service");
+ 	registerAuthRpc(ctx, new SubscriptionsAuthController(flows, deviceFlows, authChanged, resolveAttachments, usageFetchers), {
+ 		async speed(sessionId) {
+ 			return {
+@@ -6388,7 +6409,7 @@ function apply(ctx, config) {
+ 			toolsCtx.tools.register(createXSearchTool({ tokens: grokTokens }));
+ 			toolsCtx.tools.register(createVideoGenerateTool({ tokens: grokTokens }));
+ 		}
+-		if (codexTokens !== void 0 || grokTokens !== void 0) toolsCtx.tools.register(createImageGenerateTool({
++		if (config.registerImageTool !== false && (codexTokens !== void 0 || grokTokens !== void 0)) toolsCtx.tools.register(createImageGenerateTool({
+ 			...codexTokens === void 0 ? {} : { codexTokens },
+ 			...grokTokens === void 0 ? {} : { grokTokens },
+ 			resolveAttachments,

@@ -14,4 +14,5 @@ minimumReleaseAgeExclude:
 overrides:
   '@deepseek-harness/dsh-mathmodel': link:../../../plugins/dsh-mathmodel
 patchedDependencies:
+  dsh-session-link@0.1.4: patches/dsh-session-link@0.1.4.patch
   dsh-plugin-subscriptions@0.5.2: patches/dsh-plugin-subscriptions@0.5.2.patch

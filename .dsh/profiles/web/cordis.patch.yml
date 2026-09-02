@@ -68,3 +68,24 @@
           name: Grok Build 0.1 (Code Fast)
           contextWindow: 256000
           inputModalities: [text, image]
+
+# 工作区长期知识：bundle 自激活，主 patch 只覆盖安全配置，不重复 insert。
+# 数据库存入 DSH_HOME/data，默认不进公开源码；所有持久变更需确认。
+# 查询扩展关闭，避免检索隐式调用模型；global 写入名单为空。
+- id: knowledge-sqlite
+  config:
+    gating: ask
+    registerProbeTool: false
+    databasePath: !!js dshHomePath('data/knowledge.sqlite')
+    maxContentTokens: 2048
+    queryExpansion:
+      enabled: false
+      maxOutputTokens: 300
+      timeoutMs: 3000
+      cache: true
+    retrieval:
+      topN: 8
+      maxQueryTrigrams: 0
+      maxCandidates: 100
+    authorization:
+      allowedGlobalWriters: []

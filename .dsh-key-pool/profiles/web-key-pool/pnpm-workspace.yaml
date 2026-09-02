@@ -1,0 +1,7 @@
+packages:
+  - .
+
+nodeLinker: hoisted
+autoInstallPeers: false
+overrides:
+  '@deepseek-harness/dsh-api-key-pool': link:../../../plugins/dsh-api-key-pool

@@ -1,0 +1,16 @@
+{
+  "name": "dsh-profile-web-key-pool",
+  "private": true,
+  "dependencies": {
+    "@deepseek-harness/dsh-api-key-pool": "file:../../../plugins/dsh-api-key-pool"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "@deepseek-harness/dsh-api-key-pool"
+      ]
+    }
+  }
+}

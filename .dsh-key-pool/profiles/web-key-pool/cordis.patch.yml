@@ -1,0 +1,10 @@
+# Your patch layer for this dsh profile, applied after every bundle layer:
+# a top-level YAML array of loader patch entries (id-targeted config
+# overrides, disables, and insert lists; `!!js` expressions allowed).
+#
+# 号池插件的 insert 由 bundle 层单次挂载；本层只按 id 覆盖独立 Profile 的安全模式，
+# 不重复 insert。
+- id: api-key-pool
+  config:
+    profileLabel: web-key-pool
+    exclusivePoolRoutes: true

@@ -1,0 +1,13 @@
+# dsh-api-key-pool — API Key 号池（隔离 Profile 专用）
+# 注册 pool-* LLM 适配器（多 Key 轮询/冷却/失败切换）+ api-key-pool 设置 namespace
+# + Typert Remote（list/addKey/removeKey/resetCooldown，输出一律脱敏）
+# + GET /api/dsh-api-key-pool/health 只读健康端点（启动器复用检测）。
+# Key 只存独立 DSH_HOME 的 credentials 记录（scope dsh-api-key-pool），不进入本文件。
+# 默认以共存模式加载：只注册 pool-* adapter，不观察或拦截普通 Provider。
+# 独立 web-key-pool Profile 在自己的用户 patch 中显式开启 fail-closed。
+- insert:
+    - id: api-key-pool
+      name: '@deepseek-harness/dsh-api-key-pool'
+      config:
+        profileLabel: web
+        exclusivePoolRoutes: false

@@ -1,0 +1,13 @@
+# 号池独立 DSH_HOME 运行时状态：默认全部忽略。
+# 只白名单跟踪 web-key-pool Profile 的四个接线文件（package.json、
+# cordis.patch.yml、pnpm-workspace.yaml、pnpm-lock.yaml）。
+# 凭据（.credentials.yaml）、settings、sessions、data、日志绝不进入 Git。
+/*
+!/profiles/
+/profiles/*
+!/profiles/web-key-pool/
+/profiles/web-key-pool/*
+!/profiles/web-key-pool/package.json
+!/profiles/web-key-pool/cordis.patch.yml
+!/profiles/web-key-pool/pnpm-workspace.yaml
+!/profiles/web-key-pool/pnpm-lock.yaml

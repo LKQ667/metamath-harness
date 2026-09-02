@@ -1,0 +1,19 @@
+diff --git a/cordis.patch.yml b/cordis.patch.yml
+index a403a76..c9f276b 100644
+--- a/cordis.patch.yml
++++ b/cordis.patch.yml
+@@ -1,12 +1,9 @@
+ # dsh-session-link bundle patch — applied automatically when this package is
+ # installed with `dsh plugin --profile <name> add dsh-session-link`
+ # (the package declares `dsh.bundle.patch` in its package.json).
+ #
+-# Composes the two rows the feature needs: the upstream session-reference
+-# service and this package's host/client plugin.
++# DSH 0.1.1-rc.2 的 web-app 已原生挂载 session-reference；本地版本只插入
++# session-link，避免 duplicate loader entry id。升级 DSH/插件时必须复核。
+ - insert:
+-    - id: session-reference
+-      name: '@deepseek-ai/dsh-session-reference'
+-
+     - id: session-link
+       name: 'dsh-session-link'
