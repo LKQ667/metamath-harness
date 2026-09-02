@@ -131,4 +131,36 @@ export function apply(ctx) {
     }),
     presentResult: presentImageResult,
   });
+  ctx.tools.register({
+    name: 'editable_ppt_image',
+    description: '图片转可编辑 PPT 专用生图：status 读取并锁定当前生图连接（非敏感）；generate/edit 必须显式携带锁定的 connectionId，单次一张、确定性输出、失败即页面失败，禁止 Codex 与任何回退。',
+    parameters: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['action'],
+      properties: {
+        action: { type: 'string', enum: ['status', 'generate', 'edit'] },
+        connectionId: { type: 'string', minLength: 8, maxLength: 64, description: 'generate/edit 必填：status 返回并锁定的连接 ID' },
+        prompt: { type: 'string', minLength: 1 },
+        referenceImages: { type: 'array', minItems: 1, maxItems: 4, items: { type: 'string', minLength: 1 } },
+        maskImage: { type: 'string', minLength: 1 },
+        size: { type: 'string', enum: ['auto', '1024x1024', '1536x1024', '1024x1536'] },
+        quality: { type: 'string', enum: ['auto', 'low', 'medium', 'high'] },
+        outputPath: { type: 'string', minLength: 1 },
+        authorizePaid: { type: 'boolean' },
+        budgetRemaining: { type: 'integer', minimum: 0 },
+      },
+    },
+    output: jsonOutput,
+    timeoutMs: 300000,
+    async execute(args, exec) {
+      return await ctx.mathmodelRuntime.image.editablePptImage(args, { workspace: workspaceOf(exec), signal: exec.signal });
+    },
+    presentCall: (args) => ({
+      card: 'generic',
+      title: args?.action === 'status' ? '读取当前生图连接' : '可编辑 PPT 生图',
+      kind: 'execute',
+      rawInput: { action: args?.action ?? 'status', connection: args?.connectionId ?? '当前连接' },
+    }),
+  });
 }

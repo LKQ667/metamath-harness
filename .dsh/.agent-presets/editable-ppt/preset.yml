@@ -1,0 +1,3 @@
+name: 图片转可编辑 PPT 模式
+description: 以极少提示词严格委托 image-to-editable-ppt，支持单页与多页高保真、对象级可编辑 PowerPoint 重建；生图固定使用 DSH 当前连接（任务开始锁定，禁止 Codex 与回退）。
+order: 6

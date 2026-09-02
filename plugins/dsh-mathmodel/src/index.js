@@ -34,13 +34,14 @@ export {
   GROK_CREDENTIAL_KEY, describeGrokCredential, resolveGrokSession,
 } from './image/grok-auth.js';
 export { codexImagesAdapter, grokImagesAdapter } from './image/adapters.js';
+export { assertNotCodex, capabilitiesForProtocol, isCodexConnection, isCodexImagesEndpoint, requireCapabilities, CODEX_BACKEND_FORBIDDEN_CODE } from './image/capabilities.js';
 export { ManualVisionService, VisionError, VISION_MODELS, VisionService, MANUAL_VISION_LIMITS, MANUAL_VISION_PROMPT } from './vision.js';
 export { ADAPTER_BY_ID, IMAGE_ADAPTERS, customAdapter, dashscopeAdapter, geminiAdapter, openaiAdapter, openaiChatImageAdapter, openaiImagesAdapter, sub2apiAsyncImagesAdapter } from './image/adapters.js';
 export { decodeImageAsset, downloadImage, mimeForPath, requestError } from './image/assets.js';
 export { classifyVerifyError, shouldTryChatImage, verificationIdentity, verifyConnection } from './image/verify.js';
 export { ImageConnectionService } from './image/connections.js';
 export { ImageGenerationService } from './image/service.js';
-export { createToolExecutors, IMAGE_GENERATE_TOOL, VISION_ANALYZE_TOOL } from './tool-contracts.js';
+export { createToolExecutors, EDITABLE_PPT_IMAGE_TOOL, IMAGE_GENERATE_TOOL, VISION_ANALYZE_TOOL } from './tool-contracts.js';
 export { OPENCODE_RT_CREDENTIAL, OPENCODE_RT_ENDPOINT, OPENCODE_RT_MODELS_ENDPOINT, OPENCODE_RT_PROVIDER, OpenCodeRtService, OpenCodeRtSettingsSchema, buildOpenCodeRtProfile, parseOpenCodeModels } from './opencode-rt.js';
 export { StoredKeyModelDiscoveryService, parseStoredKeyModels } from './model-discovery.js';
 export { ImageConnectionsSchema, IMAGE_CONNECTIONS_NAMESPACE, installMathmodelHost, ProviderSettingsSchema, PROVIDER_SETTINGS_NAMESPACE } from './host.js';

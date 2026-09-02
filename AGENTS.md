@@ -11,9 +11,10 @@
    ```powershell
    .\install.cmd
    ```
-   脚本会自动完成：安装官方 DeepSeek Harness 本体（npm 全局）→ 构建 Mathmodel 插件 → 安装 Web 依赖 → 创建桌面快捷方式 → 启动并打开浏览器。
+   脚本会自动完成：安装官方 DeepSeek Harness 本体（npm 全局）→ 构建 Mathmodel 插件 → 安装 Web 依赖 → 在项目内准备 `editppt` 及隔离 Python → 创建桌面快捷方式 → 启动并打开浏览器。不要要求用户另装 Python、uv、pipx、editppt，也不要改用手工安装命令。
 3. **验收标准**：
    - 桌面出现「MetaMath Harness」快捷方式；
+   - `.dsh\runtime\bin\editppt.exe --help` 成功；
    - `http://127.0.0.1:3080` 返回 200 且浏览器已打开。
 4. **提醒用户**：首次使用需在 Web 设置中配置自己的模型供应商与 API Key（Key 只存本机，绝不外传）。
 5. **日常启动**：双击桌面快捷方式，或运行 `.\install.ps1 -StartOnly`。

@@ -28,6 +28,7 @@ const files = [
   ['src/model-discovery.js', 'lib/model-discovery.js'],
   ['src/image/adapters.js', 'lib/image/adapters.js'],
   ['src/image/assets.js', 'lib/image/assets.js'],
+  ['src/image/capabilities.js', 'lib/image/capabilities.js'],
   ['src/image/codex-auth.js', 'lib/image/codex-auth.js'],
   ['src/image/grok-auth.js', 'lib/image/grok-auth.js'],
   ['src/image/verify.js', 'lib/image/verify.js'],

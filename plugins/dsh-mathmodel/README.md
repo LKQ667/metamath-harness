@@ -125,6 +125,18 @@ prompt: |
 
 两类订阅生图只通过 Host service `subscriptionSessions` 获取会话快照。OAuth 登录、刷新和凭据落盘统一由 `dsh-plugin-subscriptions` 0.5.2 管理；本插件不直接读取或改写订阅凭据文件，也不会接收 `refreshToken`。401 时最多请求一次强制刷新并重试一次。Profile 必须保持 `registerImageTool: false`，由本插件独占全局 `image_generate`；订阅插件的 `x_search` 与 `video_generate` 保持启用。
 
+### 图片转可编辑 PPT 专用生图（`editable_ppt_image`）
+
+`editable-ppt` 模式（`.dsh/.agent-presets/editable-ppt/`）的图像链路专用工具，实现集中在 `src/image/capabilities.js`（三层 Codex 识别 + 协议能力矩阵）、`src/image/connections.js`（`describeActiveForTool` / `resolveForEditablePpt`）与 `src/image/service.js`（`editablePptImage` 严格入口）：
+
+- `action:"status"`：只读“设置 → 模型 → 生图模型”的当前连接，要求存在、凭据已配置且验证 `ready`，返回连接 ID/名称/模板/模型/协议与能力矩阵；这是任务开始时的唯一锁定动作，零付费、零网络。
+- `action:"generate"/"edit"`：必须显式携带锁定的 `connectionId`；固定单张输出、确定性 `outputPath`（已存在即失败，不自动改名）、工作区路径边界与 25 MB/MIME 防御；`edit` 携带 1–4 张参考图与可选 mask；成功时同目录写 `<name>.dsh-image.json` 非敏感元数据（哈希、协议、模型、时间，绝不含 Prompt 正文/Base URL/Key/Token）。
+- Codex 防线：`codex-subscription` 模板、`codex-images` 验证协议或 ChatGPT Codex 直连端点任一命中，即在任何凭据解析与付费调用前返回 `codex_backend_forbidden`；`grok-images` 等不支持编辑的协议对 edit/mask/quality 返回 `capability_unsupported`，不静默忽略。
+- 失败策略：仅对网络/5xx 做最多 2 次指数退避重试；401/403、400/404、429 直接失败；一切失败不切换连接、不提供 `ai-draw-skills` 提示词回退、不降低质量门禁；所有错误信息先经 `redactText` 并同时屏蔽凭据值与 Base URL。
+- 凭据边界：真实 Key 只在 Host 进程内解析并随请求发送；工具输出、状态描述、元数据与登记链路（`editppt image import --metadata-file`）均零秘密。通用 `image_generate` 的行为、schema 与回退提示保持原样，不受影响。
+
+配套契约测试：`test/editable-ppt-image.test.mjs`（单元/安全）、`test/editable-ppt-contract.test.mjs`（Persona/Worker/Skill 静态契约）、`test/editable-ppt-e2e-sim.test.mjs`（fake 供应商模拟 E2E，含双页并发与零秘密扫描）。`editppt` CLI 侧的 `dsh-current` 契约、运行级阻断与 metadata 校验测试位于 `.dsh/skills/image-to-editable-ppt/cli/tests/`。
+
 ## 百炼视觉配置
 
 在 `/claude-vision-skill` 卡片中按引导把百炼 Key 写入 DSH 受管凭据。Key 不要粘贴进聊天或补充要求。固定模型为：

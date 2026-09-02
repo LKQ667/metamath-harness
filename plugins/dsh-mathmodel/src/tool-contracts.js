@@ -34,9 +34,32 @@ export const IMAGE_GENERATE_TOOL = Object.freeze({
   }),
 });
 
+export const EDITABLE_PPT_IMAGE_TOOL = Object.freeze({
+  name: 'editable_ppt_image',
+  description: '图片转可编辑 PPT 专用生图：status 读取并锁定 DSH 当前生图连接（非敏感）；generate/edit 必须显式携带锁定的 connectionId，单次一张、确定性输出路径、失败即页面失败。禁止 Codex 后端与任何回退，凭据不出 DSH Host。',
+  parameters: Object.freeze({
+    type: 'object',
+    additionalProperties: false,
+    required: ['action'],
+    properties: {
+      action: { type: 'string', enum: ['status', 'generate', 'edit'] },
+      connectionId: { type: 'string', minLength: 8, maxLength: 64, description: 'generate/edit 必填：任务开始时 status 返回并锁定的连接 ID' },
+      prompt: { type: 'string', minLength: 1 },
+      referenceImages: { type: 'array', minItems: 1, maxItems: 4, items: { type: 'string', minLength: 1 }, description: 'edit 必填 1–4 张；generate 禁止' },
+      maskImage: { type: 'string', minLength: 1, description: '可选，仅 edit；工作区内 PNG 蒙版' },
+      size: { type: 'string', enum: ['auto', '1024x1024', '1536x1024', '1024x1536'] },
+      quality: { type: 'string', enum: ['auto', 'low', 'medium', 'high'] },
+      outputPath: { type: 'string', minLength: 1, description: '工作区相对路径；已存在即失败，不自动改名' },
+      authorizePaid: { type: 'boolean', description: '用户本次转换请求的一次性付费授权' },
+      budgetRemaining: { type: 'integer', minimum: 0 },
+    },
+  }),
+});
+
 export function createToolExecutors({ vision, image, workspace }) {
   return Object.freeze({
     vision_analyze: async (args, signal) => await vision.analyze({ ...args, workspace, signal }),
     image_generate: async (args, signal) => await image.generate(args, { workspace, signal }),
+    editable_ppt_image: async (args, signal) => await image.editablePptImage(args, { workspace, signal }),
   });
 }

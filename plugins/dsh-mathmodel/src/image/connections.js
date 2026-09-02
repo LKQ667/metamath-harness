@@ -6,6 +6,7 @@ import {
 import { describeCodexCredential, resolveCodexSession } from './codex-auth.js';
 import { describeGrokCredential, resolveGrokSession } from './grok-auth.js';
 import { verifyConnection } from './verify.js';
+import { assertNotCodex, capabilitiesForProtocol } from './capabilities.js';
 
 const LEGACY_CREDENTIAL_REFS = new Set(['DASHSCOPE_API_KEY', 'OPENAI_API_KEY', 'GEMINI_API_KEY', 'CUSTOM_IMAGE_API_KEY']);
 const CODEX_TEMPLATE_ID = 'codex-subscription';
@@ -380,6 +381,55 @@ export class ImageConnectionService {
       else await this.credentialStore.clear(id);
     }
     return await this.list();
+  }
+
+  /** 工具状态读取：只返回当前连接的非敏感描述；Codex 在读取凭据前失败关闭。 */
+  async describeActiveForTool() {
+    const value = await this.ensureMigrated();
+    const id = value.activeConnectionId;
+    if (!id) throw fail('no_active_connection', '尚未选择当前生图连接；请到“设置 > 模型 > 生图模型”验证并选择一条连接');
+    const connection = value.connections.find((item) => item.id === id);
+    if (!connection) throw fail('connection_not_found', `生图连接不存在：${id}`);
+    assertNotCodex(connection);
+    const credential = await this.describeCredential(connection);
+    if (!credential.configured) throw fail('credential_missing', `连接“${connection.name}”尚未配置 API Key；请在设置页补齐后重试`);
+    const capability = capabilityOf(connection, credential.configured);
+    if (capability === 'failed') throw fail('capability_failed', `连接“${connection.name}”上次真实验证失败；请到设置页重新验证`);
+    if (capability !== 'ready') throw fail('capability_pending', `连接“${connection.name}”尚未通过真实生图验证；请到设置页完成验证`);
+    const protocol = connection.verification.protocol;
+    return Object.freeze({
+      connectionId: connection.id,
+      connectionName: connection.name,
+      template: connection.template,
+      model: connection.model,
+      protocol,
+      capabilities: capabilitiesForProtocol(protocol),
+      codexForbidden: true,
+    });
+  }
+
+  /** 可编辑 PPT 锁定连接解析：必须显式携带运行锁定的 connectionId；Codex 在任何凭据解析前拒绝。 */
+  async resolveForEditablePpt(connectionId) {
+    if (typeof connectionId !== 'string' || !connectionId.trim()) {
+      throw fail('connection_id_required', 'editable_ppt_image 的生成/编辑调用必须显式携带任务开始时锁定的 connectionId');
+    }
+    const value = await this.ensureMigrated();
+    const id = connectionId.trim();
+    const connection = value.connections.find((item) => item.id === id);
+    if (!connection) throw fail('connection_not_found', `运行锁定的生图连接不存在：${id}`);
+    assertNotCodex(connection);
+    const credential = await this.resolveCredential(connection);
+    if (!credential.value) throw fail('credential_missing', `连接“${connection.name}”尚未配置 API Key`);
+    const capability = capabilityOf(connection, true);
+    if (capability === 'failed') throw fail('capability_failed', `连接“${connection.name}”上次真实验证失败；页面失败，不得切换其他连接`);
+    if (capability !== 'ready') throw fail('capability_pending', `连接“${connection.name}”尚未通过真实生图验证；页面失败，不得切换其他连接`);
+    return Object.freeze({
+      connection,
+      adapterId: connection.verification.protocol,
+      verifiedProtocol: connection.verification.protocol,
+      credentialValue: credential.value,
+      subscriptionSessions: this.subscriptionSessions,
+    });
   }
 
   /** 生成解析：显式 connectionId 优先，否则当前连接；只返回就绪且 Key 已配置的连接。 */

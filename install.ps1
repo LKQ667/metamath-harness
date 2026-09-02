@@ -1,4 +1,4 @@
-﻿# MetaMath Harness 一键安装与启动
+# MetaMath Harness 一键安装与启动
 # 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
 # 用法：
 #   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
@@ -15,6 +15,8 @@ param(
 $ErrorActionPreference = 'Stop'
 $Repo = $PSScriptRoot
 $DshVersion = '0.1.0-rc.6'
+$EditPptBin = Join-Path $Repo '.dsh\runtime\bin'
+$env:PATH = "$EditPptBin;$env:PATH"
 
 function Step([string]$msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
 function Ok([string]$msg)   { Write-Host "    $msg" -ForegroundColor Green }
@@ -74,7 +76,17 @@ if (-not $StartOnly) {
     Pop-Location
     Ok 'Profile 依赖就绪'
 
-    # ---------- 6. 创建桌面快捷方式 ----------
+    # ---------- 6. 准备图片转可编辑 PPT 运行时 ----------
+    Step '准备图片转可编辑 PPT 运行时（项目内隔离）'
+    & (Join-Path $Repo '.dsh\scripts\ensure-editppt.ps1') -RepoRoot $Repo
+    if ($LASTEXITCODE -ne 0) { Fail 'editppt 安装失败，请保留上方错误信息并重新运行 install.cmd。' }
+    $editPpt = Join-Path $EditPptBin 'editppt.exe'
+    if (-not (Test-Path -LiteralPath $editPpt)) { Fail 'editppt 安装不完整：项目内可执行文件不存在。' }
+    & $editPpt --help *> $null
+    if ($LASTEXITCODE -ne 0) { Fail 'editppt 自检失败，请重新运行 install.cmd。' }
+    Ok '图片转可编辑 PPT 组件已就绪（无需预装 Python、uv 或 editppt）'
+
+    # ---------- 7. 创建桌面快捷方式 ----------
     Step '创建桌面快捷方式'
     try {
         $desktop = [Environment]::GetFolderPath('Desktop')
@@ -99,7 +111,7 @@ if (-not $StartOnly) {
 
 if ($NoStart) { Write-Host "`n未启动（-NoStart）。日常启动：.\install.ps1 -StartOnly`n" -ForegroundColor Yellow; exit 0 }
 
-# ---------- 7. 启动 Web ----------
+# ---------- 8. 启动 Web ----------
 Step "启动 Web 界面（端口 $Port）"
 $env:DSH_HOME = Join-Path $Repo '.dsh'
 Ok "DSH_HOME = $env:DSH_HOME"

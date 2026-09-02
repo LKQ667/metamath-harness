@@ -36,7 +36,7 @@ function openAiUrl(base, path) {
   return new URL(path.replace(/^\//, ''), base.endsWith('/') ? base : `${base}/`).toString();
 }
 
-async function openAiRequest({ provider, endpoint, model, credential, request, references, fetchImpl, signal }) {
+async function openAiRequest({ provider, endpoint, model, credential, request, references, maskRef, fetchImpl, signal }) {
   const headers = { authorization: `Bearer ${credential}`, ...JSON_HEADERS };
   let body;
   let url = openAiUrl(endpoint, 'images/generations');
@@ -47,11 +47,13 @@ async function openAiRequest({ provider, endpoint, model, credential, request, r
     form.set('prompt', request.prompt);
     form.set('n', String(request.count));
     if (request.size) form.set('size', request.size);
+    if (request.quality) form.set('quality', request.quality);
     for (const [index, ref] of references.entries()) form.append('image[]', new Blob([ref.bytes], { type: ref.mime }), `reference-${index + 1}.${ref.ext}`);
+    if (maskRef) form.append('mask', new Blob([maskRef.bytes], { type: maskRef.mime }), `mask.${maskRef.ext}`);
     body = form;
     delete headers['content-type'];
   } else {
-    body = JSON.stringify({ model, prompt: request.prompt, n: request.count, ...(request.size ? { size: request.size } : {}), response_format: 'b64_json' });
+    body = JSON.stringify({ model, prompt: request.prompt, n: request.count, ...(request.size ? { size: request.size } : {}), ...(request.quality ? { quality: request.quality } : {}), response_format: 'b64_json' });
   }
   const data = await jsonResponse(await fetchImpl(url, { method: 'POST', headers, body, signal }), provider);
   return genericAssets(data);
