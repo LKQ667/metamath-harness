@@ -1,4 +1,4 @@
-# MetaMath Harness 一键安装与启动
+﻿# MetaMath Harness 一键安装与启动
 # 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
 # 用法：
 #   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
@@ -66,9 +66,9 @@ if (-not $StartOnly) {
         $pluginDir = Join-Path $Repo "plugins\$pluginName"
         Push-Location $pluginDir
         try {
-            npm install --no-fund --no-audit 2>&1 | Select-Object -Last 1 | Write-Host
+            cmd /c "npm install --no-fund --no-audit 2>&1" | Select-Object -Last 1 | Write-Host
             if ($LASTEXITCODE -ne 0) { Fail "插件依赖安装失败：$pluginName" }
-            npm run build 2>&1 | Select-Object -Last 1 | Write-Host
+            cmd /c "npm run build 2>&1" | Select-Object -Last 1 | Write-Host
             if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $pluginDir 'lib\index.js'))) { Fail "插件构建失败：$pluginName" }
         } finally {
             Pop-Location
@@ -82,8 +82,8 @@ if (-not $StartOnly) {
     foreach ($relativeProfile in $profileDirs) {
         Push-Location (Join-Path $Repo $relativeProfile)
         try {
-            pnpm install --frozen-lockfile 2>&1 | Select-Object -Last 1 | Write-Host
-            if ($LASTEXITCODE -ne 0) { pnpm install 2>&1 | Select-Object -Last 1 | Write-Host }
+            cmd /c "pnpm install --frozen-lockfile 2>&1" | Select-Object -Last 1 | Write-Host
+            if ($LASTEXITCODE -ne 0) { cmd /c "pnpm install 2>&1" | Select-Object -Last 1 | Write-Host }
             if ($LASTEXITCODE -ne 0) { Fail "Profile 依赖安装失败：$relativeProfile" }
         } finally {
             Pop-Location

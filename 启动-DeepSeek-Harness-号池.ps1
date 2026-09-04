@@ -1,4 +1,4 @@
-# DeepSeek Harness 号池启动器（隔离 Profile：web-key-pool @ 3081）
+﻿# DeepSeek Harness 号池启动器（隔离 Profile：web-key-pool @ 3081）
 # 独立 DSH_HOME=.dsh-key-pool，与原生 3080 完全隔离；
 # 端口占用时只信任号池健康端点返回 profile=web-key-pool 才复用。
 [CmdletBinding()]

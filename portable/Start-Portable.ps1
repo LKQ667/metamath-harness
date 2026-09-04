@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param([int]$Port = 3080, [switch]$NoBrowser)
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'Portable.Common.psm1') -Force

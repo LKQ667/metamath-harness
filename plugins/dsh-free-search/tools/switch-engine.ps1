@@ -1,4 +1,4 @@
-# dsh-free-search 引擎切换工具
+﻿# dsh-free-search 引擎切换工具
 # 用法：右键"以 PowerShell 运行"，或双击运行（先检查执行策略）
 
 param(

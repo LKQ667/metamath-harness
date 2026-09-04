@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 Import-Module (Join-Path $root 'Portable.Common.psm1') -Force
 $temp = Join-Path $env:TEMP ("dsh-portable-test-" + [Guid]::NewGuid().ToString('N'))

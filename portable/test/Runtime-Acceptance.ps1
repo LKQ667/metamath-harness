@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param([Parameter(Mandatory)][string]$Root, [string]$ModulePath)
 $ErrorActionPreference = 'Stop'
 $Root = [IO.Path]::GetFullPath($Root)

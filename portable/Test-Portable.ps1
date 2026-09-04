@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param([string]$Root = (Split-Path $PSScriptRoot -Parent), [switch]$Json)
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'Portable.Common.psm1') -Force
