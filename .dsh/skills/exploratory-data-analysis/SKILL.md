@@ -1,6 +1,6 @@
 ---
 name: exploratory-data-analysis
-description: "Perform bounded, local exploratory analysis of explicitly supported scientific files. Use for redacted CSV/TSV/JSON profiles; optional NumPy, HDF5, FASTA/FASTQ, and basic image metadata inspection; missingness/leakage audits; outlier and transformation sensitivity; and rigorous EDA report scaffolds. Other domain formats are reference-only and unknown formats fail closed."
+description: "对本机明确支持的科学数据文件做有边界的本地探索性分析（EDA）。适用于脱敏后的 CSV/TSV/JSON 数据概况检查，可选支持 NumPy、HDF5、FASTA/FASTQ 与基础图片元数据；覆盖缺失值与数据泄漏审查、离群点与变换敏感性分析，并产出严谨的 EDA 报告框架。其他领域格式仅供参考，未知格式一律拒绝处理（fail closed）。"
 license: MIT
 compatibility: Bundled core CLIs require Python 3.11+ and are local/network-free; the complete pinned optional snapshot requires Python 3.12+, uv, and format-specific libraries listed below.
 allowed-tools: Read Write Edit Bash Glob

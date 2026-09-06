@@ -39,6 +39,8 @@ test('当前 Skill 都有人工通俗说明', async () => {
   assert.match(summaries['skill-installer'], /安装/);
   assert.match(summaries['yatai-cn'], /亚太杯/);
   assert.match(summaries['math-paper-huawei'], /华为杯/);
+  assert.match(summaries['exploratory-data-analysis'], /探索分析/);
+  assert.doesNotMatch(summaries['exploratory-data-analysis'], /Perform bounded/);
 });
 
 test('单个损坏的 frontmatter 不会拖垮其他 Skill 说明', async (t) => {
