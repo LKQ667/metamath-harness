@@ -1,0 +1,4 @@
+# Register the Trae provider without changing the profile's default model.
+- insert:
+    - id: dsh-connect-trae
+      name: dsh-connect-trae

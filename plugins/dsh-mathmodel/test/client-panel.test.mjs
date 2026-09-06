@@ -32,6 +32,8 @@ test('bundle 声明折叠 ARIA、键盘原生按钮与窄屏布局', async () =>
   assert.match(source, /}, '技能说明'\)/);
   assert.match(source, /'aria-label': '搜索 Skill'/);
   assert.match(source, /点击查看简单说明/);
+  assert.doesNotMatch(source, /skills\.length \|\| 15/);
+  assert.match(source, /loadState === 'ready' \? `\$\{skills\.length\} 个 Skill`/);
   assert.match(source, /mathmodelCards\.help\(\)/);
   assert.match(source, /dsh-mm-skill-list/);
   assert.match(source, /if \(!isActive\) return info/);

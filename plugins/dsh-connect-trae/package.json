@@ -1,0 +1,112 @@
+{
+  "name": "dsh-connect-trae",
+  "displayName": "DSH Connect Trae",
+  "description": "Connect locally signed-in Trae models to DeepSeek Harness, plus a read-only usage/credits summary.",
+  "version": "1.2.0",
+  "author": "dingminhua",
+  "copyright": "Copyright (c) 2026 LaoDing",
+  "license": "MIT",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "trae",
+    "model-provider",
+    "usage",
+    "credits"
+  ],
+  "type": "module",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "docs/assets/dsh-connect-trae-usage-card.png",
+    "screenshots.json",
+    "cordis.patch.yml",
+    "README.md",
+    "README.en.md",
+    "CHANGELOG.md",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prepack": "npm run build",
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.client.json",
+    "check": "pnpm run typecheck && pnpm run test && pnpm run build"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-settings-plugins",
+        "@deepseek-ai/dsh-client-ui-primitives",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "platform": "web"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dingminhua/dsh-connect-trae.git"
+  },
+  "homepage": "https://github.com/dingminhua/dsh-connect-trae#readme",
+  "bugs": {
+    "url": "https://github.com/dingminhua/dsh-connect-trae/issues"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1-rc.1",
+    "@deepseek-ai/dsh-atomic-write": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/dsh-attachment": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/dsh-home-paths": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/dsh-host-webserver": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/dsh-llm": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/dsh-llm-pi-ai": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/dsh-settings": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/dsh-client-ui-primitives": ">=0.1.2-0 <0.2.0-0",
+    "@deepseek-ai/schemastery": "^3.18.1-rc.1",
+    "@earendil-works/pi-ai": ">=0.82.1",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-atomic-write": "^0.1.2-rc.1",
+    "@deepseek-ai/dsh-attachment": "^0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-locale": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-renderer": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-settings-plugins": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-primitives": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-home-paths": "^0.1.2-rc.1",
+    "@deepseek-ai/dsh-host-webserver": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-llm": "^0.1.2-rc.1",
+    "@deepseek-ai/dsh-llm-pi-ai": "^0.1.2-rc.1",
+    "@deepseek-ai/dsh-settings": "^0.1.2-rc.1",
+    "@deepseek-ai/schemastery": "3.18.2",
+    "@earendil-works/pi-ai": "0.84.2",
+    "@types/node": "^22.20.0",
+    "@types/react": "~18.3.31",
+    "react": "^18.3.1",
+    "tsdown": "^0.22.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.8"
+  }
+}

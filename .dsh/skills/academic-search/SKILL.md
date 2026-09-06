@@ -3,7 +3,7 @@ name: academic-search
 description: |
   仅手动触发的学术论文搜索与元数据提取 Skill。只有当用户明确点名 `$academic-search`（例如“$academic-search 搜索……”）时才使用；即使用户提出论文搜索、文献综述、引用分析、BibTeX、PDF 或学术数据库相关请求，也禁止自动触发。本 Skill 可处理多学科论文检索、引用关系、开放获取判定和结构化元数据提取。
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # academic-search Skill
@@ -65,7 +65,7 @@ arXiv、Semantic Scholar、PubMed、Papers with Code 等 API 平台无需 Chrome
 | 平台返回"内容不存在" | 未必真的不存在，可能是访问方式问题 | 检查 URL 参数是否完整，换平台验证 |
 | 同一方式重试 3 次无改善 | 路径错了，不是还没找到方法 | 重新评估目标，换平台或换访问方式 |
 
-**⑤ 完成判断**：对照①定义的成功标准确认任务完成后停止，不为"更完整"而过度操作。
+**⑤ 评分与归档（默认最后一步）**：按 [references/scoring-and-archive.md](references/scoring-and-archive.md) 对本次去重后的最终检索结果执行五维百分制评分，直接输出按总分降序的结果，并将一份汇总 Markdown 与所有能获取的论文全文归档到当前项目 `文献/文献X/`。自动分配新编号，不覆盖旧批次。创新 30、权威 20、相关性 25、发布时间 20、全文可得性 5；总分排序优先于下文的时效性分组与引用数排序。默认直接执行可获取全文的下载，不再停在确认清单；用户明确要求仅列表、禁止下载或指定其他交付方式时服从该要求。完成评分、下载尝试、文件核验与汇总后停止，不为凑数量扩大检索。
 
 ## 平台选择矩阵
 
@@ -152,7 +152,7 @@ Venue 等级标注规则：CS 会议参考 `references/venue-rankings.md`（CCF 
 | 开放 PDF | S2 `externalIds.ArXiv` 存在即可得 | **只要有 ArXiv ID 就标 ✓**，不依赖 openAccessPdf（该字段经常为 null） |
 | 代码可用性 | Papers with Code API | ML 论文用 `paperswithcode.com/api/v1/papers/?arxiv_id={id}` 自动补全代码列 |
 
-**排序建议**：面向学术前沿性的综合排序，优先级依次为：
+**检索初筛建议（不作为最终排序）**：以下时效性与引用数规则只用于检索阶段筛选；最后必须执行五维评分并按总分排序。初筛优先级依次为：
 
 1. **时效性（最高权重）**：近 6 个月内发表的论文标注 `[新]` 并置顶展示，不因引用数低而降权——前沿方向的新论文引用数天然偏低，但代表最新进展
 2. **引用数（次要权重）**：同一时间段内按引用数降序，高引用代表社区认可度
@@ -247,14 +247,14 @@ Academic-Search 可以下载合法开放访问 PDF，但边界必须清楚：
 - 只下载 `full_text_status="open_pdf"` 且存在 `pdf_url` 的论文。
 - 不得调用 Sci-Hub、LibGen、shadow library、WebVPN、CARSI、Tor 或 Cloudflare 绕过工具。
 - 遇到 `needs_institution`、`no_open_pdf`、`anti_bot_blocked`、`html_not_pdf`、`unknown` 时，不下载，只写入 manifest 并说明原因。
-- 批量任务先生成 manifest，再由用户确认是否下载，除非用户明确要求“下载所有开放 PDF”。
+- 默认最终归档流程已包含下载：先生成 manifest，再直接下载全部符合条件的最终结果；不再次要求确认。用户明确禁止下载或仅要清单时，才只生成 manifest。
 
 推荐流程：
 
 1. 搜索/精确查询论文，生成标准 metadata schema。
 2. 通过 arXiv、Semantic Scholar、OpenAlex、Unpaywall、PubMed Central 判断 `full_text_status` 和 `pdf_url`。
 3. 调用 `scripts/oa-pdf-download.mjs --input <metadata.json> --manifest <manifest.json>` 生成下载清单。
-4. 用户确认后，调用 `scripts/oa-pdf-download.mjs --input <metadata.json> --manifest <manifest.json> --download --out-dir <dir>` 下载开放 PDF。
+4. 默认归档时直接调用 `scripts/oa-pdf-download.mjs --input <metadata.json> --manifest <manifest.json> --download --out-dir <dir>` 下载开放 PDF。
 5. 输出下载结果表：标题、DOI/arXiv ID、状态、本地路径、跳过原因。
 
 CLI 示例：
@@ -287,6 +287,12 @@ node scripts/oa-pdf-download.mjs \
 如果用户需要下载非开放获取论文，应建议使用机构图书馆、作者邮件、馆际互借，或切换到 scansci-pdf 这类专门的论文获取工具；Academic-Search 不负责绕过访问限制。
 
 不要尝试访问任何需要绕过付费墙的第三方服务。遇到 Elsevier、Wiley、Springer、ACS、Taylor & Francis、JSTOR 等商业出版平台时，先判定开放获取状态；若需要机构访问，停止自动下载并报告 `needs_institution`。
+
+### 最终五维评分与文献归档
+
+执行细则见 [references/scoring-and-archive.md](references/scoring-and-archive.md)。完成全文获取尝试后回填可得性分，计算五项总分并重排；只展示标题或链接不算完成。本节是最终交付规则，优先于前文“第一遍即可停止”“用户确认后第二遍”和仅公开 PDF 的默认说明；用户明确限制检索深度、下载或输出时除外。
+
+沿用现有 OA PDF 下载脚本；来源提供合法可下载的 Word 全文，或用户已有授权会话能通过正常下载入口获取全文时，也应保存并核验。无需登录则直接下载；不得擅自购买、读取凭据文件、绕过访问控制或把需要新授权的内容写成已获取。不要为补齐文件制造空 PDF、把摘要打印成全文，或把 Word 简单改成 `.pdf` 后缀。下载失败保留论文评分及原因，不影响其他可得全文的归档。
 
 ### BibTeX 导出
 
@@ -403,6 +409,7 @@ curl -s "http://127.0.0.1:${CDP_PROXY_PORT:-3456}/close?target=$TARGET"
 
 | 文件 | 何时加载 |
 |------|---------|
+| `references/scoring-and-archive.md` | 最终五维评分、总分排序、递增文献批次与全文归档时必读 |
 | `references/api-cookbook.md` | 需要 API 调用示例、参数说明、响应字段映射时 |
 | `references/metadata-schema.md` | 整理提取结果、多平台去重合并、生成 BibTeX 时 |
 | `references/cdp-api.md` | 需要 CDP 浏览器操作时（Google Scholar、CNKI 等） |

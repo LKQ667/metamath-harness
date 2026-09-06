@@ -14,5 +14,9 @@ minimumReleaseAgeExclude:
 overrides:
   '@deepseek-harness/dsh-mathmodel': link:../../../plugins/dsh-mathmodel
 patchedDependencies:
-  dsh-session-link@0.1.4: patches/dsh-session-link@0.1.4.patch
-  dsh-plugin-subscriptions@0.5.2: patches/dsh-plugin-subscriptions@0.5.2.patch
+  dsh-plugin-subscriptions@0.6.0: patches/dsh-plugin-subscriptions@0.6.0.patch
+
+# patchedDependencies（dsh-session-link@0.1.4 与 dsh-plugin-subscriptions@0.5.2）
+# 已随 DSH 0.1.2-rc.1 升级移除/替换：session-link 不再兼容新 dsh-llm（assertNever
+# 导出移除）且官方原生提供 session-reference；subscriptions 升 0.6.0（自带
+# ToolCallId??CallId 双适配），本地补丁由 0.6.0 版补丁重放（见 patches/）。

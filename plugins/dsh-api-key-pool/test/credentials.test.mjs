@@ -80,14 +80,14 @@ test('空存储值视为不存在', async () => {
 
 test('脱敏列表：输出不含完整 Key', async () => {
   const facade = new CredentialFacade(mockCredentials());
-  const raw = 'sk-fixture-secret-1234';
+  const raw = 'sk-FAKEKEY-0001';
   await facade.addKey(raw);
-  await facade.addKey('sk-fixture-secret-5678');
+  await facade.addKey('sk-FAKEKEY-0002');
   const entries = await facade.describeKeys();
   assert.equal(entries.length, 2);
   for (const entry of entries) {
     assert.ok(!JSON.stringify(entry).includes(raw));
-    assert.ok(!JSON.stringify(entry).includes('sk-fixture-secret-5678'));
+    assert.ok(!JSON.stringify(entry).includes('sk-FAKEKEY-0002'));
     assert.match(entry.keyId, /^k-/);
     assert.equal(entry.fingerprint.length, 16);
     assert.match(entry.masked, /^sk-….{4}$/);

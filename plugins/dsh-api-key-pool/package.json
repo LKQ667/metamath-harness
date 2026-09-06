@@ -1,6 +1,6 @@
 {
   "name": "@deepseek-harness/dsh-api-key-pool",
-  "version": "0.3.0-metamath.3",
+  "version": "0.3.0-metamath.4",
   "description": "DeepSeek Harness 0.1.1-rc.2 专用 API Key 号池插件（原生共存/独立 Profile，多 Key 轮询/冷却/失败切换/Web 管理）",
   "type": "module",
   "main": "lib/index.js",

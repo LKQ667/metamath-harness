@@ -12,7 +12,7 @@ CLI_DIR = Path(__file__).resolve().parents[1]
 RUNTIME_DIR = CLI_DIR / "editppt" / "runtime"
 RECORD = RUNTIME_DIR / "record_imagegen_result.py"
 
-FAKE_KEY = "sk-fixture123"
+FAKE_KEY = "sk-FAKE-KEY-NOT-REAL"
 PNG_BYTES = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR-fixture"
 CONNECTION_ID = "img_mti303k7_e0224219"
 CONTRACT = {

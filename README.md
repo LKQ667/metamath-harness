@@ -1,8 +1,19 @@
 # MetaMath Harness
 
-基于 DeepSeek Harness `0.1.1-rc.2` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
+基于 DeepSeek Harness `0.1.2-rc.1` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
 
 > 💬 QQ 交流群：**635765940**
+
+## 最近更新（2026-09-06）
+
+- **官方本体升级到 0.1.2-rc.1，并新增三个模型接入渠道**：一键安装脚本现在会自动安装 DeepSeek Harness `0.1.2-rc.1`，全部本地插件已适配。模型选择器新增 Antigravity（Google）、WorkBuddy、Trae 三个分组，全部插件在设置页有对应卡片。已经装过旧版的朋友重新运行一键安装即可升级到新版官方本体；正在运行的窗口先关闭，升级后重启即可。
+- **Antigravity 桥接（Gemini 等 Google 订阅模型）**：在设置页 Antigravity 卡片完成 Google 登录后，模型选择器的 Antigravity 分组会出现可用模型（含最新的 Gemini 3.8 Flash），直接选中即可对话。登录凭据由插件自管，不进入本仓库，也不与其他插件的密钥体系混用。来源：[amlyczz/dsh-agy-link](https://github.com/amlyczz/dsh-agy-link) v0.4.24，MIT 许可证。默认免审批执行模式可在设置卡片中调整。
+- **WorkBuddy 模型接入（腾讯 CodeBuddy 桌面 App 登录态复用）**：本机装有 WorkBuddy 桌面 App 并已登录的用户，无需额外填 Key，模型选择器 WorkBuddy 分组直接可用；设置页卡片显示账号与积分。本次修复了凭据文件探测：自动兼容新旧两种凭据文件名，不再依赖写死的本机路径，全新电脑开箱即用。该渠道复用桌面 App 的非官方接口，仅供个人学习研究；App 凭据文件只被只读探测，刷新令牌不会离开本机。来源：[corrinehu/dsh-workbuddy-connect](https://github.com/corrinehu/dsh-workbuddy-connect) v0.2.6，MIT 许可证。
+- **Trae 模型接入（本机 Trae 账号）**：本机登录过 Trae（中国区 / SOLO）的用户，在设置页 Trae 卡片点击「从 Trae 刷新」再「保存」，模型选择器即出现 Trae 分组。注意：升级或重装后需要重新执行一次「刷新 → 保存」，否则模型选择器会提示目录无效。账号令牌只在本机内存中使用并自动续期，不写入本仓库。来源：[dingminhua/dsh-connect-trae](https://github.com/dingminhua/dsh-connect-trae) v1.2.0，MIT 许可证。
+- **新增桌宠**：聊天界面右上角会出现一只可交互的桌面宠物，支持行走、跳跃、睡觉等多套动画；在设置页「桌宠配置」卡片可调整参数，也可用 `/pet`、`/chat`、`/balance` 斜杠命令互动。桌宠插件的代码为 MIT 许可证，动画素材来自 [PC2005-cloud/dsh-pet](https://github.com/PC2005-cloud/dsh-pet)（固定版本 0.2.5），**素材禁止商用**；不需要时可在设置中关闭或按仓库说明卸载，不影响其他功能。
+- **订阅插件升级**：Codex / Claude / Grok 统一订阅管理插件从 0.5.2 升级到 0.6.0。来源不变：[V1ki/dsh-plugin-subscriptions](https://github.com/V1ki/dsh-plugin-subscriptions)，MIT 许可证。
+- **新增论文写作辅助技能**：「国赛摘要」技能按国赛一等奖标准撰写单页饱满、零独立公式、杜绝 AI 味的摘要，并自带离线质检脚本；「单问深研求解」技能针对竞赛单道小题完成路线探索、建模、真实计算与验证。两者会由 Agent 在对应场景自动加载，也可以在对话中手动点名调用，无需任何配置。
+- **内置 Exploratory Data Analysis 技能**：对本地 CSV/JSON 等数据文件做有边界的探索性分析与缺失值/泄漏审查，仅在本机运行。来源：K-Dense Inc.，MIT 许可证。
 
 ## 最近更新（2026-09-04）
 

@@ -37,6 +37,9 @@
 - id: tool-skill
   name: '@deepseek-ai/dsh-tool-skill'
 
+- id: command-goal
+  name: '@deepseek-ai/dsh-command-goal'
+
 - id: tool-goal
   name: '@deepseek-ai/dsh-tool-goal'
 

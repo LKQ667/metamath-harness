@@ -1,0 +1,6 @@
+interface:
+  display_name: "国赛单问深研求解"
+  short_description: "以国赛为先，探索或求解单问，比较能独立作答的完整路线并给出清晰取舍"
+  default_prompt: "使用 $cumcm-single-question 读取本问题目、预处理结果和文献，按我指定的探索或求解深度执行，优选最多三个能独立作答的完整路线，说明取舍与证据状态并给出图表建议，不拆方案凑数。"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,223 @@
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import { RunRecording, RunRegistry } from '../src/host/recording.ts'
+import { defineAgyMirrorTool, presentMirrorCall, buildMirrorRunCode, parseMirrorInvocation } from '../src/host/mirror-tool.ts'
+
+function fakeSignal(): AbortSignal {
+  return new AbortController().signal
+}
+
+test('recording: events stream live and settle, with stable indices', async () => {
+  const rec = new RunRecording('run-x')
+  const seen: string[] = []
+  const reader = (async () => {
+    for await (const ev of rec.eventsFrom(0)) seen.push((ev as { kind: string; stepKey?: string }).stepKey ?? ev.kind)
+  })()
+  rec.append({ kind: 'init', conversationId: 'c' } as never)
+  rec.append({ kind: 'step', stepKey: 'a', stepKind: 'text', text: 'hi' } as never)
+  rec.settle(null)
+  await reader
+  assert.deepEqual(seen, ['init', 'a'])
+  assert.equal(rec.sawTextBefore(1), false)
+  assert.equal(rec.sawTextBefore(2), true)
+  assert.equal(rec.getResultEvent(), null)
+})
+
+test('recording: result event projection and tool lookup by index', () => {
+  const rec = new RunRecording('run-y')
+  rec.append({ kind: 'step', stepKey: 't', stepKind: 'tool', text: '', tool: { name: 'run_command', args: { command: 'ls' }, output: 'x' } } as never)
+  rec.append({ kind: 'result', conversationId: 'cy', ok: true, response: 'done', usage: {} } as never)
+  assert.deepEqual(rec.getResultEvent(), { ok: true, response: 'done' })
+  assert.equal(rec.toolEventAt(0)?.name, 'run_command')
+  assert.equal(rec.toolEventAt(1), null)
+})
+
+test('registry retains bounded LRU and serves runs by id', () => {
+  const reg = new RunRegistry()
+  const a = reg.create()
+  assert.equal(reg.get(a.runId), a)
+  reg.forget(a.runId)
+  assert.equal(reg.get(a.runId), undefined)
+})
+
+test('mirror execute replays recorded output and errors honestly', async () => {
+  const reg = new RunRegistry()
+  const rec = reg.create()
+  rec.append({ kind: 'step', stepKey: 't1', stepKind: 'tool', text: '', tool: { name: 'run_command', args: { command: 'ls' }, output: 'out-line' } } as never)
+  rec.append({ kind: 'step', stepKey: 't2', stepKind: 'tool', text: '', tool: { name: 'find_by_name', args: {}, error: 'boom' } } as never)
+  const mirror = defineAgyMirrorTool({ runs: reg })
+  assert.equal(await mirror.execute({ run: rec.runId, step: 0, tool: 'run_command' } as never, { signal: fakeSignal() } as never), 'out-line')
+  await assert.rejects(
+    () => mirror.execute({ run: rec.runId, step: 1, tool: 'find_by_name' } as never, { signal: fakeSignal() } as never),
+    (e: unknown) => String(e).includes('boom'),
+  )
+  await assert.rejects(
+    () => mirror.execute({ run: 'missing', step: 0, tool: 'x' } as never, { signal: fakeSignal() } as never),
+    (e: unknown) => String(e).includes('no recorded agy run'),
+  )
+})
+
+test('cursor-only invocations: execute + presenters resolve detail from the recording', async () => {
+  // The run_code wrapper embeds only {run, step}; schema marks tool/input
+  // optional and the registered presenters enrich from the recording.
+  const reg = new RunRegistry()
+  const rec = reg.create()
+  rec.append({ kind: 'step', stepKey: 't1', stepKind: 'tool', text: '', tool: { name: 'run_command', args: { command: 'ls -la' }, output: 'x' } } as never)
+  const mirror = defineAgyMirrorTool({ runs: reg })
+  const cursor = { run: rec.runId, step: 0 }
+  assert.equal(await mirror.execute(cursor as never, { signal: fakeSignal() } as never), 'x')
+  const card = mirror.presentCall?.(cursor)
+  assert.equal((card as { card: string } | undefined)?.card, 'terminal')
+  assert.equal((card as { title?: string } | undefined)?.title, 'ls -la')
+})
+
+test('run_code wrapper round-trip: build -> parse recovers the cursor', () => {
+  const built = buildMirrorRunCode('7d246c00-c0d1-4e3c-a25b-848881b81042', 15, 'run_command')
+  assert.equal(built.description, 'replay agy tool step 15 · run_command')
+  assert.ok(built.code.includes("tools['agy_tool']({\"run\":\"7d246c00-c0d1-4e3c-a25b-848881b81042\",\"step\":15})"), built.code)
+  assert.deepEqual(parseMirrorInvocation(built.code), { run: '7d246c00-c0d1-4e3c-a25b-848881b81042', step: 15 })
+  assert.equal(parseMirrorInvocation('unrelated code'), null)
+})
+
+test('cards read PascalCase agy arg keys (CommandLine, AbsolutePath, …)', () => {
+  const term = presentMirrorCall({ tool: 'run_command', input: { CommandLine: 'ls -la', WorkingDirectory: '/tmp' } })
+  assert.equal(term?.card, 'terminal')
+  if (term?.card === 'terminal') {
+    assert.equal(term.title, 'ls -la')
+    assert.equal(term.cwd, '/tmp')
+  }
+  const read = presentMirrorCall({ tool: 'view_file', input: { AbsolutePath: '/tmp/a.txt' } })
+  if (read?.card === 'generic') assert.equal(read.title, 'Read /tmp/a.txt')
+  const search = presentMirrorCall({ tool: 'find_by_name', input: { Pattern: '*.ts', SearchDirectory: '/src' } })
+  if (search?.card === 'generic') assert.equal(search.title, 'Search *.ts')
+})
+
+test('presentMirrorCall maps the agy vocabulary onto native cards', () => {
+  const terminal = presentMirrorCall({ tool: 'run_command', input: { command: 'ls -la', description: 'list files', cwd: '/tmp' } })
+  assert.equal(terminal?.card, 'terminal')
+  if (terminal?.card === 'terminal') {
+    assert.equal(terminal.title, 'ls -la')
+    assert.equal(terminal.description, 'list files')
+    assert.equal(terminal.cwd, '/tmp')
+  }
+  const diff = presentMirrorCall({ tool: 'write_to_file', input: { path: 'a.txt', content: 'hello' } })
+  assert.equal(diff?.card, 'diff')
+  if (diff?.card === 'diff') {
+    assert.equal(diff.diffs[0]?.path, 'a.txt')
+    assert.equal(diff.diffs[0]?.oldText, null)
+    assert.equal(diff.diffs[0]?.newText, 'hello')
+  }
+  const replaceContent = presentMirrorCall({
+    tool: 'replace_file_content',
+    input: {
+      TargetFile: '/src/main.ts',
+      TargetContent: 'const a = 1;',
+      ReplacementContent: 'const a = 2;\nconst b = 3;',
+      Description: 'Update constant a and add b',
+    },
+  })
+  assert.equal(replaceContent?.card, 'diff')
+  if (replaceContent?.card === 'diff') {
+    assert.equal(replaceContent.title, 'Update constant a and add b · /src/main.ts')
+    assert.equal(replaceContent.diffs[0]?.path, '/src/main.ts')
+    assert.equal(replaceContent.diffs[0]?.oldText, 'const a = 1;')
+    assert.equal(replaceContent.diffs[0]?.newText, 'const a = 2;\nconst b = 3;')
+    assert.deepEqual(replaceContent.locations, [{ path: '/src/main.ts' }])
+  }
+  const read = presentMirrorCall({ tool: 'read_file', input: { path: 'src/x.ts' } })
+  assert.equal(read?.card, 'generic')
+  if (read?.card === 'generic') {
+    assert.equal(read.kind, 'read')
+    assert.deepEqual(read.locations, [{ path: 'src/x.ts' }])
+  }
+  const search = presentMirrorCall({ tool: 'find_by_name', input: { pattern: 'note*.txt' } })
+  if (search?.card === 'generic') {
+    assert.equal(search.kind, 'search')
+    assert.equal(search.title, 'Search note*.txt')
+  } else {
+    assert.fail('expected generic search card')
+  }
+  const grep = presentMirrorCall({ tool: 'grep_search', input: { Query: 'function foo', SearchPath: '/src' } })
+  if (grep?.card === 'generic') {
+    assert.equal(grep.kind, 'search')
+    assert.equal(grep.title, 'Search function foo')
+  } else {
+    assert.fail('expected generic grep search card')
+  }
+  const view = presentMirrorCall({ tool: 'view_file', input: { path: 'a.ts', offset: 3 } })
+  if (view?.card === 'generic') {
+    assert.equal(view.kind, 'read')
+    assert.deepEqual(view.locations, [{ path: 'a.ts', line: 4 }])
+  } else {
+    assert.fail('expected generic read card for view_file')
+  }
+  const viewPascal = presentMirrorCall({ tool: 'view_file', input: { AbsolutePath: '/app/index.ts', StartLine: 10 } })
+  if (viewPascal?.card === 'generic') {
+    assert.equal(viewPascal.kind, 'read')
+    assert.deepEqual(viewPascal.locations, [{ path: '/app/index.ts', line: 10 }])
+  } else {
+    assert.fail('expected generic read card for view_file PascalCase')
+  }
+  const listing = presentMirrorCall({ tool: 'list_dir', input: { path: '/tmp/x' } })
+  if (listing?.card === 'generic') {
+    assert.equal(listing.title, 'List /tmp/x')
+  } else {
+    assert.fail('expected generic card for list_dir')
+  }
+  const del = presentMirrorCall({ tool: 'delete_file', input: { path: 'old.ts' } })
+  if (del?.card === 'generic') {
+    assert.equal(del.kind, 'delete')
+  } else {
+    assert.fail('expected delete card for delete_file')
+  }
+  const ask = presentMirrorCall({ tool: 'ask_question', input: { questions: [{ question: 'Which library to use?' }] } })
+  assert.equal(ask?.card, 'generic')
+  assert.equal(ask?.title, 'Ask Question: Which library to use?')
+  const fetchUrl = presentMirrorCall({ tool: 'read_url_content', input: { Url: 'https://example.com/api' } })
+  assert.equal(fetchUrl?.card, 'generic')
+  assert.equal(fetchUrl?.kind, 'fetch')
+  assert.equal(fetchUrl?.title, 'Fetch https://example.com/api')
+  const fallback = presentMirrorCall({ tool: 'something_new', input: { a: 1 } })
+  assert.equal(fallback?.card, 'generic')
+  // JSON-string inputs (agy serializes some tool args) still project
+  const fromJson = presentMirrorCall({ tool: 'run_command', input: JSON.stringify({ command: 'pwd' }) })
+  if (fromJson?.card === 'terminal') {
+    assert.equal(fromJson.title, 'pwd')
+  } else {
+    assert.fail('expected terminal card from JSON-string input')
+  }
+})
+
+test('presentMirrorResult keeps terminal output and repeats diffs for edit and replace_file_content', () => {
+  const term = defineAgyMirrorTool({ runs: new RunRegistry() }).presentResult
+  assert.ok(term !== undefined)
+  // presenters soft-validate: args must carry the required run/step fields
+  const t = term?.({ run: 'r', step: 0, tool: 'run_command', input: { command: 'ls' } }, { content: [{ type: 'text', text: 'a.txt' }], isError: false })
+  assert.equal((t as { card: string } | undefined)?.card, 'terminal')
+  assert.equal((t as { output?: string }).output, 'a.txt')
+  const d = term?.({ run: 'r', step: 1, tool: 'write_to_file', input: { path: 'a', content: 'x' } }, { content: [{ type: 'text', text: 'wrote' }], isError: false })
+  assert.equal((d as { card: string } | undefined)?.card, 'diff')
+  assert.deepEqual((d as { diffs: Array<{ path: string }> }).diffs, [{ path: 'a', oldText: null, newText: 'x' }])
+  const rep = term?.(
+    { run: 'r', step: 2, tool: 'replace_file_content', input: { TargetFile: 'b.ts', TargetContent: 'old', ReplacementContent: 'new' } },
+    { content: [{ type: 'text', text: 'replaced' }], isError: false },
+  )
+  assert.equal((rep as { card: string } | undefined)?.card, 'diff')
+  assert.deepEqual((rep as { diffs: Array<{ path: string }> }).diffs, [{ path: 'b.ts', oldText: 'old', newText: 'new' }])
+  const invalid = term?.({ tool: 'run_command' }, { content: [], isError: false })
+  assert.equal(invalid, undefined, 'soft validation falls back to generic on bad args')
+})
+
+test('getGitHeadContent safely retrieves HEAD content or returns null', () => {
+  const mockExec = ((cmd: string, args: string[]) => {
+    if (args[0] === 'rev-parse') return '/repo\n'
+    if (args[0] === 'show' && args[1] === 'HEAD:src/index.ts') return 'console.log("hello")\n'
+    throw new Error('not found')
+  }) as never
+  const content = import('../src/host/mirror-tool.ts').then((m) => {
+    assert.equal(m.getGitHeadContent('/repo/src/index.ts', mockExec), 'console.log("hello")\n')
+    assert.equal(m.getGitHeadContent('/repo/outside.ts', mockExec), null)
+    assert.equal(m.getGitHeadContent('', mockExec), null)
+  })
+  return content
+})

@@ -20,7 +20,7 @@ export function apply(ctx, config) {
 }
 
 export {
-  assertCompatibleHarnessVersion, detectHarnessVersion, SUPPORTED_DSH_VERSION,
+  assertCompatibleHarnessVersion, detectHarnessVersion, SUPPORTED_DSH_VERSIONS,
 } from './version.js';
 export { ApiKeyPoolService, ApiKeyPoolGateway, installApiKeyPoolHost, makeHealthRoutes, recursiveSecretScan } from './host.js';
 export { ApiKeyPoolSchema, API_KEY_POOL_NAMESPACE, routeOf, isPoolRoute, validatePoolConfig } from './schema.js';

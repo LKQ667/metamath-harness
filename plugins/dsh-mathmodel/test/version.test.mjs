@@ -5,17 +5,19 @@ import { pathToFileURL } from 'node:url';
 import {
   assertCompatibleHarnessVersion,
   detectHarnessVersion,
-  SUPPORTED_DSH_VERSION,
+  SUPPORTED_DSH_VERSIONS,
 } from '../lib/index.js';
 
-test('只接受当前锁定的 DeepSeek Harness 版本', () => {
-  assert.equal(assertCompatibleHarnessVersion(SUPPORTED_DSH_VERSION), SUPPORTED_DSH_VERSION);
+test('接受白名单内的 DeepSeek Harness 版本', () => {
+  for (const version of SUPPORTED_DSH_VERSIONS) {
+    assert.equal(assertCompatibleHarnessVersion(version), version);
+  }
 });
 
 test('错误版本给出可操作的中文错误', () => {
   assert.throws(
     () => assertCompatibleHarnessVersion('0.1.0-rc.7'),
-    /需要 0\.1\.1-rc\.2，当前 0\.1\.0-rc\.7/,
+    /需要 .+，当前 0\.1\.0-rc\.7/,
   );
 });
 
@@ -25,5 +27,6 @@ test('未知版本失败关闭', () => {
 
 test('从当前 Web Profile 解析锚点可发现官方 Harness', () => {
   const profileManifest = resolve(import.meta.dirname, '../../../.dsh/profiles/web/package.json');
-  assert.equal(detectHarnessVersion(pathToFileURL(profileManifest)), SUPPORTED_DSH_VERSION);
+  const detected = detectHarnessVersion(pathToFileURL(profileManifest));
+  assert.ok(SUPPORTED_DSH_VERSIONS.includes(detected), `未列入白名单的版本：${detected}`);
 });

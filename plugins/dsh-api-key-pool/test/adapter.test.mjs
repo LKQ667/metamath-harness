@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { LlmError } from '@deepseek-ai/dsh-llm';
 import { PiAiAdapter } from '@deepseek-ai/dsh-llm-pi-ai';
 import { KeyPoolRuntime, POOL_EXHAUSTED_CODE } from '../src/pools.js';
-import { validatePoolConfig } from '../src/schema.js';
+import { DEFAULT_MAX_RETRIES, validatePoolConfig } from '../src/schema.js';
 import {
   PoolPiAiAdapter,
   resolvePoolProfiles,
@@ -91,6 +91,7 @@ test('resolvePoolProfiles：route/profile 字段与 piProvider 模型目录完�
   assert.equal(typeof profile.streamIdleTimeoutMs, 'number');
   assert.equal(typeof profile.maxRequestImageBytes, 'number');
   assert.equal(typeof profile.retryPolicy, 'object');
+  assert.equal(profile.retryPolicy.maxRetries, DEFAULT_MAX_RETRIES);
   assert.equal(profile.configuredMaxTokens.get('m-1'), 32768);
   const models = profile.piProvider.getModels();
   assert.equal(models.length, 1);
@@ -98,6 +99,11 @@ test('resolvePoolProfiles：route/profile 字段与 piProvider 模型目录完�
   assert.equal(models[0].provider, 'pool-main');
   assert.deepEqual(models[0].input, ['text']);
   assert.equal(profile.piProvider.auth.apiKey.name, 'main');
+});
+
+test('resolvePoolProfiles：显式重试次数仍可覆盖普通 Provider 默认值', () => {
+  const profile = resolvePoolProfiles(makeConfig({ maxRetries: 2 })).get('pool-main');
+  assert.equal(profile.retryPolicy.maxRetries, 2);
 });
 
 test('resolvePoolProfiles：勾选识图的模型声明 [text, image]，未勾选仍只声明文本', () => {

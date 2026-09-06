@@ -1,4 +1,5 @@
 import Schema from '@deepseek-ai/schemastery';
+import { resolveRetryPolicy } from '@deepseek-ai/dsh-llm';
 
 /**
  * 号池插件设置 schema（不含任何秘密）。
@@ -19,7 +20,11 @@ export const MAX_COOLDOWN_MS = 3_600_000;
 export const DEFAULT_MAX_COOLDOWN_MS = 3_600_000;
 export const MIN_MAX_COOLDOWN_MS = 10_000;
 export const MAX_MAX_COOLDOWN_MS = 86_400_000;
-export const DEFAULT_MAX_RETRIES = 3;
+/** 与普通 Provider 共用 DSH 当前默认值，避免号池复制常量后随升级漂移。 */
+export const DEFAULT_MAX_RETRIES = resolveRetryPolicy(
+  undefined,
+  'dsh-api-key-pool: 默认 retryPolicy',
+).maxRetries;
 export const MAX_MAX_RETRIES = 6;
 
 const POOL_ID_PATTERN = /^[a-z][a-z0-9-]{0,38}[a-z0-9]$/;

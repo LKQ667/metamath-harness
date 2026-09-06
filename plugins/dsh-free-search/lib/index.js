@@ -1,4 +1,4 @@
-import { SettingsConflictError, installSettingsSection, settingsNamespace } from "@deepseek-ai/dsh-settings";
+import { SettingsConflictError, SettingsProvider } from "@deepseek-ai/dsh-settings";
 import { defineTool } from "@deepseek-ai/dsh-tools";
 import z from "@deepseek-ai/schemastery";
 import fs from "node:fs";
@@ -15,13 +15,40 @@ const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
 const ACCEPT_LANG = "zh-CN,zh;q=0.9,en;q=0.8";
 
-const FREE_SEARCH_NS = settingsNamespace("free-search");
+// 语言 → Bing 本地化档案：{ market, acceptLang }。
+// lang 字段（设置页可切换）驱动 Bing 的 mkt + Accept-Language，让非中文用户
+// 也能拿到本地化结果（俄语搜俄文等）。bingMarket 显式设置时优先于映射。
+const LANG_PROFILES = {
+  zh: { market: "zh-CN", acceptLang: "zh-CN,zh;q=0.9,en;q=0.8" },
+  en: { market: "en-US", acceptLang: "en-US,en;q=0.9" },
+  ru: { market: "ru-RU", acceptLang: "ru-RU,ru;q=0.9,en;q=0.8" },
+  ja: { market: "ja-JP", acceptLang: "ja-JP,ja;q=0.9,en;q=0.8" },
+  de: { market: "de-DE", acceptLang: "de-DE,de;q=0.9,en;q=0.8" },
+  fr: { market: "fr-FR", acceptLang: "fr-FR,fr;q=0.9,en;q=0.8" },
+  es: { market: "es-ES", acceptLang: "es-ES,es;q=0.9,en;q=0.8" },
+  ko: { market: "ko-KR", acceptLang: "ko-KR,ko;q=0.9,en;q=0.8" },
+};
+// market → 语言（bingMarket 显式设置时反推 accept-language，避免中文优先 header 污染）
+const MARKET_TO_LANG = {
+  "zh-CN": "zh-CN,zh;q=0.9,en;q=0.8",
+  "zh-TW": "zh-TW,zh;q=0.9,en;q=0.8",
+  "en-US": "en-US,en;q=0.9",
+  "en-GB": "en-GB,en;q=0.9",
+  "ru-RU": "ru-RU,ru;q=0.9,en;q=0.8",
+  "ja-JP": "ja-JP,ja;q=0.9,en;q=0.8",
+  "de-DE": "de-DE,de;q=0.9,en;q=0.8",
+  "fr-FR": "fr-FR,fr;q=0.9,en;q=0.8",
+  "es-ES": "es-ES,es;q=0.9,en;q=0.8",
+  "ko-KR": "ko-KR,ko;q=0.9,en;q=0.8",
+};
+
+const FREE_SEARCH_NS = "free-search";
 const BRIDGE_PREFIX = "/api/dsh-free-search-settings";
 const FREE_ENGINES = ["ddg", "ddg-lite", "bing", "searxng", "anysearch"];
 const ALL_ENGINES = ["ddg", "ddg-lite", "bing", "searxng", "anysearch", "exa", "tavily", "keenable", "perplexity", "deepseek-official"];
 
 // 当前插件版本（发布时与 package.json 同步）
-const PLUGIN_VERSION = "0.4.14";
+const PLUGIN_VERSION = "0.4.24";
 // 检查更新的 npm registry 元数据地址（dsh-free-search 是 npmjs 上的公开包）
 const NPM_REGISTRY_URL = "https://registry.npmjs.org/dsh-free-search/latest";
 const PLUGIN_NPM_URL = "https://www.npmjs.com/package/dsh-free-search";
@@ -192,7 +219,7 @@ function uniqueSources(sources, limit) {
   return out;
 }
 
-async function fetchHtml(url, signal) {
+async function fetchHtml(url, signal, acceptLang) {
   // 单次请求超时 12s，避免挂起被当成 Connection error
   let response;
   try {
@@ -201,7 +228,7 @@ async function fetchHtml(url, signal) {
     const onAbort = () => controller.abort();
     signal?.addEventListener("abort", onAbort);
     response = await fetch(url, {
-      headers: { "user-agent": USER_AGENT, "accept-language": ACCEPT_LANG },
+      headers: { "user-agent": USER_AGENT, "accept-language": acceptLang ?? ACCEPT_LANG },
       signal: controller.signal,
       redirect: "follow",
     });
@@ -223,11 +250,11 @@ async function fetchHtml(url, signal) {
 }
 
 // 带重试的抓取：网络错误/空结果时重试，间隔 1.5s，最多 3 次
-async function fetchHtmlWithRetry(url, signal) {
+async function fetchHtmlWithRetry(url, signal, acceptLang) {
   let lastError;
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      const html = await fetchHtml(url, signal);
+      const html = await fetchHtml(url, signal, acceptLang);
       if (html.length > 500) return html;
       lastError = new Error(`empty response (${html.length} bytes)`);
     } catch (error) {
@@ -241,6 +268,9 @@ async function fetchHtmlWithRetry(url, signal) {
 async function searchDdgHtml(query, maxResults, options, signal) {
   const params = new URLSearchParams({ q: query });
   if (options?.region) params.set("kl", options.region);
+  // DDG 安全搜索：off(adlt=-1) / moderate(adlt=0) / strict(adlt=1)
+  const adlt = options?.safeSearch ?? "off";
+  params.set("adlt", adlt === "strict" ? "1" : adlt === "moderate" ? "0" : "-1");
   // DDG 时间过滤：df=d/w/m/y（只支持固定档，自定义取近似档）
   if (options?.timeRange) {
     const df = { day: "d", week: "w", month: "m", year: "y" }[approximateTimeRange(options.timeRange.days ?? 7)];
@@ -268,6 +298,8 @@ async function searchDdgHtml(query, maxResults, options, signal) {
 
 async function searchDdgLite(query, maxResults, options, signal) {
   const params = new URLSearchParams({ q: query });
+  const adlt = options?.safeSearch ?? "off";
+  params.set("adlt", adlt === "strict" ? "1" : adlt === "moderate" ? "0" : "-1");
   // DDG Lite 同样支持 df 时间过滤
   if (options?.timeRange) {
     const df = { day: "d", week: "w", month: "m", year: "y" }[approximateTimeRange(options.timeRange.days ?? 7)];
@@ -295,8 +327,19 @@ async function searchDdgLite(query, maxResults, options, signal) {
 }
 
 async function searchBing(query, maxResults, options, signal) {
-  const params = new URLSearchParams({ q: query, mkt: options?.bingMarket ?? "zh-CN" });
-  const html = await fetchHtmlWithRetry(`${BING_URL}?${params}`, signal);
+  // mkt：显式 bingMarket 优先；否则按 lang 映射（zh→zh-CN, ru→ru-RU ...）
+  const profile = LANG_PROFILES[options?.lang] ?? LANG_PROFILES.zh;
+  const market = options?.bingMarket ?? profile.market;
+  const params = new URLSearchParams({ q: query, mkt: market });
+  // Accept-Language：显式 bingMarket 时按 market 反推（避免中文 header 污染），否则用 lang 档案
+  const acceptLang = options?.bingMarket
+    ? (MARKET_TO_LANG[market] ?? ACCEPT_LANG)
+    : (profile.acceptLang ?? ACCEPT_LANG);
+  const adlt = options?.safeSearch ?? "off";
+  if (adlt === "off") params.set("adlt", "off");
+  else if (adlt === "moderate") params.set("adlt", "moderate");
+  else if (adlt === "strict") params.set("adlt", "strict");
+  const html = await fetchHtmlWithRetry(`${BING_URL}?${params}`, signal, acceptLang);
   const blocks = html.match(/<li class="b_algo"[\s\S]*?<\/li>/g) ?? [];
   const sources = [];
   for (const block of blocks) {
@@ -1234,7 +1277,7 @@ function makeBridgeRoutes(settings, search, testEngine, getCredentials) {
       }
       const expectedRevision = typeof body.expectedRevision === "number" ? body.expectedRevision : undefined;
       try {
-        await settings.mutate(settingsNamespace(ns), body.ops, expectedRevision);
+        await settings.mutate(ns, body.ops, expectedRevision);
       } catch (error) {
         if (error instanceof SettingsConflictError) {
           return { ok: false, code: "settings-conflict", message: error.message };
@@ -1417,6 +1460,7 @@ const Config = z.object({
   lang: z.string().default("zh"),
   region: z.string(),
   bingMarket: z.string().default("zh-CN"),
+  safeSearch: z.string().default("off"),
   searxngInstances: z.array(z.string()),
   platforms: z.array(z.string()).default(["github", "v2ex", "bilibili", "reddit", "hn", "stackoverflow", "wikipedia", "npm"]),
   exaApiKey: z.string().role("secret"),
@@ -1632,14 +1676,38 @@ function apply(ctx, config) {
     },
   };
 
-  installSettingsSection(ctx, FREE_SEARCH_NS, Config, config ?? {}, {
-    setSource: (source) => {
-      current = source;
-    },
-    onChange: () => {
-      // settings 变更时刷新系统提示词（显示最新引擎）
-      if (typeof refreshPrompt === "function") refreshPrompt();
-    },
+  ctx.inject(["settings"], (sctx) => {
+    // alpha.2+（SettingsProvider 有 installSection 方法）与 rc.2（模块级 installSettingsSection）双兼容：
+    // 特性检测优先用 alpha 方法；缺失时动态 import 旧 API 注册（rc.2 环境，不会触发 alpha 的缺失导出报错）。
+    if (typeof sctx.settings.installSection === "function") {
+      sctx.settings.installSection(ctx, FREE_SEARCH_NS, Config, config ?? {}, {
+        setSource: (source) => {
+          current = source;
+        },
+        onChange: () => {
+          // settings 变更时刷新系统提示词（显示最新引擎）
+          if (typeof refreshPrompt === "function") refreshPrompt();
+        },
+      });
+    } else {
+      void (async () => {
+        const legacy = await import("@deepseek-ai/dsh-settings");
+        if (typeof legacy.installSettingsSection === "function" && legacy.settingsNamespace) {
+          const legacyNs = legacy.settingsNamespace(FREE_SEARCH_NS);
+          legacy.installSettingsSection(ctx, legacyNs, Config, config ?? {}, {
+            setSource: (source) => {
+              current = source;
+            },
+            onChange: () => {
+              if (typeof refreshPrompt === "function") refreshPrompt();
+            },
+          });
+        } else {
+          sctx.logger?.warn?.("free-search: dsh-settings 无可用注册 API（installSection/installSettingsSection 均缺失）");
+          return;
+        }
+      })();
+    }
   });
 
   ctx.inject(["webServer", "settings"], (sctx) => {
@@ -2011,6 +2079,8 @@ function apply(ctx, config) {
           "",
           "You have the web_search tool. Its backend engine is chosen in Settings > Plugins > Free Search.",
           "Current engine: " + (current().provider ?? "bing"),
+          "Safe search filter (Settings > Plugins > Free Search): " + (current().safeSearch ?? "off") + " (off|moderate|strict). Engine default off; applies to bing/ddg/ddg-lite.",
+          "Bing market: " + (current().bingMarket ?? "zh-CN") + " (mkt + Accept-Language; e.g. ru-RU returns Russian results for Cyrillic queries).",
           "",
           "Available engines and their requirements:",
           "- ddg (DuckDuckGo HTML) - FREE, no key (may be rate-limited)",

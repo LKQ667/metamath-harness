@@ -1,0 +1,123 @@
+{
+  "name": "dsh-pet",
+  "version": "0.2.5",
+  "description": "A floating desktop pet for the DeepSeek Harness Web UI: idle breathing, occasional direction turns, random actions, and screen wandering.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "desktop-pet",
+    "pet",
+    "floating-widget",
+    "web-ui",
+    "cordis",
+    "react"
+  ],
+  "homepage": "https://github.com/PC2005-cloud/dsh-pet#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PC2005-cloud/dsh-pet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PC2005-cloud/dsh-pet/issues"
+  },
+  "_comment": [
+    "=============== dsh-pet 包清单说明 ===============",
+    "type: module —— 本包是 ESM",
+    "main: lib/index.js —— 宿主半侧入口（Cordis 插件：name/inject/apply）",
+    "exports['./client'] —— 浏览器半侧入口，DSH 模块系统按它提供 /plugins/dsh-pet/client.js",
+    "dsh.bundle.patch —— 声明本包是 bundle，patch 文件是 cordis.patch.yml（安装后自动进层栈）",
+    "dsh.client —— 声明浏览器半侧的注入依赖和平台（web）",
+    "files —— npm publish 只发这些目录/文件（assets/webm 播放资源（VP9-alpha，浏览器 Chrome/Edge/Firefox 与桌面模式共用）；Safari/HEVC 兼容由仓库流水线支持、fork 定制，不随包发布；assets/preview 的 GIF 仅 README 展示、不入包）",
+    "scripts.encode:webm —— 转码管线（step03 母版 → assets/webm 640×360 VP9-alpha）",
+    "scripts.prepack —— 发布前自动检查链：types/typecheck/lint/format → prepack-check（素材健康检查）；不构建（构建由 prepare 钩子负责）",
+    "scripts.prepare —— npm 生命周期钩子（npm install / npm publish 自动执行，也可手动 npm run prepare）：构建完整产物 + files 收敛",
+    "peerDependencies —— 运行时由宿主（DSH）提供的模块，本包不打包它们",
+    "================================================"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "assets/webm",
+    "runtime/electron-helper",
+    "assets/fonts",
+    "assets/pic",
+    "assets/config.jsonc",
+    "scripts/ensure-electron.mjs",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "bundle": "tsdown",
+    "build:desktop-core": "node scripts/build-desktop-core.mjs",
+    "watch": "tsdown --watch",
+    "ensure:electron": "node scripts/ensure-electron.mjs",
+    "start:desktop": "node scripts/start-desktop.mjs",
+    "dev:mock": "node scripts/dev/mock-server.mjs",
+    "prepack": "npm run types && npm run typecheck && npm run lint && npm run format:check && node scripts/prepack-check.js",
+    "prepare": "node scripts/prepare.js",
+    "test": "node --experimental-strip-types --test src/**/*.test.ts",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "types": "node scripts/gen-types.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@electron-internal/extract-zip": "^1.0.5",
+    "@electron/get": "^5.1.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-connection"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-agent-default-model": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-client-connection": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-commands": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-credentials": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-home-paths": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-host-webserver": "^0.1.1-rc.2",
+    "@deepseek-ai/dsh-llm": "^0.1.1-rc.2",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.2.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^10.9.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "prettier": "^3.9.6",
+    "rolldown": "1.0.0-beta.7",
+    "tsdown": "^0.8.0",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.67.0"
+  }
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "数学建模摘要 (abstract)"
+  short_description: "国赛高分摘要规范撰写与合规质检"
+  default_prompt: "请使用 abstract 技能，为本赛题撰写一份严格单页铺满、零独立公式、带丰富数学符号、**针对问题X：**全加粗且彻底杜绝AI味的国赛高分摘要。"
+policy:
+  allow_implicit_invocation: true

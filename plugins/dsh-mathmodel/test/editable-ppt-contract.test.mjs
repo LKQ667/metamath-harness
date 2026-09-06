@@ -6,7 +6,18 @@ import { resolve } from 'node:path';
 const workspaceRoot = resolve(import.meta.dirname, '../../../');
 const skillRoot = resolve(workspaceRoot, '.dsh/skills/image-to-editable-ppt');
 const presetFile = resolve(workspaceRoot, '.dsh/.agent-presets/editable-ppt/agent.cordis.yml');
-const standardFile = 'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\config\\agent-presets\\standard\\agent.cordis.yml';
+// DSH 0.1.2-rc.1 把 standard preset 移入 dsh-agent-presets 子包；保留旧路径作回退探测。
+const standardCandidates = [
+  'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\node_modules\\@deepseek-ai\\dsh-agent-presets\\presets\\standard\\agent.cordis.yml',
+  'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\config\\agent-presets\\standard\\agent.cordis.yml',
+];
+const { access } = await import('node:fs/promises');
+const standardFile = await (async () => {
+  for (const candidate of standardCandidates) {
+    try { await access(candidate); return candidate; } catch {}
+  }
+  throw new Error(`standard preset 不存在：${standardCandidates.join(' 或 ')}`);
+})();
 const ids = (text) => [...text.matchAll(/^\s*- id:\s*([^\s]+)\s*$/gm)].map((match) => match[1]);
 
 test('editable-ppt Persona 声明 DSH 当前连接边界但不复制工具 schema', async () => {

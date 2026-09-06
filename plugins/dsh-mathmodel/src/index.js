@@ -11,7 +11,7 @@ export function apply(ctx, config) {
   return installMathmodelHost(ctx, config);
 }
 
-export { assertCompatibleHarnessVersion, detectHarnessVersion, SUPPORTED_DSH_VERSION } from './version.js';
+export { assertCompatibleHarnessVersion, detectHarnessVersion, SUPPORTED_DSH_VERSIONS } from './version.js';
 export { CardRegistry, SkillHelpCatalog, SKILL_HELP_OVERRIDES } from './cards/registry.js';
 export { MathModelCardsRemote } from './cards/remote.js';
 export { parseAndValidateCard, validateCard } from './cards/schema.js';

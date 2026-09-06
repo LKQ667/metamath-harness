@@ -14,7 +14,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Repo = $PSScriptRoot
-$DshVersion = '0.1.1-rc.2'
+$DshVersion = '0.1.2-rc.1'
 $EditPptBin = Join-Path $Repo '.dsh\runtime\bin'
 $env:PATH = "$EditPptBin;$env:PATH"
 
@@ -60,21 +60,39 @@ if (-not $StartOnly) {
     }
 
     # ---------- 4. 构建本地插件 ----------
-    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库）'
-    $localPlugins = @('dsh-mathmodel', 'dsh-api-key-pool', 'dsh-knowledge-sqlite')
-    foreach ($pluginName in $localPlugins) {
-        $pluginDir = Join-Path $Repo "plugins\$pluginName"
+    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库 / Antigravity 桥接 / WorkBuddy / Trae）'
+    $localPlugins = @(
+        @{ Name = 'dsh-mathmodel';         Dir = 'dsh-mathmodel';         Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-api-key-pool';      Dir = 'dsh-api-key-pool';      Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-knowledge-sqlite';  Dir = 'dsh-knowledge-sqlite';  Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-agy-link';          Dir = 'dsh-agy-link';          Artifact = 'dist\index.js' },
+        @{ Name = 'dsh-workbuddy-connect'; Dir = 'dsh-workbuddy-connect'; Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-connect-trae';      Dir = 'dsh-connect-trae';      Artifact = 'lib\index.js' }
+    )
+    foreach ($plugin in $localPlugins) {
+        $pluginDir = Join-Path $Repo (Join-Path 'plugins' $plugin.Dir)
         Push-Location $pluginDir
         try {
             cmd /c "npm install --no-fund --no-audit 2>&1" | Select-Object -Last 1 | Write-Host
-            if ($LASTEXITCODE -ne 0) { Fail "插件依赖安装失败：$pluginName" }
+            if ($LASTEXITCODE -ne 0) { Fail "插件依赖安装失败：$($plugin.Name)" }
             cmd /c "npm run build 2>&1" | Select-Object -Last 1 | Write-Host
-            if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $pluginDir 'lib\index.js'))) { Fail "插件构建失败：$pluginName" }
+            if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $pluginDir $plugin.Artifact))) { Fail "插件构建失败：$($plugin.Name)" }
         } finally {
             Pop-Location
         }
     }
-    Ok '三个本地插件构建完成'
+    # 桌宠插件：包在内层 dsh-pet 子目录，由 prepare 脚本完成完整构建
+    $petDir = Join-Path $Repo 'plugins\dsh-pet\dsh-pet'
+    Push-Location $petDir
+    try {
+        cmd /c "npm install --no-fund --no-audit 2>&1" | Select-Object -Last 1 | Write-Host
+        if ($LASTEXITCODE -ne 0) { Fail '插件依赖安装失败：dsh-pet' }
+        cmd /c "npm run prepare 2>&1" | Select-Object -Last 1 | Write-Host
+        if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $petDir 'lib\index.js'))) { Fail '插件构建失败：dsh-pet' }
+    } finally {
+        Pop-Location
+    }
+    Ok '本地插件构建完成'
 
     # ---------- 5. 安装 Web Profile 依赖 ----------
     Step '安装 Web Profile 依赖（原生 3080 / 独立号池 3081）'

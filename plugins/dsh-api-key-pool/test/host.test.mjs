@@ -14,7 +14,7 @@ import {
 // 测试夹具：全部为 sk- 占位符 Key，非真实凭据。
 // ---------------------------------------------------------------------------
 
-const SECRET = 'sk-fixture-abc123';
+const SECRET = 'sk-fake-pool-abc123';
 
 test('路由共存：普通 Provider 不需要守卫；独占守卫只放行 pool-*', () => {
   const guard = makeExclusivePoolRouteGuard();
@@ -131,7 +131,7 @@ test('describe：输出只有脱敏 Key（递归 secret scan 零命中）+ 孤�
   assert.ok(!JSON.stringify(described).includes(SECRET));
 
   // 未挂到池的记录为孤儿
-  const orphan = await service.addKey('sk-fixture-orphan');
+  const orphan = await service.addKey('sk-fake-pool-orphan');
   const described2 = await service.describe();
   assert.deepEqual(described2.orphans, [orphan.keyId]);
   await service.removeKey(orphan.keyId);
@@ -153,7 +153,7 @@ test('并发写入：同值 Key 100 次只入库一次，队列失败后仍可�
   const credentials = makeMockCredentials();
   const service = makeService({ credentials });
   const attempts = await Promise.allSettled(
-    Array.from({ length: 100 }, () => service.addKey('sk-concurrent-same', 'main')),
+    Array.from({ length: 100 }, () => service.addKey('sk-fake-same-key', 'main')),
   );
   assert.equal(attempts.filter((entry) => entry.status === 'fulfilled').length, 1);
   assert.equal(attempts.filter((entry) => entry.status === 'rejected').length, 99);
@@ -161,7 +161,7 @@ test('并发写入：同值 Key 100 次只入库一次，队列失败后仍可�
   assert.equal(service.settings.get().pools.main.keyIds.length, 1);
 
   // 拒绝不会毒化队列尾，后续不同 Key 仍能正常写入并挂池。
-  await service.addKey('sk-after-rejection', 'main');
+  await service.addKey('sk-fake-after-key', 'main');
   assert.equal(credentials.records.size, 2);
   assert.equal(service.settings.get().pools.main.keyIds.length, 2);
 });
@@ -172,7 +172,7 @@ test('并发写入：不同 Key 同时挂池不丢失更新', async () => {
   const count = 40;
   const added = await Promise.all(Array.from(
     { length: count },
-    (_, index) => service.addKey(`sk-distinct-${String(index).padStart(3, '0')}`, 'main'),
+    (_, index) => service.addKey(`sk-concurrent-distinct-${String(index).padStart(3, '0')}`, 'main'),
   ));
   assert.equal(credentials.records.size, count);
   assert.equal(service.settings.get().pools.main.keyIds.length, count);
@@ -188,7 +188,7 @@ test('addKey：挂池写入失败时精确回滚本次新凭据且运行时保�
   const credentials = makeMockCredentials();
   const service = makeService({ settings, credentials });
   await assert.rejects(
-    () => service.addKey('sk-rollback-fixture', 'main'),
+    () => service.addKey('sk-fake-rollback-key', 'main'),
     /settings-write-failed/,
   );
   assert.equal(credentials.records.size, 0);
@@ -334,11 +334,11 @@ test('probe：anthropic-messages 使用 x-api-key 头', async (t) => {
     },
   });
   const service = makeService({ settings });
-  await service.addKey('sk-anthropic-99', 'anthropic');
+  await service.addKey('sk-fake-anthropic-key-99', 'anthropic');
   const probed = await service.probe('anthropic');
   assert.equal(probed.ok, false);
   assert.equal(probed.status, 401);
-  assert.equal(requests[0].headers['x-api-key'], 'sk-anthropic-99');
+  assert.equal(requests[0].headers['x-api-key'], 'sk-fake-anthropic-key-99');
   assert.equal(requests[0].headers.authorization, undefined);
 });
 

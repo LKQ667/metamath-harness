@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.tgz
+.env
+.DS_Store
+*.log
+.spec/
+research/
+
+# agy credential dirs (never commit)
+.gemini/

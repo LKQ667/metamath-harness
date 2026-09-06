@@ -22,7 +22,7 @@ const PLUGIN_ROOT = resolve(import.meta.dirname, '..');
 const WORKSPACE = resolve(PLUGIN_ROOT, '../..');
 const SKILL_ROOT = join(WORKSPACE, '.dsh/skills/image-to-editable-ppt');
 
-const FAKE_KEY = 'sk-fixture123';
+const FAKE_KEY = 'sk-e2e-fake-key-01';
 const stamp = '2026-09-02T03:00:00.000Z';
 const TINY_PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 const TINY_PNG_B64 = TINY_PNG.toString('base64');

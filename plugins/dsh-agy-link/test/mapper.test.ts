@@ -1,0 +1,374 @@
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import type { StreamChunk } from '@deepseek-ai/dsh-llm'
+import { EventMapper, suffixDelta, usageFromRaw } from '../src/host/mapper.ts'
+import { mirrorCallId, parseMirrorCallId } from '../src/host/recording.ts'
+import { parseMirrorInvocation } from '../src/host/mirror-tool.ts'
+
+type FinishChunk = Extract<StreamChunk, { type: 'finish' }>
+type UsageChunk = Extract<StreamChunk, { type: 'usage' }>
+type ToolCallEnd = Extract<StreamChunk, { type: 'block-end' }> & { block: { type: 'tool-call'; id: string; name: string; arguments: string } }
+
+/** Fresh mapper for one span of run r1 (cut on completed tools, like main turns). */
+function newSpan(runId = 'r1', initialSawText = false, useCodeWrapper = false): EventMapper {
+  return new EventMapper({ runId, cutOnTool: true, initialSawText, useCodeWrapper })
+}
+
+function mapAll(mapper: EventMapper, events: unknown[], startIdx = 0): StreamChunk[] {
+  const out: StreamChunk[] = []
+  let i = startIdx
+  for (const ev of events) {
+    out.push(...mapper.map(ev as never, i))
+    i++
+    if (mapper.isFinished) break
+  }
+  return out
+}
+function lastChunk(cs: StreamChunk[]): StreamChunk {
+  const c = cs[cs.length - 1]
+  assert.ok(c !== undefined)
+  return c
+}
+function asFinish(c: StreamChunk): FinishChunk {
+  assert.equal(c.type, 'finish')
+  return c as FinishChunk
+}
+function asUsage(c: StreamChunk): UsageChunk {
+  assert.equal(c.type, 'usage')
+  return c as UsageChunk
+}
+function toolCallEnd(cs: StreamChunk[]): ToolCallEnd {
+  const c = cs.find((x) => x.type === 'block-end' && (x as { block: { type: string } }).block.type === 'tool-call')
+  assert.ok(c !== undefined, 'span must emit a tool-call block')
+  return c as unknown as ToolCallEnd
+}
+
+test('suffixDelta grows by suffix and falls back to newline+full', () => {
+  assert.equal(suffixDelta('', 'abc'), 'abc')
+  assert.equal(suffixDelta('abc', 'abcdef'), 'def')
+  assert.equal(suffixDelta('abc', 'abc'), '')
+  assert.equal(suffixDelta('abc', 'xyz'), '\nxyz')
+})
+
+test('ok run without tools emits ordered protocol: blocks, usage, finish last', () => {
+  const m = newSpan()
+  const chunks = mapAll(m, [
+    { kind: 'init', conversationId: 'c1' },
+    { kind: 'step', stepKey: '1', stepKind: 'thinking', text: 'Think' },
+    { kind: 'step', stepKey: '2', stepKind: 'text', text: 'Hi there' },
+    { kind: 'result', conversationId: 'c1', ok: true, response: 'Hi there', usage: { input_tokens: 7, output_tokens: 4, thinking_tokens: 2, cache_read_tokens: 1 } },
+  ])
+  const types = chunks.map((c) => c.type)
+  assert.deepEqual(types, [
+    'block-start', 'reasoning-delta', 'block-end',
+    'block-start', 'text-delta', 'block-end',
+    'usage', 'finish',
+  ])
+  const finish = asFinish(lastChunk(chunks))
+  assert.equal(finish.reason.kind, 'stop')
+  const usage = asUsage(chunks[chunks.length - 2] as StreamChunk)
+  assert.equal(usage.usage.inputTokens, 7)
+  assert.equal(usage.usage.reasoningTokens, 2)
+  assert.equal((finish.replayState as { response?: { conversationId?: string } } | undefined)?.response?.conversationId, 'c1')
+  assert.equal(m.isFinished, true)
+})
+
+test('result usage reports the last PER-CALL step sample, never the cumulative envelope', () => {
+  // Verified against agy 1.1.16: step_update usage is per-call (current
+  // context), result usage is conversation-cumulative. Forwarding the
+  // envelope made DSH's token meter see 76M tokens against a 1M window and
+  // fire compaction every few turns.
+  const tracker = {
+    last: null as import('../src/common/types.ts').RawUsage | null,
+    noteStepUsage(raw: import('../src/common/types.ts').RawUsage) {
+      this.last = raw
+    },
+    finalUsage(resultRaw: import('../src/common/types.ts').RawUsage) {
+      return this.last ?? resultRaw
+    },
+  }
+  const m = new EventMapper({ runId: 'ru1', cutOnTool: true, usage: tracker })
+  const chunks = mapAll(m, [
+    { kind: 'init', conversationId: 'c1' },
+    { kind: 'step', stepKey: '1', stepKind: 'text', text: 'part one', usage: { input_tokens: 15_000, output_tokens: 100 } },
+    { kind: 'step', stepKey: '2', stepKind: 'text', text: 'part two', usage: { input_tokens: 16_800, output_tokens: 160 } },
+    { kind: 'result', conversationId: 'c1', ok: true, response: 'part one part two', usage: { input_tokens: 31_800, output_tokens: 260 } },
+  ])
+  const usageChunks = chunks.filter((c) => c.type === 'usage')
+  const finalUsage = asUsage(usageChunks[usageChunks.length - 1] as StreamChunk)
+  // last per-call step sample (16.8k), NOT the cumulative 31.8k
+  assert.equal(finalUsage.usage.inputTokens, 16_800)
+  assert.equal(finalUsage.usage.outputTokens, 160)
+})
+
+test('result usage falls back to the envelope when no step carried usage', () => {
+  const tracker = {
+    last: null as import('../src/common/types.ts').RawUsage | null,
+    noteStepUsage(raw: import('../src/common/types.ts').RawUsage) {
+      this.last = raw
+    },
+    finalUsage(resultRaw: import('../src/common/types.ts').RawUsage) {
+      return this.last ?? resultRaw
+    },
+  }
+  const m = new EventMapper({ runId: 'ru2', cutOnTool: true, usage: tracker })
+  const chunks = mapAll(m, [
+    { kind: 'init', conversationId: 'c1' },
+    { kind: 'step', stepKey: '1', stepKind: 'text', text: 'hi' },
+    { kind: 'result', conversationId: 'c1', ok: true, response: 'hi', usage: { input_tokens: 14_726, output_tokens: 166 } },
+  ])
+  const usageChunks = chunks.filter((c) => c.type === 'usage')
+  const finalUsage = asUsage(usageChunks[usageChunks.length - 1] as StreamChunk)
+  assert.equal(finalUsage.usage.inputTokens, 14_726)
+})
+
+test('snapshot-style repeated steps stream as suffix deltas', () => {
+  const m = newSpan()
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '1', stepKind: 'text', text: 'Hello' },
+    { kind: 'step', stepKey: '1', stepKind: 'text', text: 'Hello world' },
+  ])
+  const deltas = chunks.filter((c) => c.type === 'text-delta').map((c) => (c as unknown as { text: string }).text)
+  assert.deepEqual(deltas, ['Hello', ' world'])
+})
+
+test('completed tool step cuts the span into native agy_tool call in standard mode', () => {
+  const m = newSpan('run-abc', false, false)
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '2', stepKind: 'text', text: 'Working on it' },
+    // ACTIVE has no payload yet: no cut
+    { kind: 'step', stepKey: '3', stepKind: 'tool', state: 'ACTIVE', text: '', tool: { name: 'run_command', args: { command: 'ls' } } },
+    { kind: 'step', stepKey: '3', stepKind: 'tool', state: 'DONE', text: '', tool: { name: 'run_command', args: { command: 'ls' }, output: 'a.txt' } },
+    // later events must not map: the span already finished
+    { kind: 'step', stepKey: '9', stepKind: 'text', text: 'after the cut' },
+  ])
+  const end = toolCallEnd(chunks)
+  assert.equal(end.block.name, 'agy_tool')
+  assert.equal(end.block.id, mirrorCallId('run-abc', 2))
+  const args = JSON.parse(end.block.arguments) as { run: string; step: number; tool: string; input: Record<string, unknown> }
+  assert.equal(args.run, 'run-abc')
+  assert.equal(args.step, 2)
+  assert.equal(args.tool, 'run_command')
+  assert.deepEqual(args.input, { command: 'ls' })
+  const finish = asFinish(lastChunk(chunks))
+  assert.equal(finish.reason.kind, 'tool-calls')
+  assert.equal(m.isFinished, true)
+  const text = chunks.filter((c) => c.type === 'text-delta').map((c) => (c as { text: string }).text).join('')
+  assert.equal(text, 'Working on it')
+})
+
+test('completed tool step cuts the span into run_code wrapper in Code Mode', () => {
+  const m = newSpan('run-abc', false, true)
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '2', stepKind: 'text', text: 'Working on it' },
+    { kind: 'step', stepKey: '3', stepKind: 'tool', state: 'DONE', text: '', tool: { name: 'run_command', args: { command: 'ls' }, output: 'a.txt' } },
+  ])
+  const end = toolCallEnd(chunks)
+  assert.equal(end.block.name, 'run_code')
+  assert.equal(end.block.id, mirrorCallId('run-abc', 1))
+  const args = JSON.parse(end.block.arguments) as { code: string; description: string }
+  const inv = parseMirrorInvocation(args.code)
+  assert.ok(inv !== null, 'code embeds the agy_tool invocation')
+  assert.equal(inv.run, 'run-abc')
+  assert.equal(inv.step, 1)
+  assert.ok(args.description.includes('run_command'), args.description)
+  assert.ok(args.code.includes("tools['agy_tool']"), 'program calls the mirror tool')
+})
+
+test('erroring tool step cuts exactly like a successful one in both modes', () => {
+  const mNative = newSpan('r1', false, false)
+  const chunksNative = mapAll(mNative, [
+    { kind: 'step', stepKey: '4', stepKind: 'tool', state: 'ERROR', text: '', tool: { name: 'find_by_name', args: { pattern: 'x' }, error: 'timed out' } },
+  ])
+  const endNative = toolCallEnd(chunksNative)
+  assert.equal(endNative.block.name, 'agy_tool')
+  assert.equal(asFinish(lastChunk(chunksNative)).reason.kind, 'tool-calls')
+
+  const mCode = newSpan('r1', false, true)
+  const chunksCode = mapAll(mCode, [
+    { kind: 'step', stepKey: '4', stepKind: 'tool', state: 'ERROR', text: '', tool: { name: 'find_by_name', args: { pattern: 'x' }, error: 'timed out' } },
+  ])
+  const endCode = toolCallEnd(chunksCode)
+  assert.equal(endCode.block.name, 'run_code')
+  assert.equal(asFinish(lastChunk(chunksCode)).reason.kind, 'tool-calls')
+})
+
+test('auxiliary spans never cut on tools', () => {
+  const m = new EventMapper({ runId: 'r2', cutOnTool: false })
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '1', stepKind: 'tool', text: '', tool: { name: 'run_command', args: {}, output: 'x' } },
+    { kind: 'result', conversationId: 'c', ok: true, response: 'done', usage: {} },
+  ])
+  assert.equal(chunks.some((c) => c.type === 'block-end' && (c as { block: { type: string } }).block.type === 'tool-call'), false)
+  assert.equal(asFinish(lastChunk(chunks)).reason.kind, 'stop')
+})
+
+test('result text used when no text step streamed anywhere in the run', () => {
+  const m = newSpan('r3')
+  const chunks = mapAll(m, [
+    { kind: 'result', conversationId: 'c2', ok: true, response: 'only final', usage: {} },
+  ])
+  const deltas = chunks.filter((c) => c.type === 'text-delta').map((c) => (c as unknown as { text: string }).text)
+  assert.deepEqual(deltas, ['only final'])
+})
+
+test('result fallback suppressed when an earlier span already streamed the text', () => {
+  // Final span of a run whose text streamed in span 1: the result response
+  // must NOT be duplicated as a fresh text block.
+  const m = newSpan('r4', true)
+  const chunks = mapAll(m, [
+    { kind: 'result', conversationId: 'c4', ok: true, response: 'already streamed', usage: {} },
+  ], 5)
+  assert.equal(chunks.some((c) => c.type === 'text-delta'), false)
+  assert.equal(asFinish(lastChunk(chunks)).reason.kind, 'stop')
+})
+
+test('agy 1.1.15 stream maps onto spans: thinking turn, tool cuts, fragments, result', () => {
+  const events: unknown[] = [
+    { kind: 'init', conversationId: 'c15' },
+    // thinking-only turn (usage, no text)
+    { kind: 'step', stepKey: '2', stepKind: 'text', text: '', usage: { thinking_tokens: 80 } },
+    // tool call with output
+    { kind: 'step', stepKey: '3', stepKind: 'tool', state: 'ACTIVE', text: '', tool: { name: 'run_command', args: { command: 'ls' } } },
+    { kind: 'step', stepKey: '3', stepKind: 'tool', state: 'DONE', text: '', tool: { name: 'run_command', args: { command: 'ls' }, output: 'note1.txt' } },
+    // failed tool call
+    { kind: 'step', stepKey: '4', stepKind: 'tool', state: 'ERROR', text: '', tool: { name: 'find_by_name', args: { pattern: 'x' }, error: 'Find command timed out.' } },
+    // streamed answer fragments
+    { kind: 'step', stepKey: '5', stepKind: 'text', text: 'There are ', fragment: true },
+    { kind: 'step', stepKey: '5', stepKind: 'text', text: '2 files.', fragment: true },
+    { kind: 'result', conversationId: 'c15', ok: true, response: 'There are 2 files.', usage: { input_tokens: 9, output_tokens: 8, thinking_tokens: 95 } },
+  ]
+  // Span 1: thinking annotation + first tool cut
+  const s1 = newSpan('run15')
+  const c1 = mapAll(s1, events, 0)
+  const reasoning1 = c1.filter((c) => c.type === 'reasoning-delta').map((c) => (c as { text: string }).text).join('')
+  assert.ok(reasoning1.includes('[agy thinking turn · 80 thinking tokens]'), reasoning1)
+  assert.equal(toolCallEnd(c1).block.id, mirrorCallId('run15', 3))
+  assert.equal(asFinish(lastChunk(c1)).reason.kind, 'tool-calls')
+  // Span 2: second tool cut (the errored one)
+  const s2 = newSpan('run15')
+  const c2 = mapAll(s2, events.slice(4), 4)
+  assert.equal(toolCallEnd(c2).block.id, mirrorCallId('run15', 4))
+  assert.equal(asFinish(lastChunk(c2)).reason.kind, 'tool-calls')
+  // Span 3: fragments + result → stop
+  const s3 = newSpan('run15', false)
+  const c3 = mapAll(s3, events.slice(5), 5)
+  const text3 = c3.filter((c) => c.type === 'text-delta').map((c) => (c as { text: string }).text).join('')
+  assert.equal(text3, 'There are 2 files.')
+  assert.equal(asFinish(lastChunk(c3)).reason.kind, 'stop')
+})
+
+test('one-shot answer step (text + usage together) still annotates thinking', () => {
+  // agy answers trivial questions in a single DONE envelope: no separate
+  // thinking-only step ever arrives. Regression (v0.3.2): these turns used
+  // to show no thinking at all.
+  const m = newSpan('r-oneshot')
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '2', stepKind: 'text', text: '1 + 1 等于 2。', usage: { input_tokens: 100, output_tokens: 50, thinking_tokens: 154 } },
+    { kind: 'result', conversationId: 'c9', ok: true, response: '1 + 1 等于 2。', usage: {} },
+  ])
+  const reasoning = chunks.filter((c) => c.type === 'reasoning-delta').map((c) => (c as { text: string }).text).join('')
+  assert.ok(reasoning.includes('[agy thinking turn · 154 thinking tokens]'), reasoning)
+  const text = chunks.filter((c) => c.type === 'text-delta').map((c) => (c as { text: string }).text).join('')
+  assert.equal(text, '1 + 1 等于 2。')
+  // protocol order: the reasoning annotation precedes the answer text
+  const types = chunks.map((c) => c.type)
+  const rIdx = types.indexOf('reasoning-delta')
+  const tIdx = types.indexOf('text-delta')
+  assert.ok(rIdx >= 0 && tIdx > rIdx, 'reasoning annotation precedes the answer text')
+})
+
+test('streamed answer: DONE-tail usage annotates AFTER the complete text', () => {
+  // v0.3.2 wedged the chip mid-sentence (annotated at DONE arrival, between
+  // fragments); v0.3.3 then dropped it entirely (first turn showed no
+  // thinking). Now the annotation is deferred to the step's text completion:
+  // present, but strictly after the last fragment.
+  const m = newSpan('r-tail')
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '5', stepKind: 'text', text: 'There are ', fragment: true },
+    { kind: 'step', stepKey: '5', stepKind: 'text', text: '2 files.', fragment: true, usage: { thinking_tokens: 15 } },
+    { kind: 'result', conversationId: 'c9', ok: true, response: 'There are 2 files.', usage: {} },
+  ])
+  const reasoning = chunks.filter((c) => c.type === 'reasoning-delta').map((c) => (c as { text: string }).text).join('')
+  assert.ok(reasoning.includes('[agy thinking turn · 15 thinking tokens]'), reasoning)
+  const text = chunks.filter((c) => c.type === 'text-delta').map((c) => (c as { text: string }).text).join('')
+  assert.equal(text, 'There are 2 files.')
+  // the annotation trails the LAST text delta — never between fragments
+  const types = chunks.map((c) => c.type)
+  const lastTextIdx = types.lastIndexOf('text-delta')
+  const reasoningIdx = types.indexOf('reasoning-delta')
+  assert.ok(lastTextIdx >= 0 && reasoningIdx > lastTextIdx, 'annotation trails the step text')
+  assert.equal(asFinish(lastChunk(chunks)).reason.kind, 'stop')
+})
+
+test('DONE tail with usage but no text still annotates after streamed text', () => {
+  const m = newSpan('r-tail2')
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '7', stepKind: 'text', text: 'Answer.', fragment: true },
+    { kind: 'step', stepKey: '7', stepKind: 'text', text: '', usage: { thinking_tokens: 9 } },
+    { kind: 'result', conversationId: 'c9', ok: true, response: 'Answer.', usage: {} },
+  ])
+  const reasoning = chunks.filter((c) => c.type === 'reasoning-delta').map((c) => (c as { text: string }).text).join('')
+  assert.ok(reasoning.includes('[agy thinking turn · 9 thinking tokens]'), reasoning)
+  const text = chunks.filter((c) => c.type === 'text-delta').map((c) => (c as { text: string }).text).join('')
+  assert.equal(text, 'Answer.')
+})
+
+test('emitFailure closes blocks and finishes with error', () => {
+  const m = newSpan()
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '1', stepKind: 'text', text: 'partial' },
+  ])
+  chunks.push(...[...m.emitFailure('error', 'AUTH', 'not signed in')])
+  const finish = asFinish(lastChunk(chunks))
+  if (finish.reason.kind === 'error') {
+    assert.equal(finish.reason.failure.code, 'AUTH')
+  } else {
+    assert.fail('expected error finish')
+  }
+  const endIdx = chunks.map((c) => c.type).lastIndexOf('block-end')
+  assert.ok(endIdx >= 0)
+  assert.ok(chunks.slice(endIdx + 1).every((d) => d.type === 'usage' || d.type === 'finish'))
+})
+
+test('result ERROR with usable response soft-finishes and annotates the error', () => {
+  const m = newSpan()
+  const chunks = mapAll(m, [
+    { kind: 'step', stepKey: '5', stepKind: 'text', text: 'There are 2 files.', fragment: true },
+    { kind: 'result', conversationId: 'c15', ok: false, response: 'There are 2 files.', error: 'find timed out', usage: { input_tokens: 9, output_tokens: 8 } },
+  ])
+  const reasoning = chunks
+    .filter((c) => c.type === 'reasoning-delta')
+    .map((c) => (c as { text: string }).text)
+    .join('')
+  assert.ok(reasoning.includes('[agy finished with error] find timed out'), reasoning)
+  const finish = asFinish(lastChunk(chunks))
+  assert.equal(finish.reason.kind, 'stop')
+  assert.equal(m.isFinished, true)
+})
+
+test('result ERROR without response stays passive for the adapter', () => {
+  const m = newSpan()
+  const chunks = mapAll(m, [
+    { kind: 'result', conversationId: 'c15', ok: false, response: '', error: 'explosion', usage: {} },
+  ])
+  assert.equal(chunks.length, 0)
+  assert.equal(m.isFinished, false)
+})
+
+test('mirrorCallId round-trips through parseMirrorCallId', () => {
+  const id = mirrorCallId('0f1e2d3c-4b5a-6789-9abc-def012345678', 42)
+  assert.equal(id, 'agytc-0f1e2d3c-4b5a-6789-9abc-def012345678-42')
+  assert.deepEqual(parseMirrorCallId(id), { runId: '0f1e2d3c-4b5a-6789-9abc-def012345678', eventIndex: 42 })
+  assert.equal(parseMirrorCallId('other-1'), null)
+  assert.equal(parseMirrorCallId('agytc-x'), null)
+})
+
+test('usageFromRaw maps snake_case fields', () => {
+  const u = usageFromRaw({ input_tokens: 1, output_tokens: 2, thinking_tokens: 3, cache_read_tokens: 4, cache_write_tokens: 5 })
+  assert.equal(u.inputTokens, 1)
+  assert.equal(u.outputTokens, 2)
+  assert.equal(u.reasoningTokens, 3)
+  assert.equal(u.cacheReadTokens, 4)
+  assert.equal(u.cacheWriteTokens, 5)
+})

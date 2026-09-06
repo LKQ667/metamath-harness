@@ -1,0 +1,125 @@
+diff --git a/lib/client.js b/lib/client.js
+index be407578cc600dba83920b66dd41ae9f9bd4bcd7..a80ce8260e5f9b594f2720a768b180748f957a42 100644
+--- a/lib/client.js
++++ b/lib/client.js
+@@ -2812,13 +2812,6 @@ function apply(ctx) {
+ 		label: () => t("nav"),
+ 		inject: injected
+ 	}, SubscriptionsSection));
+-	const toolviewInjected = () => ({ load: createImageLoader(connection.rpc) });
+-	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+-		name: "tool.call.toolview",
+-		key: "image_generate",
+-		locale: NS,
+-		inject: toolviewInjected
+-	}, ImageGenerateToolview));
+ 	const videoToolviewInjected = () => ({ loadVideo: createVideoLoader(connection.rpc) });
+ 	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+ 		name: "tool.call.toolview",
+diff --git a/lib/index.d.ts b/lib/index.d.ts
+index a2bf7e17ddc0a5ac373aea9e2b958b05683920ee..dd0a1d427b8b9980f4195401132c4136d027ed6e 100644
+--- a/lib/index.d.ts
++++ b/lib/index.d.ts
+@@ -16,6 +16,19 @@ export type { ModelEntry, ProviderUsage, UsageWindow } from './providers/common.
+ export type { RateLimitConfig, RateLimitWait } from './providers/rate-limit.js';
+ export type { ProviderStatus } from './auth/rpc.js';
+ export type { ClaudeSession, CodexSession, CopilotSession, GrokSession, ProviderId } from './auth/store.js';
++export interface SubscriptionSessionSnapshot {
++    accessToken: string;
++    accountId?: string;
++}
++export interface SubscriptionSessions {
++    describe(provider: 'codex' | 'grok'): Promise<{ configured: boolean }>;
++    resolve(provider: 'codex' | 'grok', options?: { force?: boolean; signal?: AbortSignal }): Promise<SubscriptionSessionSnapshot>;
++}
++declare module '@deepseek-ai/cordis' {
++    interface Context {
++        subscriptionSessions: SubscriptionSessions;
++    }
++}
+ export declare const name = "dsh-plugin-subscriptions";
+ export declare const inject: string[];
+ /** Default maximum provider idle time while one stream read is outstanding. */
+@@ -29,6 +42,8 @@ export interface Config {
+     providers?: ProviderId[];
+     /** Maximum provider idle time while one stream read is outstanding (default five minutes). */
+     streamIdleTimeoutMs?: number;
++    /** Register the package image_generate tool; defaults to true. */
++    registerImageTool?: boolean;
+     /** Whether and how long a route waits out a closed rate-limit window. */
+     rateLimit?: RateLimitConfig;
+     /** Advisory model catalogs overriding the built-in defaults, per provider. */
+diff --git a/lib/index.js b/lib/index.js
+index a0a29a5eb694faaf47f66b1c742918c1d028911a..99aacafcdaf78f76f4a5d48b7dff7345e0c07ce8 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -7793,6 +7793,7 @@ const Config = z.object({
+ 		"copilot"
+ 	]),
+ 	streamIdleTimeoutMs: z.number().min(1).default(DEFAULT_STREAM_IDLE_TIMEOUT_MS),
++	registerImageTool: z.boolean().default(true),
+ 	rateLimit: z.object({
+ 		wait: z.boolean().default(true),
+ 		maxWaitMs: z.number().min(1).default(DEFAULT_RATE_LIMIT_MAX_WAIT_MS)
+@@ -8151,6 +8152,7 @@ function apply(ctx, config) {
+ 	const handles = /* @__PURE__ */ new Map();
+ 	const adapters = /* @__PURE__ */ new Map();
+ 	const accountTokens = /* @__PURE__ */ new Map();
++	const subscriptionTokenManagers = /* @__PURE__ */ new Map();
+ 	let poolHealth;
+ 	let poolUsage;
+ 	let poolAdapter;
+@@ -8185,7 +8187,8 @@ function apply(ctx, config) {
+ 				}
+ 			});
+ 			codexTokens = tokens;
+-			accountTokens.set("codex", tokens);
++				accountTokens.set("codex", tokens);
++				subscriptionTokenManagers.set("codex", tokens);
+ 			usageFetchers.codex = async (account, signal) => fetchCodexUsage(await tokens.session(account), proxiedFetch, signal);
+ 			let adapter;
+ 			adapter = new CodexAdapter({
+@@ -8252,7 +8255,8 @@ function apply(ctx, config) {
+ 				}
+ 			});
+ 			grokTokens = tokens;
+-			accountTokens.set("grok", tokens);
++				accountTokens.set("grok", tokens);
++				subscriptionTokenManagers.set("grok", tokens);
+ 			usageFetchers.grok = async (account, signal) => fetchGrokUsage(await tokens.session(account), proxiedFetch, signal);
+ 			const adapter = new GrokAdapter({
+ 				models: catalog.grok,
+@@ -8364,6 +8368,24 @@ function apply(ctx, config) {
+ 			onWarn
+ 		});
+ 	}
++	const subscriptionSessions = Object.freeze({
++		async describe(provider) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			const tokens = subscriptionTokenManagers.get(provider);
++			return Object.freeze({ configured: tokens !== void 0 && await tokens.defaultAccount() !== void 0 });
++		},
++		async resolve(provider, options = {}) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			const tokens = subscriptionTokenManagers.get(provider);
++			if (tokens === void 0) throw new LlmError(`dsh-plugin-subscriptions: provider ${provider} is not enabled`, "MISSING_CREDENTIAL");
++			const session = await tokens.session(void 0, options.force === true);
++			return Object.freeze({
++				accessToken: session.accessToken,
++				...provider === "codex" ? { accountId: session.accountId } : {}
++			});
++		}
++	});
++	ctx.effect(() => ctx.reflect.provide("subscriptionSessions", subscriptionSessions), "dsh-plugin-subscriptions: subscription session service");
+ 	registerAuthRpc(ctx, new SubscriptionsAuthController(flows, deviceFlows, authChanged, resolveAttachments, usageFetchers, void 0, poolUsage), {
+ 		async speed(sessionId) {
+ 			return {
+@@ -8456,7 +8478,7 @@ function apply(ctx, config) {
+ 			toolsCtx.tools.register(createXSearchTool({ tokens: grokTokens }));
+ 			toolsCtx.tools.register(createVideoGenerateTool({ tokens: grokTokens }));
+ 		}
+-		if (codexTokens !== void 0 || grokTokens !== void 0) toolsCtx.tools.register(createImageGenerateTool({
++		if (config.registerImageTool !== false && (codexTokens !== void 0 || grokTokens !== void 0)) toolsCtx.tools.register(createImageGenerateTool({
+ 			...codexTokens === void 0 ? {} : { codexTokens },
+ 			...grokTokens === void 0 ? {} : { grokTokens },
+ 			resolveAttachments,

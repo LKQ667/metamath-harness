@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { resolveRetryPolicy } from '@deepseek-ai/dsh-llm';
 import {
   routeOf,
   isPoolRoute,
@@ -37,6 +38,12 @@ test('最小合法配置通过并填充默认值', () => {
   assert.deepEqual(pool.models, [
     { id: 'model-a', name: 'model-a', contextWindow: 262144, maxTokens: 32768 },
   ]);
+});
+
+test('默认重试次数继承普通 Provider 的 DSH 默认策略', () => {
+  assert.equal(DEFAULT_MAX_RETRIES, resolveRetryPolicy(undefined, 'test: 普通 Provider 默认策略').maxRetries);
+  assert.equal(validatePoolConfig({ pools: { demo: minimalPool() } }).pools.demo.maxRetries, DEFAULT_MAX_RETRIES);
+  assert.equal(validatePoolConfig({ pools: { demo: minimalPool({ maxRetries: 2 }) } }).pools.demo.maxRetries, 2);
 });
 
 test('空/undefined 配置返回空分节', () => {

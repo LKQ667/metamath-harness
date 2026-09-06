@@ -89,3 +89,42 @@
       maxCandidates: 100
     authorization:
       allowedGlobalWriters: []
+
+# Antigravity 回退模型目录补充（2026-09-03）：Gemini 3.8 Flash 已在官方上线
+# （ai.google.dev/gemini-api/docs/models/gemini-3.8-flash，stable，thinking 支持
+# low/medium/high；antigravity.google/docs/models 已列出），但上游 v0.4.24 的
+# DEFAULT_FALLBACK_MODELS 只收录到 gemini-3.7-flash。登录后目录改由 `agy models`
+# 实时发现，此覆盖仅服务未登录/离线时的 /model 选择器；上游收录后应删除本条。
+# fallbackModels 是整体替换语义，必须写全量清单。
+- id: agy-link
+  config:
+    fallbackModels:
+      - id: gemini-3.8-flash
+        name: Gemini 3.8 Flash
+        efforts: [low, medium, high]
+      - id: gemini-3.7-flash
+        name: Gemini 3.7 Flash
+        efforts: [low, medium, high]
+      - id: gemini-3.6-flash
+        name: Gemini 3.6 Flash
+        efforts: [low, medium, high]
+      - id: gemini-3.5-flash
+        name: Gemini 3.5 Flash
+        efforts: [low, medium, high]
+      - id: gemini-3.1-pro
+        name: Gemini 3.1 Pro
+        efforts: [low, high]
+      - id: claude-sonnet-4-6
+        name: Claude Sonnet 4.6 (Thinking)
+      - id: claude-opus-4-6-thinking
+        name: Claude Opus 4.6 (Thinking)
+      - id: gpt-oss-120b-medium
+        name: GPT-OSS 120B (Medium)
+
+# WorkBuddy 桌面 App 模型接入（GOAL-74 引入，上游 v0.2.6，固定 commit fab6bf646aa3，
+# MIT；仅供个人学习研究——复用本机 WorkBuddy App 登录态，非官方接口，上游更新可能
+# 需要跟随调整）。bundle 自激活（自带 cordis.patch.yml insert llm-workbuddy），主
+# patch 零改动：本机 App 凭据文件名为 workbuddy-desktop-ai.info（带 -ai 后缀），
+# 本地派生补丁已在插件默认探测候选中加入该文件名（先后探测不带/带后缀两种），
+# 无需 authFile 绝对路径覆盖，干净机器开箱即用；settings 卡片对 authFile 的
+# 后续编辑热生效。

@@ -459,6 +459,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         const visibleSkills = skills.filter((skill) => !normalizedQuery || [skill.skill, skill.title, skill.summary, skill.category]
           .some((value) => value.toLocaleLowerCase('zh-CN').includes(normalizedQuery)))
           .sort((left, right) => Number(right.skill === activeSkill) - Number(left.skill === activeSkill));
+        const skillCount = loadState === 'ready' ? `${skills.length} 个 Skill` : loadState === 'error' ? 'Skill 读取失败' : '正在读取 Skill';
         const environment = state.status?.preflight?.status === 'ready' ? '环境已就绪' : state.status?.preflight ? '环境需检查' : '环境未检测';
         const providers = state.status?.providers?.summary ?? '生图凭据未检测';
         const panel = open ? ReactDOM.createPortal(React.createElement('aside', {
@@ -467,7 +468,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         React.createElement('div', { className: 'dsh-mm-info-head' },
           React.createElement('div', { className: 'dsh-mm-info-heading' },
             React.createElement('h2', { id: `${panelId}-title` }, '技能说明'),
-            React.createElement('p', null, `${skills.length || 15} 个 Skill · 点击查看简单说明`),
+            React.createElement('p', null, `${skillCount} · 点击查看简单说明`),
           ),
           React.createElement('button', { type: 'button', className: 'dsh-mm-info-close', 'aria-label': '收起 Skill 说明', onClick: closePanel }, '收起'),
         ),
@@ -477,7 +478,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         React.createElement('div', { className: 'dsh-mm-info-body' },
           React.createElement('div', { className: 'dsh-mm-info-list-head' },
             React.createElement('span', null, normalizedQuery ? '搜索结果' : '全部 Skill'),
-            React.createElement('span', null, `${visibleSkills.length} 项`),
+            React.createElement('span', null, loadState === 'ready' ? `${visibleSkills.length} 项` : '—'),
           ),
           loadState === 'loading' ? React.createElement('div', { className: 'dsh-mm-info-empty', role: 'status' }, '正在读取 Skill…') : null,
           loadState === 'error' ? React.createElement('div', { className: 'dsh-mm-info-empty', role: 'alert' }, '暂时无法读取 Skill 说明，请稍后重试。') : null,
@@ -973,6 +974,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         'sessions',
         'slots',
         'remote',
+        'remote.skills',
         'conversation',
       ];
       const pass = Object.freeze({ parse: (value) => value });
@@ -1031,7 +1033,9 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         }
         const sessions = ctx.get('sessions');
         const conversation = ctx.get('conversation');
-        const skillsApi = ctx.get('connection').api.skills;
+        // DSH 0.1.2-rc.1：connection.api.skills 已移除，技能目录改走宿主
+        // dsh-api-session-controller 提供的 remote.skills（信封 {ok, value, error}）。
+        const skillsRemote = ctx.get('remote.skills');
         const cache = new Map();
         const catalogTtlMs = 2_000;
         const loadSkillHelp = () => unwrapRemote(mathmodelCards.help(), 'mathmodelCards/help');
@@ -1043,15 +1047,15 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
           current?.abort.abort();
           const abort = new AbortController();
           const promise = (async () => {
-            const [{ result }, cardsResult] = await Promise.all([
-              skillsApi.list({ sessionId }, abort.signal),
+            const [skillsResult, cardsResult] = await Promise.all([
+              skillsRemote.list({ sessionId }, abort.signal),
               unwrapRemote(mathmodelCards.list(), 'mathmodelCards/list'),
             ]);
-            if (!result.ok) throw new Error(`skill.list failed: ${result.error.code}`);
+            if (!skillsResult.ok) throw new Error(`skill.list failed: ${skillsResult.error.code}`);
             const cards = new Map(cardsResult.cards.map((card) => [card.skill, card]));
-            cards.catalog = result.value.skills;
+            cards.catalog = skillsResult.value.skills;
             cache.set(sessionId, { promise, abort, cards, fetchedAt: Date.now() });
-            return result.value.skills;
+            return skillsResult.value.skills;
           })();
           cache.set(sessionId, { promise, abort, cards: new Map(), fetchedAt: Date.now() });
           promise.catch(() => { if (cache.get(sessionId)?.promise === promise) cache.delete(sessionId); });

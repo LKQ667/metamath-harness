@@ -8,7 +8,7 @@ import {
 } from '../lib/index.js';
 
 const stamp = '2026-09-02T02:00:00.000Z';
-const fakeKey = 'sk-fixture123';
+const fakeKey = 'sk-fake-image-key-01';
 const gatewayHost = 'images.example';
 const tinyPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 const tinyJpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]);

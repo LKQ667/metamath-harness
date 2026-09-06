@@ -119,7 +119,14 @@ export class SkillHelpCatalog {
         if (error?.code === 'ENOENT') continue;
         throw error;
       }
-      const meta = parseFrontmatter(text, source);
+      let meta;
+      try {
+        meta = parseFrontmatter(text, source);
+      } catch (error) {
+        // 单个第三方或新建 Skill 的元数据损坏不应拖垮整个说明目录。
+        if (error instanceof TypeError) continue;
+        throw error;
+      }
       const override = HELP[entry.name];
       skills.push(Object.freeze({
         skill: entry.name,

@@ -7,12 +7,23 @@ const preset = resolve(import.meta.dirname, '../../../.dsh/.agent-presets/mathmo
 const imagegenPreset = resolve(import.meta.dirname, '../../../.dsh/.agent-presets/imagegen/agent.cordis.yml');
 const webPatch = resolve(import.meta.dirname, '../../../.dsh/profiles/web/cordis.patch.yml');
 const webPackage = resolve(import.meta.dirname, '../../../.dsh/profiles/web/package.json');
-const subscriptionsPatch = resolve(import.meta.dirname, '../../../.dsh/profiles/web/patches/dsh-plugin-subscriptions@0.5.2.patch');
+const subscriptionsPatch = resolve(import.meta.dirname, '../../../.dsh/profiles/web/patches/dsh-plugin-subscriptions@0.6.0.patch');
 const subscriptionsClient = resolve(import.meta.dirname, '../../../.dsh/profiles/web/node_modules/dsh-plugin-subscriptions/lib/client.js');
 const codexAuth = resolve(import.meta.dirname, '../src/image/codex-auth.js');
 const grokAuth = resolve(import.meta.dirname, '../src/image/grok-auth.js');
-const standard = 'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\config\\agent-presets\\standard\\agent.cordis.yml';
+// DSH 0.1.2-rc.1 把 standard preset 移入 dsh-agent-presets 子包；保留旧路径作回退探测。
+const standardCandidates = [
+  'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\node_modules\\@deepseek-ai\\dsh-agent-presets\\presets\\standard\\agent.cordis.yml',
+  'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\config\\agent-presets\\standard\\agent.cordis.yml',
+];
 const ids = (text) => [...text.matchAll(/^\s*- id:\s*([^\s]+)\s*$/gm)].map((match) => match[1]);
+const { access } = await import('node:fs/promises');
+const standard = await (async () => {
+  for (const candidate of standardCandidates) {
+    try { await access(candidate); return candidate; } catch {}
+  }
+  throw new Error(`standard preset 不存在：${standardCandidates.join(' 或 ')}`);
+})();
 
 test('mathmodel 保留 standard 全部插件行，公共生图工具由 Web Profile 统一加载', async () => {
   const [source, baseline] = await Promise.all([readFile(preset, 'utf8'), readFile(standard, 'utf8')]);
@@ -35,7 +46,7 @@ test('Web Profile 全局加载一次生图工具，使任意 Agent 模式可用�
   assert.match(source, /@deepseek-harness\/dsh-mathmodel\/tools/);
 });
 
-test('订阅插件 0.5.2 统一 Codex/Claude/Grok 且 Host/Client 不重复注册 image_generate', async () => {
+test('订阅插件 0.6.0 统一 Codex/Claude/Grok 且 Host/Client 不重复注册 image_generate', async () => {
   const [profileSource, patchSource, compatibilityPatch, clientSource] = await Promise.all([
     readFile(webPackage, 'utf8'),
     readFile(webPatch, 'utf8'),
@@ -45,7 +56,7 @@ test('订阅插件 0.5.2 统一 Codex/Claude/Grok 且 Host/Client 不重复注�
   const profile = JSON.parse(profileSource);
   const providerBlock = patchSource.match(/- id: llm-subscriptions\s*\n\s*config:\s*\n\s*providers:\s*\n((?:\s+- [^\n]+\n)+)/)?.[1];
   const patchAdditions = compatibilityPatch.split('\n').filter((line) => line.startsWith('+') && !line.startsWith('+++')).join('\n');
-  assert.equal(profile.dependencies['dsh-plugin-subscriptions'], '0.5.2');
+  assert.equal(profile.dependencies['dsh-plugin-subscriptions'], '0.6.0');
   assert.equal('dsh-llm-oauth' in profile.dependencies, false);
   assert.equal(profile.dsh.profile.bundles.includes('dsh-llm-oauth'), false);
   assert.deepEqual([...(providerBlock ?? '').matchAll(/^\s*-\s+([^\s]+)\s*$/gm)].map((match) => match[1]), ['codex', 'claude', 'grok']);
@@ -54,7 +65,7 @@ test('订阅插件 0.5.2 统一 Codex/Claude/Grok 且 Host/Client 不重复注�
   assert.match(patchAdditions, /subscriptionSessions/);
   assert.match(patchAdditions, /subscriptionTokenManagers\.set\("codex", tokens\)/);
   assert.match(patchAdditions, /subscriptionTokenManagers\.set\("grok", tokens\)/);
-  assert.match(patchAdditions, /tokens\.session\(options\.force === true\)/);
+  assert.match(patchAdditions, /tokens\.session\(void 0, options\.force === true\)/);
   assert.match(patchAdditions, /config\.registerImageTool !== false/);
   assert.match(compatibilityPatch, /key: "image_generate"/);
   assert.match(compatibilityPatch, /^-\s*key: "image_generate"/m);

@@ -17,7 +17,9 @@ window.__ModuleLoader__.load({
 
     // ---- imports available in the boot seed graph ----
     var jsxRuntime = require("react/jsx-runtime");
-    var clientRuntime = require("@deepseek-ai/dsh-client-runtime/client");
+    // DSH 0.1.2-rc.1 移除了 @deepseek-ai/dsh-client-runtime 包；defineStore 迁移到
+    // 平台种子模块 @deepseek-ai/dsh-client-store（init/actions 签名一致，GOAL-74）。
+    var clientRuntime = require("@deepseek-ai/dsh-client-store");
 
     // =====================================================================
     // colour utilities
