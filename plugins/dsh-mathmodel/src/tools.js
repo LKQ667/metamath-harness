@@ -80,7 +80,7 @@ export function workspaceOf(exec) {
 export function apply(ctx) {
   ctx.tools.register({
     name: 'vision_analyze',
-    description: '分析工作区内的本地图片或 HTTPS 图片 URL；主模型失败时自动回退，结果不含凭据。',
+    description: '分析工作区内的本地图片或 HTTPS 图片 URL；主模型失败时自动回退，结果不含凭据。若工具失败，必须明确告知当前无法查看图片，禁止根据文件名、尺寸、上下文或预览猜测图片内容。',
     parameters: {
       type: 'object',
       additionalProperties: false,

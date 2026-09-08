@@ -1,4 +1,4 @@
-﻿# MetaMath Harness 一键安装与启动
+# MetaMath Harness 一键安装与启动
 # 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
 # 用法：
 #   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
@@ -60,14 +60,15 @@ if (-not $StartOnly) {
     }
 
     # ---------- 4. 构建本地插件 ----------
-    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库 / Antigravity 桥接 / WorkBuddy / Trae）'
+    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库 / Antigravity 桥接 / WorkBuddy / Trae / OpenCode 会话）'
     $localPlugins = @(
         @{ Name = 'dsh-mathmodel';         Dir = 'dsh-mathmodel';         Artifact = 'lib\index.js' },
         @{ Name = 'dsh-api-key-pool';      Dir = 'dsh-api-key-pool';      Artifact = 'lib\index.js' },
         @{ Name = 'dsh-knowledge-sqlite';  Dir = 'dsh-knowledge-sqlite';  Artifact = 'lib\index.js' },
         @{ Name = 'dsh-agy-link';          Dir = 'dsh-agy-link';          Artifact = 'dist\index.js' },
         @{ Name = 'dsh-workbuddy-connect'; Dir = 'dsh-workbuddy-connect'; Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-connect-trae';      Dir = 'dsh-connect-trae';      Artifact = 'lib\index.js' }
+        @{ Name = 'dsh-connect-trae';      Dir = 'dsh-connect-trae';      Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-opencode-session';  Dir = 'dsh-opencode-session';  Artifact = 'lib\index.js' }
     )
     foreach ($plugin in $localPlugins) {
         $pluginDir = Join-Path $Repo (Join-Path 'plugins' $plugin.Dir)

@@ -11,7 +11,9 @@
     "dsh-free-search": "file:../../../plugins/dsh-free-search",
     "dsh-knowledge-sqlite": "file:../../../plugins/dsh-knowledge-sqlite",
     "dsh-pet": "file:../../../plugins/dsh-pet/dsh-pet",
+    "dsh-opencode-session": "file:../../../plugins/dsh-opencode-session",
     "dsh-plugin-subscriptions": "0.6.0",
+    "dsh-session-link": "0.1.4",
     "dsh-workbuddy-connect": "file:../../../plugins/dsh-workbuddy-connect"
   },
   "dsh": {
@@ -26,9 +28,11 @@
         "dsh-knowledge-sqlite",
         "dsh-better-sidebar",
         "dsh-pet",
+        "dsh-session-link",
         "dsh-agy-link",
         "dsh-workbuddy-connect",
-        "dsh-connect-trae"
+        "dsh-connect-trae",
+        "dsh-opencode-session"
       ]
     }
   }

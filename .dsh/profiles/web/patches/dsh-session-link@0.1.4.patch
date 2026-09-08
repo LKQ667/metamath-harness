@@ -1,9 +1,8 @@
 diff --git a/cordis.patch.yml b/cordis.patch.yml
-index a403a76..c9f276b 100644
+index 9a75c04b1cbbc413379ce5e37c1ef5d93827e117..9b131cbf23b621843bfc31840136df3abc4158df 100644
 --- a/cordis.patch.yml
 +++ b/cordis.patch.yml
-@@ -1,12 +1,9 @@
- # dsh-session-link bundle patch — applied automatically when this package is
+@@ -2,11 +2,8 @@
  # installed with `dsh plugin --profile <name> add dsh-session-link`
  # (the package declares `dsh.bundle.patch` in its package.json).
  #
@@ -17,3 +16,95 @@ index a403a76..c9f276b 100644
 -
      - id: session-link
        name: 'dsh-session-link'
+diff --git a/lib/client.js b/lib/client.js
+index 9ffed5a7bfbe9268f1e545f0eb82ee2e7ba7db54..30cb1e94b38eeb8910e7d0547942190ac654b52e 100644
+--- a/lib/client.js
++++ b/lib/client.js
+@@ -140,12 +140,15 @@ window.__ModuleLoader__.load({
+ 					disposeZh();
+ 				};
+ 			}, "dsh-session-link: locale dictionaries");
+-			ctx.slots.register({
++			// DSH 0.1.2-rc.1: slots 实现要求目标插槽已由父 entry 的 children 表声明；
++			// 官方 conversation 的 header 子插槽经 slots.inject("conversation", ...) 懒注册，
++			// 直接 register 会在启动时触发 "slot ... is not declared"。改为 inject 延迟注册。
++			ctx.slots.inject("conversation.session.header.actions", () => ctx.slots.register({
+ 				name: "conversation.session.header.actions",
+ 				id: "dsh-session-link.copy",
+ 				order: 500,
+ 				locale: "dsh-session-link"
+-			}, CopySessionLinkButton);
++			}, CopySessionLinkButton));
+ 			openDeepLinkedSession(ctx);
+ 		}
+ 
+diff --git a/lib/index.js b/lib/index.js
+index 4fa188699959549f0615c5d281b4b9667d8c59e6..141f97df920aedc718f39f128d3d4233016ea817 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -14,7 +14,7 @@ import { encodeSessionReferenceUri, parseSessionReferenceText } from "@deepseek-
+ /** Stable Cordis plugin name (also the package id the client half rides on). */
+ const name = "dsh-session-link";
+ /** Services this host row needs before it activates. */
+-const inject = ["sessionReferenceResolver"];
++const inject = ["sessionReferenceResolver", "webServer", "connection"];
+ 
+ /**
+  * `dsh://` deep links copied by the header button: `dsh://session/<sessionId>`.
+@@ -70,11 +70,54 @@ function normalizeReferences(content) {
+ }
+ 
+ /**
+- * Host plugin body. Registers one `agent/pre-step` listener that turns deep
+- * links found in direct user prompts into sourced snapshot context.
++ * Host plugin body. Serves the /s/<sessionId> deep-link boot page and
++ * registers one `agent/pre-step` listener that turns deep links found in
++ * direct user prompts into sourced snapshot context.
+  * @param ctx - plugin context carrying the `sessionReferenceResolver` service.
+  */
+ function apply(ctx) {
++	// DSH 0.1.2-rc.1: the frontend-static fallback seat serves the SPA index
++	// only at "/" — a bare /s/<sessionId> boot fell through to 404. Own a
++	// prefix route that replays the request against "/" (forwarding the
++	// caller's Host and Cookie so the auth verdict matches) and relays the
++	// rendered index, so the app boots at the deep-link path and the browser
++	// half's openDeepLinkedSession() — which matches window.location.pathname —
++	// selects the target session.
++	ctx.effect(() => ctx.webServer.register({
++		kind: "prefix",
++		path: "/s",
++		handler: async (req, res) => {
++			if (req.method !== "GET" && req.method !== "HEAD") {
++				res.writeHead(405);
++				res.end();
++				return;
++			}
++			/* v8 ignore next -- node:http always sets url on server requests */
++			const rawPath = new URL(req.url ?? "/", "http://x").pathname;
++			if (!/^\/s\/[^/]+$/u.test(rawPath)) {
++				res.writeHead(404);
++				res.end();
++				return;
++			}
++			const headers = {};
++			if (typeof req.headers.host === "string") headers.host = req.headers.host;
++			if (typeof req.headers.cookie === "string") headers.cookie = req.headers.cookie;
++			let upstream;
++			try {
++				upstream = await fetch(`http://127.0.0.1:${String(ctx.webServer.port)}/`, { headers, redirect: "manual" });
++			} catch {
++				res.writeHead(502, { "cache-control": "no-store", "content-type": "text/plain; charset=utf-8" });
++				res.end(req.method === "HEAD" ? void 0 : "dsh-session-link: deep-link index unavailable.\n");
++				return;
++			}
++			const responseHeaders = { "cache-control": "no-store" };
++			const contentType = upstream.headers.get("content-type");
++			if (contentType !== null) responseHeaders["content-type"] = contentType;
++			const body = req.method === "GET" ? await upstream.text() : void 0;
++			res.writeHead(upstream.status, responseHeaders);
++			res.end(body);
++		}
++	}), "dsh-session-link: /s deep-link route");
+ 	ctx.on("agent/pre-step", async ({ agent, turn, step, signal }, next) => {
+ 		const decision = await next();
+ 		if (decision.kind === "reject" || signal?.aborted === true) return decision;

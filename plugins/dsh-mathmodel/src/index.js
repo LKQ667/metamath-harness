@@ -35,7 +35,7 @@ export {
 } from './image/grok-auth.js';
 export { codexImagesAdapter, grokImagesAdapter } from './image/adapters.js';
 export { assertNotCodex, capabilitiesForProtocol, isCodexConnection, isCodexImagesEndpoint, requireCapabilities, CODEX_BACKEND_FORBIDDEN_CODE } from './image/capabilities.js';
-export { ManualVisionService, VisionError, VISION_MODELS, VisionService, MANUAL_VISION_LIMITS, MANUAL_VISION_PROMPT } from './vision.js';
+export { detectImageMime, ManualVisionService, VisionError, VISION_MODELS, VisionService, MANUAL_VISION_LIMITS, MANUAL_VISION_PROMPT } from './vision.js';
 export { ADAPTER_BY_ID, IMAGE_ADAPTERS, customAdapter, dashscopeAdapter, geminiAdapter, openaiAdapter, openaiChatImageAdapter, openaiImagesAdapter, sub2apiAsyncImagesAdapter } from './image/adapters.js';
 export { decodeImageAsset, downloadImage, mimeForPath, requestError } from './image/assets.js';
 export { classifyVerifyError, shouldTryChatImage, verificationIdentity, verifyConnection } from './image/verify.js';

@@ -6,9 +6,11 @@ settings:
 
 overrides:
   '@deepseek-harness/dsh-mathmodel': link:../../../plugins/dsh-mathmodel
+  '@deepseek-ai/dsh-session-reference': 0.1.2-rc.1
 
 patchedDependencies:
   dsh-plugin-subscriptions@0.6.0: 37b294a2260229908448b50efaa87819841a35a80d554c7e47c709bf0a08ba65
+  dsh-session-link@0.1.4: c93de3226a9cf3d14b43a7aea3558675fd6ba18386bf43085d8d7a4aafb821f6
 
 importers:
 
@@ -16,7 +18,7 @@ importers:
     dependencies:
       '@deepseek-harness/dsh-api-key-pool':
         specifier: file:../../../plugins/dsh-api-key-pool
-        version: file:../../../plugins/dsh-api-key-pool
+        version: file:../../../plugins/dsh-api-key-pool(@deepseek-ai/dsh-brand@0.1.2-rc.1)
       '@deepseek-harness/dsh-mathmodel':
         specifier: link:../../../plugins/dsh-mathmodel
         version: link:../../../plugins/dsh-mathmodel
@@ -38,12 +40,18 @@ importers:
       dsh-knowledge-sqlite:
         specifier: file:../../../plugins/dsh-knowledge-sqlite
         version: file:../../../plugins/dsh-knowledge-sqlite(@deepseek-ai/cordis@4.0.1)
+      dsh-opencode-session:
+        specifier: file:../../../plugins/dsh-opencode-session
+        version: file:../../../plugins/dsh-opencode-session
       dsh-pet:
         specifier: file:../../../plugins/dsh-pet/dsh-pet
-        version: file:../../../plugins/dsh-pet/dsh-pet(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-credentials@0.1.1-rc.2(@deepseek-ai/cordis@4.0.1))
+        version: file:../../../plugins/dsh-pet/dsh-pet(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-credentials@0.1.1-rc.2(@deepseek-ai/dsh-brand@0.1.2-rc.1))
       dsh-plugin-subscriptions:
         specifier: 0.6.0
         version: 0.6.0(patch_hash=37b294a2260229908448b50efaa87819841a35a80d554c7e47c709bf0a08ba65)(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/schemastery@3.18.1)
+      dsh-session-link:
+        specifier: 0.1.4
+        version: 0.1.4(patch_hash=c93de3226a9cf3d14b43a7aea3558675fd6ba18386bf43085d8d7a4aafb821f6)(@deepseek-ai/cordis@4.0.1)
       dsh-workbuddy-connect:
         specifier: file:../../../plugins/dsh-workbuddy-connect
         version: file:../../../plugins/dsh-workbuddy-connect(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/schemastery@3.18.1)
@@ -143,12 +151,35 @@ packages:
   '@deepseek-ai/cosmokit@1.8.3':
     resolution: {integrity: sha512-qBo+ronVM6Eu2WNVJXi8JcMiqZ19T9BRIpV+5qJUFPXjGH/Z0QKcQMC/IZJ7L394YTOtJgcovbk9qP0w2GsBXQ==}
 
+  '@deepseek-ai/dsh-brand@0.1.2-rc.1':
+    resolution: {integrity: sha512-y2RHIag3kzLdY8kTBuSUSTsKzWPscJrysNObXTiNM7stXLpa3jXpshsB1caqGzNx50vYcmHeN1gFVECgx3NZHg==}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.2
+
   '@deepseek-ai/dsh-credentials@0.1.1-rc.2':
     resolution: {integrity: sha512-aeVBaH07rox7NuSNbSqbz8g0eNb2IIhNbrZngj/VxUsr/TR9TXOq7lm1CL6SBUDlstGw3vNWeXyhim/DmA5iSQ==}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.1
       '@deepseek-ai/dsh-brand': ^0.1.1-rc.2
       '@deepseek-ai/dsh-invariants': ^0.1.1-rc.2
+
+  '@deepseek-ai/dsh-session-reference@0.1.2-rc.1':
+    resolution: {integrity: sha512-pVMQYFFejT53nJOcaqNRaUq9VInAFovkwe7TmeeNSgbUZUVY4W7nyNYGKxzo9u7eqs+8ASqCgsIEM8WRVUymGQ==}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.2
+      '@deepseek-ai/dsh-agent': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-compaction': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-llm': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-output-retention': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-session': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-session-projection': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-session-projection-cache': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-session-query': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-session-title': ^0.1.2-rc.1
+      '@deepseek-ai/dsh-typert-protocol': ^0.1.2-rc.1
+    peerDependenciesMeta:
+      '@deepseek-ai/dsh-session-projection-cache':
+        optional: true
 
   '@deepseek-ai/dsh-settings@0.1.1-rc.2':
     resolution: {integrity: sha512-iGdKEt91Im3gE7xA9CzRfTJsPcFcxDeDOCLhAjzbpjEv7TAjx/EoYP7lPtiy+QmOjKSKy206SEtAKol9PXWbOw==}
@@ -164,8 +195,16 @@ packages:
       '@deepseek-ai/cordis': ^4.0.1
       '@deepseek-ai/dsh-invariants': ^0.1.1-rc.2
 
+  '@deepseek-ai/dsh-util-values@0.1.2-rc.1':
+    resolution: {integrity: sha512-FQdgoK+KYVR0pBQb9fTsajvGb3gzUxEzJQEYnFOt+Qdwc4nkxJOPwJJdIvXuqvZaQ33DaOoqpnpcr2p5HpLu4g==}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.2
+
   '@deepseek-ai/schemastery@3.18.1':
     resolution: {integrity: sha512-Qn0FCSwCQnpnj6SB31I6i2sIKgKWnkbJM8O0EU91Gv2UsYVvtZTl6IA0sCwk2e2MZf5S8w5hpq9QkeVvK9qwxg==}
+
+  '@deepseek-ai/schemastery@3.18.2':
+    resolution: {integrity: sha512-njDtZsznjYxok7KLLlHOPyuv2efdWVbSflAHgztSfbMsg+CVraEoRe2DjOCgClYv3ZCSm7WXoaUkbB/+RY7tWQ==}
 
   '@deepseek-harness/dsh-api-key-pool@file:../../../plugins/dsh-api-key-pool':
     resolution: {directory: ../../../plugins/dsh-api-key-pool, type: directory}
@@ -674,6 +713,11 @@ packages:
       '@deepseek-ai/dsh-session': ^0.1.0-rc.5
       '@deepseek-ai/dsh-tools': ^0.1.0-rc.5
 
+  dsh-opencode-session@file:../../../plugins/dsh-opencode-session:
+    resolution: {directory: ../../../plugins/dsh-opencode-session, type: directory}
+    peerDependencies:
+      '@deepseek-ai/dsh-llm-pi-ai': 0.1.2-rc.1
+
   dsh-pet@file:../../../plugins/dsh-pet/dsh-pet:
     resolution: {directory: ../../../plugins/dsh-pet/dsh-pet, type: directory}
     peerDependencies:
@@ -698,6 +742,13 @@ packages:
       '@deepseek-ai/dsh-llm': ^0.1.1-rc.2 || ^0.1.2-alpha.1
       '@deepseek-ai/dsh-tools': ^0.1.1-rc.2 || ^0.1.2-alpha.1
       '@deepseek-ai/schemastery': ^3.18.1
+
+  dsh-session-link@0.1.4:
+    resolution: {integrity: sha512-YSVKIUHdO1gH/h2wqd/PjPiUqHQEQTqlOnmkpMXBHbvRe/hNQaOCwM8e6IfLOt8Geil8HBJYZNlU9Lg7ac59lg==}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.1
+      '@deepseek-ai/dsh-client-locale': ^0.1.0-rc.6
+      '@deepseek-ai/dsh-client-ui-conversation': ^0.1.0-rc.6
 
   dsh-workbuddy-connect@file:../../../plugins/dsh-workbuddy-connect:
     resolution: {directory: ../../../plugins/dsh-workbuddy-connect, type: directory}
@@ -1143,16 +1194,34 @@ snapshots:
 
   '@deepseek-ai/cosmokit@1.8.3': {}
 
-  '@deepseek-ai/dsh-credentials@0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)':
+  '@deepseek-ai/dsh-brand@0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.1
 
-  '@deepseek-ai/dsh-settings@0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/schemastery@3.18.1)':
+  '@deepseek-ai/dsh-credentials@0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-brand@0.1.2-rc.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.1
+      '@deepseek-ai/dsh-brand': 0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)
+
+  '@deepseek-ai/dsh-session-reference@0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)':
+    dependencies:
+      '@deepseek-ai/cordis': 4.0.1
+      '@deepseek-ai/dsh-brand': 0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)
+      '@deepseek-ai/dsh-util-values': 0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)
+      '@deepseek-ai/schemastery': 3.18.2
+      zod: 4.5.4
+
+  '@deepseek-ai/dsh-settings@0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-brand@0.1.2-rc.1)(@deepseek-ai/schemastery@3.18.1)':
+    dependencies:
+      '@deepseek-ai/cordis': 4.0.1
+      '@deepseek-ai/dsh-brand': 0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)
       '@deepseek-ai/schemastery': 3.18.1
 
   '@deepseek-ai/dsh-typert-protocol@0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)':
+    dependencies:
+      '@deepseek-ai/cordis': 4.0.1
+
+  '@deepseek-ai/dsh-util-values@0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.1
 
@@ -1161,11 +1230,16 @@ snapshots:
       '@deepseek-ai/cosmokit': 1.8.3
       '@standard-schema/spec': 1.1.0
 
-  '@deepseek-harness/dsh-api-key-pool@file:../../../plugins/dsh-api-key-pool':
+  '@deepseek-ai/schemastery@3.18.2':
+    dependencies:
+      '@deepseek-ai/cosmokit': 1.8.3
+      '@standard-schema/spec': 1.1.0
+
+  '@deepseek-harness/dsh-api-key-pool@file:../../../plugins/dsh-api-key-pool(@deepseek-ai/dsh-brand@0.1.2-rc.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.1
-      '@deepseek-ai/dsh-credentials': 0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)
-      '@deepseek-ai/dsh-settings': 0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/schemastery@3.18.1)
+      '@deepseek-ai/dsh-credentials': 0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-brand@0.1.2-rc.1)
+      '@deepseek-ai/dsh-settings': 0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-brand@0.1.2-rc.1)(@deepseek-ai/schemastery@3.18.1)
       '@deepseek-ai/dsh-typert-protocol': 0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)
       '@deepseek-ai/schemastery': 3.18.1
       zod: 4.5.4
@@ -1721,10 +1795,12 @@ snapshots:
     dependencies:
       '@deepseek-ai/cordis': 4.0.1
 
-  dsh-pet@file:../../../plugins/dsh-pet/dsh-pet(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-credentials@0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)):
+  dsh-opencode-session@file:../../../plugins/dsh-opencode-session: {}
+
+  dsh-pet@file:../../../plugins/dsh-pet/dsh-pet(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-credentials@0.1.1-rc.2(@deepseek-ai/dsh-brand@0.1.2-rc.1)):
     dependencies:
       '@deepseek-ai/cordis': 4.0.1
-      '@deepseek-ai/dsh-credentials': 0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)
+      '@deepseek-ai/dsh-credentials': 0.1.1-rc.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-brand@0.1.2-rc.1)
       '@electron-internal/extract-zip': 1.0.5
       '@electron/get': 5.1.0
     transitivePeerDependencies:
@@ -1735,6 +1811,22 @@ snapshots:
       '@deepseek-ai/cordis': 4.0.1
       '@deepseek-ai/schemastery': 3.18.1
       undici: 7.29.0
+
+  dsh-session-link@0.1.4(patch_hash=c93de3226a9cf3d14b43a7aea3558675fd6ba18386bf43085d8d7a4aafb821f6)(@deepseek-ai/cordis@4.0.1):
+    dependencies:
+      '@deepseek-ai/cordis': 4.0.1
+      '@deepseek-ai/dsh-session-reference': 0.1.2-rc.1(@deepseek-ai/cordis@4.0.1)
+    transitivePeerDependencies:
+      - '@deepseek-ai/dsh-agent'
+      - '@deepseek-ai/dsh-compaction'
+      - '@deepseek-ai/dsh-llm'
+      - '@deepseek-ai/dsh-output-retention'
+      - '@deepseek-ai/dsh-session'
+      - '@deepseek-ai/dsh-session-projection'
+      - '@deepseek-ai/dsh-session-projection-cache'
+      - '@deepseek-ai/dsh-session-query'
+      - '@deepseek-ai/dsh-session-title'
+      - '@deepseek-ai/dsh-typert-protocol'
 
   dsh-workbuddy-connect@file:../../../plugins/dsh-workbuddy-connect(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/schemastery@3.18.1):
     dependencies:

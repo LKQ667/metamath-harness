@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { ManualVisionService, VisionService } from '../lib/index.js';
+import { ManualVisionService, VisionService, detectImageMime } from '../lib/index.js';
 
 const secret = 'dashscope-secret-fixture';
 const credentials = { resolve: async () => ({ value: secret, source: 'file' }) };
@@ -35,13 +35,30 @@ test('主模型失败后切换到指定回退模型', async () => {
 
 test('本地图片转 data URL 且限制在工作区', async () => {
   const workspace = await mkdtemp(join(tmpdir(), 'dsh-vision-'));
-  await writeFile(join(workspace, 'tiny.png'), Buffer.from([137, 80, 78, 71]));
+  await writeFile(join(workspace, 'tiny.png'), Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
   let body;
   const service = new VisionService({ credentials, fetchImpl: async (_url, init) => { body = JSON.parse(init.body); return ok(); } });
   const result = await service.analyze({ image: 'tiny.png', workspace });
   assert.equal(result.sourceType, 'local');
   assert.match(body.messages[0].content[0].image_url.url, /^data:image\/png;base64,/);
   await assert.rejects(() => service.analyze({ image: '..\\outside.png', workspace }), (error) => error.code === 'path_outside_workspace');
+});
+
+test('无扩展名内容寻址附件按文件签名识别，扩展名冲突与截断内容失败关闭', async () => {
+  const workspace = await mkdtemp(join(tmpdir(), 'dsh-vision-signature-'));
+  const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
+  await writeFile(join(workspace, 'sha256-object'), png);
+  await writeFile(join(workspace, 'wrong.jpg'), png);
+  await writeFile(join(workspace, 'truncated.png'), Buffer.from([0x89, 0x50, 0x4e]));
+  let body;
+  const service = new VisionService({ credentials, fetchImpl: async (_url, init) => { body = JSON.parse(init.body); return ok(); } });
+  await service.analyze({ image: 'sha256-object', workspace });
+  assert.match(body.messages[0].content[0].image_url.url, /^data:image\/png;base64,/);
+  await assert.rejects(() => service.analyze({ image: 'wrong.jpg', workspace }), (error) => error.code === 'image_type_mismatch');
+  await assert.rejects(() => service.analyze({ image: 'truncated.png', workspace }), (error) => error.code === 'unsupported_image');
+  assert.equal(detectImageMime(Buffer.from('GIF89a', 'ascii')), 'image/gif');
+  assert.equal(detectImageMime(Buffer.from([0xff, 0xd8, 0xff])), 'image/jpeg');
+  assert.equal(detectImageMime(Buffer.from('RIFF0000WEBP', 'ascii')), 'image/webp');
 });
 
 test('文件不存在、HTTP URL 和取消返回稳定错误码', async () => {
@@ -59,6 +76,17 @@ test('全部失败时错误详情脱敏', async () => {
   await assert.rejects(
     () => service.analyze({ image: 'https://example.com/a.png' }),
     (error) => error.code === 'all_models_failed' && !JSON.stringify(error.details).includes(secret),
+  );
+});
+
+test('全部 HTTP 失败时公开消息只包含逐模型 code/status，不包含秘密或上游正文', async () => {
+  const service = new VisionService({ credentials, fetchImpl: async () => ({ ok: false, status: 403, json: async () => ({ message: `leak ${secret}` }) }) });
+  await assert.rejects(
+    () => service.analyze({ image: 'https://example.com/a.png' }),
+    (error) => error.code === 'all_models_failed'
+      && error.message.includes('qwen3.7-plus: provider_http_error/HTTP 403')
+      && error.message.includes('qwen3.7-flash-2026-07-15: provider_http_error/HTTP 403')
+      && !error.message.includes(secret),
   );
 });
 

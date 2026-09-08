@@ -24,6 +24,16 @@ function inside(root, candidate) {
   return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel));
 }
 
+/** 用文件签名识别浏览器可显示的位图；内容寻址附件没有扩展名，不能只看路径。 */
+export function detectImageMime(bytes) {
+  if (!Buffer.isBuffer(bytes)) return undefined;
+  if (bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return 'image/png';
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
+  if (bytes.length >= 6 && ['GIF87a', 'GIF89a'].includes(bytes.subarray(0, 6).toString('ascii'))) return 'image/gif';
+  if (bytes.length >= 12 && bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WEBP') return 'image/webp';
+  return undefined;
+}
+
 async function imageSource(image, workspace) {
   if (typeof image !== 'string' || image.trim() === '') throw new VisionError('invalid_image', '图片路径或 URL 不能为空');
   if (/^https:\/\//i.test(image)) return image;
@@ -40,9 +50,15 @@ async function imageSource(image, workspace) {
   }
   if (!info.isFile()) throw new VisionError('not_a_file', '图片路径不是文件');
   if (info.size > MAX_IMAGE_BYTES) throw new VisionError('image_too_large', '本地图片超过 20 MB 上限');
-  const mime = MIME.get(extname(path).toLowerCase());
-  if (!mime) throw new VisionError('unsupported_image', '仅支持 PNG、JPEG、WebP 或 GIF');
-  return `data:${mime};base64,${(await readFile(path)).toString('base64')}`;
+  const bytes = await readFile(path);
+  const detectedMime = detectImageMime(bytes);
+  if (!detectedMime) throw new VisionError('unsupported_image', '文件内容不是受支持的 PNG、JPEG、WebP 或 GIF');
+  const extension = extname(path).toLowerCase();
+  const declaredMime = extension === '' ? undefined : MIME.get(extension);
+  if (extension !== '' && declaredMime !== detectedMime) {
+    throw new VisionError('image_type_mismatch', '图片扩展名与文件内容不一致');
+  }
+  return `data:${detectedMime};base64,${bytes.toString('base64')}`;
 }
 
 function browserDraftSource({ mediaType, data } = {}) {
@@ -111,10 +127,16 @@ export class VisionService {
       } catch (error) {
         if (signal?.aborted || error?.name === 'AbortError') throw new VisionError('cancelled', '视觉分析已取消');
         const sanitized = safeError(error, [credential.value]);
-        failures.push({ model, code: error?.code ?? 'provider_error', message: sanitized.message });
+        failures.push({
+          model,
+          code: error?.code ?? 'provider_error',
+          ...(Number.isInteger(error?.details?.status) ? { status: error.details.status } : {}),
+          message: sanitized.message,
+        });
       }
     }
-    throw new VisionError('all_models_failed', '主模型与回退模型均失败', { failures });
+    const summary = failures.map((failure) => `${failure.model}: ${failure.code}${failure.status === undefined ? '' : `/HTTP ${failure.status}`}`).join('；');
+    throw new VisionError('all_models_failed', `主模型与回退模型均失败（${summary}）`, { failures });
   }
 }
 

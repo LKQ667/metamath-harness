@@ -1,0 +1,11 @@
+{
+  "name": "dsh-opencode-session",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "files": ["lib", "cordis.patch.yml", "README.md"],
+  "scripts": {"build": "node scripts/build.mjs", "test": "node --test test/*.test.mjs"},
+  "peerDependencies": {"@deepseek-ai/dsh-llm-pi-ai": "0.1.2-rc.1"},
+  "dsh": {"bundle": {"patch": "cordis.patch.yml"}, "engines": {"dsh": "0.1.2-rc.1"}}
+}
