@@ -6,6 +6,11 @@
 
 ## 最近更新（2026-09-10）
 
+- **安装和更新现在会自动修复模型与插件目录**：首次安装或覆盖更新后，安装器会自动把 DeepSeek V4.1 Flash 加入 DeepSeek 官方和 OpenCode Go 两个模型入口，不再需要手工编辑配置或运行补丁；上游正式收录后会自动跳过临时适配。安装器同时会刷新 Profile 中的本地插件副本并核对哈希，避免 `pnpm` 显示“up to date”却继续加载旧插件。整个过程不会读取或上传 API Key，已有用户设置会保留。
+- **修复 Windows PowerShell 5.1 首次运行报错**：`install.ps1` 恢复 UTF-8 BOM，并加入发布前、归档后和 GitHub 回读三重字节检查，避免后续更新再次覆盖编码修复。
+
+## 最近更新（2026-09-10）
+
 - **DeepSeek V4.1 Flash 正式模型已适配**：DeepSeek 官方把正式 API 模型名统一为 `deepseek-flash`，它对应 DeepSeek V4.1 Flash；临时测试名 `deepseek-v4.1-flash-expires-on-0910` 已到期，不应继续使用。在「设置 → 模型 → DeepSeek → 自定义设置」中添加模型 ID `deepseek-flash`、显示名称“DeepSeek V4.1 Flash”，并保留图片输入能力即可使用。API Key 仍只保存在本机；下一个 DSH RC 原生收录后应删除手工目录并以官方配置为准。
 - **OpenCode Go 同步 DeepSeek V4.1 Flash**：OpenCode Go 官方页面、实时模型接口和 models.dev 三方均确认 `deepseek-flash` 对应 V4.1 Flash。仓库新增可重复运行的更新脚本：已安装用户运行 `python scripts/patch-opencode-go-v41.py`，重启 DSH 后即可在模型选择器的 `opencode-go` 分组中选择“DeepSeek V4.1 Flash”；需要已有 OpenCode Go 订阅和本机 API Key。脚本会先备份旧目录，只增加新模型，不删除旧模型、不读取或上传 Key；pi-ai/DSH 官方收录后不会重复修改。
 

@@ -1,4 +1,4 @@
-# MetaMath Harness 一键安装与启动
+﻿# MetaMath Harness 一键安装与启动
 # 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
 # 用法：
 #   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
@@ -59,16 +59,25 @@ if (-not $StartOnly) {
         Ok "官方本体安装完成 $(dsh --version)"
     }
 
+    # 临时模型目录适配：上游原生收录后脚本自动跳过；版本或语义漂移时失败关闭。
+    Step '同步 DeepSeek 官方与 OpenCode Go 模型目录'
+    $dshCommand = Get-Command dsh -ErrorAction Stop
+    $dshRoot = Join-Path (Split-Path $dshCommand.Source -Parent) 'node_modules\@deepseek-ai\dsh'
+    $dshHome = Join-Path $Repo '.dsh'
+    node (Join-Path $Repo 'scripts\ensure-v41-models.mjs') $dshRoot $dshHome
+    if ($LASTEXITCODE -ne 0) { Fail 'DeepSeek V4.1 Flash 模型目录适配失败。' }
+    Ok '两个官方渠道均已提供 DeepSeek V4.1 Flash，无需手工添加'
+
     # ---------- 4. 构建本地插件 ----------
     Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库 / Antigravity 桥接 / WorkBuddy / Trae / OpenCode 会话）'
     $localPlugins = @(
-        @{ Name = 'dsh-mathmodel';         Dir = 'dsh-mathmodel';         Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-api-key-pool';      Dir = 'dsh-api-key-pool';      Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-knowledge-sqlite';  Dir = 'dsh-knowledge-sqlite';  Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-agy-link';          Dir = 'dsh-agy-link';          Artifact = 'dist\index.js' },
-        @{ Name = 'dsh-workbuddy-connect'; Dir = 'dsh-workbuddy-connect'; Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-connect-trae';      Dir = 'dsh-connect-trae';      Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-opencode-session';  Dir = 'dsh-opencode-session';  Artifact = 'lib\index.js' }
+        @{ Name = 'dsh-mathmodel';         Package = '@deepseek-harness/dsh-mathmodel';     Dir = 'dsh-mathmodel';         Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-api-key-pool';      Package = '@deepseek-harness/dsh-api-key-pool';  Dir = 'dsh-api-key-pool';      Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-knowledge-sqlite';  Package = 'dsh-knowledge-sqlite';                Dir = 'dsh-knowledge-sqlite';  Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-agy-link';          Package = 'dsh-agy-link';                       Dir = 'dsh-agy-link';          Artifact = 'dist\index.js' },
+        @{ Name = 'dsh-workbuddy-connect'; Package = 'dsh-workbuddy-connect';              Dir = 'dsh-workbuddy-connect'; Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-connect-trae';      Package = 'dsh-connect-trae';                   Dir = 'dsh-connect-trae';      Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-opencode-session';  Package = 'dsh-opencode-session';               Dir = 'dsh-opencode-session';  Artifact = 'lib\index.js' }
     )
     foreach ($plugin in $localPlugins) {
         $pluginDir = Join-Path $Repo (Join-Path 'plugins' $plugin.Dir)
@@ -99,7 +108,20 @@ if (-not $StartOnly) {
     Step '安装 Web Profile 依赖（原生 3080 / 独立号池 3081）'
     $profileDirs = @('.dsh\profiles\web', '.dsh-key-pool\profiles\web-key-pool')
     foreach ($relativeProfile in $profileDirs) {
-        Push-Location (Join-Path $Repo $relativeProfile)
+        $profileDir = Join-Path $Repo $relativeProfile
+        $profilePackage = Get-Content (Join-Path $profileDir 'package.json') -Raw | ConvertFrom-Json
+        foreach ($dependency in $profilePackage.dependencies.psobject.Properties) {
+            if ($dependency.Value -notlike 'file:*') { continue }
+            $installed = Join-Path (Join-Path $profileDir 'node_modules') ($dependency.Name -replace '/', '\')
+            if (-not (Test-Path -LiteralPath $installed)) { continue }
+            $item = Get-Item -LiteralPath $installed -Force
+            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                Remove-Item -LiteralPath $installed -Force
+            } else {
+                Remove-Item -LiteralPath $installed -Recurse -Force
+            }
+        }
+        Push-Location $profileDir
         try {
             cmd /c "pnpm install --frozen-lockfile 2>&1" | Select-Object -Last 1 | Write-Host
             if ($LASTEXITCODE -ne 0) { cmd /c "pnpm install 2>&1" | Select-Object -Last 1 | Write-Host }
@@ -109,6 +131,23 @@ if (-not $StartOnly) {
         }
     }
     Ok '两个 Profile 依赖就绪'
+
+    # pnpm 的 file: 依赖可能复用旧复制品；安装后必须以实际构建入口哈希验收。
+    $webModules = Join-Path $Repo '.dsh\profiles\web\node_modules'
+    foreach ($plugin in $localPlugins) {
+        $sourceArtifact = Join-Path (Join-Path $Repo (Join-Path 'plugins' $plugin.Dir)) $plugin.Artifact
+        $installedArtifact = Join-Path (Join-Path $webModules ($plugin.Package -replace '/', '\')) $plugin.Artifact
+        if (-not (Test-Path -LiteralPath $installedArtifact)) { Fail "Profile 缺少插件副本：$($plugin.Name)" }
+        if ((Get-FileHash $sourceArtifact -Algorithm SHA256).Hash -ne (Get-FileHash $installedArtifact -Algorithm SHA256).Hash) {
+            Fail "Profile 插件副本未刷新：$($plugin.Name)"
+        }
+    }
+    $petSource = Join-Path $Repo 'plugins\dsh-pet\dsh-pet\lib\index.js'
+    $petInstalled = Join-Path $webModules 'dsh-pet\lib\index.js'
+    if ((Get-FileHash $petSource -Algorithm SHA256).Hash -ne (Get-FileHash $petInstalled -Algorithm SHA256).Hash) {
+        Fail 'Profile 插件副本未刷新：dsh-pet'
+    }
+    Ok '本地插件副本已刷新且哈希一致'
 
     # ---------- 6. 准备图片转可编辑 PPT 运行时 ----------
     Step '准备图片转可编辑 PPT 运行时（项目内隔离）'
