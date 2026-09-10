@@ -6,6 +6,11 @@
 
 ## 最近更新（2026-09-10）
 
+- **DeepSeek V4.1 Flash 正式模型已适配**：DeepSeek 官方把正式 API 模型名统一为 `deepseek-flash`，它对应 DeepSeek V4.1 Flash；临时测试名 `deepseek-v4.1-flash-expires-on-0910` 已到期，不应继续使用。在「设置 → 模型 → DeepSeek → 自定义设置」中添加模型 ID `deepseek-flash`、显示名称“DeepSeek V4.1 Flash”，并保留图片输入能力即可使用。API Key 仍只保存在本机；下一个 DSH RC 原生收录后应删除手工目录并以官方配置为准。
+- **OpenCode Go 同步 DeepSeek V4.1 Flash**：OpenCode Go 官方页面、实时模型接口和 models.dev 三方均确认 `deepseek-flash` 对应 V4.1 Flash。仓库新增可重复运行的更新脚本：已安装用户运行 `python scripts/patch-opencode-go-v41.py`，重启 DSH 后即可在模型选择器的 `opencode-go` 分组中选择“DeepSeek V4.1 Flash”；需要已有 OpenCode Go 订阅和本机 API Key。脚本会先备份旧目录，只增加新模型，不删除旧模型、不读取或上传 Key；pi-ai/DSH 官方收录后不会重复修改。
+
+## 最近更新（2026-09-10）
+
 - **新增「HTML 论文图」技能：技术路线图、流程图、架构图自动生成矢量 PDF**：在对话中说「画HTML图」「画技术路线图」即可触发。技能用 HTML+CSS 自动布局（路线图/流程图/架构图/流水线/框架矩阵五类模板），输出矢量单页 PDF，论文里 LaTeX `\includegraphics` 直接引用。相比手工拖拽画图，自动布局天然避免节点重叠、连线错位；支持数学公式渲染（内置 KaTeX 资产，MIT 许可证）；默认黑白学术配色，内置几何自检（文字裁切/越界/重叠检测）与视觉自检双重质检，赶时间时可说「快速模式」跳过视觉自检多轮修复。本技能为本地原创的 DSH 适配版。
 - **「单问深研求解」技能新增内置逻辑对抗复核**：针对竞赛单道小题的求解技能，现在会在首次真实计算完成后、交付推荐结论前，自动从题目原文重新审视六类语义错误：任务理解、方向与界、重复计量、外推、遗漏变量、跨问一致性——不再把「求解器跑通了」当作「答案正确」。复核证据与裁定写入 `COMP_REVIEW.md`；存在未解决致命错误的路线会明确标注「受阻」，不会伪装成已验证推荐。默认自动执行，无需任何配置。
 
