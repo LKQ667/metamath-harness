@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "backend": "host",
+  "pdf": "F:\\数学建模赛题\\26A\\论文\\main.pdf",
+  "log": "F:\\数学建模赛题\\26A\\论文\\main.log",
+  "aux": "F:\\数学建模赛题\\26A\\论文\\main.aux",
+  "attempts": [
+    {
+      "attempt": 1,
+      "returncode": 0,
+      "tail": "perl: warning: Setting locale failed.\nperl: warning: Please check that your locale settings:\n\tLC_ALL = \"C.UTF-8\",\n\tLC_CTYPE = \"C\",\n\tLC_NUMERIC = \"C\",\n\tLC_COLLATE = \"C\",\n\tLC_TIME = (unset),\n\tLC_MONETARY = (unset),\n\tLANG = \"C.UTF-8\"\n    are supported and installed on your system.\nperl: warning: Falling back to the system default locale (\"Chinese (Simplified)_China.936\").\nInitial Win CP for (console input, console output, system): (CP936, CP936, CP936)\nI changed them all to CP936\nRc files read:\n  NONE\nLatexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.\nLatexmk: Nothing to do for 'main.tex'.\nLatexmk: All targets (main.xdv main.pdf) are up-to-date\n\n"
+    }
+  ]
+}

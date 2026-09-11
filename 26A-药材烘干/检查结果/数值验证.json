@@ -1,0 +1,59 @@
+{
+  "网格收敛": [
+    {
+      "n_cells": 100,
+      "dt_s": 1.0,
+      "surface_temperature_C": 36.786257,
+      "center_temperature_C": 33.576539,
+      "surface_moisture": 1.51041,
+      "center_moisture": 2.549992
+    },
+    {
+      "n_cells": 200,
+      "dt_s": 1.0,
+      "surface_temperature_C": 36.786266,
+      "center_temperature_C": 33.576543,
+      "surface_moisture": 1.510358,
+      "center_moisture": 2.549992
+    },
+    {
+      "n_cells": 400,
+      "dt_s": 1.0,
+      "surface_temperature_C": 36.786268,
+      "center_temperature_C": 33.576544,
+      "surface_moisture": 1.510345,
+      "center_moisture": 2.549992
+    }
+  ],
+  "时间步收敛": [
+    {
+      "n_cells": 200,
+      "dt_s": 1.0,
+      "surface_temperature_C": 36.786266,
+      "center_temperature_C": 33.576543,
+      "surface_moisture": 1.510358,
+      "center_moisture": 2.549992
+    },
+    {
+      "n_cells": 200,
+      "dt_s": 0.5,
+      "surface_temperature_C": 36.785912,
+      "center_temperature_C": 33.575943,
+      "surface_moisture": 1.510305,
+      "center_moisture": 2.549992
+    }
+  ],
+  "质量守恒": {
+    "surface_flux_integral": 0.0001026,
+    "internal_loss": 0.00010466,
+    "relative_gap": 0.019731
+  },
+  "烘干时间时间步无关性": {
+    "dt_20_s": 57.1,
+    "dt_10_s": 57.1,
+    "dt_5_s": 57.0972
+  },
+  "收缩模型退化检验": {
+    "drying_time_h": 57.1
+  }
+}

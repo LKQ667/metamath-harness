@@ -1,0 +1,132 @@
+{
+  "gate_contract": {
+    "version": 3,
+    "runner_sha256": "55e9b62a877bbe9f52c2612a94071298982eeaf58f81d4ca16f8b3484acf2b87",
+    "registry_sha256": "88bffd6d648978e30b50c402c39baaff7f2eb7fc181666f0403c207035bb7496",
+    "launchers": {
+      "scripts/checks/run_stage_gate.py": "011bb86769684cc10619e423f77d959826a7fede6d962cf13675df954a6fcb89",
+      "scripts/checks/run_all_checks.py": "e54e07c04589813fb3a6f5b93dcd4f379bbbc2e155cbfed088604ae601afecd5",
+      "scripts/checks/verify_delivery.py": "838ba5ca97384fe45b97c6a6da0db5ef2182a03c2ff9a4eeea644549c70e6f1a"
+    },
+    "initialized_at": "2026-09-11T02:16:48.476077+00:00"
+  },
+  "status": "completed",
+  "workflow_version": 3,
+  "locked_config": {
+    "schema": "dsh.mathmodel.request/v1",
+    "skill": "math-paper-cn",
+    "objective": "完成中文数学建模论文并交付通过门禁的最终 PDF",
+    "problem_path": "赛题",
+    "output_dir": ".",
+    "body_pages": 25,
+    "competition_language": "中文",
+    "drawing_mode": "Draw.io成图+AI概念提示词",
+    "bar_policy": "少用",
+    "three_d_preference": "优先考虑",
+    "figure_total": 16,
+    "reference_excellent_papers": true,
+    "run_to_pdf": true,
+    "ai_image_limit": 0,
+    "confirm_paid_calls": false,
+    "userNotes": "国一",
+    "locked_at": "2026-09-11T02:22:00+00:00"
+  },
+  "competition": {
+    "name": "2026 年高教社杯全国大学生数学建模竞赛",
+    "problem": "A 题  药材的烘干问题",
+    "question_count": 4,
+    "language": "中文"
+  },
+  "competition_language": "中文",
+  "drawing_mode": "drawio",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "question_count": 4,
+  "data_mode": "data",
+  "bar_policy": "少用",
+  "body_pages": 25,
+  "body_pages_minimum": 16,
+  "figure_total": 16,
+  "three_d_preference": "优先考虑",
+  "run_to_pdf": true,
+  "ai_image_limit": 0,
+  "confirm_paid_calls": false,
+  "ai_drawing_allowed": false,
+  "ai_drawing_block_reason": "ai_image_limit=0 且 confirm_paid_calls=false，未同时满足供应商健康、数量上限与付费确认，按锁定模式退回 Draw.io 成图 + AI 概念提示词，不调用生图。",
+  "excellent_paper_reference": {
+    "enabled": true,
+    "competition": "国赛",
+    "problem": "A",
+    "status": "catalog_missing",
+    "reason": "本地共享目录中不存在往年优秀论文脚本与论文库，按技能规则记录“暂无匹配样本”并继续使用官方规则、当前模板和通用量表。",
+    "samples": []
+  },
+  "sensitivity_analysis_planned": true,
+  "stages": {
+    "step0": {
+      "status": "passed",
+      "input_fingerprint": "77a019730805bbb9f2def041b057c82243a330b01e0f22836bf23971cf74175a",
+      "report": "检查结果/step0/step0_gate.json",
+      "report_sha256": "cc3553b733f50a3b8f8d300f016a41e473a9ea6170cd37ea56dbe782095e1449",
+      "checked_at": "2026-09-11T03:05:31.419143+00:00",
+      "completed_at": "2026-09-11T03:05:31.419164+00:00",
+      "stale_at": "2026-09-11T03:05:26.836203+00:00"
+    },
+    "step1": {
+      "status": "passed",
+      "input_fingerprint": "f95c39c06285cae44f7474923b9e30ae77decc74ab459614ac284b8df5a0160f",
+      "report": "检查结果/step1/step1_gate.json",
+      "report_sha256": "eee961162ae9814b141bd4f04d358e30057c09b9e19f93af6caf20cf8459d4d3",
+      "checked_at": "2026-09-11T03:05:32.958619+00:00",
+      "completed_at": "2026-09-11T03:05:32.958635+00:00",
+      "stale_at": "2026-09-11T03:05:26.836228+00:00"
+    },
+    "step2": {
+      "status": "passed",
+      "input_fingerprint": "260c1e2829da70ada2af4ee4f7e014c5878475573a34116faeb23ee8a80f145c",
+      "report": "检查结果/step2/step2_gate.json",
+      "report_sha256": "7b6d1f9d5273df08343ae622b485f5d7144f3da40e8613ac656634d719530ed3",
+      "checked_at": "2026-09-11T03:05:34.357001+00:00",
+      "completed_at": "2026-09-11T03:05:34.357024+00:00",
+      "stale_at": "2026-09-11T03:05:26.836231+00:00"
+    },
+    "step3": {
+      "status": "passed",
+      "input_fingerprint": "909a91ba408d58bf5122e7bf97961fb26e0202b3efd7c84e41d62169ac57f90a",
+      "report": "检查结果/step3/step3_gate.json",
+      "report_sha256": "14fc1d057ba46c92128ee0b9518e20f2ec84cd817e8d6211bfe582ccef9ef76e",
+      "checked_at": "2026-09-11T03:05:39.637965+00:00",
+      "completed_at": "2026-09-11T03:05:39.637983+00:00"
+    },
+    "step4": {
+      "status": "passed",
+      "input_fingerprint": "f56ffa65a357cae14f3bcb04bfd5d858c272d0c31c0629acf3bee74f0f567b28",
+      "report": "检查结果/step4/step4_gate.json",
+      "report_sha256": "e1c191d6e78244664be322145b60d521bf2f09fd933d3223a5aa80e1fe3aa8e4",
+      "checked_at": "2026-09-11T03:28:12.103393+00:00",
+      "completed_at": "2026-09-11T03:28:12.103418+00:00",
+      "stale_at": "2026-09-11T03:27:33.180831+00:00"
+    },
+    "step5": {
+      "status": "passed",
+      "input_fingerprint": "d79d0963e4bf5262678b305082cc376d6916c24775245f7ff6c87340453568f5",
+      "report": "检查结果/check_report.json",
+      "report_sha256": "792c3df96f8e13b6e6a9c46345bb1b20977f8dc44d18090bd94918dd025c33e5",
+      "checked_at": "2026-09-11T03:29:24.940447+00:00",
+      "completed_at": "2026-09-11T03:29:24.940472+00:00"
+    }
+  },
+  "latex_backend": {
+    "source": "host",
+    "version": "XeTeX 3.141592653-2.6-0.999997 (TeX Live 2025)",
+    "managed": false,
+    "fonts": [
+      "SimSun",
+      "SimHei",
+      "Times New Roman",
+      "Cambria Math"
+    ],
+    "smoke_test": {}
+  },
+  "completed_at": "2026-09-11T03:29:24.941937+00:00"
+}

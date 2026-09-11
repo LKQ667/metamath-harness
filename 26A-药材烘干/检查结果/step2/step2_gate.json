@@ -1,0 +1,30 @@
+{
+  "stage": "step2",
+  "ok": true,
+  "checks": [
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    }
+  ]
+}

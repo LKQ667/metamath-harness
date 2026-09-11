@@ -1,0 +1,258 @@
+{
+  "tolerance": {
+    "abs": 1e-09,
+    "rel": 1e-09
+  },
+  "files": [
+    {
+      "source": "数据预处理/prepare_data.py",
+      "appendix": "论文/附录代码/prep.py",
+      "rename_map": {},
+      "keep_long_names": {}
+    },
+    {
+      "source": "scripts/ambient.py",
+      "appendix": "论文/附录代码/ambient.py",
+      "rename_map": {},
+      "keep_long_names": {}
+    },
+    {
+      "source": "scripts/drying_model.py",
+      "appendix": "论文/附录代码/model.py",
+      "rename_map": {},
+      "keep_long_names": {}
+    },
+    {
+      "source": "Q1/solve_q1.py",
+      "appendix": "论文/附录代码/q1.py",
+      "rename_map": {},
+      "keep_long_names": {}
+    },
+    {
+      "source": "Q2/solve_q2.py",
+      "appendix": "论文/附录代码/q2.py",
+      "rename_map": {},
+      "keep_long_names": {}
+    },
+    {
+      "source": "Q3/solve_q3.py",
+      "appendix": "论文/附录代码/q3.py",
+      "rename_map": {},
+      "keep_long_names": {}
+    },
+    {
+      "source": "Q4/solve_q4.py",
+      "appendix": "论文/附录代码/q4.py",
+      "rename_map": {},
+      "keep_long_names": {}
+    }
+  ],
+  "runs": [
+    {
+      "name": "数据预处理回归",
+      "command": [
+        "{python}",
+        "数据预处理/prepare_data.py"
+      ],
+      "files": [
+        "论文/附录代码/prep.py"
+      ],
+      "outputs": [
+        {
+          "path": "data/derived/eda_summary.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 300
+    },
+    {
+      "name": "问题一回归",
+      "command": [
+        "{python}",
+        "Q1/solve_q1.py"
+      ],
+      "files": [
+        "论文/附录代码/q1.py",
+        "论文/附录代码/model.py",
+        "论文/附录代码/ambient.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/q1_summary.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 600
+    },
+    {
+      "name": "问题二回归",
+      "command": [
+        "{python}",
+        "Q2/solve_q2.py"
+      ],
+      "files": [
+        "论文/附录代码/q2.py",
+        "论文/附录代码/model.py",
+        "论文/附录代码/ambient.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/q2_summary.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 900
+    },
+    {
+      "name": "问题三回归",
+      "command": [
+        "{python}",
+        "Q3/solve_q3.py"
+      ],
+      "files": [
+        "论文/附录代码/q3.py",
+        "论文/附录代码/model.py",
+        "论文/附录代码/ambient.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/q3_summary.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 900
+    },
+    {
+      "name": "问题四回归",
+      "command": [
+        "{python}",
+        "Q4/solve_q4.py"
+      ],
+      "files": [
+        "论文/附录代码/q4.py",
+        "论文/附录代码/model.py",
+        "论文/附录代码/ambient.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/q4_summary.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 900
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "tolerance": {
+      "abs": 1e-09,
+      "rel": 1e-09
+    },
+    "files": [
+      {
+        "source": "数据预处理/prepare_data.py",
+        "appendix": "论文/附录代码/prep.py",
+        "source_sha256": "2b62b8dd3c72818dae9f9b222e9490cd9298f9577822d2c9384891f86fe902e1",
+        "appendix_sha256": "cab1e531c61ac8e6519a07c68476ceb43192cf3cfb3a6a3fc957052b9d416dd9"
+      },
+      {
+        "source": "scripts/ambient.py",
+        "appendix": "论文/附录代码/ambient.py",
+        "source_sha256": "ab1eae4fdbe27dcd72b01a6e24a8d2a7f7afc564b2e264e2b0612f434f4961a9",
+        "appendix_sha256": "7a5a22e9deddd87e5976195992de8ef3c95122b1b66a062b4d2ad75e0a92a73a"
+      },
+      {
+        "source": "scripts/drying_model.py",
+        "appendix": "论文/附录代码/model.py",
+        "source_sha256": "7d3cd5b0c20323877f33243696735091487d73aaa0c4e175821d2d3ccf0a0136",
+        "appendix_sha256": "ad0c7b2389611b97ee028bf68357079db69788c121d3a816bc38967b3f2918b7"
+      },
+      {
+        "source": "Q1/solve_q1.py",
+        "appendix": "论文/附录代码/q1.py",
+        "source_sha256": "c28ce3c04de93ffe81b5e2dbfcd7f00a9a5f6abb005e333266088056ce12d1c0",
+        "appendix_sha256": "c5e798a2aecee73bb7905aa4e1193872faf2fbef63d387dea5cc08ec5ccb33f4"
+      },
+      {
+        "source": "Q2/solve_q2.py",
+        "appendix": "论文/附录代码/q2.py",
+        "source_sha256": "4b0040b9ea6355388d0fa36a9b04f062cc7ceb933e31b446dfe9cfe7809a4024",
+        "appendix_sha256": "347b5e0d1999caab8bbb556143237c49e227455472854469f0e10d9d7dfea7b2"
+      },
+      {
+        "source": "Q3/solve_q3.py",
+        "appendix": "论文/附录代码/q3.py",
+        "source_sha256": "818cd725f9988cf7db6bc77aa99362d7c6aadd71d449c2de1762108167710eff",
+        "appendix_sha256": "8316c8bb4815fb0822f28363a8eebbbf31d59c717b974ec5dc85f2e5c0e77225"
+      },
+      {
+        "source": "Q4/solve_q4.py",
+        "appendix": "论文/附录代码/q4.py",
+        "source_sha256": "e5b069c864836d8d2087f88f1fdce8da9f0eaaa5ec985c8171957bd1442f4754",
+        "appendix_sha256": "2c6f033f84bc4dc1a422abe647bbf0634a7b00a884115ba302153b5b64b32c65"
+      }
+    ],
+    "runs": [
+      {
+        "name": "数据预处理回归",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "data/derived/eda_summary.json",
+            "type": "json",
+            "original_sha256": "47a7eccce69cb9aee6df7f07c2d4b668d5381b33a1937bc229a9791f8ccd93e3",
+            "sanitized_sha256": "47a7eccce69cb9aee6df7f07c2d4b668d5381b33a1937bc229a9791f8ccd93e3"
+          }
+        ]
+      },
+      {
+        "name": "问题一回归",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/q1_summary.json",
+            "type": "json",
+            "original_sha256": "b89f4e22c7766b7cf62bf5b5d5eb79e31062e9c52fb051a6d5b77412b1ceec5f",
+            "sanitized_sha256": "b89f4e22c7766b7cf62bf5b5d5eb79e31062e9c52fb051a6d5b77412b1ceec5f"
+          }
+        ]
+      },
+      {
+        "name": "问题二回归",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/q2_summary.json",
+            "type": "json",
+            "original_sha256": "d162fa371360617bcc600a2f2dd1b9b6b94b1a2c51b31cc5365e051744d9e74b",
+            "sanitized_sha256": "d162fa371360617bcc600a2f2dd1b9b6b94b1a2c51b31cc5365e051744d9e74b"
+          }
+        ]
+      },
+      {
+        "name": "问题三回归",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/q3_summary.json",
+            "type": "json",
+            "original_sha256": "9e19b5c9bebfec50bf0197cfcb58c29664342cfef47ed764521fec79259155b1",
+            "sanitized_sha256": "9e19b5c9bebfec50bf0197cfcb58c29664342cfef47ed764521fec79259155b1"
+          }
+        ]
+      },
+      {
+        "name": "问题四回归",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/q4_summary.json",
+            "type": "json",
+            "original_sha256": "a1615ff1cc24118bc92ce42d7c7cf125a099717847f04d54aa8e8467c1b6df16",
+            "sanitized_sha256": "a1615ff1cc24118bc92ce42d7c7cf125a099717847f04d54aa8e8467c1b6df16"
+          }
+        ]
+      }
+    ]
+  }
+}

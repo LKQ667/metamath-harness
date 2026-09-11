@@ -1,0 +1,19 @@
+{
+  "executable": "D:\\draw.io\\draw.io.exe",
+  "executable_sha256": "0947b608407e09320d3de2521fe917c3cebdb5a2b10412a65fc0327fa201f780",
+  "version": "30.0.1",
+  "version_ok": true,
+  "source_ok": true,
+  "cn_text_ok": true,
+  "exports": {
+    "png": true,
+    "svg": true,
+    "pdf": true
+  },
+  "sandbox_args": [
+    "--no-sandbox",
+    "--disable-gpu"
+  ],
+  "node_options_cleared": true,
+  "ok": true
+}

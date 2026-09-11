@@ -1,0 +1,280 @@
+{
+  "stage": "step5",
+  "ok": true,
+  "checks": [
+    {
+      "check": "compile_paper",
+      "ok": true,
+      "errors": [],
+      "details": {
+        "ok": true,
+        "backend": "host",
+        "pdf": "F:\\数学建模赛题\\26A\\论文\\main.pdf",
+        "log": "F:\\数学建模赛题\\26A\\论文\\main.log",
+        "aux": "F:\\数学建模赛题\\26A\\论文\\main.aux",
+        "attempts": [
+          {
+            "attempt": 1,
+            "returncode": 0,
+            "tail": "perl: warning: Setting locale failed.\nperl: warning: Please check that your locale settings:\n\tLC_ALL = \"C.UTF-8\",\n\tLC_CTYPE = \"C\",\n\tLC_NUMERIC = \"C\",\n\tLC_COLLATE = \"C\",\n\tLC_TIME = (unset),\n\tLC_MONETARY = (unset),\n\tLANG = \"C.UTF-8\"\n    are supported and installed on your system.\nperl: warning: Falling back to the system default locale (\"Chinese (Simplified)_China.936\").\nInitial Win CP for (console input, console output, system): (CP936, CP936, CP936)\nI changed them all to CP936\nRc files read:\n  NONE\nLatexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.\nLatexmk: Nothing to do for 'main.tex'.\nLatexmk: All targets (main.xdv main.pdf) are up-to-date\n\n"
+          }
+        ]
+      }
+    },
+    {
+      "check": "check_latex_environment",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "source": "host",
+        "version": "XeTeX 3.141592653-2.6-0.999997 (TeX Live 2025)",
+        "managed": false,
+        "fonts": [
+          "SimSun",
+          "SimHei",
+          "Times New Roman",
+          "Cambria Math"
+        ],
+        "available": true,
+        "deferred_install": false,
+        "install_stage": null
+      }
+    },
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_ranges",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_code_distribution",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figures_manifest",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_quality",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_bar_chart_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "少用",
+        "bar_calls": []
+      }
+    },
+    {
+      "check": "check_flowchart_required",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_question_assets",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_consistency",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_abstract_no_formula",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_abstract_one_page",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "effective_chars": 900,
+        "minimum_chars": 800,
+        "target_chars": [
+          850,
+          1050
+        ],
+        "end_page": "1"
+      }
+    },
+    {
+      "check": "check_paper_emphasis",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_latex_log",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_drawing_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_in_paper",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_ai_prompt_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_template_adherence",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_section_whitelist",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_model_building_rigor",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_layout_whitespace",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_internal_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_body_forbidden_symbols",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_prose_style",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_bibliography_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_support_material_catalog",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_appendix_code_cleanliness",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_appendix_code_equivalence",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_body_page_count_minimum",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_three_round_self_review",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_3d_recommendation",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_readme_agent_status",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_deliverable_scorecard",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    }
+  ]
+}

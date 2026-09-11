@@ -1,0 +1,10 @@
+{
+  "check": "check_python_bar_chart_policy",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "policy": "少用",
+    "bar_calls": []
+  }
+}

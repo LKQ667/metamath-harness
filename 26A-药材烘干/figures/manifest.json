@@ -1,0 +1,459 @@
+{
+  "drawing_mode": "drawio",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "bar_policy": "少用",
+  "competition_language": "中文",
+  "figure_total": 16,
+  "figure_target_note": "全文最终入文图片总数为 16 张：数据预处理 1 张、技术路线图 1 张、问题一 4 张、问题二 3 张、问题三 3 张、问题四 2 张、灵敏度分析 2 张。",
+  "python_qa_defaults": {
+    "profile": "competition_cn",
+    "cn_text_ok": true,
+    "export_ok": true,
+    "editable_text_ok": true,
+    "research_preflight_ok": false
+  },
+  "updated_at": "2026-09-11T03:05:00+00:00",
+  "items": [
+    {
+      "id": "fig01",
+      "figure_no": 1,
+      "title": "烘房边界工况演化",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "source": "数据预处理/plot_eda.py",
+      "exports": [
+        "数据预处理/figures/fig_eda_ambient.svg",
+        "数据预处理/figures/fig_eda_ambient.pdf",
+        "数据预处理/figures/fig_eda_ambient.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 数据预处理",
+      "usage": "说明预热平衡阶段烘房温度与水分浓度同步上升，支撑边界工况取值的合理性",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig02",
+      "figure_no": 2,
+      "title": "论文技术路线图",
+      "generator": "drawio",
+      "template_id": "steps-stacked-banner",
+      "chart_family": "flowchart",
+      "source": "手绘图/技术路线图.drawio",
+      "exports": [
+        "手绘图/技术路线图.png",
+        "手绘图/技术路线图.svg",
+        "手绘图/技术路线图.pdf"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "cli_exported",
+      "export_scale": 2,
+      "needs_visual_review": false,
+      "paper_section": "二、问题分析",
+      "usage": "给出从数据准备到结果校核的四步技术路线，说明全文求解链条",
+      "qa": {
+        "static_check_ok": true,
+        "cli_export_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "edge_routing_ok": true,
+        "node_overlap_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig03",
+      "figure_no": 3,
+      "title": "预热平衡阶段温度场演化",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "source": "Q1/plot_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_temperature_field.svg",
+        "Q1/figures/fig_q1_temperature_field.pdf",
+        "Q1/figures/fig_q1_temperature_field.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题一",
+      "usage": "说明热量由表面向中心逐层传入，温度场响应远快于含水率场",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig04",
+      "figure_no": 4,
+      "title": "预热平衡阶段含水率场演化",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "source": "Q1/plot_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_moisture_field.svg",
+        "Q1/figures/fig_q1_moisture_field.pdf",
+        "Q1/figures/fig_q1_moisture_field.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题一",
+      "usage": "说明 1800 s 内干燥扰动仅推进到距中心 1.34 cm 的表层",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig05",
+      "figure_no": 5,
+      "title": "特征剖面与特征点温度",
+      "generator": "python",
+      "template_id": "multi_panel_hero_support_template",
+      "chart_family": "hero_support",
+      "source": "Q1/plot_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_profiles.svg",
+        "Q1/figures/fig_q1_profiles.pdf",
+        "Q1/figures/fig_q1_profiles.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题一",
+      "usage": "支撑表 1 与表 2 的逐时刻数值，并对比温度与含水率的响应速度",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig06",
+      "figure_no": 6,
+      "title": "温度对时间与半径的响应面",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "surface3d",
+      "source": "Q1/plot_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_surface3d.svg",
+        "Q1/figures/fig_q1_surface3d.pdf",
+        "Q1/figures/fig_q1_surface3d.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题一",
+      "usage": "以三维响应面展示温度对时间与半径的耦合依赖",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig07",
+      "figure_no": 7,
+      "title": "恒温干燥阶段温度场演化",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "source": "Q2/plot_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_temperature_field.svg",
+        "Q2/figures/fig_q2_temperature_field.pdf",
+        "Q2/figures/fig_q2_temperature_field.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题二",
+      "usage": "说明整个烘干过程中温度在 2 h 内趋于均匀",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig08",
+      "figure_no": 8,
+      "title": "恒温干燥阶段含水率场演化",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "source": "Q2/plot_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_moisture_field.svg",
+        "Q2/figures/fig_q2_moisture_field.pdf",
+        "Q2/figures/fig_q2_moisture_field.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题二",
+      "usage": "说明干燥前沿在 3 h 内推进到距中心 1.1 cm",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig09",
+      "figure_no": 9,
+      "title": "物性与扩散系数随含水率变化",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "source": "Q2/plot_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_properties.svg",
+        "Q2/figures/fig_q2_properties.pdf",
+        "Q2/figures/fig_q2_properties.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题二",
+      "usage": "解释干燥速率随时间衰减的物性机理",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig10",
+      "figure_no": 10,
+      "title": "含水率衰减曲线与烘干判据",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "source": "Q3/plot_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_drying_curve.svg",
+        "Q3/figures/fig_q3_drying_curve.pdf",
+        "Q3/figures/fig_q3_drying_curve.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题三",
+      "usage": "给出烘干结束时间 57.1 h，并区分快速失水段与扩散控制段",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig11",
+      "figure_no": 11,
+      "title": "含水率剖面演化",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "source": "Q3/plot_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_profile_evolution.svg",
+        "Q3/figures/fig_q3_profile_evolution.pdf",
+        "Q3/figures/fig_q3_profile_evolution.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题三",
+      "usage": "说明剖面由外向内整体下移直至全断面达标",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig12",
+      "figure_no": 12,
+      "title": "含水率在时间与半径上的衰减曲面",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "surface3d",
+      "source": "Q3/plot_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_surface3d.svg",
+        "Q3/figures/fig_q3_surface3d.pdf",
+        "Q3/figures/fig_q3_surface3d.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题三",
+      "usage": "同时展示时间、半径与含水率的三维关系",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig13",
+      "figure_no": 13,
+      "title": "收缩半径与含水率耦合",
+      "generator": "python",
+      "template_id": "multi_panel_hero_support_template",
+      "chart_family": "hero_support",
+      "source": "Q4/plot_q4.py",
+      "exports": [
+        "Q4/figures/fig_q4_shrinkage.svg",
+        "Q4/figures/fig_q4_shrinkage.pdf",
+        "Q4/figures/fig_q4_shrinkage.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题四",
+      "usage": "说明收缩与干燥同步发生，收缩使内外含水率差显著收窄",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig14",
+      "figure_no": 14,
+      "title": "固定域与收缩域烘干时长对比",
+      "generator": "python",
+      "template_id": "stats_interval_lollipop_template",
+      "chart_family": "interval_lollipop",
+      "source": "Q4/plot_q4.py",
+      "exports": [
+        "Q4/figures/fig_q4_compare.svg",
+        "Q4/figures/fig_q4_compare.pdf",
+        "Q4/figures/fig_q4_compare.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "五、模型建立与求解 问题四",
+      "usage": "量化收缩对烘干时间的影响：57.1 h 缩短到 50.8 h",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig15",
+      "figure_no": 15,
+      "title": "参数扰动下的烘干时间变化",
+      "generator": "python",
+      "template_id": "sensitivity_tornado_template",
+      "chart_family": "tornado",
+      "source": "灵敏度分析/plot_sensitivity.py",
+      "exports": [
+        "灵敏度分析/figures/fig_sensitivity_tornado.svg",
+        "灵敏度分析/figures/fig_sensitivity_tornado.pdf",
+        "灵敏度分析/figures/fig_sensitivity_tornado.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "六、敏感度分析",
+      "usage": "给出扩散系数、烘房温度、传质系数、初始含水率与换热系数的影响排序",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    },
+    {
+      "id": "fig16",
+      "figure_no": 16,
+      "title": "烘干时间对扩散与传质系数的二维响应",
+      "generator": "python",
+      "template_id": "sensitivity_sobol_heatmap_template",
+      "chart_family": "heatmap",
+      "source": "灵敏度分析/plot_sensitivity.py",
+      "exports": [
+        "灵敏度分析/figures/fig_sensitivity_heatmap.svg",
+        "灵敏度分析/figures/fig_sensitivity_heatmap.pdf",
+        "灵敏度分析/figures/fig_sensitivity_heatmap.png"
+      ],
+      "prompt_source": "",
+      "paper_ready": true,
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_section": "六、敏感度分析",
+      "usage": "给出扩散系数与传质系数联合变化时烘干时间的等值线响应",
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "research_preflight_ok": false
+      }
+    }
+  ]
+}

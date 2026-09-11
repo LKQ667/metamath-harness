@@ -1,0 +1,84 @@
+{
+  "stage": "step3",
+  "ok": true,
+  "checks": [
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_ranges",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_code_distribution",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figures_manifest",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_quality",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_bar_chart_policy",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_flowchart_required",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_question_assets",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    }
+  ]
+}

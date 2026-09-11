@@ -1,0 +1,15 @@
+{
+  "check": "check_abstract_one_page",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "effective_chars": 900,
+    "minimum_chars": 800,
+    "target_chars": [
+      850,
+      1050
+    ],
+    "end_page": "1"
+  }
+}

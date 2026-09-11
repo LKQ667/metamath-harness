@@ -1,0 +1,6 @@
+{
+  "check": "check_appendix_code_cleanliness",
+  "ok": true,
+  "errors": [],
+  "issues": []
+}
