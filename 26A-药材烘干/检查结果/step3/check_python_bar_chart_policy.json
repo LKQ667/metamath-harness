@@ -1,6 +1,0 @@
-{
-  "check": "check_python_bar_chart_policy",
-  "ok": true,
-  "errors": [],
-  "issues": []
-}
