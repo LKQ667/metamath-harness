@@ -1,0 +1,66 @@
+{
+  "case1": {
+    "objective": 11606616.26,
+    "status": "Optimal",
+    "profit_by_year": {
+      "2024": 1795230.89,
+      "2025": 1495230.89,
+      "2026": 1615230.89,
+      "2027": 1795230.89,
+      "2028": 1465230.89,
+      "2029": 1645230.89,
+      "2030": 1795230.89
+    },
+    "revenue_yuan": 27223587.95,
+    "margin_yuan": 0.0,
+    "cost_yuan": 2230996.1,
+    "profit_value_yuan": 24992591.85,
+    "produce_jin": 3027525.0,
+    "sales_jin": 3027525.0,
+    "surplus_jin": 0.0,
+    "full_price_value_yuan": 27223573.82,
+    "plant_area": 3255.26,
+    "crop_count": 27,
+    "audit": {
+      "repeat_count": 0,
+      "bean_window_fail": 0,
+      "over_capacity": 0,
+      "undersize_count": 0
+    },
+    "label": "情形一_超产滞销",
+    "discount": 0.0,
+    "loss_yuan": 0.0
+  },
+  "case2": {
+    "objective": 11606616.26,
+    "status": "Optimal",
+    "profit_by_year": {
+      "2024": 1795230.89,
+      "2025": 1495230.89,
+      "2026": 1615230.89,
+      "2027": 1795230.89,
+      "2028": 1495230.89,
+      "2029": 1615230.89,
+      "2030": 1795230.89
+    },
+    "revenue_yuan": 27223587.95,
+    "margin_yuan": 0.0,
+    "cost_yuan": 2230996.21,
+    "profit_value_yuan": 24992591.74,
+    "produce_jin": 3027525.0,
+    "sales_jin": 3027525.0,
+    "surplus_jin": 0.0,
+    "full_price_value_yuan": 27223573.82,
+    "plant_area": 3255.26,
+    "crop_count": 27,
+    "audit": {
+      "repeat_count": 0,
+      "bean_window_fail": 0,
+      "over_capacity": 0,
+      "undersize_count": 0
+    },
+    "label": "情形二_超产降价百分之五十",
+    "discount": 0.5,
+    "loss_yuan": 0.0
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "stage": "step3",
+  "generated_at": "2026-09-17T12:26:15.054494+00:00",
+  "failed_check_count": 1,
+  "total_failure_count": 1,
+  "failed_checks": [
+    {
+      "check": "check_roadmap_quality_notes",
+      "errors": [
+        "技术路线图 generator 必须与 Draw.io/AI 锁定模式一致。"
+      ],
+      "issues": [
+        {
+          "error_code": "CHECK_ROADMAP_QUALITY_NOTES_001",
+          "message": "技术路线图 generator 必须与 Draw.io/AI 锁定模式一致。",
+          "repair_hint": "根据错误定位对应产物，做最小修复后重跑当前阶段门禁。"
+        }
+      ]
+    }
+  ]
+}

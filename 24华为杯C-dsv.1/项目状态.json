@@ -1,0 +1,211 @@
+{
+  "gate_contract": {
+    "version": 3,
+    "runner_sha256": "d9c01b50b63eeafed93c99fcf89dd863700132b86a2d6284371f4ed0238b7b04",
+    "registry_sha256": "d52d2fa15d949d95681b1b4ac9928888b64a590abff06db475330be163e4823b",
+    "launchers": {
+      "scripts/checks/run_stage_gate.py": "cc2bbc20a6fe8a27f7bc7462703e826edb68b6692db971ae552d985e3e4c26d8",
+      "scripts/checks/run_all_checks.py": "35f9504e01acf5d4aa00ba178aff40fbcbaaab322339b8d3a97ce8378bfee0bc",
+      "scripts/checks/verify_delivery.py": "7905b8d64ef1c75bdb1840c0d0a8ef9324119666c5f452af8679c45104e1e881"
+    },
+    "initialized_at": "2026-09-17T05:30:06.329948+00:00"
+  },
+  "status": "in_progress",
+  "workflow_version": 3,
+  "project": "24华为杯C-dsv.1",
+  "competition": "2024 年全国大学生数学建模竞赛 C 题",
+  "paper_standard": "华为杯（中国研究生数学建模竞赛）论文规范 + 内置 GMCMthesis 模板",
+  "paper_standard_note": "赛题来自国赛 C 题，论文按卡片锁定要求采用华为杯 GMCMthesis 模板与官方结构；若与国赛格式规范冲突，以任务卡片的华为杯口径执行并在三轮自查中记录差异。",
+  "problem_title": "农作物的种植策略",
+  "question_count": 3,
+  "data_mode": "data",
+  "drawing_mode": "html",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "drawing_mode_note": "卡片锁定 HTML矢量成图；Electron 可用且 3 张流程类图已用内置 HTML 引擎出矢量 PDF。因 check_roadmap_quality_notes 在 html 模式下不可满足（详见 检查结果/交付就绪报告.md），未在未获授权情况下切换绘图模式。",
+  "competition_language": "中文",
+  "body_pages": 26,
+  "figure_total": 16,
+  "bar_policy": "禁用",
+  "three_d_preference": "优先考虑",
+  "reference_excellent_papers": true,
+  "run_to_pdf": true,
+  "ai_image_limit": 0,
+  "confirm_paid_calls": false,
+  "figure_plan": [
+    {
+      "id": "fig01",
+      "name": "fig01_土地与作物结构",
+      "chapter": "一、问题重述",
+      "duty": "54 个地块类型面积构成与 41 种作物可种空间分层"
+    },
+    {
+      "id": "fig02",
+      "name": "fig02_调研数据分布",
+      "chapter": "一、问题重述",
+      "duty": "亩产量-成本-价格三元分布与作物类型分族"
+    },
+    {
+      "id": "fig03",
+      "name": "fig03_问题分析流程图",
+      "chapter": "一、问题重述",
+      "duty": "三问任务、耦合与约束识别流程图（HTML 矢量）"
+    },
+    {
+      "id": "fig04",
+      "name": "fig04_技术路线图",
+      "chapter": "二、模型假设与符号说明",
+      "duty": "建模-求解-验证总体技术路线（HTML 矢量）"
+    },
+    {
+      "id": "fig05",
+      "name": "fig05_模型框架与符号流",
+      "chapter": "二、模型假设与符号说明",
+      "duty": "集合、变量、目标与约束的符号流框架（HTML 矢量）"
+    },
+    {
+      "id": "fig06",
+      "name": "fig06_问题一_利润构成",
+      "chapter": "问题一",
+      "duty": "两情形的收入结构分解与七年利润演化"
+    },
+    {
+      "id": "fig07",
+      "name": "fig07_问题一_方案对比",
+      "chapter": "问题一",
+      "duty": "两情形逐年利润与滞销/降价损失对比"
+    },
+    {
+      "id": "fig08",
+      "name": "fig08_问题一_种植时空图",
+      "chapter": "问题一",
+      "duty": "地块×年三维种植强度与作物份额"
+    },
+    {
+      "id": "fig09",
+      "name": "fig09_问题二_情景树",
+      "chapter": "问题二",
+      "duty": "情景抽样与参数漂移幅度"
+    },
+    {
+      "id": "fig10",
+      "name": "fig10_问题二_风险收益前沿",
+      "chapter": "问题二",
+      "duty": "均值-CVaR 有效前沿与关键拐点"
+    },
+    {
+      "id": "fig11",
+      "name": "fig11_问题二_产量响应面",
+      "chapter": "问题二",
+      "duty": "产量扰动与价格扰动对总利润的响应面"
+    },
+    {
+      "id": "fig12",
+      "name": "fig12_问题三_相关性结构",
+      "chapter": "问题三",
+      "duty": "价格-需求量互相关热图与相关网络"
+    },
+    {
+      "id": "fig13",
+      "name": "fig13_问题三_协同矩阵",
+      "chapter": "问题三",
+      "duty": "内生产量-价格-利润三元协同关系"
+    },
+    {
+      "id": "fig14",
+      "name": "fig14_问题三_三问对比",
+      "chapter": "问题三",
+      "duty": "三问方案收益、稳定性与结构差异对比"
+    },
+    {
+      "id": "fig15",
+      "name": "fig15_灵敏度分析",
+      "chapter": "问题三",
+      "duty": "关键参数扰动对利润与方案结构的一维灵敏度"
+    },
+    {
+      "id": "fig16",
+      "name": "fig16_约束合规与鲁棒区间",
+      "chapter": "问题三",
+      "duty": "重茬、豆类轮作与最小地块规模合规及鲁棒区间"
+    }
+  ],
+  "notes": [
+    "赛题为 2024 年国赛 C 题，卡片要求按华为杯规范排版：以内置 GMCMthesis 模板为唯一模板来源。",
+    "禁止编造数据、结果、文献；全部数值来自 results/final_results.json 唯一结果源。"
+  ],
+  "stages": {
+    "step0": {
+      "status": "passed",
+      "input_fingerprint": "fc97cf8fb2d4e562e981f728a97bb98a72bb47a5de2e924d778cfac80fec1f85",
+      "report": "检查结果/step0/step0_gate.json",
+      "report_sha256": "cc3553b733f50a3b8f8d300f016a41e473a9ea6170cd37ea56dbe782095e1449",
+      "checked_at": "2026-09-17T12:26:12.662613+00:00",
+      "completed_at": "2026-09-17T12:26:12.662613+00:00",
+      "stale_at": "2026-09-17T12:26:10.621462+00:00"
+    },
+    "step1": {
+      "status": "passed",
+      "input_fingerprint": "0163e531dd56cd8e93126c7aebddd39f26f8d8a9ca244d2704d00000be7aca85",
+      "report": "检查结果/step1/step1_gate.json",
+      "report_sha256": "eee961162ae9814b141bd4f04d358e30057c09b9e19f93af6caf20cf8459d4d3",
+      "checked_at": "2026-09-17T12:26:13.158676+00:00",
+      "completed_at": "2026-09-17T12:26:13.158676+00:00",
+      "stale_at": "2026-09-17T12:26:10.621462+00:00"
+    },
+    "step2": {
+      "status": "passed",
+      "input_fingerprint": "416cc8aeac4249101b8ad64fbc9e9f00933f924ecdd267fc2a8938765fbbca29",
+      "report": "检查结果/step2/step2_gate.json",
+      "report_sha256": "7b6d1f9d5273df08343ae622b485f5d7144f3da40e8613ac656634d719530ed3",
+      "checked_at": "2026-09-17T12:26:13.668848+00:00",
+      "completed_at": "2026-09-17T12:26:13.668848+00:00",
+      "stale_at": "2026-09-17T12:26:10.621462+00:00"
+    },
+    "step3": {
+      "status": "failed",
+      "input_fingerprint": "b6dd44efd3d1802b3de3d2e31d385a295881252523e4fe0eb26dd5dd070f36e6",
+      "report": "检查结果/step3/step3_gate.json",
+      "report_sha256": "9f9ba84c8c7ee1f7334a5ddbdb71be90ac21b001b26dd0d07c10ad665b3964b3",
+      "checked_at": "2026-09-17T12:26:15.090770+00:00"
+    },
+    "step4": {},
+    "step5": {}
+  },
+  "latex_backend": {
+    "source": "host",
+    "version": "XeTeX 3.141592653-2.6-0.999997 (TeX Live 2025)",
+    "managed": false,
+    "fonts": [
+      "SimSun",
+      "SimHei",
+      "Times New Roman",
+      "Cambria Math"
+    ],
+    "smoke_test": {}
+  },
+  "blockers": [
+    {
+      "check": "check_roadmap_quality_notes",
+      "stage": "step3",
+      "status": "needs_user_authority",
+      "reason": "该检查要求任何含技术路线/路线图/roadmap/问题分析流程字样的 manifest 条目 generator 属于 drawio/AI；而 HTML 模式的 check_drawing_contract 要求同类条目 generator=html，check_roadmap_in_paper 又要求该条目必须存在，三者在锁定 html 模式下互斥。",
+      "evidence": "检查结果/step3/failures_summary.json、检查结果/交付就绪报告.md",
+      "options": [
+        "授权在检查接受集合中加入 html",
+        "授权切换 drawing_mode=drawio",
+        "授权记为环境缺陷例外"
+      ]
+    }
+  ],
+  "delivery_readiness": {
+    "pdf": "论文/main.pdf",
+    "body_pages": 27,
+    "appendix_start_page": 28,
+    "figure_total_actual": 16,
+    "checks_passed_except": [
+      "check_roadmap_quality_notes"
+    ],
+    "report": "检查结果/交付就绪报告.md"
+  }
+}

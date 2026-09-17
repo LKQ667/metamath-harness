@@ -1,0 +1,6 @@
+{
+  "check": "check_code_distribution",
+  "ok": true,
+  "errors": [],
+  "issues": []
+}

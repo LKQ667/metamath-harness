@@ -1,0 +1,10 @@
+{
+  "case1": {
+    "wall_time": 55.28,
+    "runtime": 54.42
+  },
+  "case2": {
+    "wall_time": 71.15,
+    "runtime": 70.27
+  }
+}

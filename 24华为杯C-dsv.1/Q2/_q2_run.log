@@ -1,0 +1,12 @@
+{"scenario": "��׼����", "status": "Optimal", "plan_rows": 379, "profit_value": 21059645.17, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"scenario": "�������������", "status": "Optimal", "plan_rows": 463, "profit_value": 24399288.93, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"scenario": "�������������", "status": "Optimal", "plan_rows": 379, "profit_value": 18276936.91, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"scenario": "������ɱ�˫ѹ", "status": "Optimal", "plan_rows": 333, "profit_value": 18350817.95, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"scenario": "������ɱ�˫��", "status": "Optimal", "plan_rows": 383, "profit_value": 21670455.79, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"scenario": "�߲˼۸����", "status": "Optimal", "plan_rows": 370, "profit_value": 22368872.31, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"scenario": "ʳ�þ��۸�콵", "status": "Optimal", "plan_rows": 368, "profit_value": 18463604.43, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"scenario": "�ۺϲ���", "status": "Optimal", "plan_rows": 365, "profit_value": 17492882.1, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"risk": 0.0, "status": "Optimal", "objective": 1192611.88, "wall_time": 201.21, "mean_profit": 20571887.31, "std_profit": 3956121.18, "cvar": 15113327.1, "worst": 15113327.1, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"risk": 1.0, "status": "Optimal", "objective": 2485272.91, "wall_time": 201.16, "mean_profit": 19718462.69, "std_profit": 3982761.09, "cvar": 14186776.46, "worst": 14186776.46, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"risk": 3.0, "status": "Optimal", "objective": 4871955.73, "wall_time": 200.79, "mean_profit": 18175934.77, "std_profit": 3783177.29, "cvar": 12973726.98, "worst": 12973726.98, "audit": {"repeat_count": 0, "bean_window_fail": 0, "over_capacity": 0, "undersize_count": 0}}
+{"vss": -3782509.82}

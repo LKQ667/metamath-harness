@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin:0; padding:0; width:fit-content; height:fit-content; background:transparent; }
+  .fig {
+    width:fit-content; height:fit-content; background:transparent; padding:18px 20px; display:flex;
+    flex-direction:column; gap:12px;
+  }
+  .fig, .fig * {
+    font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif;
+    color:#1c1c1c; box-sizing:border-box;
+  }
+  .head { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+  .head div {
+    border:1px solid #9a9a9a; border-left:5px solid #1c1c1c; background:#f6f6f6;
+    padding:7px 10px; font-size:14px; font-weight:700; letter-spacing:0.5px; text-align:center;
+  }
+  .body { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; align-items:stretch; }
+  .lane { display:flex; flex-direction:column; gap:9px; }
+  .node {
+    border:1px solid #8d8d8d; background:#ffffff; border-radius:4px; padding:8px 9px;
+    font-size:12.5px; line-height:1.45; text-align:left; flex:1 1 auto;
+  }
+  .node b { font-weight:700; }
+  .node .sub { display:block; margin-top:3px; font-size:11px; color:#4a4a4a; }
+  .accent { background:#ececec; border:1.6px solid #1c1c1c; }
+  .flow { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-top:2px; }
+  .arrow-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+  .arrow-row span { text-align:center; font-size:15px; color:#3c3c3c; line-height:0.9; }
+  .loop {
+    margin-top:2px; border:1.4px dashed #1c1c1c; border-radius:4px; padding:8px 12px;
+    font-size:12.5px; background:#fbfbfb; display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; align-items:center;
+  }
+  .loop div { font-size:12.5px; }
+  .loop .tag { font-weight:700; border-right:1px solid #b5b5b5; padding-right:8px; }
+</style>
+</head>
+<body>
+<div class="fig">
+  <div class="head">
+    <div>一 · 数据与规则解析</div>
+    <div>二 · 模型构建</div>
+    <div>三 · 求解与验证</div>
+    <div>四 · 结果与决策</div>
+  </div>
+  <div class="body">
+    <div class="lane" data-mh-col="1">
+      <div class="node accent"><b>附件1 地块与作物可种矩阵</b><br><span class="sub">平旱地/梯田/山坡地单季；水浇地单季水稻或两季蔬菜；大棚两季</span></div>
+      <div class="node">附件2 2023 基准：亩产、成本、价格区间、种植面积<br><span class="sub">价格取区间中点，销售上限取 2023 年实际产量</span></div>
+      <div class="node">派生数据表：地块表、作物表、参数表、基准表<br><span class="sub">缺失值与重复值核查后落盘，供三问共用</span></div>
+    </div>
+    <div class="lane" data-mh-col="2">
+      <div class="node accent"><b>决策变量：地块 × 作物 × 季次 × 年份 的种植面积</b><br><span class="sub">0-1 变量刻画落位、单年作物落位数与地块占用</span></div>
+      <div class="node">约束体系<br><span class="sub">季次容量、水浇地二选一、晚季蔬菜独占、同作物不重茬、三年豆类窗口、最小地块规模</span></div>
+      <div class="node">目标函数<br><span class="sub">正常销售收益 + 超产折价收益 − 种植成本；问题二叠加均值-CVaR</span></div>
+    </div>
+    <div class="lane" data-mh-col="3">
+      <div class="node accent"><b>CBC 分支定界求解 MILP</b><br><span class="sub">间隙上限 1%，单次时限受控，多次重启保证稳定</span></div>
+      <div class="node">情景抽样与滚动评估<br><span class="sub">产量 ±10%、成本 +5%/年、蔬菜价 +5%/年、食用菌价下降</span></div>
+      <div class="node">合规审计<br><span class="sub">重茬、豆类窗口、地块容量、最小地块规模逐项回检</span></div>
+    </div>
+    <div class="lane" data-mh-col="4">
+      <div class="node accent"><b>最优种植方案与年度净利润</b><br><span class="sub">逐地块逐季面积、逐年销售量与超产处置量</span></div>
+      <div class="node">风险-收益权衡<br><span class="sub">有效前沿、确定性等价解与随机解的价值差</span></div>
+      <div class="node">策略比较与建议<br><span class="sub">三问方案在收益、稳定性与结构上的差异</span></div>
+    </div>
+  </div>
+  <div class="arrow-row">
+    <span>▼</span><span>▼</span><span>▼</span><span>▼</span>
+  </div>
+  <div class="loop">
+    <div class="tag">闭环校验</div>
+    <div>结构合规审计不通过 → 追加约束重新求解</div>
+    <div>求解间隙未收敛 → 收紧间隙并加长时限</div>
+    <div>情景内表现劣化 → 提高风险厌恶系数重解</div>
+  </div>
+</div>
+</body>
+</html>

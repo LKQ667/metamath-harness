@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin:0; padding:0; width:fit-content; height:fit-content; background:transparent; }
+  .fig { width:fit-content; height:fit-content; background:transparent; padding:16px 18px; display:flex; flex-direction:column; gap:10px; }
+  .fig, .fig * { font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif; color:#1c1c1c; box-sizing:border-box; }
+  .top { border:1.6px solid #1c1c1c; background:#ececec; padding:7px 12px; font-size:13.5px; font-weight:700; text-align:center; }
+  .cols { display:grid; grid-template-columns:1.05fr 1fr 1fr; gap:12px; align-items:stretch; }
+  .col { display:flex; flex-direction:column; gap:9px; }
+  .colhead { font-size:13px; font-weight:700; border-bottom:1.4px solid #1c1c1c; padding-bottom:4px; }
+  .node { border:1px solid #8d8d8d; background:#ffffff; border-radius:4px; padding:7px 9px; font-size:12px; line-height:1.5; }
+  .node .sub { display:block; font-size:11px; color:#4a4a4a; margin-top:2px; }
+  .focus { background:#f2f2f2; border:1.6px solid #1c1c1c; }
+  .bottom { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+  .bottom .node { font-size:12px; }
+  .band { border:1.2px dashed #6f6f6f; border-radius:4px; padding:6px 9px; font-size:11.5px; background:#fbfbfb; }
+</style>
+</head>
+<body>
+<div class="fig">
+  <div class="top">共同底座：1201 亩耕地、54 个地块、41 种作物、2024—2030 七年连续决策</div>
+  <div class="cols">
+    <div class="col" data-mh-col="1">
+      <div class="colhead">问题一 · 确定性最优种植方案</div>
+      <div class="node focus">任务：给定稳定预期销售量、成本、亩产量与价格，求七年最优方案<span class="sub">两种超产处置规则分别求解</span></div>
+      <div class="node">关键结构：需求上限截断 + 超产分流<span class="sub">情形一滞销为零收益，情形二按半价计入收益</span></div>
+      <div class="node">产出：逐地块逐季面积、逐年销售量与超产量</div>
+      <div class="band">约束继承：季次容量、水浇地二选一、同作物不重茬、三年豆类窗口</div>
+    </div>
+    <div class="col" data-mh-col="2">
+      <div class="colhead">问题二 · 参数不确定下的稳健方案</div>
+      <div class="node focus">新增任务：销售量、亩产量、成本、价格随年份漂移，需控制种植风险<span class="sub">风险来自年度收益的尾部波动</span></div>
+      <div class="node">关键结构：情景化的年度收益 + 均值-CVaR 风险度量<span class="sub">以风险厌恶系数在前沿上取点</span></div>
+      <div class="node">产出：稳健方案、有效前沿与确定性等价解</div>
+      <div class="band">与问题一接口：沿用同一变量与约束体系，仅替换系数与目标</div>
+    </div>
+    <div class="col" data-mh-col="3">
+      <div class="colhead">问题三 · 替代互补与相关性下的策略</div>
+      <div class="node focus">新增任务：作物间替代与互补、销售量-价格-成本相关，需与问题二对比<span class="sub">相关性改变最优结构而非仅改变数值</span></div>
+      <div class="node">关键结构：量价负相关的内生收益 + 跨作物相关冲击<span class="sub">相关矩阵分解后作用于产量与价格系数</span></div>
+      <div class="node">产出：相关感知策略、协同结构与三问对比</div>
+      <div class="band">与问题二接口：在问题二方案上叠加相关结构，识别结构差异</div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="node">判据一：结构合规<span class="sub">重茬、豆类三年窗口、地块容量、最小地块规模全部回检为零违规</span></div>
+    <div class="node">判据二：收益可信<span class="sub">收益口径与题目两种超产规则一致，逐年利润可逐年复核</span></div>
+    <div class="node">判据三：鲁棒可交付<span class="sub">在不利情景下仍保持正收益，尾部损失受 CVaR 约束控制</span></div>
+  </div>
+</div>
+</body>
+</html>

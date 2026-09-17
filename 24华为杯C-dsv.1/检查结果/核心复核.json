@@ -1,0 +1,48 @@
+{
+  "years": [
+    2024,
+    2025
+  ],
+  "time_limit": null,
+  "cases": [
+    {
+      "case": "问题一情形一",
+      "status": "Optimal",
+      "objective": 8357706.93,
+      "rows": 206,
+      "area": 2315.4876,
+      "audit": {
+        "repeat_count": 0,
+        "bean_window_fail": 162,
+        "over_capacity": 0,
+        "undersize_count": 0
+      }
+    },
+    {
+      "case": "问题二均值口径",
+      "status": "Optimal",
+      "objective": 8357706.93,
+      "rows": 206,
+      "area": 2315.4876,
+      "audit": {
+        "repeat_count": 0,
+        "bean_window_fail": 162,
+        "over_capacity": 0,
+        "undersize_count": 0
+      }
+    },
+    {
+      "case": "问题二风险口径",
+      "status": "Optimal",
+      "objective": 8348650.96,
+      "rows": 201,
+      "area": 2178.7981,
+      "audit": {
+        "repeat_count": 0,
+        "bean_window_fail": 162,
+        "over_capacity": 0,
+        "undersize_count": 0
+      }
+    }
+  ]
+}

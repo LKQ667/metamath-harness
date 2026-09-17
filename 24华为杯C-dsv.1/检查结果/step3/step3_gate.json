@@ -1,0 +1,96 @@
+{
+  "stage": "step3",
+  "ok": false,
+  "checks": [
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_ranges",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_code_distribution",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figures_manifest",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_quality",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_bar_chart_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "禁用",
+        "bar_calls": []
+      }
+    },
+    {
+      "check": "check_flowchart_required",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "ok": false,
+      "errors": [
+        "技术路线图 generator 必须与 Draw.io/AI 锁定模式一致。"
+      ],
+      "issues": [
+        {
+          "error_code": "CHECK_ROADMAP_QUALITY_NOTES_001",
+          "message": "技术路线图 generator 必须与 Draw.io/AI 锁定模式一致。",
+          "repair_hint": "根据错误定位对应产物，做最小修复后重跑当前阶段门禁。"
+        }
+      ]
+    },
+    {
+      "check": "check_question_assets",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    }
+  ]
+}

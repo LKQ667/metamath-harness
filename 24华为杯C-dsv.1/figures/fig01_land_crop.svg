@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="469.023622pt" height="269.397488pt" viewBox="0 0 469.023622 269.397488" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-17T14:34:37.174793</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 269.397488 
+L 469.023622 269.397488 
+L 469.023622 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 59.8 107.541587 
+L 273.26387 107.541587 
+L 273.26387 20.2345 
+L 59.8 20.2345 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 61.189513 95.703338 
+L 124.586024 95.703338 
+L 124.586024 61.668372 
+L 61.189513 61.668372 
+z
+" clip-path="url(#p3f58a56841)" style="fill: #3775ba; stroke: #ffffff; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 124.586024 95.703338 
+L 232.09956 95.703338 
+L 232.09956 61.668372 
+L 124.586024 61.668372 
+z
+" clip-path="url(#p3f58a56841)" style="fill: #0f4d92; stroke: #ffffff; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 232.09956 95.703338 
+L 250.85798 95.703338 
+L 250.85798 61.668372 
+L 232.09956 61.668372 
+z
+" clip-path="url(#p3f58a56841)" style="fill: #42949e; stroke: #ffffff; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 250.85798 95.703338 
+L 269.790089 95.703338 
+L 269.790089 61.668372 
+L 250.85798 61.668372 
+z
+" clip-path="url(#p3f58a56841)" style="fill: #3f8efc; stroke: #ffffff; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 269.790089 95.703338 
+L 271.457504 95.703338 
+L 271.457504 61.668372 
+L 269.790089 61.668372 
+z
+" clip-path="url(#p3f58a56841)" style="fill: #e28e2c; stroke: #ffffff; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 271.457504 95.703338 
+L 271.874358 95.703338 
+L 271.874358 61.668372 
+L 271.457504 61.668372 
+z
+" clip-path="url(#p3f58a56841)" style="fill: #b64342; stroke: #ffffff; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m6cc28a4ab6" d="M 0 0 
+L 0 3.5 
+" style="stroke: #222222; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="61.189513" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="61.189513" y="120.936587" transform="rotate(-0 61.189513 120.936587)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="95.927327" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="95.927327" y="120.936587" transform="rotate(-0 95.927327 120.936587)">200</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="130.665142" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="130.665142" y="120.936587" transform="rotate(-0 130.665142 120.936587)">400</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="165.402956" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="165.402956" y="120.936587" transform="rotate(-0 165.402956 120.936587)">600</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="200.140771" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="200.140771" y="120.936587" transform="rotate(-0 200.140771 120.936587)">800</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="234.878585" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="234.878585" y="120.936587" transform="rotate(-0 234.878585 120.936587)">1000</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="269.6164" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="269.6164" y="120.936587" transform="rotate(-0 269.6164 120.936587)">1200</text>
+     </g>
+    </g>
+    <g id="text_8">
+     <text style="font-size: 8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="166.531935" y="133.320337" transform="rotate(-0 166.531935 133.320337)">耕地面积 / 亩</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2"/>
+   <g id="patch_9">
+    <path d="M 59.8 107.541587 
+L 273.26387 107.541587 
+" style="fill: none; stroke: #000000; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #ffffff" transform="translate(81.487768 75.581492)">平旱地</text>
+    <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #ffffff" transform="translate(70.961175 85.976155)">365 亩 · 6 块</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #ffffff" transform="translate(170.742792 75.581492)">梯田</text>
+    <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #ffffff" transform="translate(154.187854 85.976155)">619 亩 · 14 块</text>
+   </g>
+   <g id="patch_10">
+    <path d="M 225.185166 36.21097 
+Q 232.791964 48.095959 240.398762 59.980949 
+" style="fill: none; stroke: #8a8a8a; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 6.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #3f3f3f" x="255.721274" y="32.493163" transform="rotate(-0 255.721274 32.493163)">山坡地 108.0 亩 · 6 块</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 230.774259 43.606082 
+Q 244.696055 52.115775 258.617852 60.625468 
+" style="fill: none; stroke: #8a8a8a; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 6.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #3f3f3f" x="255.721274" y="39.892069" transform="rotate(-0 255.721274 39.892069)">水浇地 109.0 亩 · 8 块</text>
+   </g>
+   <g id="patch_12">
+    <path d="M 237.573285 51.007065 
+Q 253.148419 56.031232 268.723553 61.055399 
+" style="fill: none; stroke: #8a8a8a; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 6.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #3f3f3f" x="255.721274" y="47.290975" transform="rotate(-0 255.721274 47.290975)">普通大棚 9.6 亩 · 16 块</text>
+   </g>
+   <g id="patch_13">
+    <path d="M 253.482292 58.405519 
+Q 261.590792 59.8605 269.699292 61.31548 
+" style="fill: none; stroke: #8a8a8a; stroke-width: 0.7; stroke-linecap: round"/>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 6.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #3f3f3f" x="255.721274" y="54.68988" transform="rotate(-0 255.721274 54.68988)">智慧大棚 2.4 亩 · 4 块</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #222222" x="49.126806" y="15.377944" transform="rotate(-0 49.126806 15.377944)">a</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 8.8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="166.531935" y="14.2345" transform="rotate(-0 166.531935 14.2345)">六类耕地的面积构成与地块数量</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_14">
+    <path d="M 319.514375 107.541587 
+L 461.823622 107.541587 
+L 461.823622 20.2345 
+L 319.514375 20.2345 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 327.074554 88.334028 
+L 343.084344 88.334028 
+L 343.084344 65.634185 
+L 327.074554 65.634185 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #3775ba; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 349.310374 88.334028 
+L 365.320164 88.334028 
+L 365.320164 65.634185 
+L 349.310374 65.634185 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #0f4d92; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 371.546194 88.334028 
+L 387.555984 88.334028 
+L 387.555984 65.634185 
+L 371.546194 65.634185 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #42949e; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 393.782013 88.334028 
+L 409.791804 88.334028 
+L 409.791804 65.634185 
+L 393.782013 65.634185 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #3f8efc; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 393.782013 58.649618 
+L 409.791804 58.649618 
+L 409.791804 35.949776 
+L 393.782013 35.949776 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #3f8efc; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 416.017833 88.334028 
+L 432.027624 88.334028 
+L 432.027624 65.634185 
+L 416.017833 65.634185 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #e28e2c; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 416.017833 58.649618 
+L 432.027624 58.649618 
+L 432.027624 35.949776 
+L 416.017833 35.949776 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #e28e2c; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 438.253653 88.334028 
+L 454.263443 88.334028 
+L 454.263443 65.634185 
+L 438.253653 65.634185 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #b64342; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 438.253653 58.649618 
+L 454.263443 58.649618 
+L 454.263443 35.949776 
+L 438.253653 35.949776 
+z
+" clip-path="url(#p01fe7e0721)" style="fill: #b64342; opacity: 0.88; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="335.079449" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 7px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #222222" transform="translate(314.956714 127.596498) rotate(-22)">平旱地</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="357.315269" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 7px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #222222" transform="translate(343.682821 124.974252) rotate(-22)">梯田</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="379.551089" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 7px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #222222" transform="translate(359.428354 127.596498) rotate(-22)">山坡地</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="401.786909" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 7px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #222222" transform="translate(381.664174 127.596498) rotate(-22)">水浇地</text>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="424.022728" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_21">
+      <text style="font-size: 7px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #222222" transform="translate(397.409706 130.218744) rotate(-22)">普通大棚</text>
+     </g>
+    </g>
+    <g id="xtick_13">
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="446.258548" y="107.541587" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_22">
+      <text style="font-size: 7px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #222222" transform="translate(419.645526 130.218744) rotate(-22)">智慧大棚</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_1">
+     <g id="line2d_14">
+      <defs>
+       <path id="m10579c8119" d="M 0 0 
+L -3.5 0 
+" style="stroke: #222222; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m10579c8119" x="319.514375" y="76.984106" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_23">
+      <text style="font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #222222" x="312.514375" y="79.941794" transform="rotate(-0 312.514375 79.941794)">第一季</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m10579c8119" x="319.514375" y="47.299697" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_24">
+      <text style="font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #222222" x="312.514375" y="50.257384" transform="rotate(-0 312.514375 50.257384)">第二季</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #222222" x="305.283451" y="15.377944" transform="rotate(-0 305.283451 15.377944)">b</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 8.8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="390.668999" y="14.2345" transform="rotate(-0 390.668999 14.2345)">各类地块的季次容量</text>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g id="patch_24">
+    <path d="M 59.8 247.232925 
+L 461.823622 247.232925 
+L 461.823622 159.925839 
+L 59.8 159.925839 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 68.877953 177.051459 
+L 128.533071 177.051459 
+L 128.533071 162.948007 
+L 68.877953 162.948007 
+z
+" clip-path="url(#p01172e408b)" style="fill: #0f4d92; opacity: 0.64875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 133.720472 177.051459 
+L 193.375591 177.051459 
+L 193.375591 162.948007 
+L 133.720472 162.948007 
+z
+" clip-path="url(#p01172e408b)" style="fill: #0f4d92; opacity: 0.64875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 198.562992 177.051459 
+L 258.21811 177.051459 
+L 258.21811 162.948007 
+L 198.562992 162.948007 
+z
+" clip-path="url(#p01172e408b)" style="fill: #0f4d92; opacity: 0.64875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 263.405512 177.051459 
+L 323.06063 177.051459 
+L 323.06063 162.948007 
+L 263.405512 162.948007 
+z
+" clip-path="url(#p01172e408b)" style="fill: #0f4d92; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 68.877953 193.841284 
+L 128.533071 193.841284 
+L 128.533071 179.737831 
+L 68.877953 179.737831 
+z
+" clip-path="url(#p01172e408b)" style="fill: #4f8a4b; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 133.720472 193.841284 
+L 193.375591 193.841284 
+L 193.375591 179.737831 
+L 133.720472 179.737831 
+z
+" clip-path="url(#p01172e408b)" style="fill: #4f8a4b; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 198.562992 193.841284 
+L 258.21811 193.841284 
+L 258.21811 179.737831 
+L 198.562992 179.737831 
+z
+" clip-path="url(#p01172e408b)" style="fill: #4f8a4b; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 263.405512 210.631108 
+L 323.06063 210.631108 
+L 323.06063 196.527656 
+L 263.405512 196.527656 
+z
+" clip-path="url(#p01172e408b)" style="fill: #e28e2c; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_33">
+    <path d="M 328.248031 210.631108 
+L 387.90315 210.631108 
+L 387.90315 196.527656 
+L 328.248031 196.527656 
+z
+" clip-path="url(#p01172e408b)" style="fill: #e28e2c; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_34">
+    <path d="M 393.090551 210.631108 
+L 452.745669 210.631108 
+L 452.745669 196.527656 
+L 393.090551 196.527656 
+z
+" clip-path="url(#p01172e408b)" style="fill: #e28e2c; opacity: 0.92; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_35">
+    <path d="M 263.405512 227.420932 
+L 323.06063 227.420932 
+L 323.06063 213.31748 
+L 263.405512 213.31748 
+z
+" clip-path="url(#p01172e408b)" style="fill: #42949e; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 328.248031 227.420932 
+L 387.90315 227.420932 
+L 387.90315 213.31748 
+L 328.248031 213.31748 
+z
+" clip-path="url(#p01172e408b)" style="fill: #42949e; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 393.090551 227.420932 
+L 452.745669 227.420932 
+L 452.745669 213.31748 
+L 393.090551 213.31748 
+z
+" clip-path="url(#p01172e408b)" style="fill: #42949e; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_38">
+    <path d="M 328.248031 244.210757 
+L 387.90315 244.210757 
+L 387.90315 230.107304 
+L 328.248031 230.107304 
+z
+" clip-path="url(#p01172e408b)" style="fill: #9a4d8e; opacity: 0.226875; stroke: #ffffff; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_5">
+    <g id="xtick_14">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="98.705512" y="247.232925" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_27">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="98.705512" y="260.308175" transform="rotate(-0 98.705512 260.308175)">平旱地</text>
+     </g>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="163.548031" y="247.232925" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_28">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="163.548031" y="260.308175" transform="rotate(-0 163.548031 260.308175)">梯田</text>
+     </g>
+    </g>
+    <g id="xtick_16">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="228.390551" y="247.232925" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_29">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="228.390551" y="260.308175" transform="rotate(-0 228.390551 260.308175)">山坡地</text>
+     </g>
+    </g>
+    <g id="xtick_17">
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="293.233071" y="247.232925" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_30">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="293.233071" y="260.308175" transform="rotate(-0 293.233071 260.308175)">水浇地</text>
+     </g>
+    </g>
+    <g id="xtick_18">
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="358.075591" y="247.232925" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_31">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="358.075591" y="260.308175" transform="rotate(-0 358.075591 260.308175)">普通大棚</text>
+     </g>
+    </g>
+    <g id="xtick_19">
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#m6cc28a4ab6" x="422.91811" y="247.232925" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_32">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="422.91811" y="260.308175" transform="rotate(-0 422.91811 260.308175)">智慧大棚</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_6">
+    <g id="ytick_3">
+     <g id="line2d_22">
+      <g>
+       <use xlink:href="#m10579c8119" x="59.8" y="237.159031" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_33">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #222222" x="52.8" y="240.196656" transform="rotate(-0 52.8 240.196656)">食用菌</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#m10579c8119" x="59.8" y="220.369206" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_34">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #222222" x="52.8" y="223.406831" transform="rotate(-0 52.8 223.406831)">蔬菜（豆类）</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_24">
+      <g>
+       <use xlink:href="#m10579c8119" x="59.8" y="203.579382" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_35">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #222222" x="52.8" y="206.617007" transform="rotate(-0 52.8 206.617007)">蔬菜</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#m10579c8119" x="59.8" y="186.789558" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_36">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #222222" x="52.8" y="189.827183" transform="rotate(-0 52.8 189.827183)">粮食（豆类）</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_26">
+      <g>
+       <use xlink:href="#m10579c8119" x="59.8" y="169.999733" style="fill: #222222; stroke: #222222; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_37">
+      <text style="font-size: 7.6px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: end; fill: #222222" x="52.8" y="173.037358" transform="rotate(-0 52.8 173.037358)">粮食</text>
+     </g>
+    </g>
+   </g>
+   <g id="text_38">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="98.705512" y="169.854947" transform="rotate(-0 98.705512 169.854947)">10 种</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="98.705512" y="174.31091" transform="rotate(-0 98.705512 174.31091)">小麦、玉米、谷子…</text>
+   </g>
+   <g id="text_40">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="163.548031" y="169.854947" transform="rotate(-0 163.548031 169.854947)">10 种</text>
+   </g>
+   <g id="text_41">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="163.548031" y="174.31091" transform="rotate(-0 163.548031 174.31091)">小麦、玉米、谷子…</text>
+   </g>
+   <g id="text_42">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="228.390551" y="169.854947" transform="rotate(-0 228.390551 169.854947)">10 种</text>
+   </g>
+   <g id="text_43">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="228.390551" y="174.31091" transform="rotate(-0 228.390551 174.31091)">小麦、玉米、谷子…</text>
+   </g>
+   <g id="text_44">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="293.233071" y="169.854947" transform="rotate(-0 293.233071 169.854947)">1 种</text>
+   </g>
+   <g id="text_45">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="293.233071" y="174.31091" transform="rotate(-0 293.233071 174.31091)">水稻</text>
+   </g>
+   <g id="text_46">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="98.705512" y="186.644771" transform="rotate(-0 98.705512 186.644771)">1 种</text>
+   </g>
+   <g id="text_47">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="98.705512" y="191.100734" transform="rotate(-0 98.705512 191.100734)">黄豆</text>
+   </g>
+   <g id="text_48">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="163.548031" y="186.644771" transform="rotate(-0 163.548031 186.644771)">1 种</text>
+   </g>
+   <g id="text_49">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="163.548031" y="191.100734" transform="rotate(-0 163.548031 191.100734)">黄豆</text>
+   </g>
+   <g id="text_50">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="228.390551" y="186.644771" transform="rotate(-0 228.390551 186.644771)">1 种</text>
+   </g>
+   <g id="text_51">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="228.390551" y="191.100734" transform="rotate(-0 228.390551 191.100734)">黄豆</text>
+   </g>
+   <g id="text_52">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="293.233071" y="203.434595" transform="rotate(-0 293.233071 203.434595)">18 种</text>
+   </g>
+   <g id="text_53">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="293.233071" y="207.890558" transform="rotate(-0 293.233071 207.890558)">土豆、西红柿、茄子…</text>
+   </g>
+   <g id="text_54">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="358.075591" y="203.434595" transform="rotate(-0 358.075591 203.434595)">17 种</text>
+   </g>
+   <g id="text_55">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="358.075591" y="207.890558" transform="rotate(-0 358.075591 207.890558)">土豆、西红柿、茄子…</text>
+   </g>
+   <g id="text_56">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="422.91811" y="203.434595" transform="rotate(-0 422.91811 203.434595)">17 种</text>
+   </g>
+   <g id="text_57">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="422.91811" y="207.890558" transform="rotate(-0 422.91811 207.890558)">土豆、西红柿、茄子…</text>
+   </g>
+   <g id="text_58">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="293.233071" y="220.22442" transform="rotate(-0 293.233071 220.22442)">1 种</text>
+   </g>
+   <g id="text_59">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="293.233071" y="224.680383" transform="rotate(-0 293.233071 224.680383)">豇豆</text>
+   </g>
+   <g id="text_60">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="358.075591" y="220.22442" transform="rotate(-0 358.075591 220.22442)">1 种</text>
+   </g>
+   <g id="text_61">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="358.075591" y="224.680383" transform="rotate(-0 358.075591 224.680383)">豇豆</text>
+   </g>
+   <g id="text_62">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="422.91811" y="220.22442" transform="rotate(-0 422.91811 220.22442)">1 种</text>
+   </g>
+   <g id="text_63">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="422.91811" y="224.680383" transform="rotate(-0 422.91811 224.680383)">豇豆</text>
+   </g>
+   <g id="text_64">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="358.075591" y="237.014244" transform="rotate(-0 358.075591 237.014244)">1 种</text>
+   </g>
+   <g id="text_65">
+    <text style="font-size: 5.9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #3f3f3f" x="358.075591" y="241.470207" transform="rotate(-0 358.075591 241.470207)">榆黄菇</text>
+   </g>
+   <g id="text_66">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #222222" x="39.698819" y="155.069282" transform="rotate(-0 39.698819 155.069282)">c</text>
+   </g>
+   <g id="text_67">
+    <text style="font-size: 8.8px; font-family: 'Microsoft YaHei', 'SimHei', 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #222222" x="260.811811" y="153.925839" transform="rotate(-0 260.811811 153.925839)">作物类型与可种空间的匹配：单元格为可种作物种类数，色深与数量同向</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p3f58a56841">
+   <rect x="59.8" y="20.2345" width="213.46387" height="87.307087"/>
+  </clipPath>
+  <clipPath id="p01fe7e0721">
+   <rect x="319.514375" y="20.2345" width="142.309247" height="87.307087"/>
+  </clipPath>
+  <clipPath id="p01172e408b">
+   <rect x="59.8" y="159.925839" width="402.023622" height="87.307087"/>
+  </clipPath>
+ </defs>
+</svg>

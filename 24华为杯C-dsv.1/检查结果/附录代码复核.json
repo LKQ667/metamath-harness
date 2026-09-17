@@ -1,0 +1,368 @@
+{
+  "tolerance": {
+    "abs": 1e-06,
+    "rel": 1e-06
+  },
+  "files": [
+    {
+      "source": "数据预处理/prepare_data.py",
+      "appendix": "论文/附录代码/prepare_data.py"
+    },
+    {
+      "source": "共享/envdata.py",
+      "appendix": "论文/附录代码/envdata.py"
+    },
+    {
+      "source": "共享/cropmodel.py",
+      "appendix": "论文/附录代码/cropmodel.py"
+    },
+    {
+      "source": "Q1/solve_q1.py",
+      "appendix": "论文/附录代码/solve_q1.py"
+    },
+    {
+      "source": "Q2/solve_q2.py",
+      "appendix": "论文/附录代码/solve_q2.py"
+    },
+    {
+      "source": "Q3/solve_q3.py",
+      "appendix": "论文/附录代码/solve_q3.py"
+    },
+    {
+      "source": "灵敏度分析/sensitivity.py",
+      "appendix": "论文/附录代码/sensitivity.py"
+    },
+    {
+      "source": "scripts/collect_final_results.py",
+      "appendix": "论文/附录代码/collect_final_results.py"
+    },
+    {
+      "source": "scripts/verify_core.py",
+      "appendix": "论文/附录代码/verify_core.py"
+    }
+  ],
+  "runs": [
+    {
+      "name": "数据预处理复算",
+      "command": [
+        "python",
+        "数据预处理/prepare_data.py"
+      ],
+      "cwd": ".",
+      "timeout": 600,
+      "files": [
+        "论文/附录代码/prepare_data.py"
+      ],
+      "outputs": [
+        {
+          "path": "data/派生/eda_summary.json",
+          "type": "json"
+        },
+        {
+          "path": "data/派生/plots.csv",
+          "type": "csv"
+        }
+      ],
+      "env": {
+        "PYTHONHASHSEED": "0"
+      }
+    },
+    {
+      "name": "数据装载与核心复核复算",
+      "command": [
+        "python",
+        "scripts/verify_core.py"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "env": {
+        "CROP_YEARS": "2",
+        "CROP_TIME_LIMIT": "0",
+        "PYTHONHASHSEED": "0"
+      },
+      "files": [
+        "论文/附录代码/envdata.py",
+        "论文/附录代码/cropmodel.py",
+        "论文/附录代码/verify_core.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/核心复核.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "问题一求解复算",
+      "command": [
+        "python",
+        "Q1/solve_q1.py"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "env": {
+        "CROP_FAST": "1",
+        "CROP_YEARS": "2",
+        "CROP_TIME_LIMIT": "0",
+        "PYTHONHASHSEED": "0"
+      },
+      "files": [
+        "论文/附录代码/solve_q1.py"
+      ],
+      "outputs": [
+        {
+          "path": "Q1/q1_metrics.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "问题二求解复算",
+      "command": [
+        "python",
+        "Q2/solve_q2.py"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "env": {
+        "CROP_FAST": "1",
+        "CROP_YEARS": "2",
+        "CROP_TIME_LIMIT": "0",
+        "PYTHONHASHSEED": "0"
+      },
+      "files": [
+        "论文/附录代码/solve_q2.py"
+      ],
+      "outputs": [
+        {
+          "path": "Q2/q2_metrics.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "问题三求解复算",
+      "command": [
+        "python",
+        "Q3/solve_q3.py"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "env": {
+        "CROP_FAST": "1",
+        "CROP_YEARS": "2",
+        "CROP_TIME_LIMIT": "0",
+        "PYTHONHASHSEED": "0"
+      },
+      "files": [
+        "论文/附录代码/solve_q3.py"
+      ],
+      "outputs": [
+        {
+          "path": "Q3/q3_metrics.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "结果汇总复算",
+      "command": [
+        "python",
+        "scripts/collect_final_results.py"
+      ],
+      "cwd": ".",
+      "timeout": 600,
+      "files": [
+        "论文/附录代码/collect_final_results.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/final_results.json",
+          "type": "json"
+        }
+      ],
+      "env": {
+        "PYTHONHASHSEED": "0"
+      }
+    },
+    {
+      "name": "灵敏度复算",
+      "command": [
+        "python",
+        "灵敏度分析/sensitivity.py"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "env": {
+        "CROP_FAST": "1",
+        "CROP_YEARS": "2",
+        "CROP_TIME_LIMIT": "0",
+        "PYTHONHASHSEED": "0"
+      },
+      "files": [
+        "论文/附录代码/sensitivity.py"
+      ],
+      "outputs": [
+        {
+          "path": "灵敏度分析/sensitivity_metrics.json",
+          "type": "json"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "tolerance": {
+      "abs": 1e-06,
+      "rel": 1e-06
+    },
+    "files": [
+      {
+        "source": "数据预处理/prepare_data.py",
+        "appendix": "论文/附录代码/prepare_data.py",
+        "source_sha256": "38fe2c5a84da9bbb7557329e0e4370bb16bc1fd4778d0dbfd34a954f16805353",
+        "appendix_sha256": "fb19fe1f03307bdd6c032027495001c4daacd6ca0e894102f6dc555710c6728d"
+      },
+      {
+        "source": "共享/envdata.py",
+        "appendix": "论文/附录代码/envdata.py",
+        "source_sha256": "f605c05bd9a402a61ede1de7d6af8ff671a0fc31a4ec6fdb3b89acbabc06cfa5",
+        "appendix_sha256": "6c00b6a4f289713155eef140a7fc569c18f63be1b953a8e55d96968cecc98306"
+      },
+      {
+        "source": "共享/cropmodel.py",
+        "appendix": "论文/附录代码/cropmodel.py",
+        "source_sha256": "b3e1f8472b943ed8e0b22992f8d32b47e7d6fe2a3f2a945c71951eb36927e2e4",
+        "appendix_sha256": "49e197c9dd2da0272a8a3db55c01250765df7c3fec4196871ff87e399c1988f2"
+      },
+      {
+        "source": "Q1/solve_q1.py",
+        "appendix": "论文/附录代码/solve_q1.py",
+        "source_sha256": "cb0bf169c59ef0cb43676db98266dee78faedf6a276953601aed14053ff10aab",
+        "appendix_sha256": "77b423a4bf8037fa6f987794078c1091b23d1d501a21e8f0a0eab216913bef8a"
+      },
+      {
+        "source": "Q2/solve_q2.py",
+        "appendix": "论文/附录代码/solve_q2.py",
+        "source_sha256": "0a6a0b23669ed2b701fc7938595add2bb11c7211ec7dfe5f87429be0e5b4cce3",
+        "appendix_sha256": "69cafa1ae1a087285ecb50d8ba9ee1e72a80cd6e8a6b90646258fa691d3c08b8"
+      },
+      {
+        "source": "Q3/solve_q3.py",
+        "appendix": "论文/附录代码/solve_q3.py",
+        "source_sha256": "ed9980544c0d9a3fcddefbb0205865b251f8ad4a8ac817319baa1f8080969cf2",
+        "appendix_sha256": "5765e1b0baeef37bc19d7b424a3293c515b4a239c3215d2233a469c552036a73"
+      },
+      {
+        "source": "灵敏度分析/sensitivity.py",
+        "appendix": "论文/附录代码/sensitivity.py",
+        "source_sha256": "7d07a34f31e4cdee0282a2a74f627b05888af176915bb010651dbc5b013f67e9",
+        "appendix_sha256": "eb6ca3eca491a66cefc7d7416a40532ffcee722b79727e06344788741ca541be"
+      },
+      {
+        "source": "scripts/collect_final_results.py",
+        "appendix": "论文/附录代码/collect_final_results.py",
+        "source_sha256": "57af209439f5bdb37ecd4dfa58b9e3ed1991f8a02340b41b8cb3cd5f7c5f0453",
+        "appendix_sha256": "ec9ccf19227f15be516ecd6e60e80bd0ef448f2a000638fb40152b6212ae5aad"
+      },
+      {
+        "source": "scripts/verify_core.py",
+        "appendix": "论文/附录代码/verify_core.py",
+        "source_sha256": "ecbe0aa60f96d00cb4b153bb9e7033988f272d5f2676577d722a66ee6947817d",
+        "appendix_sha256": "90c30af11dc08dc55c253721e18c6c7f8c3cb94703fa80c0c3875392f8d0885b"
+      }
+    ],
+    "runs": [
+      {
+        "name": "数据预处理复算",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "data/派生/eda_summary.json",
+            "type": "json",
+            "original_sha256": "1164d1137a0ba3eef2557f0846d5aa9ce5464e4be5b91e666d8443e346bc794e",
+            "sanitized_sha256": "1164d1137a0ba3eef2557f0846d5aa9ce5464e4be5b91e666d8443e346bc794e"
+          },
+          {
+            "path": "data/派生/plots.csv",
+            "type": "csv",
+            "original_sha256": "ad841aecc2ff5a72a759c0592f93355149f550b54a18494d332a5120e1eebd9c",
+            "sanitized_sha256": "ad841aecc2ff5a72a759c0592f93355149f550b54a18494d332a5120e1eebd9c"
+          }
+        ]
+      },
+      {
+        "name": "数据装载与核心复核复算",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/核心复核.json",
+            "type": "json",
+            "original_sha256": "b0e64e075ddf481171cce76b7573e5641c1fb270f569e52cf6afc8494d59744b",
+            "sanitized_sha256": "b0e64e075ddf481171cce76b7573e5641c1fb270f569e52cf6afc8494d59744b"
+          }
+        ]
+      },
+      {
+        "name": "问题一求解复算",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "Q1/q1_metrics.json",
+            "type": "json",
+            "original_sha256": "02d6f3f92b6a20acd7c6399d8e4a668851c279f58ddd12b9ef6c32507ab58b5d",
+            "sanitized_sha256": "02d6f3f92b6a20acd7c6399d8e4a668851c279f58ddd12b9ef6c32507ab58b5d"
+          }
+        ]
+      },
+      {
+        "name": "问题二求解复算",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "Q2/q2_metrics.json",
+            "type": "json",
+            "original_sha256": "f58512915e295720687706cab36cd5e5ff206183af4004b1933d368b67f69dfd",
+            "sanitized_sha256": "f58512915e295720687706cab36cd5e5ff206183af4004b1933d368b67f69dfd"
+          }
+        ]
+      },
+      {
+        "name": "问题三求解复算",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "Q3/q3_metrics.json",
+            "type": "json",
+            "original_sha256": "68547bf9d2237f340ae9b8bc92a3156113a2d78cb5d0bdaeb2379ee729a68b98",
+            "sanitized_sha256": "68547bf9d2237f340ae9b8bc92a3156113a2d78cb5d0bdaeb2379ee729a68b98"
+          }
+        ]
+      },
+      {
+        "name": "结果汇总复算",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/final_results.json",
+            "type": "json",
+            "original_sha256": "b47a366bae7aac74c7fbc944ef141794b81db81f604c7a5923e1b987813e344f",
+            "sanitized_sha256": "b47a366bae7aac74c7fbc944ef141794b81db81f604c7a5923e1b987813e344f"
+          }
+        ]
+      },
+      {
+        "name": "灵敏度复算",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "灵敏度分析/sensitivity_metrics.json",
+            "type": "json",
+            "original_sha256": "9ebc6de1b33af445360da7215968be66238880771a3175ab0ebe4eeffda5f695",
+            "sanitized_sha256": "9ebc6de1b33af445360da7215968be66238880771a3175ab0ebe4eeffda5f695"
+          }
+        ]
+      }
+    ]
+  }
+}

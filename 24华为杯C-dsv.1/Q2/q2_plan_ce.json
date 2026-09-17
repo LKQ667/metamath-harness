@@ -1,0 +1,3890 @@
+[
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2024,
+    "area": 80.0
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 7.381
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2024,
+    "area": 47.619
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2024,
+    "area": 35.0
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 51.5
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 7.9905
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2024,
+    "area": 12.5095
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 4.5
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2024,
+    "area": 63.5
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 43.7
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2024,
+    "area": 11.3
+  },
+  {
+    "plot": "B11",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 0.3
+  },
+  {
+    "plot": "B12",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 7.9503
+  },
+  {
+    "plot": "B13",
+    "kind": "梯田",
+    "crop_id": 11,
+    "crop": "荞麦",
+    "season": "单季",
+    "year": 2024,
+    "area": 14.2857
+  },
+  {
+    "plot": "B14",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 0.3
+  },
+  {
+    "plot": "B3",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2024,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2024,
+    "area": 9.8821
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.3
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2024,
+    "area": 1.3516
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2024,
+    "area": 1.0875
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 25,
+    "crop": "菜花",
+    "season": "第一季",
+    "year": 2024,
+    "area": 1.0909
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 31,
+    "crop": "辣椒",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.75
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 32,
+    "crop": "空心菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.36
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 33,
+    "crop": "黄心菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.36
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2024,
+    "area": 13.44
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.3
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2024,
+    "area": 4.9054
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 26,
+    "crop": "包菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 1.0946
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 5.9361
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 29,
+    "crop": "黄瓜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 1.0875
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.3
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.3
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.5486
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 5.1514
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2024,
+    "area": 1.906
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2024,
+    "area": 2.16
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2024,
+    "area": 6.2389
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 30,
+    "crop": "生菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 0.6951
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2024,
+    "area": 8.9024
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 27,
+    "crop": "油麦菜",
+    "season": "第一季",
+    "year": 2024,
+    "area": 1.0976
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2024,
+    "area": 0.6
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 56.0
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 15.3714
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2025,
+    "area": 8.6286
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2025,
+    "area": 51.5
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2025,
+    "area": 3.5
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 35.0
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2025,
+    "area": 72.0
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 8.7
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2025,
+    "area": 47.619
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2025,
+    "area": 11.681
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2025,
+    "area": 55.0
+  },
+  {
+    "plot": "B10",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "B10",
+    "kind": "梯田",
+    "crop_id": 11,
+    "crop": "荞麦",
+    "season": "单季",
+    "year": 2025,
+    "area": 14.2857
+  },
+  {
+    "plot": "B2",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "B4",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "B5",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 6.7958
+  },
+  {
+    "plot": "B6",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "C3",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "C4",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "C6",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.605
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 9.1101
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2025,
+    "area": 3.9024
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 27,
+    "crop": "油麦菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 1.0976
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 7.2621
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 25,
+    "crop": "菜花",
+    "season": "第一季",
+    "year": 2025,
+    "area": 1.0909
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 30,
+    "crop": "生菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.6951
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 2.16
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 29,
+    "crop": "黄瓜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 1.0875
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3273
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 10.0
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 3.0979
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2025,
+    "area": 1.0875
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 26,
+    "crop": "包菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 1.0946
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 32,
+    "crop": "空心菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.36
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 33,
+    "crop": "黄心菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.36
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2025,
+    "area": 9.0226
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2025,
+    "area": 1.9774
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2025,
+    "area": 2.1625
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2025,
+    "area": 7.0875
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 31,
+    "crop": "辣椒",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.75
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.6
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.6
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.6
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.6
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.6
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "F1",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "F3",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第二季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "F4",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2025,
+    "area": 0.3
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2026,
+    "area": 80.0
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 38.5714
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2026,
+    "area": 16.4286
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2026,
+    "area": 35.0
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 43.7
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 12.9286
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 15.3714
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 4.5
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2026,
+    "area": 63.5
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2026,
+    "area": 31.1905
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2026,
+    "area": 23.8095
+  },
+  {
+    "plot": "B1",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "B13",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 6.4958
+  },
+  {
+    "plot": "B14",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "B3",
+    "kind": "梯田",
+    "crop_id": 11,
+    "crop": "荞麦",
+    "season": "单季",
+    "year": 2026,
+    "area": 14.2857
+  },
+  {
+    "plot": "B7",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "B8",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "B9",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "C1",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "C2",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "C5",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2026,
+    "area": 10.7225
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 27,
+    "crop": "油麦菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 1.0976
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 2.16
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.4875
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 26,
+    "crop": "包菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 1.0946
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 30,
+    "crop": "生菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.6951
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 31,
+    "crop": "辣椒",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.75
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 5.2525
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 29,
+    "crop": "黄瓜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 1.0875
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 33,
+    "crop": "黄心菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.36
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 1.8
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 4.2
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2026,
+    "area": 7.0875
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 25,
+    "crop": "菜花",
+    "season": "第一季",
+    "year": 2026,
+    "area": 1.0909
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 32,
+    "crop": "空心菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.36
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3273
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2026,
+    "area": 4.365
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2026,
+    "area": 1.635
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 11.295
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 10.0
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2026,
+    "area": 0.6
+  },
+  {
+    "plot": "F2",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2026,
+    "area": 0.3
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 43.4
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 36.6
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 3.2
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2027,
+    "area": 51.8
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 19.4
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2027,
+    "area": 15.6
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2027,
+    "area": 72.0
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 0.3
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 11.8714
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2027,
+    "area": 32.019
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2027,
+    "area": 23.8095
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 0.3
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2027,
+    "area": 54.7
+  },
+  {
+    "plot": "B1",
+    "kind": "梯田",
+    "crop_id": 11,
+    "crop": "荞麦",
+    "season": "单季",
+    "year": 2027,
+    "area": 14.2857
+  },
+  {
+    "plot": "B11",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 7.9503
+  },
+  {
+    "plot": "B12",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 0.3
+  },
+  {
+    "plot": "B3",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 0.3
+  },
+  {
+    "plot": "B5",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2027,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2027,
+    "area": 7.5
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2027,
+    "area": 4.36
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 25,
+    "crop": "菜花",
+    "season": "第一季",
+    "year": 2027,
+    "area": 1.0909
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 33,
+    "crop": "黄心菜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 0.36
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2027,
+    "area": 7.0
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2027,
+    "area": 2.16
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 27,
+    "crop": "油麦菜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 1.0976
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 30,
+    "crop": "生菜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 0.6951
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2027,
+    "area": 6.44
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2027,
+    "area": 1.0875
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 29,
+    "crop": "黄瓜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 1.0875
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2027,
+    "area": 0.3
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2027,
+    "area": 7.0875
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 32,
+    "crop": "空心菜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 0.36
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2027,
+    "area": 15.0875
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 0.3273
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 26,
+    "crop": "包菜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 1.0946
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2027,
+    "area": 11.0875
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 31,
+    "crop": "辣椒",
+    "season": "第一季",
+    "year": 2027,
+    "area": 0.75
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2027,
+    "area": 0.6
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2028,
+    "area": 80.0
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2028,
+    "area": 31.1905
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2028,
+    "area": 23.8095
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 4.5
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2028,
+    "area": 30.5
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 43.7
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 17.4286
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 10.8714
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2028,
+    "area": 68.0
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 38.5714
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2028,
+    "area": 16.4286
+  },
+  {
+    "plot": "B1",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "B10",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 6.7958
+  },
+  {
+    "plot": "B2",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "B2",
+    "kind": "梯田",
+    "crop_id": 11,
+    "crop": "荞麦",
+    "season": "单季",
+    "year": 2028,
+    "area": 14.2857
+  },
+  {
+    "plot": "B4",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "B6",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "C3",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "C4",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "C6",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2028,
+    "area": 4.6343
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 25,
+    "crop": "菜花",
+    "season": "第一季",
+    "year": 2028,
+    "area": 1.0909
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 29,
+    "crop": "黄瓜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 1.0875
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 32,
+    "crop": "空心菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.36
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3273
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 27,
+    "crop": "油麦菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 1.0976
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 2.8524
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 31,
+    "crop": "辣椒",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.75
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 1.8
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2028,
+    "area": 3.7757
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 26,
+    "crop": "包菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 1.0946
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 30,
+    "crop": "生菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.6951
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 33,
+    "crop": "黄心菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.36
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 6.0
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2028,
+    "area": 2.9125
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2028,
+    "area": 7.0875
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2028,
+    "area": 3.7649
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2028,
+    "area": 2.2351
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 10.305
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2028,
+    "area": 1.0875
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 10.0
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.6
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.6
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.6
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.6
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "F1",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "F3",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "F4",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2028,
+    "area": 0.3
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 21.0
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 15.3714
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2029,
+    "area": 43.6286
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2029,
+    "area": 55.0
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 35.0
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2029,
+    "area": 68.5
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2029,
+    "area": 3.5
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 43.7
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.4905
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2029,
+    "area": 23.8095
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2029,
+    "area": 55.0
+  },
+  {
+    "plot": "B13",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "B14",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 6.4958
+  },
+  {
+    "plot": "B3",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "B3",
+    "kind": "梯田",
+    "crop_id": 11,
+    "crop": "荞麦",
+    "season": "单季",
+    "year": 2029,
+    "area": 14.2857
+  },
+  {
+    "plot": "B7",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "B8",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "B9",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "C1",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "C2",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "C5",
+    "kind": "山坡地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 5.3033
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 2.16
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2029,
+    "area": 1.0875
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 26,
+    "crop": "包菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 1.0946
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2029,
+    "area": 5.0
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 12.16
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 31,
+    "crop": "辣椒",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.75
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2029,
+    "area": 4.5424
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 27,
+    "crop": "油麦菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 1.0976
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 32,
+    "crop": "空心菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.36
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.3517
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 2.1784
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 29,
+    "crop": "黄瓜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 1.0875
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 30,
+    "crop": "生菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.6951
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 33,
+    "crop": "黄心菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.36
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.3273
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 6.0
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2029,
+    "area": 10.0875
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2029,
+    "area": 2.5451
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 25,
+    "crop": "菜花",
+    "season": "第一季",
+    "year": 2029,
+    "area": 1.0909
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2029,
+    "area": 8.9091
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2029,
+    "area": 0.6
+  },
+  {
+    "plot": "F2",
+    "kind": "智慧大棚",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2029,
+    "area": 0.3
+  },
+  {
+    "plot": "A1",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2030,
+    "area": 80.0
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 39.2
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 7.8095
+  },
+  {
+    "plot": "A2",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 7.9905
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 2,
+    "crop": "黑豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 4.5
+  },
+  {
+    "plot": "A3",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2030,
+    "area": 30.5
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 3,
+    "crop": "红豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 48.1905
+  },
+  {
+    "plot": "A4",
+    "kind": "平旱地",
+    "crop_id": 10,
+    "crop": "黍子",
+    "season": "单季",
+    "year": 2030,
+    "area": 23.8095
+  },
+  {
+    "plot": "A5",
+    "kind": "平旱地",
+    "crop_id": 8,
+    "crop": "谷子",
+    "season": "单季",
+    "year": 2030,
+    "area": 68.0
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 7.381
+  },
+  {
+    "plot": "A6",
+    "kind": "平旱地",
+    "crop_id": 9,
+    "crop": "高粱",
+    "season": "单季",
+    "year": 2030,
+    "area": 47.619
+  },
+  {
+    "plot": "B10",
+    "kind": "梯田",
+    "crop_id": 11,
+    "crop": "荞麦",
+    "season": "单季",
+    "year": 2030,
+    "area": 14.2857
+  },
+  {
+    "plot": "B11",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 0.3
+  },
+  {
+    "plot": "B12",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 8.2503
+  },
+  {
+    "plot": "B5",
+    "kind": "梯田",
+    "crop_id": 5,
+    "crop": "爬豆",
+    "season": "单季",
+    "year": 2030,
+    "area": 0.3
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2030,
+    "area": 6.5451
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 25,
+    "crop": "菜花",
+    "season": "第一季",
+    "year": 2030,
+    "area": 1.0909
+  },
+  {
+    "plot": "D1",
+    "kind": "水浇地",
+    "crop_id": 33,
+    "crop": "黄心菜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 0.36
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 19,
+    "crop": "芸豆",
+    "season": "第一季",
+    "year": 2030,
+    "area": 2.16
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 26,
+    "crop": "包菜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 1.0946
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 29,
+    "crop": "黄瓜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 1.0875
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 30,
+    "crop": "生菜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 0.6951
+  },
+  {
+    "plot": "D2",
+    "kind": "水浇地",
+    "crop_id": 31,
+    "crop": "辣椒",
+    "season": "第一季",
+    "year": 2030,
+    "area": 0.75
+  },
+  {
+    "plot": "D3",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2030,
+    "area": 7.7673
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 18,
+    "crop": "刀豆",
+    "season": "第一季",
+    "year": 2030,
+    "area": 5.6727
+  },
+  {
+    "plot": "D4",
+    "kind": "水浇地",
+    "crop_id": 34,
+    "crop": "芹菜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 0.3273
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 21,
+    "crop": "西红柿",
+    "season": "第一季",
+    "year": 2030,
+    "area": 8.5424
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 27,
+    "crop": "油麦菜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 1.0976
+  },
+  {
+    "plot": "D5",
+    "kind": "水浇地",
+    "crop_id": 32,
+    "crop": "空心菜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 0.36
+  },
+  {
+    "plot": "D6",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2030,
+    "area": 9.2475
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 24,
+    "crop": "青椒",
+    "season": "第一季",
+    "year": 2030,
+    "area": 1.0875
+  },
+  {
+    "plot": "D7",
+    "kind": "水浇地",
+    "crop_id": 28,
+    "crop": "小青菜",
+    "season": "第一季",
+    "year": 2030,
+    "area": 11.0875
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 17,
+    "crop": "豇豆",
+    "season": "第一季",
+    "year": 2030,
+    "area": 2.9125
+  },
+  {
+    "plot": "D8",
+    "kind": "水浇地",
+    "crop_id": 22,
+    "crop": "茄子",
+    "season": "第一季",
+    "year": 2030,
+    "area": 7.0875
+  },
+  {
+    "plot": "E1",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E10",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E11",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E12",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E13",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E14",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E15",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E16",
+    "kind": "普通大棚",
+    "crop_id": 38,
+    "crop": "榆黄菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E2",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E3",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E4",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E5",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E6",
+    "kind": "普通大棚",
+    "crop_id": 39,
+    "crop": "香菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E7",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E8",
+    "kind": "普通大棚",
+    "crop_id": 41,
+    "crop": "羊肚菌",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  },
+  {
+    "plot": "E9",
+    "kind": "普通大棚",
+    "crop_id": 40,
+    "crop": "白灵菇",
+    "season": "第二季",
+    "year": 2030,
+    "area": 0.6
+  }
+]
