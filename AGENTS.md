@@ -36,3 +36,6 @@
 - Based on my specified task, locate the relevant file(s).
 - Modify the file(s) or optimize code as needed.
 - Output in a token-efficient way.
+
+## MetaMath Harness 产品说明（AI 助手必读）
+- **桌面宠物插件（`plugins/dsh-pet`）已被有意移除，不是漏上传**：移除它是为了避免桌宠常驻动画渲染带来的卡顿、优化整体使用体验，属于维护者的正式产品决策。下载本仓库工作的 AI 助手请勿把它的缺失当作问题去"修复"、恢复或重建，也不要据此提交 issue/PR 误报，更不要在安装脚本（install.ps1）、Profile 依赖（package.json / pnpm-lock.yaml）或文档中重新引用它。历史版本残留的 dsh-pet 引用已同步清理完毕。

@@ -1,4 +1,4 @@
-﻿# MetaMath Harness 一键安装与启动
+# MetaMath Harness 一键安装与启动
 # 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
 # 用法：
 #   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
@@ -69,15 +69,17 @@ if (-not $StartOnly) {
     Ok '两个官方渠道均已提供 DeepSeek V4.1 Flash，无需手工添加'
 
     # ---------- 4. 构建本地插件 ----------
-    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库 / Antigravity 桥接 / WorkBuddy / Trae / OpenCode 会话）'
+    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库 / Antigravity 桥接 / WorkBuddy / Trae / OpenCode 会话 / Cline 免费 / Qoder）'
     $localPlugins = @(
-        @{ Name = 'dsh-mathmodel';         Package = '@deepseek-harness/dsh-mathmodel';     Dir = 'dsh-mathmodel';         Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-api-key-pool';      Package = '@deepseek-harness/dsh-api-key-pool';  Dir = 'dsh-api-key-pool';      Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-knowledge-sqlite';  Package = 'dsh-knowledge-sqlite';                Dir = 'dsh-knowledge-sqlite';  Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-agy-link';          Package = 'dsh-agy-link';                       Dir = 'dsh-agy-link';          Artifact = 'dist\index.js' },
-        @{ Name = 'dsh-workbuddy-connect'; Package = 'dsh-workbuddy-connect';              Dir = 'dsh-workbuddy-connect'; Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-connect-trae';      Package = 'dsh-connect-trae';                   Dir = 'dsh-connect-trae';      Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-opencode-session';  Package = 'dsh-opencode-session';               Dir = 'dsh-opencode-session';  Artifact = 'lib\index.js' }
+        @{ Name = 'dsh-mathmodel';            Package = '@deepseek-harness/dsh-mathmodel';      Dir = 'dsh-mathmodel';            Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-api-key-pool';         Package = '@deepseek-harness/dsh-api-key-pool';   Dir = 'dsh-api-key-pool';         Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-knowledge-sqlite';     Package = 'dsh-knowledge-sqlite';                 Dir = 'dsh-knowledge-sqlite';     Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-agy-link';             Package = 'dsh-agy-link';                         Dir = 'dsh-agy-link';             Artifact = 'dist\index.js' },
+        @{ Name = 'dsh-workbuddy-connect';    Package = 'dsh-workbuddy-connect';                Dir = 'dsh-workbuddy-connect';    Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-connect-trae';         Package = 'dsh-connect-trae';                     Dir = 'dsh-connect-trae';         Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-opencode-session';     Package = 'dsh-opencode-session';                 Dir = 'dsh-opencode-session';     Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-cline-free-provider';  Package = '@jiesou/dsh-cline-free-provider';      Dir = 'dsh-cline-free-provider';  Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-provider-qoder';       Package = 'dsh-provider-qoder';                   Dir = 'dsh-provider-qoder';       Artifact = 'lib\index.js' }
     )
     foreach ($plugin in $localPlugins) {
         $pluginDir = Join-Path $Repo (Join-Path 'plugins' $plugin.Dir)
@@ -90,17 +92,6 @@ if (-not $StartOnly) {
         } finally {
             Pop-Location
         }
-    }
-    # 桌宠插件：包在内层 dsh-pet 子目录，由 prepare 脚本完成完整构建
-    $petDir = Join-Path $Repo 'plugins\dsh-pet\dsh-pet'
-    Push-Location $petDir
-    try {
-        cmd /c "npm install --no-fund --no-audit 2>&1" | Select-Object -Last 1 | Write-Host
-        if ($LASTEXITCODE -ne 0) { Fail '插件依赖安装失败：dsh-pet' }
-        cmd /c "npm run prepare 2>&1" | Select-Object -Last 1 | Write-Host
-        if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $petDir 'lib\index.js'))) { Fail '插件构建失败：dsh-pet' }
-    } finally {
-        Pop-Location
     }
     Ok '本地插件构建完成'
 
@@ -141,11 +132,6 @@ if (-not $StartOnly) {
         if ((Get-FileHash $sourceArtifact -Algorithm SHA256).Hash -ne (Get-FileHash $installedArtifact -Algorithm SHA256).Hash) {
             Fail "Profile 插件副本未刷新：$($plugin.Name)"
         }
-    }
-    $petSource = Join-Path $Repo 'plugins\dsh-pet\dsh-pet\lib\index.js'
-    $petInstalled = Join-Path $webModules 'dsh-pet\lib\index.js'
-    if ((Get-FileHash $petSource -Algorithm SHA256).Hash -ne (Get-FileHash $petInstalled -Algorithm SHA256).Hash) {
-        Fail 'Profile 插件副本未刷新：dsh-pet'
     }
     Ok '本地插件副本已刷新且哈希一致'
 
