@@ -1,6 +1,6 @@
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, posix } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   defaultDesktopAuthCandidates,
@@ -136,6 +136,42 @@ describe('WorkBuddyCredentialStore', () => {
       },
     })
     await expect(store.resolve()).resolves.toMatchObject({ accessToken: 'at' })
+  })
+
+  it('serves the persisted copy with its expiry and identity after the desktop file disappears', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'wb-store-'))
+    CLEANUP.push(() => rm(dir, { recursive: true, force: true }))
+    const desktop = join(dir, 'workbuddy-desktop.info')
+    const own = join(dir, 'own.json')
+    await writeFile(desktop, nestedDoc(Date.now() - 1000))
+    let refreshes = 0
+    const store = new WorkBuddyCredentialStore({
+      desktopPath: desktop,
+      ownPath: own,
+      refresh: async () => {
+        refreshes += 1
+        return { accessToken: 'fresh', refreshToken: 'rt2', expiresInSec: 3600 }
+      },
+    })
+    await expect(store.resolve()).resolves.toMatchObject({ accessToken: 'fresh', source: 'dsh' })
+    await rm(desktop)
+    const survived = await store.resolve()
+    expect(refreshes).toBe(1)
+    expect(survived).toMatchObject({ accessToken: 'fresh', uid: 'uid-1', enterpriseId: 'ent-1', nickname: '昵称', source: 'dsh' })
+    expect(survived.expiresAtMs).toBeGreaterThan(Date.now() + 3000_000)
+  })
+
+  it('rejects an owned copy from another format version', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'wb-store-'))
+    CLEANUP.push(() => rm(dir, { recursive: true, force: true }))
+    const own = join(dir, 'own.json')
+    await writeFile(own, JSON.stringify({ version: 99, credential: { accessToken: 'at' } }))
+    const store = new WorkBuddyCredentialStore({
+      desktopPath: join(dir, 'missing.info'),
+      ownPath: own,
+      refresh: async credential => ({ accessToken: credential.accessToken }),
+    })
+    await expect(store.resolve()).rejects.toThrow(/no signed-in WorkBuddy account/)
   })
 
   it('fails loudly when nothing is signed in', async () => {
@@ -293,10 +329,14 @@ describe('Windows default desktop path probing', () => {
 })
 
 describe('WSL default desktop path probing', () => {
-  const AUTH_DIR = join('CodeBuddyExtension', 'Data', 'Public', 'auth')
-  const AUTH_TAILS = [
-    join(AUTH_DIR, 'workbuddy-desktop.info'),
-    join(AUTH_DIR, 'workbuddy-desktop-ai.info'),
+  // A WSL mount path is POSIX by definition, so the expectations are built with
+  // `posix.join` instead of the host `path.join`. Using the host separator made
+  // the fixture assert `\mnt\c\...` on Windows — a path no WSL process can
+  // resolve — so it silently encoded the host rather than the platform contract.
+  const AUTH_DIR_POSIX = posix.join('CodeBuddyExtension', 'Data', 'Public', 'auth')
+  const AUTH_TAILS_POSIX = [
+    posix.join(AUTH_DIR_POSIX, 'workbuddy-desktop.info'),
+    posix.join(AUTH_DIR_POSIX, 'workbuddy-desktop-ai.info'),
   ]
 
   async function asWsl<T>(options: {
@@ -333,9 +373,9 @@ describe('WSL default desktop path probing', () => {
   it('probes the matching mounted Windows profile before the Linux path', async () => {
     await asWsl({ home: '/home/alice' }, async () => {
       expect(defaultDesktopAuthCandidates()).toEqual([
-        ...AUTH_TAILS.map(tail => join('/mnt/c/Users/alice/AppData/Local', tail)),
-        ...AUTH_TAILS.map(tail => join('/mnt/c/Users/alice/AppData/Roaming', tail)),
-        ...AUTH_TAILS.map(tail => join('/home/alice/.config', tail)),
+        ...AUTH_TAILS_POSIX.map(tail => posix.join('/mnt/c/Users/alice/AppData/Local', tail)),
+        ...AUTH_TAILS_POSIX.map(tail => posix.join('/mnt/c/Users/alice/AppData/Roaming', tail)),
+        ...AUTH_TAILS_POSIX.map(tail => posix.join('/home/alice/.config', tail)),
       ])
     })
   })
@@ -344,16 +384,30 @@ describe('WSL default desktop path probing', () => {
     const root = await mkdtemp(join(tmpdir(), 'wb-wsl-'))
     CLEANUP.push(() => rm(root, { recursive: true, force: true }))
     const windowsProfile = join(root, 'Users', 'windows-alice')
-    const local = join(windowsProfile, 'AppData', 'Local', AUTH_TAILS[0]!)
-    await mkdir(join(local, '..'), { recursive: true })
-    await writeFile(local, nestedDoc(Date.now() + 3600_000))
+    // A WSL process reaches the Windows profile through the drive mount, so the
+    // expected path is the `/mnt/<drive>/...` form — never the verbatim Windows
+    // path, which the plugin must not probe from WSL.
+    const mountedProfile = posix.join('/mnt', 'c', ...windowsProfile.split(/[\\/]+/u).slice(1))
+    const mountedAuth = posix.join(mountedProfile, 'AppData', 'Local', AUTH_TAILS_POSIX[0]!)
 
     await asWsl({ home: '/home/linux-alice', env: { USERPROFILE: windowsProfile } }, async () => {
       const store = new WorkBuddyCredentialStore({
         ownPath: join(root, 'own.json'),
         refresh: async credential => ({ accessToken: credential.accessToken }),
       })
-      expect(store.desktopAuthPath()).toBe(local)
+      expect(store.desktopAuthPath()).toBe(mountedAuth)
+      expect(defaultDesktopAuthCandidates()[0]).toBe(mountedAuth)
+
+      if (process.platform === 'win32') {
+        // The mount only exists inside WSL: on a Windows host the translated
+        // path cannot be read, and the plugin must report the signed-out state
+        // instead of silently falling back to the verbatim Windows path it was
+        // handed through USERPROFILE.
+        await expect(store.status()).resolves.toEqual({ state: 'signed-out' })
+        return
+      }
+      await mkdir(join(mountedAuth, '..'), { recursive: true })
+      await writeFile(mountedAuth, nestedDoc(Date.now() + 3600_000))
       await expect(store.resolve()).resolves.toMatchObject({ accessToken: 'at', source: 'desktop' })
     })
   })
@@ -367,8 +421,8 @@ describe('WSL default desktop path probing', () => {
       },
     }, async () => {
       expect(defaultDesktopAuthCandidates().slice(0, 2)).toEqual([
-        join('/mnt/d/Users/alice/AppData/Local', AUTH_TAILS[0]!),
-        join('/mnt/d/Users/alice/AppData/Local', AUTH_TAILS[1]!),
+        posix.join('/mnt/d/Users/alice/AppData/Local', AUTH_TAILS_POSIX[0]!),
+        posix.join('/mnt/d/Users/alice/AppData/Local', AUTH_TAILS_POSIX[1]!),
       ])
     })
   })

@@ -63,7 +63,14 @@ test('宿主真实适配器：三种协议线上头、并发、prepareCall、卸
         auth: { apiKey: { name: 'test', resolve: async () => ({ auth: { apiKey: 'fake-wire-test' }, source: 'test' }) } },
         api: module[factoryName](), models: [{ id: 'probe', name: 'probe', api, provider: route, baseUrl,
           input: ['text'], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 8192, maxTokens: 128, reasoning: false }] });
-      profiles.set(route, { provider: route, displayName: route, piProvider, configuredMaxTokens: new Map(), streamIdleTimeoutMs: 10000 });
+      profiles.set(route, {
+        provider: route,
+        displayName: route,
+        piProvider,
+        configuredMaxTokens: new Map(),
+        modelErrors: new Map(),
+        streamIdleTimeoutMs: 10000,
+      });
     }
     const adapter = new PiAiAdapter({ profiles: () => profiles, resolveApiKey: async () => 'fake-wire-test',
       auth: { credentials: { read: async () => undefined, list: async () => [] }, authContext: { env: async () => undefined } } });

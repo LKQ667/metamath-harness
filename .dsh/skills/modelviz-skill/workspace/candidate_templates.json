@@ -1,0 +1,166 @@
+{
+  "original_request": "根据数据预处理结果（附件1 烘房温湿度环境边界 + 附件2 药材半径收缩），生成 1-2 张中文顶刊一区 Top1 水平的数据预处理插图；明确拒绝一维柱状图与普通一维折线图。",
+  "candidate_count": 8,
+  "total_templates": 89,
+  "candidates": [
+    {
+      "template_id": "mpn_scatter_matrix_timeseries_regression",
+      "template_name": "散点矩阵与时间序列回归报告",
+      "category": "multi_panel_report",
+      "score": 0.175,
+      "matched_keywords": [
+        "时间序列",
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [
+        "scatter_matrix"
+      ],
+      "matched_use_cases": [],
+      "matched_styles": [
+        "科研风",
+        "中文顶刊一区",
+        "低饱和",
+        "高信息密度",
+        "无色情荧光色",
+        "出版级"
+      ],
+      "penalties": [],
+      "candidate_reason": "图表类型匹配：scatter_matrix；功能关键词匹配：时间序列, 分布；风格弱匹配：科研风, 中文顶刊一区, 低饱和, 高信息密度, 无色情荧光色, 出版级",
+      "preview": "templates/05_MPN_multi_panel_report/05_MPN_002/assets/preview.png",
+      "code_path": "templates/05_MPN_multi_panel_report/05_MPN_002/散点矩阵与时间序列回归报告.py",
+      "catalog_order": 29
+    },
+    {
+      "template_id": "dis_ridgeline_distribution",
+      "template_name": "山脊分布图",
+      "category": "distribution_uncertainty",
+      "score": 0.1525,
+      "matched_keywords": [
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [
+        "ridgeline"
+      ],
+      "matched_use_cases": [],
+      "matched_styles": [],
+      "penalties": [],
+      "candidate_reason": "图表类型匹配：ridgeline；功能关键词匹配：分布",
+      "preview": "templates/04_DIS_distribution_uncertainty/04_DIS_002/assets/preview.png",
+      "code_path": "templates/04_DIS_distribution_uncertainty/04_DIS_002/山脊分布图.py",
+      "catalog_order": 23
+    },
+    {
+      "template_id": "dis_combined_boxplot_grid",
+      "template_name": "组合箱线图",
+      "category": "distribution_uncertainty",
+      "score": 0.1125,
+      "matched_keywords": [
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [],
+      "matched_use_cases": [],
+      "matched_styles": [],
+      "penalties": [],
+      "candidate_reason": "功能关键词匹配：分布",
+      "preview": "templates/04_DIS_distribution_uncertainty/04_DIS_001/assets/preview.png",
+      "code_path": "templates/04_DIS_distribution_uncertainty/04_DIS_001/组合箱线图.py",
+      "catalog_order": 22
+    },
+    {
+      "template_id": "dis_violin_mean_change_grid",
+      "template_name": "均值变化小提琴图",
+      "category": "distribution_uncertainty",
+      "score": 0.1125,
+      "matched_keywords": [
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [],
+      "matched_use_cases": [],
+      "matched_styles": [],
+      "penalties": [],
+      "candidate_reason": "功能关键词匹配：分布",
+      "preview": "templates/04_DIS_distribution_uncertainty/04_DIS_003/assets/preview.png",
+      "code_path": "templates/04_DIS_distribution_uncertainty/04_DIS_003/均值变化小提琴图.py",
+      "catalog_order": 24
+    },
+    {
+      "template_id": "dis_rank_sum_violin_box",
+      "template_name": "秩和检验分布图",
+      "category": "distribution_uncertainty",
+      "score": 0.1125,
+      "matched_keywords": [
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [],
+      "matched_use_cases": [],
+      "matched_styles": [],
+      "penalties": [],
+      "candidate_reason": "功能关键词匹配：分布",
+      "preview": "templates/04_DIS_distribution_uncertainty/04_DIS_004/assets/preview.png",
+      "code_path": "templates/04_DIS_distribution_uncertainty/04_DIS_004/秩和检验分布图.py",
+      "catalog_order": 25
+    },
+    {
+      "template_id": "dis_radial_bar_error_significance",
+      "template_name": "带显著性标记与误差棒的环形柱状图",
+      "category": "distribution_uncertainty",
+      "score": 0.1125,
+      "matched_keywords": [
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [],
+      "matched_use_cases": [],
+      "matched_styles": [],
+      "penalties": [],
+      "candidate_reason": "功能关键词匹配：分布",
+      "preview": "templates/04_DIS_distribution_uncertainty/04_DIS_005/assets/preview.png",
+      "code_path": "templates/04_DIS_distribution_uncertainty/04_DIS_005/带显著性标记与误差棒的环形柱状图.py",
+      "catalog_order": 26
+    },
+    {
+      "template_id": "dis_tukey_hsd_violin_grid",
+      "template_name": "Tukey HSD检验小提琴图",
+      "category": "distribution_uncertainty",
+      "score": 0.1125,
+      "matched_keywords": [
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [],
+      "matched_use_cases": [],
+      "matched_styles": [],
+      "penalties": [],
+      "candidate_reason": "功能关键词匹配：分布",
+      "preview": "templates/04_DIS_distribution_uncertainty/04_DIS_006/assets/preview.png",
+      "code_path": "templates/04_DIS_distribution_uncertainty/04_DIS_006/Tukey HSD检验小提琴图.py",
+      "catalog_order": 27
+    },
+    {
+      "template_id": "rel_multiclass_scatter_matrix",
+      "template_name": "多类别散点图矩阵",
+      "category": "relationship_correlation",
+      "score": 0.0925,
+      "matched_keywords": [
+        "分布"
+      ],
+      "matched_synonyms": [],
+      "matched_chart_types": [
+        "scatter_matrix"
+      ],
+      "matched_use_cases": [],
+      "matched_styles": [],
+      "penalties": [],
+      "candidate_reason": "图表类型匹配：scatter_matrix；功能关键词匹配：分布",
+      "preview": "templates/09_REL_relationship_correlation/09_REL_014/assets/preview.png",
+      "code_path": "templates/09_REL_relationship_correlation/09_REL_014/多类别散点图矩阵.py",
+      "catalog_order": 58
+    }
+  ],
+  "warnings": []
+}

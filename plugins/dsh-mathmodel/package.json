@@ -1,7 +1,7 @@
 {
   "name": "@deepseek-harness/dsh-mathmodel",
-  "version": "0.1.1",
-  "description": "DeepSeek Harness 0.1.1-rc.2 专用数学建模模式插件",
+  "version": "0.1.2",
+  "description": "DeepSeek Harness 0.1.5-rc.2 数学建模模式插件",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -45,15 +45,15 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@deepseek-ai/cordis": "4.0.1",
-    "@deepseek-ai/dsh-invariants": "0.1.1-rc.2",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.1-rc.2",
-    "@deepseek-ai/schemastery": "3.18.1",
+    "@deepseek-ai/cordis": "4.0.2",
+    "@deepseek-ai/dsh-invariants": "0.1.5-rc.2",
+    "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
+    "@deepseek-ai/schemastery": "3.18.2",
     "yaml": "^2.8.1",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh": "0.1.1-rc.2"
+    "@deepseek-ai/dsh": "0.1.5-rc.2"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh": {

@@ -4,14 +4,23 @@
 // 配置唯一入口 = GET /dsh-pet-7340/config 的**成品聚合**（host readAllConfig 保证绝对正确）：
 // PetMulti 一次拉取 → flattenConfigPets 拍平成渲染列表，PetCard 直接读字段，零校验零兜底。
 // 纯逻辑（选择/移动几何/余额/拍平）来自 src/shared —— 与桌面模式共用同一份源码。
-import { pick, rollKind, pickCategoryAction } from '../shared/pickers';
+import {
+  pick,
+  rollKind,
+  pickCategoryAction,
+  pickSlot,
+  isEventAnim,
+  poolIncludes,
+  nextWorkStatusAnim,
+} from '../shared/pickers';
 import { planMove } from '../shared/motion';
 import { flattenConfigPets, isWebVisible } from '../shared/config';
 import { balanceEventIndex, balancePercent, fetchBalanceState, type BalanceState } from '../shared/balance';
 import { fetchWhisperState, fetchWhisperTrigger } from '../shared/whisper';
+import { WORK_STATUS_INDEX, fetchWorkStatus, type WorkStatusSnapshot } from '../shared/work-status';
 import { makeBalanceBubble, makeWhisperBubble } from './bubble';
 import { clickScore, SCORE_MIN_SPEED, mountScorePopup, spawnScoreBurst } from '../shared/score-popup';
-import { CANVAS_H, FEET_Y, HIT_BOX, DRAG_THRESHOLD, PET_REF_WIDTH } from '../shared/constants';
+import { CANVAS_H, FEET_Y, HIT_BOX, DRAG_THRESHOLD, PET_REF_WIDTH, ANIMATION_EXT } from '../shared/constants';
 // 统一右键菜单：与桌面共用同一份组件（树 + 渲染 + 样式，src/shared/menu.ts）
 import {
   buildMenuTree,
@@ -55,10 +64,9 @@ export type RuntimePet = Pet & {
   physics: PhysicsParams;
 };
 
-/** 播放动画扩展名：唯一播放/发布格式 webm（VP9-alpha），源码写死、不做运行时判断。
- *  Safari/HEVC(.mov) 兼容属 fork 定制（仓库保留流水线 scripts/encode_hevc_alpha.sh），
- *  插件本体不发布、不支持 .mov。 */
-const THUMB_EXT = '.webm';
+/** 播放动画扩展名 = 共享常量（src/shared/constants.ts 的 ANIMATION_EXT，默认 .webm）。
+ *  macOS Safari/WKWebView 需改共享常量/产物为 .mov（HEVC-with-Alpha）后自构建。 */
+const THUMB_EXT = ANIMATION_EXT;
 
 /** 余额气泡展示时长（ms）：定时自动消失，与动画生命周期解耦 */
 const BUBBLE_DURATION_MS = 10 * 1000;
@@ -115,11 +123,15 @@ export function makePetUI(rt: {
     cfg,
     balance,
     balanceTick,
+    workStatus,
+    workStatusTick,
     arena,
   }: {
     cfg: RuntimePet;
     balance: BalanceState | null;
     balanceTick: number;
+    workStatus: WorkStatusSnapshot | null;
+    workStatusTick: number;
     arena: ReactNS.MutableRefObject<{ slots: Record<string, PetCollisionSlot> }>;
   }) {
     // ---- 尺寸（由配置传入；容器/设置页更新后即时跟随）----
@@ -148,8 +160,13 @@ export function makePetUI(rt: {
     // 碎碎念气泡（独立于余额气泡：文本气泡与余额行气泡互不干扰，各自 10s 显隐）
     const [whisperBubbleOn, setWhisperBubbleOn] = useState(false);
     const whisperBubbleTimerRef = useRef<number | null>(null);
-    // 碎碎念当前文本（本宠物独立生成的句子）
+    // 碎碎念当前文本（本宠物独立生成的句子）+ 配图名称（开启配图时由 host 随机抽定，随文本一起来）
     const [whisperText, setWhisperText] = useState<string | null>(null);
+    const [whisperImage, setWhisperImage] = useState<string | undefined>(undefined);
+    // 工作状态气泡：DSH 会话状态联动（workStatusEnabled 开启时）——文本气泡独立于碎碎念，10s 显隐
+    const [workBubbleOn, setWorkBubbleOn] = useState(false);
+    const workBubbleTimerRef = useRef<number | null>(null);
+    const [workText, setWorkText] = useState<string | null>(null);
     // 右键菜单（统一自绘组件）：当前挂载的 close() 句柄，卸载/重开前清理
     const menuRef = useRef<{ close: () => void } | null>(null);
     // 对话弹窗（与桌面共用 shared 组件）：当前挂载的 close() 句柄，卸载/重开前清理
@@ -192,6 +209,9 @@ export function makePetUI(rt: {
     const pendingSquashRef = useRef(false);
     const animRef = useRef(anim);
     animRef.current = anim;
+    // workStatus 最新值同步：handleEnded 的 onended 闭包注册时可能早于状态更新，护栏用 ref 读当前值
+    const workStatusRef = useRef(workStatus);
+    workStatusRef.current = workStatus;
 
     const switchTo = (next: string, nextOnce: boolean) => {
       if (!next) return;
@@ -211,6 +231,20 @@ export function makePetUI(rt: {
       const target = frontRef.current === 0 ? videoBRef : videoARef;
       const el = target.current;
       if (!el) return;
+      // 诊断：事件池动画被切换（含 workStatus 触发/循环续播/其他事件顶替），once 反映 loop 语义
+      const inEvents = isEventAnim(petAnims.events, next);
+      if (inEvents) {
+        console.log(
+          '[dsh-pet] ' +
+            new Date().toTimeString().slice(0, 8) +
+            ' pet=' +
+            cfg.id +
+            ' switch ' +
+            next +
+            ' once=' +
+            nextOnce,
+        );
+      }
       el.src =
         '/dsh-pet-7340/thumb/' +
         encodeURIComponent(cfg.assetRoot ?? cfg.id) +
@@ -302,11 +336,12 @@ export function makePetUI(rt: {
         return;
       }
       const idx = balanceEventIndex(p);
-      const name = pool[idx];
-      if (!name) {
+      const slot = pool[idx];
+      if (!slot) {
         console.error('[dsh-pet] balance 档位索引越界：p=' + p + ' idx=' + idx);
         return;
       }
+      const name = pickSlot(slot, animRef.current); // 数组槽位档内随机抽 1，且避开当前正播动画（避免连续重复）
       console.log(
         '[dsh-pet] ' +
           new Date().toTimeString().slice(0, 8) +
@@ -328,6 +363,93 @@ export function makePetUI(rt: {
       setAnim(name);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [balanceTick]);
+
+    // 工作状态联动：容器轮询 /work-status 递增 workStatusTick → 本宠物（workStatusEnabled 开启时）
+    // 按 events.workStatus 档位播动画 + 弹文本气泡。
+    // 气泡驻留语义：thinking/working/result/waiting（"事情还没完"）常驻显示，直到状态切走；
+    //   success/error（"这事结束了"）10s 自动收起；
+    //   state=null（空闲，回合 aborted 等）收起气泡回待机。
+    // 动画循环语义：进行中档位循环播（once=false），终态档位播一遍（once=true）回 idle 链。
+    const prevWorkTickRef = useRef(0);
+    // 调试日志：上一档位（null=空闲；undefined=启动后首次触发，显示为 null）
+    const prevWorkStateRef = useRef<string | null | undefined>(undefined);
+    useEffect(() => {
+      if (!cfg.workStatusEnabled) return; // 未启用工作状态联动 -> 该宠物完全免疫
+      if (workStatusTick === 0 || workStatusTick === prevWorkTickRef.current) return;
+      prevWorkTickRef.current = workStatusTick;
+      if (!workStatus || workStatus.state === null) {
+        // 调试：状态回空闲（仅打印切换日志；动画不处理，由常规动画链回待机）
+        console.log(
+          '[dsh-pet] ' +
+            new Date().toTimeString().slice(0, 8) +
+            ' pet=' +
+            cfg.id +
+            ' ' +
+            (prevWorkStateRef.current ?? 'null') +
+            '->null    无动画（回待机，收起气泡）',
+        );
+        prevWorkStateRef.current = null;
+        // 空闲：收起常驻气泡（动画不处理，由常规动画链回待机）
+        if (workBubbleTimerRef.current !== null) window.clearTimeout(workBubbleTimerRef.current);
+        workBubbleTimerRef.current = null;
+        setWorkText(null);
+        setWorkBubbleOn(false);
+        return;
+      }
+      const pool = petAnims.events?.workStatus;
+      if (!pool || pool.length === 0) {
+        console.error('[dsh-pet] 配置缺少 animations.events.workStatus，无法播放工作状态动画');
+        return;
+      }
+      const idx = WORK_STATUS_INDEX[workStatus.state];
+      const slot = pool[idx];
+      if (slot === undefined) {
+        console.error('[dsh-pet] work-status 档位索引越界：state=' + workStatus.state + ' idx=' + idx);
+        return;
+      }
+      const name = pickSlot(slot, animRef.current); // 数组槽位档内随机抽 1，且避开当前正播动画（避免连续重复）
+      console.log(
+        '[dsh-pet] ' +
+          new Date().toTimeString().slice(0, 8) +
+          ' pet=' +
+          cfg.id +
+          ' ' +
+          (prevWorkStateRef.current ?? 'null') +
+          '->' +
+          workStatus.state +
+          '    ' +
+          name,
+      );
+      const stateChanged = prevWorkStateRef.current !== workStatus.state;
+      prevWorkStateRef.current = workStatus.state;
+      stopMove();
+      // 气泡文本：任务详情（todo/write 提供，如"正在做 X"）优先，否则从条目级配置
+      // workStatusTexts[档位]（数组）随机抽一句；整字段/整档缺失 = 不弹文本，只播动画。
+      const textGroup = Array.isArray(cfg.workStatusTexts) ? cfg.workStatusTexts[idx] : undefined;
+      const configuredText =
+        Array.isArray(textGroup) && textGroup.length > 0
+          ? textGroup[Math.floor(Math.random() * textGroup.length)]
+          : undefined;
+      // 文本总是更新（任务详情可能在同一状态下变化）
+      setWorkText(workStatus.task ?? configuredText ?? null);
+      const terminal = workStatus.state === 'success' || workStatus.state === 'error';
+      // 气泡点亮/收起只在状态变化时动作：同状态后续 tick（todo 文案更新、其它会话事件搅动 ts）
+      // 不重新点亮**已自动收起的终态气泡**——否则"任务完成"的气泡会被后续 ts 变化反复弹回（Bug 2）；
+      // 非终态同状态 tick 气泡本就常驻，无需重复点亮。
+      if (stateChanged) {
+        setWorkBubbleOn(true);
+        if (workBubbleTimerRef.current !== null) window.clearTimeout(workBubbleTimerRef.current);
+        workBubbleTimerRef.current = terminal
+          ? window.setTimeout(() => setWorkBubbleOn(false), BUBBLE_DURATION_MS)
+          : null; // 非终态：常驻，不设自动收起
+      }
+      // 循环语义：终态播一遍回 idle（once=true）；非终态单候选档位 once=false 无限循环；
+      // 非终态多候选档位 once=true 播一遍 → ended 由 handleEnded 护栏轮换到下一候选（长时间状态不单段重复）
+      const rotating = !terminal && Array.isArray(slot) && slot.length > 1;
+      setOnce(terminal || rotating);
+      setAnim(name);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [workStatusTick]);
 
     // 碎碎念：本宠物独立轮询 /whisper?pet=<id> —— host 按宠物独立生成（用本种类人设）、按宠物节流。
     // 首拉仅记基线（不触发，避免页面加载/刷新时重放）；之后 ts 变化（本宠物新周期的新句）才触发动画+气泡；
@@ -352,7 +474,7 @@ export function makePetUI(rt: {
             if (state.ts !== prevWhisperTsRef.current) {
               prevWhisperTsRef.current = state.ts;
               whisperTextRef.current = state.text;
-              triggerWhisper(state.text);
+              triggerWhisper(state.text, state.image);
             }
           } else {
             console.warn(
@@ -387,7 +509,12 @@ export function makePetUI(rt: {
         try {
           const r = await fetch('/dsh-pet-7340/broadcast?pet=' + encodeURIComponent(cfg.id), { cache: 'no-store' });
           if (!alive || !r.ok) return;
-          const d = (await r.json().catch(() => null)) as { ok?: unknown; text?: unknown; ts?: unknown } | null;
+          const d = (await r.json().catch(() => null)) as {
+            ok?: unknown;
+            text?: unknown;
+            image?: unknown;
+            ts?: unknown;
+          } | null;
           if (!d || d.ok !== true) return;
           const ts = typeof d.ts === 'number' ? d.ts : 0;
           if (!hasBaseline) {
@@ -399,7 +526,10 @@ export function makePetUI(rt: {
           }
           if (ts === 0 || ts === prevBroadcastTsRef.current) return; // 无广播 / 无变化
           prevBroadcastTsRef.current = ts;
-          if (typeof d.text === 'string' && d.text) triggerWhisper(d.text);
+          if (typeof d.text === 'string' && d.text) {
+            // image：host 侧抽定/模型选定的配图名（未开配图则 undefined）——与 /whisper 同契约
+            triggerWhisper(d.text, typeof d.image === 'string' ? d.image : undefined);
+          }
         } catch {
           /* 广播轮询失败静默：下一周期再试 */
         }
@@ -414,13 +544,15 @@ export function makePetUI(rt: {
     }, [cfg.id]);
 
     // 碎碎念触发（本宠物）：随机抽 events.whisper 动画 + 弹文本气泡（10s 消失，与动画解耦）
-    const triggerWhisper = (text: string) => {
+    // image：host 侧随机抽定的配图名称（未开配图/池为空则 undefined）——与文本同一次触发一起来
+    const triggerWhisper = (text: string, image?: string) => {
       const pool = petAnims.events?.whisper;
       if (!pool || pool.length === 0) {
         console.error('[dsh-pet] 配置缺少 animations.events.whisper，无法播放碎碎念动画');
         return;
       }
-      const name = pool[Math.floor(Math.random() * pool.length)];
+      // 整池随机抽 1 槽（避开当前正播动画，避免连续重复）；槽位若为数组候选再档内随机
+      const name = pickSlot(pick(pool, animRef.current), animRef.current);
       console.log(
         '[dsh-pet] ' +
           new Date().toTimeString().slice(0, 8) +
@@ -434,6 +566,7 @@ export function makePetUI(rt: {
       );
       stopMove();
       setWhisperText(text);
+      setWhisperImage(image);
       setWhisperBubbleOn(true);
       // 气泡 10s 定时消失（与动画解耦；重复触发先清旧定时器）
       if (whisperBubbleTimerRef.current !== null) window.clearTimeout(whisperBubbleTimerRef.current);
@@ -499,6 +632,27 @@ export function makePetUI(rt: {
       setSeq((s) => s + 1);
     };
 
+    // 互动打断后恢复：workStatus 非终态（thinking/working/result/waiting）期间，点击/拖拽等瞬时
+    // 互动结束应立即回到对应档位循环动画（打断-恢复语义）；无状态/终态返回 false 不接管，
+    // 调用方走原逻辑（回 idle / 随机池）。
+    const resumeWorkStatusAnim = (): boolean => {
+      const ws = workStatusRef.current;
+      if (!ws || !ws.state || ws.state === 'success' || ws.state === 'error') return false;
+      const pool = petAnims.events?.workStatus;
+      if (!pool || pool.length === 0) return false;
+      const idx = WORK_STATUS_INDEX[ws.state];
+      const slot = pool[idx];
+      if (slot === undefined) return false;
+      const name = pickSlot(slot, animRef.current); // 互动结束后恢复档位循环：数组槽位档内随机（避开当前正播动画）
+      console.log(
+        '[dsh-pet] ' + new Date().toTimeString().slice(0, 8) + ' pet=' + cfg.id + ' 互动结束恢复状态动画: ' + name,
+      );
+      // 多候选档位恢复后同样走 ended 轮换（once=true 播一遍 → 护栏换下一候选）；单候选/单动画维持无限循环
+      setOnce(Array.isArray(slot) && slot.length > 1);
+      setAnim(name);
+      return true;
+    };
+
     const handleEnded = (e?: Event) => {
       // 只认前台视频触发的 ended：后台（被降级停播）视频即便有残留事件也一律丢弃，防止掐断当前动画
       const evEl = e && (e.currentTarget as HTMLVideoElement | null);
@@ -506,8 +660,60 @@ export function makePetUI(rt: {
       const animations = petAnims;
       if (dragRef.current.active) return;
       // 事件动画播完：回 idle（与 drag/clicks 同分支，不进入随机链）；气泡由定时器自动消失，与动画解耦
-      const isEvent = Object.values(animations.events ?? {}).some((pool) => pool.includes(animRef.current));
+      const isEvent = isEventAnim(animations.events, animRef.current);
+      // 工作状态循环护栏：非终态档位（thinking/working/result/waiting）期间，workStatus 事件动画
+      // 禁止“播完回 idle”——一旦意外触发 ended（loop 被某种原因掐断/once 被误置 true），
+      // 立即重设循环续播，直到状态真正切走（success/error/空闲）。其余事件动画仍按原语义回 idle。
+      const wsNow = workStatusRef.current;
+      if (isEvent && wsNow && wsNow.state && wsNow.state !== 'success' && wsNow.state !== 'error') {
+        // 多候选档位：播完一段自动轮换到下一候选（排除当前段，避免连抽）——长时间状态不单段重复
+        const nextWork = nextWorkStatusAnim(animations.events?.workStatus ?? [], animRef.current);
+        if (nextWork !== null) {
+          console.log(
+            '[dsh-pet] ' +
+              new Date().toTimeString().slice(0, 8) +
+              ' pet=' +
+              cfg.id +
+              ' workStatus 档内轮换: ' +
+              animRef.current +
+              ' -> ' +
+              nextWork,
+          );
+          setOnce(true); // 保持 once=true：下一段播完再 ended → 再轮换
+          setAnim(nextWork);
+          setSeq((s) => s + 1);
+          return;
+        }
+        // 单候选/单动画档位（意外 ended：loop 被掐断/once 误置 true）：原护栏语义续播同一段
+        if (poolIncludes(animations.events?.workStatus ?? [], animRef.current)) {
+          console.log(
+            '[dsh-pet] ' +
+              new Date().toTimeString().slice(0, 8) +
+              ' pet=' +
+              cfg.id +
+              ' workStatus 循环续播: ' +
+              animRef.current,
+          );
+          setOnce(false);
+          setSeq((s) => s + 1);
+          return;
+        }
+      }
       if (isEvent) {
+        // 诊断：事件动画 ended 落地（余额/碎碎念/终态 workStatus 走到这里；非终态走上面护栏续播）
+        console.log(
+          '[dsh-pet] ' +
+            new Date().toTimeString().slice(0, 8) +
+            ' pet=' +
+            cfg.id +
+            ' 事件动画播完 ended anim=' +
+            animRef.current +
+            ' ws=' +
+            ((workStatusRef.current && workStatusRef.current.state) || 'null'),
+        );
+        // 事件动画播完但 workStatus 仍处于非终态（余额/碎碎念等抢占播完）：立即恢复档位循环动画，
+        // 绝不留进随机链——否则长事件期间当前状态不变（ts 不变），随机链会一直播到状态切换才被拉回
+        if (resumeWorkStatusAnim()) return;
         if (animations.idle.length) setAnim(pick(animations.idle, animRef.current));
         setOnce(true);
         setSeq((s) => s + 1);
@@ -519,6 +725,8 @@ export function makePetUI(rt: {
         facingRef.current = next; // 立即同步：翻转后的 pickNext 用新朝向过滤 noMirror（右侧不选文字类）
       }
       if (animations.drag.includes(animRef.current) || animations.clicks.includes(animRef.current)) {
+        // 互动动画播完：workStatus 非终态时恢复状态循环，否则回 idle（原语义）
+        if (resumeWorkStatusAnim()) return;
         if (animations.idle.length) setAnim(pick(animations.idle, animRef.current));
         setOnce(true);
         setSeq((s) => s + 1);
@@ -955,8 +1163,12 @@ export function makePetUI(rt: {
         setDragging(false);
         const stageEl = stageRef.current;
         if (stageEl) stageEl.style.transform = 'translateY(' + bottomPad + 'px)';
-        if (petAnims.idle.length) setAnim(pick(petAnims.idle, animRef.current));
-        setOnce(false);
+        // 拖拽松手：workStatus 非终态时恢复状态循环；否则播一遍待机 → ended → 回随机链
+        // （once=true；旧实现 once=false 无限循环，ended 永不触发、随机链永远回不来——历史卡死 bug）
+        if (!resumeWorkStatusAnim()) {
+          if (petAnims.idle.length) setAnim(pick(petAnims.idle, animRef.current));
+          setOnce(true);
+        }
         // 释放位置 = 弹簧跟随的实时包围盒左上角（不是指针目标：跟手滞后时落点跟随宠物实际位置）
         const bx = boxPxRef.current;
         const px = bx ? bx.x : e.clientX - d.offX - halfW;
@@ -1021,7 +1233,7 @@ export function makePetUI(rt: {
         fetchWhisperTrigger('/dsh-pet-7340/whisper/trigger?pet=' + encodeURIComponent(cfg.id))
           .then((state) => {
             if (state.ok) {
-              triggerWhisper(state.text);
+              triggerWhisper(state.text, state.image);
             } else {
               console.warn(
                 '[dsh-pet] 碎碎念手动触发失败 reason=' + state.reason + (state.message ? ' ' + state.message : ''),
@@ -1044,9 +1256,9 @@ export function makePetUI(rt: {
           baseUrl: '/dsh-pet-7340/chat',
           x: hitRect ? hitRect.right + 6 : window.innerWidth - 256,
           y: hitRect ? hitRect.top + 6 : 8,
-          onReply: (reply) => {
-            console.info('[dsh-pet] 对话回复 pet=' + cfg.id + '「' + reply + '」');
-            triggerWhisper(reply); // 复用碎碎念链路：随机说话动画 + 气泡 10s 消失
+          onReply: (reply, image) => {
+            console.info('[dsh-pet] 对话回复 pet=' + cfg.id + '「' + reply + '」' + (image ? ' [' + image + ']' : ''));
+            triggerWhisper(reply, image); // 复用碎碎念链路：随机说话动画 + 气泡 10s（含配图）
           },
           onClose: () => {
             chatRef.current = null;
@@ -1158,8 +1370,11 @@ export function makePetUI(rt: {
         balance && balance.ok && cfg.balanceEnabled ? h(BalanceBubble, { state: balance, on: bubbleOn }) : null,
         // 碎碎念/对话气泡：**不受 whisperEnabled 限制**（该字段只关自动周期轮询的触发，
         // 见上头 useEffect 的 319 行门控）；whisperText 只由 triggerWhisper 设置——
-        // 自动轮询被门控后不会触发，所以这里任何说话气泡（碎碎念/对话回复）都照常渲染
-        whisperText ? h(WhisperBubble, { text: whisperText, on: whisperBubbleOn }) : null,
+        // 自动轮询被门控后不会触发，所以这里任何说话气泡（碎碎念/对话回复）都照常渲染。
+        // image 为该次配图（碎碎念/对话配图开关开启时由 host 抽定/模型选定）
+        whisperText ? h(WhisperBubble, { text: whisperText, image: whisperImage, on: whisperBubbleOn }) : null,
+        // 工作状态气泡（仅启用工作状态联动的宠物渲染；文本 = 任务详情优先，状态文案兜底）
+        workText && cfg.workStatusEnabled ? h(WhisperBubble, { text: workText, on: workBubbleOn }) : null,
         h('div', {
           ref: stageRef,
           className: 'dsh-pet-stage',
@@ -1190,6 +1405,9 @@ export function makePetUI(rt: {
     // 余额状态（容器统一拉取，PetCard 共享；balanceTick 每次成功拉取递增，驱动事件动画）
     const [balance, setBalance] = useState<BalanceState | null>(null);
     const [balanceTick, setBalanceTick] = useState(0);
+    // 工作状态：容器统一轮询 /work-status（任一宠物启用才启动），快照 + tick 递增驱动各宠物播档位动画
+    const [workStatus, setWorkStatus] = useState<WorkStatusSnapshot | null>(null);
+    const [workStatusTick, setWorkStatusTick] = useState(0);
     // 碎碎念：轮询下沉到每只 PetCard（各自按自己的周期拉取 /whisper?pet=<id>，人设/文本/触发全部独立），
     // 容器不再持有共享状态——与「每只宠物单独触发对话」的产品语义一致。
 
@@ -1214,13 +1432,17 @@ export function makePetUI(rt: {
             : undefined;
           petBridge.sync = (list: Pet[]) => {
             // 设置页编辑的是 main 条目实例（裸实例，无条目级字段）：这里补吹 main 的
-            // 动画池/权重/周期（与 flattenConfigPets 同规格），再合并文件宠物
+            // 动画池/权重/周期/物理参数/工作状态文案（与 flattenConfigPets 同规格——漏吹会让
+            // RuntimePet 的必填 physics 落空，新增或恢复默认的宠物一拖就在 cfg.physics 上抛错），
+            // 再合并文件宠物
             const mc = mainConfRef.current;
             const filled: Pet[] = list.map((p) => ({
               ...p,
               animations: mc.animations as Animations,
               animationWeights: mc.animationWeights as Weights,
               eventsRefreshSec: mc.eventsRefreshSec as Record<string, number>,
+              physics: mc.physics as PhysicsParams,
+              workStatusTexts: mc.workStatusTexts as string[][],
               assetRoot: 'main',
               extra: false,
             }));
@@ -1244,6 +1466,8 @@ export function makePetUI(rt: {
     const visiblePets = pets.filter((p) => isWebVisible(p.display));
     // 是否存在启用余额功能的宠物：全禁用时跳过余额轮询（不拉取 /dsh-pet-7340/balance，避免无意义的周期请求）
     const anyBalanceEnabled = visiblePets.some((p) => p.balanceEnabled);
+    // 是否存在启用工作状态联动的宠物：全禁用时不轮询 /work-status（避免无意义的周期请求）
+    const anyWorkStatusEnabled = visiblePets.some((p) => p.workStatusEnabled);
 
     // 余额轮询：配置就绪（ready）且至少一只宠物启用余额后启动拉取一次，之后按 eventsRefreshSec.balance（秒）周期刷新；
     // 成功递增 balanceTick 触发事件动画；失败/不支持均不触发动画（错误显式 console.error，绝不显示伪造余额）
@@ -1313,8 +1537,44 @@ export function makePetUI(rt: {
       };
     }, [ready, anyBalanceEnabled]);
 
+    // 工作状态轮询：任一宠物启用且配置就绪后，1s 轻量轮询 /work-status（host 端点 no-cache）。
+    // 拉取成功且 ts 变化才 setWorkStatus + 递增 workStatusTick（与 broadcast 同一触发语义，避免刷屏）。
+    useEffect(() => {
+      if (!ready || !anyWorkStatusEnabled) return; // 未就绪 / 全宠物未启用：不启动轮询
+      let alive = true;
+      let prevTs = -1;
+      const poll = async () => {
+        try {
+          const snap = await fetchWorkStatus();
+          if (!alive) return;
+          if (snap.ts === prevTs) return; // 无变化：不触发（首拉记基线，避免重放历史状态）
+          prevTs = snap.ts;
+          setWorkStatus(snap);
+          setWorkStatusTick((t) => t + 1); // 任何 ts 变化都触发（含回到空闲：用于收起常驻气泡）
+        } catch {
+          /* 轻量轮询失败静默：下一周期再试 */
+        }
+      };
+      void poll();
+      const timer = window.setInterval(() => void poll(), 1000);
+      return () => {
+        alive = false;
+        window.clearInterval(timer);
+      };
+    }, [ready, anyWorkStatusEnabled]);
+
     return ready
-      ? visiblePets.map((p) => h(PetCard, { key: p.id, cfg: p as RuntimePet, balance, balanceTick, arena: arenaRef }))
+      ? visiblePets.map((p) =>
+          h(PetCard, {
+            key: p.id,
+            cfg: p as RuntimePet,
+            balance,
+            balanceTick,
+            workStatus,
+            workStatusTick,
+            arena: arenaRef,
+          }),
+        )
       : null;
   }
 

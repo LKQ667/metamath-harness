@@ -3,7 +3,7 @@
 本项目原创的本地兼容插件（0.1.0），不引入第三方源码或素材。
 对应官方问题：https://github.com/deepseek-ai/deepseek-harness/discussions/5495 。
 
-DSH 0.1.2-rc.1 没有公开动态请求头接口，因此在进程内包装 PiAiAdapter.streamWithSnapshot 私有方法；以精确版本和函数 SHA-256 双重门禁限制使用。没有改写官方包或全局 fetch。
+DSH 0.1.5-rc.2 没有公开 OpenCode 动态请求头接口，因此在进程内包装 PiAiAdapter.streamWithSnapshot 私有方法；以精确版本和函数 SHA-256 双重门禁限制使用。没有改写官方包或全局 fetch。
 每次仅复制当前调用的 profile 与 headers，把 options.sessionId 写入 x-opencode-session；覆盖 OpenCode 原生路由及实际模型端点主机为 opencode.ai 的自定义路由。模型与凭据解析仍走官方实现，不读取或持久化凭据。
 聊天、标题、压缩及重试共用该适配器入口；不依赖模型协议，不使用固定会话 ID，缺少有效 ID 时在本地拒绝。
 

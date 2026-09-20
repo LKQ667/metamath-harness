@@ -1,4 +1,16 @@
 (() => {
+/**
+ * 卡片字段联动：选择「AI全自动绘图」时，自动勾选「已确认允许付费生图调用」，
+ * 并把「AI 自动成图总上限」置为 4（原理图 1、流程图/技术路线图 2、示意图 1）。
+ */
+const AI_DRAWING_MODE = 'AI全自动绘图';
+const AI_IMAGE_LIMIT_DEFAULT = 4;
+
+function drawingModeLinkedValues(mode) {
+  if (String(mode ?? '') !== AI_DRAWING_MODE) return {};
+  return { confirm_paid_calls: true, ai_image_limit: AI_IMAGE_LIMIT_DEFAULT };
+}
+
 function createCardFlow({ renderDraft, insertDraft, setBlock, notify }) {
   const listeners = new Set();
   let state = Object.freeze({ open: false, busy: false, error: null });
@@ -31,7 +43,9 @@ function createCardFlow({ renderDraft, insertDraft, setBlock, notify }) {
     },
     setValue(id, value) {
       if (!state.open || state.busy) return;
-      publish({ ...state, values: { ...state.values, [id]: value }, error: null });
+      let patch = { [id]: value };
+      if (id === 'drawing_mode') patch = { ...patch, ...drawingModeLinkedValues(value) };
+      publish({ ...state, values: { ...state.values, ...patch }, error: null });
     },
     cancel: close,
     setStatus(status) {
@@ -255,7 +269,58 @@ function createSkillSource({ fetchCatalog, flow, cardsForSession }) {
   };
 }
 
-if (typeof module !== 'undefined') module.exports = { appendStagedImagesDraft, browserDraftPayload, createCardFlow, createCredentialActions, createImageConnectionActions, createManualVisionActions, createOpenCodeRtActions, createStoredKeyModelDiscoveryActions, createSkillSource, panelSections, IMAGE_TEMPLATE_META, capabilityLabel };
+/**
+ * 大道至简主视觉标题安装器（GOAL-84 / M01）。
+ * 兼容两代宿主 DOM：
+ * - 新版：_headline 行 → span._titleGroup → 内部无 class 标题 span + span._previewBadge；
+ * - 旧版：span[class*="_headlineText"] 直接承载标题文本。
+ * 行为约定：只替换真实标题元素；使用原艺术字资产与可访问文本“大道至简”；
+ * 通过 data 标记防重复插入；重复调用与 DOM 重建后保持单一标题；非目标区域不动。
+ */
+function createMetaMathHeroTitleInstaller(doc, heroSrc) {
+  function buildTitleImg() {
+    const img = doc.createElement('img');
+    img.className = 'dsh-mm-hero-title-img';
+    img.src = heroSrc;
+    img.alt = '大道至简';
+    return img;
+  }
+  return function installMetaMathHeroTitle() {
+    // 旧版分支：标题文本直接在 _headlineText span 内。
+    const headline = doc.querySelector('span[class*="_headlineText"]');
+    if (headline && headline.dataset.dshMetamathTitle !== 'true') {
+      headline.textContent = '';
+      headline.classList.add('dsh-mm-hero-title');
+      headline.appendChild(buildTitleImg());
+      headline.dataset.dshMetamathTitle = 'true';
+      const row = headline.parentElement;
+      if (row && row.dataset.dshMetamathTitleRow !== 'true') {
+        row.style.gridTemplateColumns = 'auto';
+        row.style.justifyContent = 'center';
+        row.dataset.dshMetamathTitleRow = 'true';
+      }
+    }
+    // 新版分支：标题组内首个无 class 的 span 才是标题文本；徽章与品牌位不动。
+    const titleGroup = doc.querySelector('span[class*="_titleGroup"]');
+    if (titleGroup && titleGroup.dataset.dshMetamathTitle !== 'true') {
+      const textSpan = Array.from(titleGroup.children).find(
+        (child) => child.tagName === 'SPAN' && child.className.length === 0,
+      );
+      if (textSpan) {
+        textSpan.textContent = '';
+        textSpan.appendChild(buildTitleImg());
+        titleGroup.dataset.dshMetamathTitle = 'true';
+      }
+    }
+    const badge = doc.querySelector('span[class*="_previewBadge"]');
+    if (badge && badge.dataset.dshMetamathBadge !== 'true') {
+      badge.style.display = 'none';
+      badge.dataset.dshMetamathBadge = 'true';
+    }
+  };
+}
+
+if (typeof module !== 'undefined') module.exports = { appendStagedImagesDraft, browserDraftPayload, createCardFlow, createCredentialActions, createImageConnectionActions, createManualVisionActions, createMetaMathHeroTitleInstaller, createOpenCodeRtActions, createStoredKeyModelDiscoveryActions, createSkillSource, panelSections, IMAGE_TEMPLATE_META, capabilityLabel };
 
 if (typeof window !== 'undefined' && window.__ModuleLoader__) {
   window.__ModuleLoader__.load({
@@ -268,10 +333,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
       const metaMathHeroTitle = 'data:image/png;base64,__METAMATH_HERO_TITLE__';
 
       const styleId = 'dsh-mathmodel-card-style';
-      if (!document.getElementById(styleId)) {
-        const style = document.createElement('style');
-        style.id = styleId;
-        style.textContent = `
+      const styleText = `
           .dsh-mm-overlay{position:fixed;z-index:40;inset:68px 24px 140px;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
           .dsh-mm-card{box-sizing:border-box;width:min(680px,100%);max-height:100%;overflow:auto;pointer-events:auto;border:1px solid color-mix(in srgb,var(--dsw-alias-border-l1) 82%,transparent);border-radius:18px;background:var(--dsw-alias-bg-base);box-shadow:0 20px 54px rgba(15,23,42,.16);padding:20px 22px 0;scrollbar-width:thin;overscroll-behavior:contain}
           .dsh-mm-head{display:flex;gap:12px;align-items:flex-start}.dsh-mm-title{margin:0;flex:1;font-size:17px;line-height:1.35;font-weight:650;letter-spacing:-.01em}.dsh-mm-summary{margin:5px 0 16px;color:var(--dsw-alias-label-secondary);font-size:12px;line-height:1.5}
@@ -286,15 +348,21 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
            .dsh-mm-info-button{border:0;background:transparent;color:var(--dsw-alias-label-secondary);border-radius:9px;padding:6px 10px;cursor:pointer;font-size:12px;font-weight:550}.dsh-mm-info-button:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-info-button:focus-visible{outline:2px solid var(--dsw-alias-label-tertiary);outline-offset:2px}
            .dsh-mm-hero-title{display:inline-flex;align-items:center}
           .dsh-mm-hero-title-img{height:72px;width:auto;display:block}
-          [data-slot="sidebar.brand.mark"][data-dsh-metamath-brand=true]>:not(.dsh-mm-brand-mark),[data-slot="sidebar.brand.name"][data-dsh-metamath-brand=true]>:not(.dsh-mm-brand-lockup){display:none!important}.dsh-mm-brand-mark{display:block;width:24px;height:24px;flex:none;border-radius:6px;object-fit:contain}.dsh-mm-brand-lockup{display:inline-flex;align-items:center;gap:7px;color:#16181d}.dsh-mm-brand-word{font-size:18px;font-weight:650;letter-spacing:-.04em;line-height:1}.dsh-mm-brand-chip{border-radius:4px;background:#181a20;color:#fff;padding:3px 5px 2px;font-size:9px;font-weight:750;letter-spacing:.065em;line-height:1}
+          [data-slot="sidebar.brand.mark"][data-dsh-metamath-brand=true]>:not(.dsh-mm-brand-mark),[data-slot="sidebar.brand.name"][data-dsh-metamath-brand=true]>:not(.dsh-mm-brand-lockup){display:none!important}.dsh-mm-brand-mark{display:block;width:24px;height:24px;flex:none;border-radius:6px;object-fit:contain}.dsh-mm-brand-lockup{display:inline-flex;align-items:center;gap:7px;color:var(--dsw-alias-label-primary,#16181d)}.dsh-mm-brand-word{font-size:18px;font-weight:650;letter-spacing:-.04em;line-height:1}.dsh-mm-brand-chip{border-radius:4px;background:#181a20;color:#fff;padding:3px 5px 2px;font-size:9px;font-weight:750;letter-spacing:.065em;line-height:1}
           .dsh-mm-info-launcher{position:fixed;z-index:89;top:12px;right:calc(72px + var(--dsh-sidebar-width,0px));display:inline-flex;width:36px;height:36px;min-height:36px;box-sizing:border-box;align-items:center;justify-content:center;border:0;border-radius:12px;background:transparent;box-shadow:none;padding:0;line-height:1}
-          /* better-sidebar 在场时四按钮统一为其角标簇规格（28×28@y3、8px 间距）：
+          /* better-sidebar 在场时五按钮统一为其角标簇规格（28×28@y11、8px 间距）：
+             技能入口并入官方簇，置于「在本地打开」（底部面板切换）左侧标准槽位；
+             「更多操作」容器左移 36px（28+8）腾出该槽位，五者同一水平线。
              插件卸载（无 panel-host）时以下规则全部失效，恢复 GOAL-08 原几何。 */
-          body:has([data-dsh-panel-host]) .dsh-mm-info-launcher{top:3px;right:calc(64px + var(--dsh-sidebar-width,0px));width:28px;height:28px;min-height:28px;border-radius:9px}
+          body:has([data-dsh-panel-host]) .dsh-mm-info-launcher{top:11px;right:calc(84px + var(--dsh-sidebar-width,0px));width:28px;height:28px;min-height:28px;border-radius:9px}
+          body:has([data-dsh-panel-host]) span:has(>.nL4_yW_moreButton){margin-right:36px}
           body:has([data-dsh-panel-host]) .dsh-mm-info-launcher svg{width:16px;height:16px}
           /* 收起态角标簇回收右上角；better-sidebar 同步把官方头右内边距推到 78px
-            （body 标记契约），入口右距 = 78 + 28(Session log) + 8。 */
-          body[data-dsh-sidebar-collapsed] .dsh-mm-info-launcher{right:114px}.dsh-mm-info-launcher:hover,.dsh-mm-info-launcher[aria-expanded=true]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-info-launcher svg{width:19px;height:19px}
+            （body 标记契约），官方簇整体左移 50px：入口右距 = 84 + 50 = 134。
+            非 panel-host 回退几何维持原 114px。 */
+          body[data-dsh-sidebar-collapsed] .dsh-mm-info-launcher{right:114px}
+          body:has([data-dsh-panel-host])[data-dsh-sidebar-collapsed] .dsh-mm-info-launcher{right:134px}
+          .dsh-mm-info-launcher:hover,.dsh-mm-info-launcher[aria-expanded=true]{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-info-launcher svg{width:19px;height:19px}
           [data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]{width:36px!important;height:36px!important;min-width:36px!important;box-sizing:border-box!important;justify-content:center!important;gap:0!important;border-radius:12px!important;padding:0!important}[data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]>span{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important}[data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]>svg{width:16px!important;height:16px!important}
           body:has([data-dsh-panel-host]) [data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]{width:28px!important;height:28px!important;min-width:28px!important;border-radius:9px!important;transform:translateY(-11px)}
           body:has([data-dsh-panel-host]) [data-slot="conversation.session.header.utilities"]>button[class*="_sessionLogButton"]>svg{width:14px!important;height:14px!important}
@@ -306,9 +374,22 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
           @media(max-width:760px){.dsh-mm-info{top:56px;right:6px;bottom:6px;width:calc(100vw - 12px)}.dsh-mm-info-status{grid-template-columns:1fr}.dsh-mm-info-status span:last-child{text-align:left}}
           .dsh-mm-active-selector{position:relative;flex:none;min-width:0;max-width:360px}.dsh-mm-active-selector-button{display:inline-flex;align-items:center;gap:7px;width:100%;min-height:34px;box-sizing:border-box;border:1px solid var(--dsw-alias-border-l2);border-radius:9px;background:transparent;color:var(--dsw-alias-label-primary);padding:0 11px;font-size:12px;cursor:pointer;overflow:hidden}.dsh-mm-active-selector-button:hover{background:var(--dsw-alias-interactive-bg-hover)}.dsh-mm-active-selector-button:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary);outline-offset:2px}.dsh-mm-active-selector-dot{width:8px;height:8px;flex:none;border-radius:50%;background:var(--dsw-alias-label-tertiary)}.dsh-mm-active-selector-dot[data-ready=true]{background:#20b96b}.dsh-mm-active-selector-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsh-mm-active-selector-caret{flex:none;color:var(--dsw-alias-label-tertiary)}.dsh-mm-active-menu{position:fixed;z-index:1200;display:flex;width:min(360px,calc(100vw - 24px));max-height:min(320px,60vh);flex-direction:column;gap:4px;overflow:auto;box-sizing:border-box;border:1px solid var(--dsw-alias-border-l1);border-radius:12px;background:var(--dsw-alias-bg-base);box-shadow:0 18px 46px rgba(15,23,42,.18);padding:8px;scrollbar-width:thin}.dsh-mm-active-menu-option{display:flex;align-items:center;gap:8px;min-height:36px;border:0;border-radius:9px;background:transparent;color:var(--dsw-alias-label-primary);padding:0 10px;font-size:12px;text-align:left;cursor:pointer}.dsh-mm-active-menu-option:hover,.dsh-mm-active-menu-option[aria-selected=true]{background:var(--dsw-alias-interactive-bg-hover)}.dsh-mm-active-menu-option:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary);outline-offset:-2px}.dsh-mm-active-menu-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:550}.dsh-mm-active-menu-meta{margin-left:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsh-mm-active-menu-check{flex:none;color:var(--dsw-alias-state-business-primary);font-weight:700}.dsh-mm-active-menu-empty{padding:16px 10px;color:var(--dsw-alias-label-tertiary);font-size:12px;text-align:center}.dsh-mm-image-add{display:block;width:100%;box-sizing:border-box;min-height:40px;margin-top:12px;border:1px dashed var(--dsw-alias-border-l2);border-radius:12px;background:transparent;color:var(--dsw-alias-label-secondary);font-size:13px;font-weight:550;cursor:pointer}.dsh-mm-image-add:hover{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.dsh-mm-image-provider-capability{display:inline-flex;align-items:center;gap:6px;color:var(--dsw-alias-label-secondary);font-size:12px}.dsh-mm-image-provider-capability[data-capability=ready]{color:#1a8f56}.dsh-mm-image-provider-active{flex:none;border-radius:999px;background:var(--dsw-alias-state-business-primary);color:white;padding:3px 8px;font-size:11px;font-weight:600}.dsh-mm-image-provider-field select{box-sizing:border-box;width:100%;height:38px;border:1px solid var(--dsw-alias-border-l2);border-radius:9px;outline:0;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);padding:0 9px;font-size:13px}.dsh-mm-image-provider-field select:focus-visible{border-color:var(--dsw-alias-state-business-primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--dsw-alias-state-business-primary) 12%,transparent)}.dsh-mm-image-provider-verify-note{grid-column:1/-1;margin:0;color:#b45309;font-size:11px;line-height:1.5}.dsh-mm-image-confirm{border-top:1px solid var(--dsw-alias-border-l1);padding:14px 18px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;color:var(--dsw-alias-label-secondary);font-size:12px}.dsh-mm-image-confirm-actions{display:flex;flex-wrap:wrap;gap:8px}.dsh-mm-image-danger{border-color:var(--dsw-alias-state-error-primary)!important;color:var(--dsw-alias-state-error-primary)!important}.dsh-mm-image-provider-message[data-error=true]{color:var(--dsw-alias-state-error-primary)}
           @media(max-width:700px){.dsh-mm-image-settings{margin-top:26px;padding-top:22px}.dsh-mm-image-settings-head{display:block}.dsh-mm-image-provider-head{padding:0 14px}.dsh-mm-image-provider-meta{display:none}.dsh-mm-image-provider-editor{grid-template-columns:1fr;padding:14px}.dsh-mm-image-provider-field,.dsh-mm-image-provider-field[data-wide=true],.dsh-mm-image-provider-actions{grid-column:1}.dsh-mm-active-selector{max-width:none;margin-top:14px}.dsh-mm-active-menu{position:fixed;left:12px!important;right:12px!important;top:auto!important;bottom:12px;width:auto;max-height:70vh;border-radius:16px}.dsh-mm-image-confirm{padding:12px 14px}}
+          /* 卡片打开期间收起 '/' 触发器菜单：点选带卡片的 Skill 后，输入框里仍留着触发词，
+             注意：本注释处于模板字符串内，禁止使用反引号（会提前终止模板，导致 styleText 变成 NaN），
+             触发器会把 Skill 列表立刻再弹一次（技能栏跳起来）。这里只在卡片打开时隐藏该菜单，
+             卡片确认或取消后立刻恢复；输入框文本、列表数据与选择行为都不改动。 */
+          html[data-dsh-mathmodel-card] :is([role=listbox],:has(>[role=listbox])){opacity:0!important;pointer-events:none!important;visibility:hidden!important}
         `;
-        document.head.appendChild(style);
+      function ensureMathmodelStyle() {
+        let style = document.getElementById(styleId);
+        if (!style) {
+          style = document.createElement('style');
+          style.id = styleId;
+          document.head.appendChild(style);
+        }
+        if (style.textContent !== styleText) style.textContent = styleText;
       }
+      ensureMathmodelStyle();
 
       function installMetaMathBrand() {
         for (const markSlot of document.querySelectorAll('[data-slot="sidebar.brand.mark"]')) {
@@ -362,6 +443,18 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
       installMetaMathBranding();
       new MutationObserver(installMetaMathBranding).observe(document.documentElement, { childList: true, subtree: true });
 
+      // 卡片标记自愈：卡片关闭的任何路径（取消/确定/会话切换/多实例竞态）若遗漏
+      // data-dsh-mathmodel-card 清理，只要页面已无 .dsh-mm-card 就地清除，
+      // 避免 `/` 触发菜单被残留标记永久隐藏（GOAL-80 用户实测残留 math-paper-cn）。
+      // 打开方向安全：React 先提交卡片 DOM 再跑 effect 设标记，childList 回调不会提前误删。
+      function syncMathmodelCardMarker() {
+        const root = document.documentElement;
+        if (root.dataset.dshMathmodelCard === undefined) return;
+        if (!document.querySelector('.dsh-mm-card')) delete root.dataset.dshMathmodelCard;
+      }
+      syncMathmodelCardMarker();
+      new MutationObserver(syncMathmodelCardMarker).observe(document.documentElement, { childList: true, subtree: true });
+
       // 中央主视觉：隐藏官方鲸鱼（GOAL-35 用户要求移除紫鲸鱼），标题行整行居中
       function hideMetaMathHeroFish() {
         const hitbox = document.querySelector('span[class*="_fishHitbox"]');
@@ -376,30 +469,8 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
       new MutationObserver(hideMetaMathHeroFish).observe(document.documentElement, { childList: true, subtree: true });
 
       // 中央主标题替换为“大道至简”金属艺术字图（透明底），并移除“预览版”徽章（GOAL-33）
-      function installMetaMathHeroTitle() {
-        const headline = document.querySelector('span[class*="_headlineText"]');
-        if (headline && headline.dataset.dshMetamathTitle !== 'true') {
-          headline.textContent = '';
-          headline.classList.add('dsh-mm-hero-title');
-          const titleImg = document.createElement('img');
-          titleImg.className = 'dsh-mm-hero-title-img';
-          titleImg.src = metaMathHeroTitle;
-          titleImg.alt = '大道至简';
-          headline.appendChild(titleImg);
-          headline.dataset.dshMetamathTitle = 'true';
-          const row = headline.parentElement;
-          if (row && row.dataset.dshMetamathTitleRow !== 'true') {
-            row.style.gridTemplateColumns = 'auto';
-            row.style.justifyContent = 'center';
-            row.dataset.dshMetamathTitleRow = 'true';
-          }
-        }
-        const badge = document.querySelector('span[class*="_previewBadge"]');
-        if (badge && badge.dataset.dshMetamathBadge !== 'true') {
-          badge.style.display = 'none';
-          badge.dataset.dshMetamathBadge = 'true';
-        }
-      }
+      // 共享工厂 createMetaMathHeroTitleInstaller 兼容新旧两代宿主 DOM（见上方 JSDoc）。
+      const installMetaMathHeroTitle = createMetaMathHeroTitleInstaller(document, metaMathHeroTitle);
       installMetaMathHeroTitle();
       new MutationObserver(installMetaMathHeroTitle).observe(document.documentElement, { childList: true, subtree: true });
 
@@ -442,6 +513,17 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
           return () => { active = false; };
         }, [open, loadSkillHelp, activeSkill]);
         React.useEffect(() => { if (activeSkill) setSelectedSkill(activeSkill); }, [activeSkill]);
+        /**
+         * 已修复：点选带卡片的 Skill 后，`/` 触发器仍留在输入框里，导致 Skill 列表
+         * 立刻又弹起来（"技能栏跳起来"）。卡片打开期间给 <html> 挂一个标记，由本插件的
+         * 样式收起触发器菜单；卡片关闭（确认/取消）后立即移除标记，输入框不受影响。
+         */
+        React.useEffect(() => {
+          const root = document.documentElement;
+          if (card) root.dataset.dshMathmodelCard = card.skill ?? 'open';
+          else delete root.dataset.dshMathmodelCard;
+          return () => { delete root.dataset.dshMathmodelCard; };
+        }, [card]);
         React.useEffect(() => {
           if (!floating) return undefined;
           const button = document.querySelector('[data-slot="conversation.session.header.utilities"] > button[class*="_sessionLogButton"]');
@@ -1019,6 +1101,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         throw error;
       }
       async function apply(ctx) {
+        ensureMathmodelStyle();
         const disposeRemote = await ctx.remote.$mount(TYPERT_REMOTE);
         const mathmodelCards = ctx.get('remote.mathmodelCards');
         const mathmodelCredentials = ctx.get('remote.mathmodelCredentials');

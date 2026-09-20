@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
+
+reviews:
+  profile: "chill"
+  poem: false
+  request_changes_workflow: false
+  high_level_summary: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!**/pnpm-lock.yaml"
+    - "!**/*.lock"
+    - "!**/package-lock.json"
+    - "!**/lib/**"
+    - "!**/coverage/**"
+    - "!**/.scratch/**"
+    - "!**/*.log"
+  path_instructions:
+    - path: "src/**"
+      instructions: |
+        - Must follow ESM conventions: two spaces indentation, single quotes, and no semicolons.
+        - Never hardcode or log credentials, OAuth tokens, API keys, or account identifiers.
+        - Maintain clean, testable boundaries for translation (translate.ts), streaming (sse.ts), and credential management.
+    - path: "tests/**"
+      instructions: |
+        - Mock network responses by default; do not make requests that consume external Qoder quota.

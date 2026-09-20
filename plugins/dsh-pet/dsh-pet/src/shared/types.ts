@@ -8,6 +8,14 @@
 /** 支持的角落 */
 export type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
+/** 轴对齐矩形（左上角 + 宽高）。显示器工作区、窗口内容区、可视夹取区共用同一形状。 */
+export interface Rect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 /**
  * 宠物的显示位置（四个值，必填）：
  * - web     = 只显示在浏览器 overlay
@@ -37,8 +45,11 @@ export interface Category {
   actions: string[];
 }
 
-/** 事件动画：事件名 → 动画名数组（数组顺序 = 档位顺序；不进随机链，只由代码显式触发） */
-export type Events = Record<string, string[]>;
+/** 事件档位槽位：单个动画名（固定播放，原行为）或候选数组（触发时档内随机抽 1，尽量不连续重复） */
+export type EventSlot = string | string[];
+
+/** 事件动画：事件名 → 档位槽位数组（数组顺序 = 档位顺序；不进随机链，只由代码显式触发） */
+export type Events = Record<string, EventSlot[]>;
 
 /** 动画权重 */
 export interface Weights {
@@ -81,6 +92,9 @@ export interface Pet {
    *  缺失默认 false（默认关闭：碎碎念每次生成会调用当前对话的模型，本地 LLM 单并发时
    *  会顶掉正在跑的任务的 KV cache，见 config.jsonc 注释） */
   whisperEnabled: boolean;
+  /** 是否启用工作状态联动：true=监听 DSH 会话事件（tool/call 等），按 animations.events.workStatus
+   *  数组切档位动画 + 气泡；false=禁用（默认）。监听不调用模型，无 KV cache 风险 */
+  workStatusEnabled: boolean;
   /** 显示位置（web/desktop/both/none，必填）：缺失即配置错误，代码不做兜底 */
   display: PetDisplay;
   position: { corner: Corner; marginX: number; marginY: number };
@@ -92,6 +106,9 @@ export interface Pet {
   eventsRefreshSec?: Record<string, number>;
   /** 条目级：拖拽抛掷物理参数（全局共用；host 合并已填默认，拍平时吹入） */
   physics?: PhysicsParams;
+  /** 条目级：工作状态气泡文案（二维数组，外层索引 = workStatus 档位 0..5，内层每档可多句随机抽；
+   *  host 合并已填默认，拍平时吹入；整字段缺失 = 不弹工作状态文本，只播动画） */
+  workStatusTexts?: string[][];
 }
 
 /** config.jsonc 的 physics 段：拖拽抛掷手感参数（全局，所有宠物共用）。
@@ -115,6 +132,10 @@ export interface PhysicsParams {
 export interface ClientConfig {
   /** 系统通知总开关：true=对话完成/生成失败/输出截断/权限申请/用户选择时弹出系统通知；缺失即配置错误 */
   notificationsEnabled: boolean;
+  /** 碎碎念配图开关：true=碎碎念每次从表情包池随机抽 1 张连同文本显示（碎碎念无上下文，故随机） */
+  whisperImageEnabled: boolean;
+  /** 对话配图开关：true=对话时把表情包清单交模型按语境选 1 张（可不选）；false=纯文本 */
+  chatImageEnabled: boolean;
   pets: Pet[];
   animations: Animations;
   animationWeights: Weights;

@@ -1,0 +1,107 @@
+{
+  "name": "dsh-provider-qoder",
+  "description": "Global Qoder subscription adapter for the DeepSeek Harness LLM seam",
+  "version": "0.3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mo-n/dsh-provider-qoder"
+  },
+  "homepage": "https://github.com/mo-n/dsh-provider-qoder#readme",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "qoder"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "tsdown --config tsdown.config.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --test-isolation=none --experimental-strip-types tests/*.test.ts",
+    "build": "tsdown --config tsdown.config.mjs",
+    "verify": "pnpm run build && pnpm run typecheck && pnpm test",
+    "check": "pnpm run verify && pnpm pack --dry-run",
+    "prepublishOnly": "pnpm run verify"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
+    "cordis.patch.yml",
+    "LICENSE",
+    "README.md",
+    "README_CN.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
+    }
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.2 <5",
+    "@deepseek-ai/dsh-api-remotes": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-attachment": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-client-connection": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-client-locale": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-client-ui-settings": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-client-ui-slots": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-credentials": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-invariants": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-llm": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-settings": ">=0.1.2-rc.1 <0.2",
+    "@deepseek-ai/dsh-web": ">=0.1.2-rc.1 <0.2",
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "3.18.1"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.2",
+    "@deepseek-ai/dsh-agent": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-api-remotes": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-attachment": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-connection": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-locale": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-settings": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-client-ui-slots": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-credentials": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-invariants": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-llm": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-settings": "0.1.2-rc.1",
+    "@deepseek-ai/dsh-web": "0.1.2-rc.1",
+    "@deepseek-ai/schemastery": "3.18.1",
+    "@types/node": "24.3.0",
+    "@types/react": "18.3.1",
+    "lightningcss": "^1.33.0",
+    "react": "18.3.1",
+    "tsdown": "0.22.2",
+    "typescript": "5.9.2"
+  }
+}

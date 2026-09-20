@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""检查项目锁定的 Draw.io / AI 非数据绘图契约。"""
+"""检查项目锁定的 Draw.io / HTML / AI 非数据绘图契约。"""
 from __future__ import annotations
 import json
 import hashlib
@@ -17,12 +17,14 @@ if str(DRAWING_DIR) not in sys.path:
     sys.path.insert(0, str(DRAWING_DIR))
 from drawio_pipeline import ROADMAP_TEMPLATE_IDS, template_structure_errors
 
-MODES = {"drawio", "ai"}
+MODES = {"drawio", "html", "ai"}
 FLOW_TOKENS = ("flowchart", "roadmap", "技术路线", "路线图", "流程图", "问题分析")
 AI_GENERATORS = {"imagegen", "image gen", "openai-imagegen"}
 FIELDS = ("generator", "template_id", "source", "exports", "prompt_source", "paper_ready", "export_status", "needs_visual_review", "qa")
 DRAWIO_QA = ("static_check_ok", "cli_export_ok", "content_ok", "cn_text_ok", "layout_ok", "edge_routing_ok", "node_overlap_ok", "text_fit_ok", "grayscale_ok", "single_column_ok", "double_column_ok", "paper_insert_ok")
+HTML_QA = ("html_pdf_check_ok", "geom_check_ok", "content_ok", "cn_text_ok", "layout_ok", "text_fit_ok", "grayscale_ok", "single_column_ok", "double_column_ok", "paper_insert_ok")
 AI_QA = ("content_consistency_ok", "cn_text_ok", "symbol_formula_ok", "crop_ok", "clarity_ok", "single_column_ok", "double_column_ok", "paper_insert_ok")
+HTML_ROADMAP_SKELETONS = {"skeleton_swimlane", "skeleton_spine", "skeleton_twocolumn", "skeleton_layered"}
 
 
 def load_object(path: Path) -> tuple[dict, list[str]]:
@@ -326,8 +328,54 @@ def check_ai(project: Path, items: list[dict], prompts: list[Path], errors: list
             errors.append(f"{label} 未在论文中插入")
 
 
+def check_html(project: Path, items: list[dict], prompts: list[Path], errors: list[str]) -> None:
+    loose_drawio = sorted((project / "手绘图").glob("*.drawio")) if (project / "手绘图").exists() else []
+    if loose_drawio:
+        errors.append("HTML 模式的 手绘图/ 不得残留 .drawio 源文件")
+    non_data = [item for item in items if not is_python_data(item)]
+    flows = [item for item in items if is_flow(item) and not is_python_data(item)]
+    if not flows:
+        errors.append("HTML 模式至少需要一张流程类图")
+    if any(str(item.get("generator", "")).lower() in AI_GENERATORS for item in items):
+        errors.append("HTML 模式不得混入 AI 成图条目")
+    invalid = [item for item in non_data if str(item.get("generator", "")).lower() != "html"]
+    if invalid:
+        errors.append("HTML 模式存在 generator 不是 html 的非数据绘图条目")
+    non_flow = [item for item in non_data if not is_flow(item)]
+    if non_flow:
+        errors.append("HTML 模式不得自动生成原理/模型/概念/示意图条目")
+    if not 2 <= len(prompts) <= 4:
+        errors.append(f"HTML 模式概念类提示词必须为 2–4 份，当前 {len(prompts)} 份")
+    for index, item in enumerate(flows, 1):
+        label = f"HTML 流程图条目 {index}"
+        common_entry(project, item, label, errors)
+        source = rel(item.get("source"))
+        if str(item.get("generator", "")).lower() != "html":
+            errors.append(f"{label} generator 必须为 html")
+        if not source.startswith("手绘图/") or not source.endswith(".html"):
+            errors.append(f"{label} source 必须为 手绘图/*.html")
+        template_id = str(item.get("template_id") or "")
+        if not template_id:
+            errors.append(f"{label} 缺少 template_id（必须记录所用骨架/范式）")
+        if is_roadmap(item) and template_id not in HTML_ROADMAP_SKELETONS:
+            errors.append(f"{label} 技术路线图 template_id 必须属于骨架池四类: {template_id or '<空>'}")
+        if item.get("export_status") != "electron_printed":
+            errors.append(f"{label} export_status 必须为 electron_printed")
+        if not {".png", ".pdf"}.issubset({Path(path).suffix.lower() for path in export_paths(item)}):
+            errors.append(f"{label} 必须包含矢量 PDF 与 2× PNG")
+        qa = item.get("qa")
+        if not isinstance(qa, dict):
+            errors.append(f"{label} qa 必须是对象")
+        else:
+            for key in HTML_QA:
+                if qa.get(key) is not True:
+                    errors.append(f"{label} QA 未通过 {key}")
+        if not paper_has(project, export_paths(item)):
+            errors.append(f"{label} 导出图未在论文中插入")
+
+
 def main() -> int:
-    parser = project_arg("检查项目级 Draw.io / AI 全自动双绘图契约")
+    parser = project_arg("检查项目级 Draw.io / HTML 矢量 / AI 全自动绘图契约")
     args = parser.parse_args()
     project = Path(args.project).resolve()
     state, errors = load_object(project / "项目状态.json")
@@ -360,6 +408,8 @@ def main() -> int:
             errors.append(f"提示词文件为空: {prompt.relative_to(project)}")
     if state_mode == "drawio":
         check_drawio(project, items, prompts, errors)
+    elif state_mode == "html":
+        check_html(project, items, prompts, errors)
     elif state_mode == "ai":
         check_ai(project, items, prompts, errors)
     return write_report(not errors, "check_drawing_contract", errors, args.output)

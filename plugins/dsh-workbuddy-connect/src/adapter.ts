@@ -16,6 +16,7 @@ import type { ResolvedPiAiProviderProfile } from '@deepseek-ai/dsh-llm-pi-ai'
 import type { AttachmentStore } from '@deepseek-ai/dsh-attachment'
 import type { WorkBuddyCredentialStore } from './auth.ts'
 import type { WorkBuddyCatalog, WorkBuddyModelInfo } from './catalog.ts'
+import type { WorkBuddyProbeRecord } from './probe-store.ts'
 import type { WorkBuddyShim } from './shim.ts'
 import { normalizeCredits } from './upstream.ts'
 
@@ -74,11 +75,12 @@ const RATE_SEPARATOR = ' · '
 /**
  * Append the billing rate to one model's display name.
  *
- * The rate rides the *name* alone because the DSH model surfaces disagree
- * about which field they render: the composer's model seat (`ModelSelect`)
- * renders `model.name` only and never reads `description`, while the `/model`
- * popup renders BOTH — a rate in `description` would show it twice there, so
- * `description` stays untouched.
+ * The rate AND the declared promo badges ride the *name* alone: since DSH
+ * 0.1.2 the composer's model seat (`ModelSelect`) renders `model.name` only —
+ * `description` is no longer read there at all (the 0.1.1-era client rendered
+ * it, which is why the badges used to be visible in the seat). The `/model`
+ * popup renders the name too, so a separate `description` copy would either
+ * duplicate (rate) or vanish (badges) depending on client generation.
  *
  * This is display-only and cannot affect routing: the wire request is built
  * from `model.id` (pi-ai's completions API sets `model: model.id`), the
@@ -88,28 +90,40 @@ const RATE_SEPARATOR = ' · '
  */
 
 /**
- * The declared promo badges (`限时免费`, `夜间折扣`) as a display string for the
- * `/model` popup's description slot, which the name does not cover. The
- * labels are the upstream's own spellings and the host seam has no locale
- * service, so non-Chinese UIs see them verbatim — accepted until the picker
- * grows a localized badge slot.
+ * The catalog display suffix: the billing rate followed by the declared promo
+ * badges (`限时免费`, `夜间折扣`), or undefined when the row carries neither.
+ * The badge labels are the upstream's own spellings and the host seam has no
+ * locale service, so non-Chinese UIs see them verbatim — accepted until the
+ * picker grows a localized badge slot.
  */
-function promoDescription(info: WorkBuddyModelInfo): string | undefined {
-  const badges = info.billing?.badges
-  return badges === undefined || badges.length === 0 ? undefined : badges.join(' · ')
+function displaySuffix(info: WorkBuddyModelInfo): string | undefined {
+  const parts = [
+    normalizeCredits(info.billing?.credits),
+    ...(info.billing?.badges ?? []),
+  ].filter((part): part is string => part !== undefined && part !== '')
+  return parts.length === 0 ? undefined : parts.join(' · ')
 }
-function withRate(name: string, info: WorkBuddyModelInfo): string {
-  const rate = normalizeCredits(info.billing?.credits)
-  return rate === undefined ? name : `${name}${RATE_SEPARATOR}${rate}`
+
+/** Append the catalog display suffix to one model's display name. */
+function withCatalogDisplay(name: string, info: WorkBuddyModelInfo): string {
+  const suffix = displaySuffix(info)
+  return suffix === undefined ? name : `${name}${RATE_SEPARATOR}${suffix}`
 }
 
 /** Constructor dependencies. */
 export interface WorkBuddyAdapterOptions {
+  providerId?: string
+  displayName?: string
   shim: WorkBuddyShim
   store: WorkBuddyCredentialStore
   catalog: WorkBuddyCatalog
   /** Resolve the durable attachment service at request time, when present. */
   resolveAttachments?: () => AttachmentStore | undefined
+  /**
+   * Look up a local probe observation for a model. Consulted only for rows the
+   * upstream left undeclared; absent means declared-set-only behavior.
+   */
+  observe?: (modelId: string) => WorkBuddyProbeRecord | undefined
 }
 
 /** What {@link createWorkBuddyAdapter} hands back. */
@@ -124,36 +138,57 @@ export interface WorkBuddyAdapter {
  * `thinkingLevelMap` (every level pinned to its wire spelling or `null` for
  * unsupported), mirroring `dsh-llm-pi-ai`'s own `resolveModelReasoning`.
  *
- * Declared sets only: a thinking control is offered exactly when the upstream
- * catalog declares a `supportedEfforts` list, and it offers exactly the
- * declared values. Rows without a list (the older `{effort, summary}` shape)
- * get no control at all — their selectable set is client-side knowledge the
- * catalog does not carry (the desktop app differs per model there: GLM-5.2
- * gets a thinking control while MiniMax-M3 and Kimi-K2.6 do not, though their
- * catalog rows are identical), and another implementation against the same
- * upstream (workbuddy2api) gates on the declared set and downgrades
- * out-of-set values rather than passing them through, so sending an
- * undeclared value risks a 400. Such models never carry `reasoning_effort`
- * on the wire; the upstream applies its own default.
- * `off` is offered only when the model explicitly reports thinking can be
- * disabled (`canDisableThinking === true`).
+ * Two sources, strictly ordered (`docs/reasoning-effort-probe-plan.md` §5):
+ *
+ * 1. **The declared set.** When the upstream declares a non-empty
+ *    `supportedEfforts`, exactly those values are offered and nothing else.
+ *    This always wins: an observation never widens or narrows a declared set.
+ * 2. **A local observation.** Rows without a declared set (the older
+ *    `{effort, summary}` shape) normally get no control at all — their
+ *    selectable set is client-side knowledge the catalog does not carry, and
+ *    the desktop app differs per model there. If the user authorized a probe
+ *    and it established that the upstream *validates* the parameter, the
+ *    verified spellings are offered.
+ *
+ * A `non-validating` observation deliberately yields no control: the upstream
+ * accepts values that cannot exist (measured on `glm-5.2`), so every per-level
+ * acceptance it produced would be a false positive.
+ *
+ * `off` is offered only when the upstream declares `canDisableThinking: true`.
+ * It is never probed — disabling thinking is a separate capability, and the
+ * per-model acceptance of `off` cannot be inferred from the row's shape.
+ *
+ * The offered set is described internally as "verified accepted", never as
+ * "verified effective": acceptance proves the upstream did not reject the
+ * spelling, not that it changes what the model does.
  */
-function reasoningFields(info: WorkBuddyModelInfo): { reasoning: boolean; thinkingLevelMap?: ThinkingLevelMap } {
+export function reasoningFields(
+  info: WorkBuddyModelInfo,
+  observed?: WorkBuddyProbeRecord,
+): { reasoning: boolean; thinkingLevelMap?: ThinkingLevelMap } {
   const reasoning = info.reasoning
   if (reasoning === undefined || reasoning.supports !== true) {
     // Not a reasoning model: pi-ai reads a falsy `reasoning` as "off only".
     return { reasoning: false }
   }
-  const efforts = reasoning.supportedEfforts
-  if (efforts === undefined || efforts.length === 0) {
-    // No declared set: no thinking control, no `reasoning_effort` on the wire
-    // — identical to the pre-#9 behavior for these rows.
+  const declared = reasoning.supportedEfforts
+  const efforts = declared !== undefined && declared.length > 0
+    ? declared
+    // Only a validating observation may supply a set, and only for rows the
+    // upstream left undeclared.
+    : observed?.validation === 'validating' && observed.efforts.length > 0
+      ? observed.efforts
+      : undefined
+  if (efforts === undefined) {
+    // Undeclared and unobserved (or observed as non-validating): no thinking
+    // control, and no `reasoning_effort` on the wire.
     return { reasoning: false }
   }
   const map: Record<ModelThinkingLevel, string | null> = {
-    off: reasoning.canDisableThinking === true ? 'off' : null,
+    // Probing never grants `off`; only an explicit declaration does.
+    off: reasoning.canDisableThinking === true && declared !== undefined && declared.length > 0 ? 'off' : null,
     // `minimal` is not in the upstream effort vocabulary (EFFORT_VALUES), so
-    // no declared set can ever contain it.
+    // no declared set — and no probe candidate — can ever contain it.
     minimal: null,
     low: efforts.includes('low') ? 'low' : null,
     medium: efforts.includes('medium') ? 'medium' : null,
@@ -165,18 +200,21 @@ function reasoningFields(info: WorkBuddyModelInfo): { reasoning: boolean; thinki
 }
 
 /** Build one pi-ai model descriptor pointing at the loopback shim. */
-function toPiModel(info: WorkBuddyModelInfo, baseUrl: string): Model<Api> {
+function toPiModel(info: WorkBuddyModelInfo, baseUrl: string, observed?: WorkBuddyProbeRecord, providerId = WORKBUDDY_PROVIDER): Model<Api> {
   return {
     id: info.id,
     name: info.name,
     api: 'openai-completions',
-    provider: WORKBUDDY_PROVIDER,
+    provider: providerId,
     baseUrl,
     input: info.supportsImages === true ? ['text', 'image'] : ['text'],
-    ...reasoningFields(info),
+    ...reasoningFields(info, observed),
     cost: NO_COST,
     contextWindow: info.contextWindow,
     maxTokens: info.maxTokens,
+    // pi-ai cannot infer WorkBuddy's field spelling from the shim's random
+    // loopback URL, so name the upstream-required field explicitly.
+    compat: { maxTokensField: 'max_tokens' },
   } as unknown as Model<Api>
 }
 
@@ -184,20 +222,29 @@ function toPiModel(info: WorkBuddyModelInfo, baseUrl: string): Model<Api> {
  * Assemble the adapter. The provider's `getModels` reads the live catalog,
  * and every model's `baseUrl` is re-resolved per read so the shim's
  * ephemeral port applies from the first snapshot after startup.
+ *
+ * The profile is constructed by hand rather than through dsh-llm-pi-ai's
+ * internal `resolveProfiles()`: that helper is not part of the package's
+ * public export surface (root entry, `lib/` deep imports blocked by the
+ * exports map, `src/` not shipped), so hand-assembly is the only supported
+ * path and every newly required field must be adopted here explicitly —
+ * `modelErrors` since 0.1.5-alpha.2 (#12).
  */
 export function createWorkBuddyAdapter(options: WorkBuddyAdapterOptions): WorkBuddyAdapter {
-  const { shim, store, catalog, resolveAttachments } = options
+  const { shim, store, catalog, resolveAttachments, observe } = options
+  const providerId = options.providerId ?? WORKBUDDY_PROVIDER
+  const displayName = options.displayName ?? 'WorkBuddy'
 
   const buildModels = (): Model<Api>[] => {
     // The OpenAI SDK pi-ai drives appends `/chat/completions` to baseURL,
     // so the shim's routes line up with the `/v1` prefix in place.
     const baseUrl = `${shim.baseUrl()}/v1`
-    return catalog.current().map(info => toPiModel(info, baseUrl))
+    return catalog.current().map(info => toPiModel(info, baseUrl, observe?.(info.id), providerId))
   }
 
   const base = createProvider({
-    id: WORKBUDDY_PROVIDER,
-    name: 'WorkBuddy',
+    id: providerId,
+    name: displayName,
     auth: {
       apiKey: {
         name: 'WorkBuddy OAuth bearer token',
@@ -219,16 +266,19 @@ export function createWorkBuddyAdapter(options: WorkBuddyAdapterOptions): WorkBu
   const provider: Provider = { ...base, getModels: () => buildModels() }
 
   const profile: ResolvedPiAiProviderProfile = {
-    provider: WORKBUDDY_PROVIDER,
-    displayName: 'WorkBuddy',
+    provider: providerId,
+    displayName,
     streamIdleTimeoutMs: WORKBUDDY_STREAM_IDLE_TIMEOUT_MS,
     retryPolicy: resolveRetryPolicy(undefined, 'dsh-workbuddy-connect retryPolicy'),
     configuredMaxTokens: new Map(),
+    // Required since 0.1.5-alpha.2; the live catalog only exposes models that
+    // probed successfully, so there is never a per-model failure to report.
+    modelErrors: new Map(),
     ...REQUEST_IMAGE_BUDGETS,
     piProvider: provider,
   }
 
-  let profiles = new Map<string, ResolvedPiAiProviderProfile>([[WORKBUDDY_PROVIDER, profile]])
+  let profiles = new Map<string, ResolvedPiAiProviderProfile>([[providerId, profile]])
 
   const adapter = new WorkBuddyPiAiAdapter(catalog, {
     profiles: () => profiles,
@@ -244,7 +294,7 @@ export function createWorkBuddyAdapter(options: WorkBuddyAdapterOptions): WorkBu
   return {
     adapter,
     invalidate: () => {
-      profiles = new Map<string, ResolvedPiAiProviderProfile>([[WORKBUDDY_PROVIDER, profile]])
+      profiles = new Map<string, ResolvedPiAiProviderProfile>([[providerId, profile]])
     },
   }
 }
@@ -283,8 +333,7 @@ class WorkBuddyPiAiAdapter extends PiAiAdapter {
     return models.map(model => {
       const info = this.infoFor(model.id)
       if (info === undefined) return model
-      const promo = promoDescription(info)
-      return { ...model, name: withRate(model.name, info), ...promo === undefined ? {} : { description: promo } }
+      return { ...model, name: withCatalogDisplay(model.name, info) }
     })
   }
 
@@ -292,7 +341,6 @@ class WorkBuddyPiAiAdapter extends PiAiAdapter {
     const resolved = await super.resolveModel(provider, model, signal)
     const info = this.infoFor(model)
     if (info === undefined) return resolved
-    const promo = promoDescription(info)
-    return { ...resolved, name: withRate(resolved.name, info), ...promo === undefined ? {} : { description: promo } }
+    return { ...resolved, name: withCatalogDisplay(resolved.name, info) }
   }
 }

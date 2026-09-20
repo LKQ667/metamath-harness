@@ -28,6 +28,7 @@ A [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness) bund
 ## Features
 
 - **Trae model provider** — registers locally signed-in Trae models as the `trae` provider (e.g. `DeepSeek-V4-Flash`, `DeepSeek-V4-Pro`).
+- **Multiplier in the model name** — model names show the credit multiplier in Trae's own menu format (e.g. `GLM-5.2 · x0.79`), updated with each directory refresh.
 - **DSH local tool loop** — gets pending structured `tool_calls` from Trae `llm_utils_chat`, lets DSH execute its own local tools, then returns tool results to the model.
 - **Trae CN account switching** — detects local Trae CN and TRAE SOLO CN sign-ins, refreshes the token list, and lets users select an account without storing tokens in DSH settings.
 - **Read-only credits and model management** — shows Work credits separately from the general credits usable by DSH, and manages which Trae models are enabled. Read-only queries do not consume credits.

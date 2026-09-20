@@ -36,7 +36,7 @@ def main() -> int:
             errors.append(f"图源不存在: {source}")
         if is_flowchart_item(item):
             generator = str(item.get("generator", "")).lower()
-            expected = {"python": ".py", "drawio": ".drawio"}.get(generator)
+            expected = {"python": ".py", "drawio": ".drawio", "html": ".html"}.get(generator)
             if expected and source_path.suffix.lower() != expected:
                 errors.append(f"流程图源与 generator 不匹配: {source}")
             if generator in {"imagegen", "image gen", "openai-imagegen"} and source_path.suffix.lower() != ".png":

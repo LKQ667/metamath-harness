@@ -1,0 +1,4 @@
+# dsh bundle patch: inserts this plugin into a profile's layer stack.
+- insert:
+    - id: cline-free-provider
+      name: '@jiesou/dsh-cline-free-provider'

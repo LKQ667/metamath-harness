@@ -222,16 +222,32 @@ def choose_chart_family(
     }
 
 
+class SubplotPolicyError(ValueError):
+    """在当前 subplot_policy 下禁止生成多面板图。"""
+
+
+def assert_multi_panel_allowed(subplot_policy: str | None, panel_count: int) -> None:
+    """子图策略硬约束：禁用子图时任何多面板合成都必须中止，而不是静默降级。"""
+    policy = str(subplot_policy or "").strip()
+    if "禁用" in policy and panel_count > 1:
+        raise SubplotPolicyError(
+            f"subplot_policy=禁用子图 时禁止生成 panel_count={panel_count} 的多面板图；"
+            "请拆分为多张 panel_count=1 的独立图。"
+        )
+
+
 def compose_multi_panel(
     layout_mode: str,
     panel_specs: list[str] | None = None,
     width_mm: float = NATURE_WIDTH_MM["double"],
     height_mm: float = 130,
+    subplot_policy: str | None = None,
 ):
+    panel_specs = panel_specs or []
+    assert_multi_panel_allowed(subplot_policy, max(2, len(panel_specs) or 2))
     apply_py_nature_style()
     fig = plt.figure(figsize=(mm_to_inch(width_mm), mm_to_inch(height_mm)))
     axes: dict[str, plt.Axes] = {}
-    panel_specs = panel_specs or []
 
     if layout_mode == "hero_top_support_bottom":
         gs = fig.add_gridspec(2, 4, height_ratios=[2.2, 1.1], hspace=0.28, wspace=0.35)

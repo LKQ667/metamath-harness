@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -25,18 +25,37 @@ class MemorySettings extends SettingsProvider {
 let context: Context | undefined
 let root: string | undefined
 
+/** A desktop-shaped credential document for one upstream region. */
+function credentialDocument(domain: string): string {
+  return JSON.stringify({
+    auth: { accessToken: 'at', refreshToken: 'rt', expiresAt: Date.now() + 3_600_000, domain },
+    account: { uid: 'uid-1', nickname: 'nick', enterpriseId: 'ent-1' },
+  })
+}
+
 afterEach(async () => {
   await context?.fiber.dispose()
   context = undefined
   if (root !== undefined) await rm(root, { recursive: true, force: true })
   root = undefined
   vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
 })
 
 describe('WorkBuddy Host settings integration', () => {
   it('exposes the provider directory entry, the settings section, and the fallback model list', async () => {
     root = await mkdtemp(join(tmpdir(), 'dsh-workbuddy-connect-settings-'))
     vi.stubEnv('DSH_HOME', root)
+    // Hermetic fixture: point the CN variant at a synthetic credential and fail
+    // the upstream fetch, so the roster under test is always the built-in
+    // fallback. Without this the case silently depended on the developer
+    // machine's own WorkBuddy desktop sign-in — a machine holding only the
+    // `-ai` credential (correctly refused as the other product) left the group
+    // hidden and failed every fallback-roster assertion below.
+    const authFile = join(root, 'desktop-cn.info')
+    await writeFile(authFile, credentialDocument('copilot.tencent.com'))
+    vi.stubEnv('WORKBUDDY_AUTH_FILE', authFile)
+    vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('offline in tests') }))
     const ctx = new Context()
     context = ctx
     await ctx.plugin(LlmRuntime)
@@ -59,6 +78,13 @@ describe('WorkBuddy Host settings integration', () => {
     const descriptor = ctx.settings.describe().find(entry => entry.ns === WorkBuddy.WORKBUDDY_SETTINGS_NS)
     expect(descriptor).toBeDefined()
 
+    // The catalog is revealed by the first credential sweep, which is
+    // asynchronous by design (a sign-in while DSH is running must surface
+    // without a restart), so wait for the roster instead of asserting a
+    // fixed instant.
+    await vi.waitFor(async () => {
+      expect((await ctx.llm.listModels('workbuddy')).map(model => model.id)).toContain('auto')
+    })
     const models = await ctx.llm.listModels('workbuddy')
     expect(models.map(model => model.id)).toContain('auto')
     expect(models.map(model => model.id)).toContain('deepseek-v4-pro')
@@ -71,13 +97,13 @@ describe('WorkBuddy Host settings integration', () => {
     // so both the /model popup and the composer seat show it; the id and the
     // request path are untouched by this display-only decoration.
     const byId = new Map(models.map(model => [model.id, model]))
-    expect(byId.get('glm-5.2')?.name).toBe('GLM-5.2 · x0.79')
+    // Since DSH 0.1.2 the composer seat renders the model name only, so both
+    // the billing rate and the declared promo badges ride the name itself;
+    // description stays untouched everywhere.
+    expect(byId.get('glm-5.2')?.name).toBe('GLM-5.2 · x0.79 · 夜间折扣')
     expect(byId.get('glm-5.1')?.name).toBe('GLM-5.1 · x0.79')
     expect(byId.get('auto')?.name).toBe('Auto')
-    // The rate lives on the name only: the /model popup renders name AND
-    // description, so a description copy would display it twice there.
-    // description instead carries the declared promo badges, when present.
-    expect(byId.get('glm-5.2')?.description).toBe('夜间折扣')
+    expect(byId.get('glm-5.2')?.description).toBeUndefined()
     expect(byId.get('glm-5.3')?.description).toBeUndefined()
 
     // Thinking controls are declared-set-only: models whose upstream row
@@ -100,5 +126,208 @@ describe('WorkBuddy Host settings integration', () => {
     await ctx.settings.update(WorkBuddy.WORKBUDDY_SETTINGS_NS, { authFile: '/tmp/other-workbuddy.info' })
     const updated = ctx.settings.describe().find(entry => entry.ns === WorkBuddy.WORKBUDDY_SETTINGS_NS)
     expect((updated?.value as Record<string, unknown>)['authFile']).toBe('/tmp/other-workbuddy.info')
+  })
+
+  it('registers a signed-out variant but serves no models for it', async () => {
+    root = await mkdtemp(join(tmpdir(), 'dsh-workbuddy-connect-signedout-'))
+    vi.stubEnv('DSH_HOME', root)
+    // Hermetic signed-out fixture: explicit auth-file paths that do not exist
+    // keep the developer machine's own desktop sign-in out of the picture for
+    // both variants.
+    vi.stubEnv('WORKBUDDY_AUTH_FILE', join(root, 'absent-cn.info'))
+    vi.stubEnv('WORKBUDDY_AI_AUTH_FILE', join(root, 'absent-ai.info'))
+    const ctx = new Context()
+    context = ctx
+    await ctx.plugin(LlmRuntime)
+    await ctx.plugin(MemorySettings)
+    await ctx.plugin(WorkBuddy, {})
+
+    await vi.waitFor(() => {
+      expect(ctx.llm.listProviders().map(provider => provider.id)).toContain('workbuddy')
+    })
+    // The real signed-out semantics: the provider stays registered — that is
+    // what lets a sign-in while DSH is already running surface without a
+    // restart — but it serves no models, because an empty catalog is how DSH
+    // hides a group whose models could only fail.
+    expect(await ctx.llm.listModels('workbuddy')).toEqual([])
+  })
+
+  /**
+   * Both providers register from one plugin, unconditionally, and the four
+   * credential combinations are expressed through catalog visibility rather
+   * than through registration. That is what lets a sign-in that happens while
+   * DSH is already running surface without a restart.
+   */
+  it('registers both variants and keeps each variant identity separate', async () => {
+    root = await mkdtemp(join(tmpdir(), 'dsh-workbuddy-connect-dual-'))
+    vi.stubEnv('DSH_HOME', root)
+    // Shorten the credential sweep: the assertions below change a setting and
+    // then wait for the group to react, which only happens on a sweep.
+    vi.stubEnv('DSH_WORKBUDDY_POLL_MS', '100')
+    // One real-shaped credential per product, in separate files. The upstream
+    // fetch is stubbed to fail so the assertion covers the per-variant fallback
+    // rosters rather than depending on the network.
+    const cnFile = join(root, 'cn.info')
+    const aiFile = join(root, 'ai.info')
+    await writeFile(cnFile, credentialDocument('copilot.tencent.com'))
+    await writeFile(aiFile, credentialDocument('www.workbuddy.ai'))
+    vi.stubEnv('WORKBUDDY_AUTH_FILE', cnFile)
+    vi.stubEnv('WORKBUDDY_AI_AUTH_FILE', aiFile)
+    vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('offline in tests') }))
+
+    const ctx = new Context()
+    context = ctx
+    await ctx.plugin(LlmRuntime)
+    await ctx.plugin(MemorySettings)
+    await ctx.plugin(WorkBuddy, {})
+
+    await vi.waitFor(() => {
+      expect(ctx.llm.listProviders().map(provider => provider.id)).toEqual(
+        expect.arrayContaining(['workbuddy', 'workbuddy-ai']),
+      )
+    })
+
+    // Each provider carries its own display name, which is the model group
+    // heading the picker renders — and its OWN settings namespace: the Models
+    // page resolves `settingsNs` against served sections, so a shared ns would
+    // render both providers onto one card.
+    expect(ctx.llm.listConfigurableProviders()).toEqual(expect.arrayContaining([
+      { provider: 'workbuddy', displayName: 'WorkBuddy', settingsNs: 'workbuddy', settingsPath: [], declared: false },
+      { provider: 'workbuddy-ai', displayName: 'WorkBuddy AI', settingsNs: 'workbuddy-ai', settingsPath: [], declared: false },
+    ]))
+
+    // THE DISPATCH CONTRACT. The Plugins tab renders a card by
+    // `renderSlot('settings.plugin.item', {}, { entryKey: ns })` for each
+    // namespace the Host serves, and skips an entry whose key names no served
+    // namespace — the tab builds its list from sections, never from the slot's
+    // registrations. A card whose variant id is not a served ns therefore
+    // registers but never renders, which is exactly the bug this pins: every
+    // variant id must be an installed section's namespace.
+    const served = new Set(ctx.settings.describe().map(entry => entry.ns))
+    for (const variant of WorkBuddy.WORKBUDDY_VARIANTS) {
+      expect(served, `card key "${variant.id}" must be a served settings namespace`).toContain(variant.id)
+    }
+    expect(served).toContain(WorkBuddy.WORKBUDDY_AI_SETTINGS_NS)
+
+    // Each section owns only its own fields, so one card's form cannot edit the
+    // other's path. `describe()` reports the schema as schemastery's ref graph;
+    // the root object's `dict` is the field map.
+    const fieldsOf = (ns: string): string[] => {
+      const descriptor = ctx.settings.describe().find(entry => entry.ns === ns)
+      const root = (descriptor?.schema as { refs?: Record<string, { dict?: Record<string, unknown> }>, uid?: string } | undefined)?.refs?.[String((descriptor?.schema as { uid?: number } | undefined)?.uid)]
+      return Object.keys(root?.dict ?? {})
+    }
+    expect(fieldsOf('workbuddy')).toContain('authFile')
+    expect(fieldsOf('workbuddy')).not.toContain('authFileAI')
+    expect(fieldsOf('workbuddy-ai')).toEqual(['authFileAI'])
+
+    // A write through one section must reach ONLY that variant's store. The
+    // schema assertions above prove the two forms are split; this proves the
+    // wiring behind them is too. Without it, a section could carry the right
+    // field while `onChange` handed it to the wrong store and nothing above
+    // would notice.
+    //
+    // Observable chosen deliberately: point `authFileAI` at a file holding a
+    // CN-domain credential. If the write really reached the AI store, that
+    // store refuses the cross-product credential and the AI group empties; the
+    // CN group must be untouched. A mis-routed write would instead empty the
+    // CN group — so the assertion distinguishes "reached the AI store" from
+    // "reached some store".
+    const wrongRegionForAi = join(root, 'cn-credential-for-ai.info')
+    await writeFile(wrongRegionForAi, credentialDocument('copilot.tencent.com'))
+    await ctx.settings.update('workbuddy-ai', { authFileAI: wrongRegionForAi })
+    // A bounded settle rather than waitFor: if the wiring were broken the group
+    // would simply never change, and an assertion states that plainly instead
+    // of surfacing as a timeout. Two sweeps at the 100 ms interval above.
+    await new Promise(resolve => setTimeout(resolve, 400))
+    expect(await ctx.llm.listModels('workbuddy-ai')).toEqual([])
+    expect((await ctx.llm.listModels('workbuddy')).length).toBeGreaterThan(0)
+
+    // And the setting is genuinely read back through the merged config: putting
+    // a valid international file back restores the group.
+    await ctx.settings.update('workbuddy-ai', { authFileAI: aiFile })
+    await vi.waitFor(async () => {
+      expect((await ctx.llm.listModels('workbuddy-ai')).length).toBeGreaterThan(0)
+    }, { timeout: 10_000 })
+
+    await vi.waitFor(async () => {
+      expect((await ctx.llm.listModels('workbuddy')).length).toBeGreaterThan(0)
+      expect((await ctx.llm.listModels('workbuddy-ai')).length).toBeGreaterThan(0)
+    })
+
+    // The two variants must not share a roster: the international models are
+    // not reachable through the CN provider, and vice versa. A shared fallback
+    // list would misdescribe one of them (different rates, windows, and
+    // declared efforts).
+    const cn = (await ctx.llm.listModels('workbuddy')).map(model => model.id)
+    const ai = (await ctx.llm.listModels('workbuddy-ai')).map(model => model.id)
+    expect(cn).toContain('minimax-m3')
+    expect(ai).not.toContain('minimax-m3')
+    expect(ai).toContain('gpt-5.6-luna')
+    expect(cn).not.toContain('gpt-5.6-luna')
+  })
+
+  /**
+   * With no credential present, a variant exposes nothing. This is the
+   * deliberate behaviour change the plan calls out: the CN provider used to
+   * publish 15 fallback models to a signed-out user, which offered models that
+   * could only fail on the first message.
+   */
+  it('hides a variant with no usable credential while still registering it', async () => {
+    root = await mkdtemp(join(tmpdir(), 'dsh-workbuddy-connect-empty-'))
+    vi.stubEnv('DSH_HOME', root)
+    vi.stubEnv('WORKBUDDY_AUTH_FILE', join(root, 'absent-cn.info'))
+    vi.stubEnv('WORKBUDDY_AI_AUTH_FILE', join(root, 'absent-ai.info'))
+    const ctx = new Context()
+    context = ctx
+    await ctx.plugin(LlmRuntime)
+    await ctx.plugin(MemorySettings)
+    await ctx.plugin(WorkBuddy, {})
+
+    await vi.waitFor(() => {
+      expect(ctx.llm.listProviders().map(provider => provider.id)).toContain('workbuddy')
+    })
+    await vi.waitFor(async () => {
+      expect(await ctx.llm.listModels('workbuddy')).toEqual([])
+    })
+    expect(await ctx.llm.listModels('workbuddy-ai')).toEqual([])
+
+    // The provider directory entry survives: the group is hidden by having no
+    // models, not by unregistering, so a later sign-in needs no restart.
+    expect(ctx.llm.listConfigurableProviders().map(entry => entry.provider))
+      .toEqual(expect.arrayContaining(['workbuddy', 'workbuddy-ai']))
+    // And the settings card is still there to explain how to sign in.
+    expect(ctx.settings.describe().find(entry => entry.ns === WorkBuddy.WORKBUDDY_SETTINGS_NS)).toBeDefined()
+  })
+
+  /**
+   * A credential for the other product is refused, and the refusal is what the
+   * card shows. Silently treating it as "signed out" would send the user to
+   * re-authenticate when the actual fix is a file path.
+   */
+  it('refuses a cross-product credential instead of using it', async () => {
+    root = await mkdtemp(join(tmpdir(), 'dsh-workbuddy-connect-cross-'))
+    vi.stubEnv('DSH_HOME', root)
+    // The CN file is handed to the international provider, which is exactly the
+    // misconfiguration a user can produce with authFileAI / the env var.
+    const crossFile = join(root, 'wrong.info')
+    await writeFile(crossFile, credentialDocument('copilot.tencent.com'))
+    vi.stubEnv('WORKBUDDY_AUTH_FILE', join(root, 'absent-cn.info'))
+    vi.stubEnv('WORKBUDDY_AI_AUTH_FILE', crossFile)
+    const ctx = new Context()
+    context = ctx
+    await ctx.plugin(LlmRuntime)
+    await ctx.plugin(MemorySettings)
+    await ctx.plugin(WorkBuddy, {})
+
+    const models = await (async () => {
+      await vi.waitFor(() => {
+        expect(ctx.llm.listProviders().map(provider => provider.id)).toContain('workbuddy-ai')
+      })
+      return ctx.llm.listModels('workbuddy-ai')
+    })()
+    // Refused, so the group stays hidden rather than serving a roster the token
+    // cannot actually reach.
+    expect(models).toEqual([])
   })
 })

@@ -43,6 +43,11 @@ describe('client card fallback', () => {
           throw new Error('not reached')
         })
         void t
+        ctx.inject(['modelDirectories'], (scope: any) => {
+          scope.slots.inject('conversation.input.right', () => {
+            throw new Error('not reached')
+          })
+        })
       } catch (error: unknown) {
         console.error('[dsh-workbuddy-connect] client card failed to load (host provider unaffected):', error)
       }

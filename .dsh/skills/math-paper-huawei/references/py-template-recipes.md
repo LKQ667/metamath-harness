@@ -23,6 +23,20 @@
 
 模板注册表：`scripts/plotting/template_registry.py`
 
+## 模板语义面板数（panel_count）
+
+每个模板的语义面板数由注册表唯一给出，manifest 的 `panel_count` 必须与之相同；colorbar 与 legend 不计入。选模板前先执行 `subplot_policy`。
+
+| 模板 | panel_count | 等价单图 |
+|---|---|---|
+| `trend_confidence_template` / `sensitivity_tornado_template` / `sensitivity_sobol_heatmap_template` / `optimization_pareto_template` / `optimization_convergence_template` / `dynamics_phase_portrait_template` / `spatial_contour_flow_template` / `causal_effects_line_template` | 1 | 自身 |
+| `network_resilience_template` / `network_curvature_multiscale_template` / `spatiotemporal_chronological_network_template` | 3 | 无，拆分 |
+| `temporal_bursty_activity_template` | 3 | `trend_confidence_template` |
+| `stats_interval_lollipop_template` / `multi_panel_hero_support_template` | 4 | 无，拆分 |
+
+- `少用子图`：多面板入文图最多 4 张，其余选单 panel 模板；`temporal_bursty_activity_template` 优先换 `trend_confidence_template`。`select_template` 在禁用模式且无单图等价实现时返回“需要按原图语义拆分”，不得使用 `#panelN` 之类未注册的伪模板 ID。
+- `禁用子图`：禁止选用任何 `panel_count>1` 模板，更不得调用 `compose_multi_panel`；按上表拆分为独立编号图，一个 panel 一张图。
+
 ## 1. hero_top_support_bottom
 
 - 适用：机制说明、网络场景、流程 + 定量支撑

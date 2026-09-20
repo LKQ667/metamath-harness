@@ -1,0 +1,30 @@
+# Dependencies and package-manager caches
+node_modules/
+.pnpm-store/
+
+# Generated build and test output
+dist/
+lib/
+coverage/
+.artifacts/
+output/
+*.tgz
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+.scratch
+
+# Editor and operating-system metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini

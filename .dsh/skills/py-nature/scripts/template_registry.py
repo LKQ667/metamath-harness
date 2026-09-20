@@ -1,4 +1,88 @@
 TEMPLATE_REGISTRY = {
+    "ternary_tradeoff_template": {
+        "task_family": "optimization",
+        "chart_family": "ternary_contour",
+        "description": "三元权衡等高线与综合效用模板",
+        "tags": ["optimization", "ternary", "trade-off"],
+    },
+    "taylor_diagram_template": {
+        "task_family": "comparison",
+        "chart_family": "taylor_diagram",
+        "description": "多模型相关性、标准差与中心均方根误差综合评价模板",
+        "tags": ["comparison", "model-evaluation", "taylor"],
+    },
+    "response_surface_3d_template": {
+        "task_family": "optimization",
+        "chart_family": "response_surface",
+        "description": "响应面与投影等高线模板",
+        "tags": ["optimization", "response-surface", "3d-conditional"],
+    },
+    "parallel_coordinates_template": {
+        "task_family": "optimization",
+        "chart_family": "parallel_coordinates",
+        "description": "高维方案权衡与解空间平行坐标模板",
+        "tags": ["optimization", "high-dimensional", "parallel-coordinates"],
+    },
+    "sensitivity_sobol_chord_template": {
+        "task_family": "sensitivity",
+        "chart_family": "sobol_chord",
+        "description": "Sobol 主效应与交互作用弦图模板（仅复杂交互网络）",
+        "tags": ["sensitivity", "sobol", "restricted", "complex-interaction"],
+    },
+    "optimization_pareto_evolution_template": {
+        "task_family": "optimization",
+        "chart_family": "pareto_evolution",
+        "description": "Pareto 前沿代际演化与超体积收敛模板",
+        "tags": ["optimization", "pareto", "convergence"],
+    },
+    "constrained_optimization_landscape_template": {
+        "task_family": "optimization",
+        "chart_family": "constrained_landscape",
+        "description": "约束可行域、目标地形与迭代轨迹模板",
+        "tags": ["optimization", "constraints", "trajectory"],
+    },
+    "forecast_uncertainty_scenarios_template": {
+        "task_family": "evolution",
+        "chart_family": "uncertainty_scenarios",
+        "description": "时变预测区间与情景聚类模板",
+        "tags": ["evolution", "forecast", "uncertainty", "scenario"],
+    },
+    "hierarchical_correlation_template": {
+        "task_family": "comparison",
+        "chart_family": "clustered_heatmap",
+        "description": "层次聚类树与相关矩阵热图模板",
+        "tags": ["comparison", "correlation", "clustering", "heatmap"],
+    },
+    "sensitivity_multiscale_sunburst_template": {
+        "task_family": "sensitivity",
+        "chart_family": "multiscale_sunburst",
+        "description": "多阶段敏感性旭日图模板（仅层级与尺度结构）",
+        "tags": ["sensitivity", "multiscale", "restricted", "sunburst"],
+    },
+    "persistent_homology_template": {
+        "task_family": "dynamics",
+        "chart_family": "persistent_homology",
+        "description": "持续同调、Betti 数与条形码模板",
+        "tags": ["dynamics", "topology", "persistent-homology"],
+    },
+    "wavelet_coherence_template": {
+        "task_family": "evolution",
+        "chart_family": "wavelet_coherence",
+        "description": "小波相干谱、显著性边界与主脊线模板",
+        "tags": ["evolution", "time-frequency", "wavelet", "scipy"],
+    },
+    "dynamics_multi_attractor_template": {
+        "task_family": "dynamics",
+        "chart_family": "multi_attractor_phase_portrait",
+        "description": "多吸引子、势阱与状态转移相图模板",
+        "tags": ["dynamics", "phase-portrait", "multi-attractor"],
+    },
+    "optimization_pareto_manifold_3d_template": {
+        "task_family": "optimization",
+        "chart_family": "pareto_manifold_3d",
+        "description": "三目标非劣解流形模板（仅三目标结构确有必要时）",
+        "tags": ["optimization", "pareto", "restricted", "3d-conditional"],
+    },
     "causal_effects_line_template": {
         "task_family": "comparison",
         "chart_family": "multi_line",

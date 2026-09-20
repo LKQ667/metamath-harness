@@ -52,3 +52,59 @@ export function parseTraeStorageDocument(text: string): unknown {
   if (typeof value !== 'string') throw new Error(`Trae storage document has no ${TRAE_AUTH_STORAGE_KEY}`)
   return parseTraeAuthValue(value)
 }
+
+/**
+ * One decoded claim set from a Trae CLI `trae-jwt-token` file.
+ *
+ * The CLI writes a bare, unencrypted JWT — there is no `iCubeAuthInfo` wrapper
+ * and no AES layer, so this deliberately bypasses `parseTraeAuthValue`. Only
+ * the claims the credential store needs are read; the signature is not
+ * verified because the token is consumed locally and re-validated by the
+ * upstream service on every request.
+ */
+export interface TraeCliTokenClaims {
+  /** Token used directly as the `Cloud-IDE-JWT` bearer value. */
+  accessToken: string
+  /** `data.user_id`; matches the desktop `userId` for the same account. */
+  userId: string
+  /** `exp` as epoch milliseconds, or undefined when absent/unparseable. */
+  expiresAtMs?: number
+}
+
+function decodeBase64UrlJson(segment: string): Record<string, unknown> | undefined {
+  try {
+    const padded = segment.replace(/-/g, '+').replace(/_/g, '/')
+    const decoded = Buffer.from(padded, 'base64').toString('utf8')
+    const parsed = JSON.parse(decoded) as unknown
+    return typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed) ? parsed as Record<string, unknown> : undefined
+  } catch { return undefined }
+}
+
+/**
+ * Parse the CLI token file. Accepts either the bare JWT itself or a JSON
+ * envelope containing one, since the on-disk shape is only verified on macOS
+ * and a future CLI revision may wrap it.
+ */
+export function parseTraeCliToken(text: string): TraeCliTokenClaims {
+  const trimmed = text.trim()
+  if (trimmed === '') throw new Error('Trae CLI token file is empty')
+  let token = trimmed
+  if (trimmed.startsWith('{')) {
+    const envelope = JSON.parse(trimmed) as Record<string, unknown>
+    const candidate = envelope['token'] ?? envelope['accessToken'] ?? envelope['jwt']
+    if (typeof candidate !== 'string' || candidate.trim() === '') throw new Error('Trae CLI token document has no token field')
+    token = candidate.trim()
+  }
+  const segments = token.split('.')
+  if (segments.length !== 3 || segments.some(segment => segment === '')) throw new Error('Trae CLI token is not a three-part JWT')
+  const payload = decodeBase64UrlJson(segments[1]!)
+  if (payload === undefined) throw new Error('Trae CLI token payload is not decodable JSON')
+  const data = typeof payload['data'] === 'object' && payload['data'] !== null && !Array.isArray(payload['data'])
+    ? payload['data'] as Record<string, unknown>
+    : undefined
+  const userId = typeof data?.['user_id'] === 'string' ? data['user_id'] : undefined
+  if (userId === undefined || userId === '') throw new Error('Trae CLI token has no data.user_id claim')
+  const exp = payload['exp']
+  const expiresAtMs = typeof exp === 'number' && Number.isFinite(exp) && exp > 0 ? exp * 1000 : undefined
+  return { accessToken: token, userId, ...expiresAtMs === undefined ? {} : { expiresAtMs } }
+}

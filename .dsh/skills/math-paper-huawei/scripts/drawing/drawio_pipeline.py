@@ -420,6 +420,8 @@ def verify_cli(executable: Path, work_dir: Path) -> dict:
         args = ["--export", "--format", fmt]
         if fmt == "png":
             args += ["--scale", "2"]
+        elif fmt == "pdf":
+            args += ["--crop"]
         args += ["--output", str(output), str(source)]
         proc = run_cli(executable, args)
         result["exports"][fmt] = proc.returncode == 0 and wait_for_stable_output(output)
@@ -439,6 +441,8 @@ def export_drawio(executable: Path, source: Path, output_dir: Path) -> dict[str,
         args = ["--export", "--format", fmt]
         if fmt == "png":
             args += ["--scale", "2"]
+        elif fmt == "pdf":
+            args += ["--crop"]
         args += ["--output", str(output), str(source)]
         proc = run_cli(executable, args)
         if proc.returncode != 0 or not wait_for_stable_output(output):

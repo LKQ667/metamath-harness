@@ -1,0 +1,17 @@
+line-length = 100
+# templates/ 下是 89 个独立维护的绘图脚本，沿用各自的写法与命名，
+# 不纳入本项目编排代码的 lint / format 范围。
+extend-exclude = ["templates", ".venv"]
+
+[lint]
+# 已知且刻意保留的噪声规则：
+# - B023：evals/run_evaluation.py 中用 RunnableLambda(lambda _: payload) 把循环/分支
+#   变量捕获进闭包，这里是有意的测试桩写法，不是真实闭包缺陷。
+# - FLY002：测试夹具里用 "\n".join([...]) 拼装一段被 AST 解析的模板源码，
+#   改成 f-string 反而更难读且无收益。
+ignore = ["B023", "FLY002"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

@@ -3,7 +3,13 @@
 // 内容（文案/档位/数学）来自 src/shared/balance.ts 的 balanceBubbleView ——
 // 与桌面模式共用同一份行数据，本文件只负责把行数据映射成 React 节点。
 import { balanceBubbleView, type BalanceBubbleRow, type BalanceState } from '../shared/balance';
-import { whisperBubbleView } from '../shared/whisper';
+import {
+  MEME_BUBBLE_CLASS,
+  MEME_IMG_CLASS,
+  injectMemeBubbleCss,
+  memeImageUrl,
+  whisperBubbleView,
+} from '../shared/whisper';
 import type { ReactNode } from 'react';
 import type { jsx } from 'react/jsx-runtime';
 
@@ -33,6 +39,8 @@ const bubbleCss = [
   '.dsh-pet-bubble.dsh-pet-whisper{font-size:calc(var(--dsh-pet-size)*0.034);' +
     'min-width:calc(var(--dsh-pet-size)*0.10);max-width:calc(var(--dsh-pet-size)*0.5);' +
     'white-space:normal;overflow-wrap:anywhere}',
+  // 配图（碎碎念/对话共用）：样式在 shared 的 MEME_BUBBLE_CSS（两端同一份，由
+  // createMemeImage 注入）——这里不再重复写一份，避免与桌面端 index.html 走样
   '.dsh-pet-bubble .pet-bub-title{font-size:calc(var(--dsh-pet-size)*0.035);color:rgba(43,43,43,.6);margin-bottom:calc(var(--dsh-pet-size)*0.009)}',
   '.dsh-pet-bubble .pet-bub-row{display:flex;justify-content:space-between;gap:calc(var(--dsh-pet-size)*0.030)}',
   '.dsh-pet-bubble .pet-bub-sub{font-size:calc(var(--dsh-pet-size)*0.035);color:rgba(43,43,43,.6)}',
@@ -105,16 +113,24 @@ export function makeBalanceBubble(rt: { h: typeof jsx }): (props: { state: Balan
  * 制造碎碎念气泡（工厂）。
  * 与余额气泡共用同一套样式（dsh-pet-bubble）与行渲染（rowsToNodes）；
  * 内容来自 src/shared 的 whisperBubbleView（与桌面模式完全一致）。
+ * image：配图名称（配置 memes 的键），有值则在文字上方渲染该表情包；
+ *        图片样式取自 shared 的 MEME_BUBBLE_CSS（两端同一份，这里只声明式建节点）。
  */
-export function makeWhisperBubble(rt: { h: typeof jsx }): (props: { text: string; on: boolean }) => ReactNode {
+export function makeWhisperBubble(rt: {
+  h: typeof jsx;
+}): (props: { text: string; image?: string; on: boolean }) => ReactNode {
   const { h } = rt;
   injectBubbleCss();
+  injectMemeBubbleCss();
 
-  return function WhisperBubble({ text, on }: { text: string; on: boolean }) {
+  return function WhisperBubble({ text, image, on }: { text: string; image?: string; on: boolean }) {
     const rows = whisperBubbleView({ ok: true, text, ts: 0 });
+    const key = String(image ?? '').trim();
     return h('div', {
-      className: 'dsh-pet-bubble dsh-pet-whisper' + (on ? ' is-on' : ''),
-      children: rowsToNodes(h, rows),
+      className: 'dsh-pet-bubble dsh-pet-whisper' + (key ? ' ' + MEME_BUBBLE_CLASS : '') + (on ? ' is-on' : ''),
+      children: key
+        ? [h('img', { key: 'img', className: MEME_IMG_CLASS, src: memeImageUrl(key), alt: key }), rowsToNodes(h, rows)]
+        : rowsToNodes(h, rows),
     });
   };
 }

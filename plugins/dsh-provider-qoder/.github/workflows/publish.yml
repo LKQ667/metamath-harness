@@ -1,0 +1,68 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Validate release version
+        id: release
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs'
+          const { version } = JSON.parse(readFileSync('package.json', 'utf8'))
+          if (process.env.GITHUB_REF_NAME !== `v${version}`) {
+            throw new Error(`Tag must match package.json version: v${version}`)
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, `dist-tag=${version.includes('-') ? 'next' : 'latest'}\n`)
+          NODE
+
+      - name: Install package managers
+        run: npm install --global pnpm@12.3.1 npm@11
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build, test, and check package contents
+        run: pnpm run check
+
+      # Verification already ran above; avoid repeating prepublishOnly.
+      - name: Publish with npm trusted publishing
+        run: npm publish --ignore-scripts --access public --provenance --registry https://registry.npmjs.org --tag "$DIST_TAG"
+        env:
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+        run: |
+          pnpm pack
+          RELEASE_ARGS=("$GITHUB_REF_NAME" *.tgz --title "$GITHUB_REF_NAME" --generate-notes)
+          if [ "$DIST_TAG" = "next" ]; then
+            RELEASE_ARGS+=(--prerelease)
+          fi
+          gh release create "${RELEASE_ARGS[@]}"

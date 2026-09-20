@@ -15,5 +15,5 @@
     "types": ["node"]
   },
   "include": ["src", "tests"],
-  "exclude": ["src/client"]
+  "exclude": ["src/client", "tests/probe-composer.spec.ts", "tests/plugin-card.spec.ts", "tests/client-variants.spec.ts", "tests/slot-registration.spec.ts"]
 }

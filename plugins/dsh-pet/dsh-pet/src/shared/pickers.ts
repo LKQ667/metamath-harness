@@ -1,5 +1,5 @@
 // 纯选择逻辑：不依赖 React / DOM，可独立单测。浏览器 bundle 与桌面 shared-core 共用同一份源码。
-import type { Category, Weights } from './types';
+import type { Category, EventSlot, Events, Weights } from './types';
 
 /** 从字符串池里等概率随机抽一个；exclude 排除某个名字（避免连续重复） */
 export const pick = <T>(pool: T[], exclude?: T): T => {
@@ -7,6 +7,44 @@ export const pick = <T>(pool: T[], exclude?: T): T => {
   // 排除后池空（单元素池 + 排除自己）：退回原池抽——宁可重复，也不要返回 undefined
   const src = entries.length ? entries : pool;
   return src[Math.floor(Math.random() * src.length)];
+};
+
+/**
+ * 事件档位取值：字符串槽位原样返回（固定播放，原行为不变）；
+ * 数组槽位 = 档内候选，随机抽 1 并尽量避开 exclude（当前正在播的动画，避免连续重复）；
+ * 排除后池空（单候选 + 排除自己）退回原数组——宁可重复，也不要返回 undefined（与 pick 同一哲学）。
+ */
+export const pickSlot = (slot: EventSlot, exclude?: string): string => {
+  if (typeof slot === 'string') return slot;
+  const entries = exclude === undefined ? slot : slot.filter((n) => n !== exclude);
+  const src = entries.length ? entries : slot;
+  return src[Math.floor(Math.random() * src.length)];
+};
+
+/** 槽位是否包含某动画名：字符串按名比；数组查成员（成员判断必须走这里——直接 includes 会漏掉数组槽位） */
+export const slotIncludes = (slot: EventSlot, anim: string): boolean =>
+  typeof slot === 'string' ? slot === anim : slot.includes(anim);
+
+/** 事件池（档位槽位数组）是否包含某动画名 */
+export const poolIncludes = (pool: readonly EventSlot[], anim: string): boolean =>
+  pool.some((slot) => slotIncludes(slot, anim));
+
+/** 整个 events 段是否包含某动画名（事件动画播完回 idle / switchTo 诊断 / 循环护栏共用） */
+export const isEventAnim = (events: Readonly<Events> | undefined, anim: string): boolean =>
+  events ? Object.values(events).some((pool) => poolIncludes(pool, anim)) : false;
+
+/**
+ * workStatus 播完（ended）续播决策：找到包含 current 动画的档位——
+ * 多候选档位（≥2）→ 返回档内下一候选（排除 current，避免连抽）：播完一段自动轮换，长时间状态不单段重复；
+ * 单候选/单动画档位或动画不属于 workStatus 池 → null（原样续播同一段/按原语义处理）。
+ * 浏览器与桌面共用同一份决策，双端轮换行为严格一致。
+ */
+export const nextWorkStatusAnim = (pool: readonly EventSlot[], current: string): string | null => {
+  const idx = pool.findIndex((slot) => slotIncludes(slot, current));
+  if (idx === -1) return null;
+  const slot = pool[idx];
+  if (!Array.isArray(slot) || slot.length <= 1) return null;
+  return pickSlot(slot, current);
 };
 
 /** 生成 [min, max) 区间内的随机整数 */

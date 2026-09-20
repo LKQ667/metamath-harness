@@ -14,7 +14,7 @@ preset 一律写入用户区：`<DSH_HOME>/.agent-presets/<新模式id>/`
 
 - 默认 `~/.dsh`；探测方法：找同时含 `.agent-presets/` 与 `settings.yaml` 的目录
 
-- 本机为 `F:\DeepSeekHarness\.dsh`
+- 本仓库为 `<项目根>\.dsh`
 
 ## 1. 动手前必读（全部读完再写）
 

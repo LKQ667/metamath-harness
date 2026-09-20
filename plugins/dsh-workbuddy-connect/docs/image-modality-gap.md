@@ -253,11 +253,12 @@ pnpm run check        # typecheck + vitest + build（AGENTS.md 规定的顺序�
 
 ---
 
-## 11. 附：排查过程中的相关发现（未处理）
+## 11. 附：排查过程中的相关发现（后续已陆续接入）
 
-上游响应中还有多个本插件同样丢弃的字段，未来可一并接入：
+写这份排查记录时，上游响应里下列字段同样被插件丢弃；此后已按各自节奏接入：
 
-- `supportsToolCall`：工具调用能力
-- `reasoning.supportedEfforts` / `canDisableThinking` / `defaultEffort`：推理档位（目前插件不提供 reasoning effort 选择）
-- `supportsReasoning`、`onlyReasoning`
-- `tags`、`vendor`、`credits`（如 `x0.71 credits`）
+- `supportsImages`：即本文件主体，随 v0.2.5 落地。
+- `supportsReasoning`、`onlyReasoning` 与 `reasoning.supportedEfforts` / `canDisableThinking` / `defaultEffort`：v0.2.6 起解析（PR #9 回移），按「仅声明集」暴露推理档位；未声明档位的模型自 v0.4.0 起支持用户手动探测（设计与边界见 `docs/reasoning-effort-probe-plan.md`）。
+- `tags`、`credits`：v0.2.6 起解析，v0.3.0 起用于模型名上的促销徽章与积分倍率显示。
+
+仍未接入：`supportsToolCall`（工具调用能力）、`vendor`。

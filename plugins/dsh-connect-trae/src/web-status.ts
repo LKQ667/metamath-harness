@@ -92,7 +92,24 @@ function toCredits(snapshot: { summary: { totalAmount: number; consumedAmount: n
 export async function traeWebUsage(deps: TraeUsageRouteOptions): Promise<TraeWebUsage> {
   const accounts = await deps.store.accounts()
   const authStatus = await deps.store.status()
-  if (authStatus.state !== 'signed-in') return { status: 'signed-out', accounts }
+  if (authStatus.state !== 'signed-in') {
+    // A bare "signed out" is undiagnosable on a machine whose layout differs
+    // from the ones this plugin was written against — the reported WSL2/CLI
+    // case. The probed paths and their failure reasons are safe to surface:
+    // they carry paths and error text, never token material.
+    const { failures } = await deps.store.diagnose()
+    return {
+      status: 'signed-out',
+      accounts,
+      searched: failures.map(failure => ({
+        path: failure.path,
+        edition: failure.edition,
+        source: failure.source,
+        reason: failure.reason,
+        ...failure.message === undefined ? {} : { message: safeMessage(failure.message) },
+      })),
+    }
+  }
   let credential
   try {
     credential = await deps.store.resolve()

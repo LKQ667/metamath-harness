@@ -16,6 +16,12 @@
 \usepackage{subfig}
 \usepackage{siunitx}
 
+% 图/表全篇连续编号：gmcmthesis.cls 默认用 \numberwithin 让图表随 section 重置
+% （图1.1、表2.1）。此处只在模板层用 \counterwithout 取消 figure/table 对 section
+% 的计数从属，保持 class 可替换可升级；equation 编号保持 class 原有章节编号不变。
+\counterwithout{figure}{section}
+\counterwithout{table}{section}
+
 % 算法
 \usepackage[noend]{algpseudocode}
 \usepackage{algorithmicx,algorithm}
@@ -101,12 +107,17 @@
 \end{enumerate}
 
 \subsection{符号说明}
-\begin{table}[htp!]
-\centering
+% ------------------------------------------------------------------
+% 符号表固定使用非浮动排版（禁止 \begin{table} 浮动容器）：
+% 1) 短表（可在当前页放下）使用下方 tabularx，紧随标题，不加 caption、不编号；
+% 2) 符号内容实际超过一页时，删除上方 tabularx 块，改用下方 longtable 版本：
+%    自动跨页并重复表头，同样不加 caption；进入前保存 table 计数、结束后恢复，
+%    保证符号表不占用“表1”等正式结果表编号。
+% ------------------------------------------------------------------
 \renewcommand\arraystretch{1.2}
 \newcolumntype{L}{>{\quad}X}
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
-\begin{tabularx}{0.9\textwidth}{|P{1cm}|L|}
+\noindent\begin{tabularx}{0.9\textwidth}{|P{1cm}|L|}
   \hline
   符号    &   \quad 意义 \\
   \hline
@@ -117,7 +128,28 @@
   $ c $  &  符号3的意义    \\
   \hline
 \end{tabularx}
-\end{table}
+
+% —— 长表版本（符号内容超过一页时替换上方 tabularx 块；按实际编译结果选择分支）——
+% \newcounter{huaweisymbolsavetable}
+% \setcounter{huaweisymbolsavetable}{\value{table}}
+% longtable 不支持上方基于 X 的 L 列；显式分配剩余列宽并保持总宽 0.9\textwidth。
+% \begin{longtable}{|P{1cm}|>{\raggedright\arraybackslash}p{\dimexpr0.9\textwidth-1cm-4\tabcolsep-3\arrayrulewidth\relax}|}
+%   \hline
+%   符号    &   \quad 意义 \\
+%   \hline
+%   \endfirsthead
+%   \hline
+%   符号    &   \quad 意义（续） \\
+%   \hline
+%   \endhead
+%   $ a $  &  符号1的意义    \\
+%   \hline
+%   $ b $  &  符号2的意义    \\
+%   \hline
+%   $ c $  &  符号3的意义    \\
+%   \hline
+% \end{longtable}
+% \setcounter{table}{\value{huaweisymbolsavetable}}
 
 \section{问题一模型建立与求解}
 

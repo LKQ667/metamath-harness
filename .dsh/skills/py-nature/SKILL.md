@@ -94,6 +94,20 @@ disable-model-invocation: true
 
 模板位于 `assets/templates/`：
 
+- `ternary_tradeoff_template.py`
+- `taylor_diagram_template.py`
+- `response_surface_3d_template.py`
+- `parallel_coordinates_template.py`
+- `sensitivity_sobol_chord_template.py`（受限：仅复杂交互网络）
+- `optimization_pareto_evolution_template.py`
+- `constrained_optimization_landscape_template.py`
+- `forecast_uncertainty_scenarios_template.py`
+- `hierarchical_correlation_template.py`
+- `sensitivity_multiscale_sunburst_template.py`（受限：仅层级与尺度结构）
+- `persistent_homology_template.py`
+- `wavelet_coherence_template.py`
+- `dynamics_multi_attractor_template.py`
+- `optimization_pareto_manifold_3d_template.py`（受限：仅三目标结构确有必要）
 - `trend_confidence_template.py`
 - `sensitivity_tornado_template.py`
 - `sensitivity_sobol_heatmap_template.py`
@@ -108,6 +122,8 @@ disable-model-invocation: true
 - `temporal_bursty_activity_template.py`
 - `multi_panel_hero_support_template.py`
 - `causal_effects_line_template.py`
+
+上述模板均为可替换数据的绘图骨架，示例数组不得冒充真实结果。带“受限”标记的模板只有在其结构显著提高信息密度时才可使用；一般敏感性优先 tornado/heatmap，一般多目标结果优先二维 Pareto。三维流场效果图不作为通用模板纳入，除非用户提供真实仿真数据与对应坐标场。
 
 如需批量跑模板或做快速演示，使用：
 

@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import hashlib
+import argparse
 import json
 import subprocess
 import sys
@@ -124,6 +125,19 @@ Draw.io 可编辑源文件及三种真实导出、中文 XeLaTeX 编译和正文
 
 
 def main() -> int:
+    global EVIDENCE, PROJECT, PAPER, FIGURES, REPORTS
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--evidence-dir', type=Path, help='本轮新的证据目录，禁止覆盖已有 goal 证据')
+    args = parser.parse_args()
+    if args.evidence_dir is not None:
+        candidate = args.evidence_dir.resolve()
+        if not candidate.is_relative_to((ROOT / 'Overall-goal').resolve()):
+            raise ValueError('论文 E2E 证据目录必须位于本项目 Overall-goal 内')
+        if candidate.exists():
+            raise FileExistsError('本轮证据目录已存在，拒绝覆盖历史产物')
+        EVIDENCE = candidate
+        PROJECT = EVIDENCE / 'project'
+        PAPER, FIGURES, REPORTS = PROJECT / '论文', PROJECT / 'figures', PROJECT / '检查结果'
     for directory in (PAPER, FIGURES, REPORTS):
         directory.mkdir(parents=True, exist_ok=True)
 

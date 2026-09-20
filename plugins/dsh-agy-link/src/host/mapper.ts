@@ -14,13 +14,16 @@
 // derived cursor. Text/reasoning streaming and the result envelope behave
 // as before; thinking-only turns stay token-annotated because agy print
 // mode never streams the thoughts themselves.
-// DSH 0.1.2-rc.1 适配（2026-09-04）：dsh-llm 将 brand 函数 `CallId` 更名为
-// `ToolCallId`（0.1.1-rc.2 及更早版本为 `CallId`）。上游 agy-link v0.4.24
-// 尚未适配，本地以别名导入保持下方值用法不变；上游发适配版后应移除本行差异。
-import { ToolCallId as CallId, type StreamChunk, type TokenUsage } from '@deepseek-ai/dsh-llm'
+import type { StreamChunk, TokenUsage, ToolCallId } from '@deepseek-ai/dsh-llm'
+import * as dshLlm from '@deepseek-ai/dsh-llm'
 import type { AgyEvent, RawUsage } from '../common/types.ts'
 import { mirrorCallId } from './recording.ts'
 import { buildMirrorRunCode, MIRROR_TOOL_NAME, WRAPPER_TOOL_NAME } from './mirror-tool.ts'
+
+const toToolCallId: (id: string) => ToolCallId =
+  (dshLlm as { ToolCallId?: (id: string) => ToolCallId; CallId?: (id: string) => ToolCallId }).ToolCallId ??
+  (dshLlm as { ToolCallId?: (id: string) => ToolCallId; CallId?: (id: string) => ToolCallId }).CallId ??
+  ((id: string) => id as unknown as ToolCallId)
 
 export function usageFromRaw(raw: RawUsage): TokenUsage {
   // The DSH session layer rejects chunks carrying undefined-valued fields
@@ -233,7 +236,7 @@ export class EventMapper {
           index: idx,
           block: {
             type: 'tool-call',
-            id: CallId(mirrorCallId(this.opts.runId, absIndex)),
+            id: toToolCallId(mirrorCallId(this.opts.runId, absIndex)),
             name: toolName,
             arguments: argumentsJson,
           },

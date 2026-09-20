@@ -1,5 +1,43 @@
 # Changelog
 
+## 1.4.2 (2026-09-14)
+
+> **版本号说明**：`v1.4.1` ~ `v1.4.4` 四个 git tag 曾推送到远端，但对应代码已整体回档到 `1.4.0`、
+> 从未发布到 npm。发布前已删除这四个废弃 tag（备份见 `backup/abandoned-v1.4.1-v1.4.4` 分支
+> 及 `abandoned-tags-v1.4.1-4.bundle`）。
+>
+> 本次实际使用 `1.4.2` 而非 `1.4.1`：`1.4.1` 在 npm 上处于 **staged 状态**
+> （由一次未完成的发布预占，`npm view` 查不到该版本，但 `npm publish` 报
+> `E409 Cannot publish over previously staged version`），该编号已无法复用。
+
+### Fixes
+
+- 修复 CLI 登录（`traecli`）不被识别、插件恒显「未登录」的问题（issue #5，WSL2 用户报告）。插件此前只认桌面版 Electron 的 `globalStorage/storage.json`（加密值 `iCubeAuthInfo://icube.cloudide`），而 `traecli` 把登录信息写在自己的家目录里、内容是**未加密的裸 JWT**（实测 macOS 上是 `~/.trae-cn/trae-jwt-token`）；纯 CLI 环境（WSL2 常见）根本没有 `storage.json`，因此永远解析不出账号。现在：
+  - 凭据来源扩展为 `desktop` / `cli` 两类，`TraeStorageCandidate` 新增 `source` 字段；新增 `parseTraeCliToken()` 直接解析裸 JWT（取 `data.user_id` 与 `exp`），不走 AES 解密链路。CLI token 不含 host 声明，统一补 CN 主机 `https://api.trae.cn`，避免空字符串变成不可用的 base URL。
+  - CLI 候选路径在 macOS / Windows / Linux 三平台都会探测（`~/.trae-cn/`、`~/.trae/`）。
+  - Linux 桌面版目录名改为**多候选并列探测**（`trae-cn` 与 macOS 拼写 `Trae CN` 都试）。此前只认从 macOS 抄来的 `Trae CN`，而 Linux 上 Electron 应用通常用小写无空格目录名；该拼写从未在 Linux 真机验证过。多探测保证猜错也不会漏掉真实安装。
+- 把 `readDesktopAll()` 里的静默 `catch { continue }` 改为记录失败原因，新增 `TraeCredentialStore.diagnose()`：返回探测过的每个路径及其失败类型（`missing` / `unreadable` / `invalid`）。未登录时卡片新增可折叠的「已检查的路径」列表。此前无论路径不存在、key 缺失还是加密头不支持，用户都只看到「未登录」三个字，无从自助定位——`docs/WINDOWS_TOKEN_PROBE.md` 整篇文档的存在本身就是这个可观测性缺口的补丁。诊断内容只含路径与固定原因文案（错误消息不回显输入），不携带任何 token 材料，并有专门测试守住这一点。
+
+## 1.4.0 (2026-09-10)
+
+### Changes
+
+- 对齐 DSH 内核 `0.1.2-rc.1` → `0.1.5-rc.2`（桌面 `dsh-plugin-desktop` 2.0.9 所捆绑通道；`0.1.5-rc.1` 为 npm `latest`，`rc.2` 在 `next`）：
+  - `ResolvedPiAiProviderProfile` 在 0.1.5 新增**必填**字段 `modelErrors`：`PiAiAdapter` 现在按模型查此表，命中即以 `INVALID_CONFIG` 拒绝请求；`piProvider` 同时由必填改为可选。本插件是手工构造 profile（不走内核目录解析，故该表不会被子系统填充），补 `modelErrors: new Map()` 表达「所服务的模型全部可用」这一事实。不补则本插件在 0.1.5 宿主上**无法通过类型检查**（`TS2741`）。
+  - devDependencies 升级至 `@deepseek-ai/dsh-*@0.1.5-rc.2`，`@earendil-works/pi-ai` 由 `0.84.2` 升至 `^0.85.1`：`dsh-llm-pi-ai@0.1.5-rc.2` 要求 `pi-ai@^0.85.1`，版本不一致会在 `node_modules` 里留下两份互不兼容的 `pi-ai`，导致 `Provider<Api>` 结构不匹配的编译错误。
+  - `peerDependencies` 的 `@deepseek-ai/dsh-*` 由 `>=0.1.2-0` 抬到 `>=0.1.5-0`（`modelErrors` 为编译期硬依赖，0.1.2 宿主无法满足），`@earendil-works/pi-ai` 抬到 `>=0.85.1`。仍按范围声明、不锁死补丁版本，与内核 `next` 通道继续前进保持一致。
+  - 经核实本次不受文档列出的其余破坏项影响：未使用 `dsh-session` / `dsh-session-persistence` / `dsh-persona` / `dsh-system-prompt` / `dsh-message-feedback` / `dsh-subagent`；未读取 `DSH_SESSION_JSONL`、未调用已移除的 `locate()` / `readRaw()`；`AttachmentStore` 仅作类型引用，`IconChevronDownOutline14` 与客户端 `dsh.client.inject` 六个包在 0.1.5 均仍存在。会话格式 v3 与 persona 段改名对本插件不适用。
+
+### Fixes
+
+- 修复内置回退模型表被实时线路映射过滤、导致真实安装上模型几乎全部消失的问题：`FALLBACK_TRAE_MODELS` 是本插件自带的静态兜底表，其中每个 id 都**从未**由 Trae Remote 目录公布，因此永远不会出现在 `callableKeys` 里。此前 `configuredModels` / `derive` 把这张表也交给 `dropDeadModels` 过滤，只要实时目录只返回一部分模型（账号权限、版本或网络给出的子集），过滤就会把「这次没被提到的」回退模型一并删掉——本机实测在无凭据环境下只剩 `glm-5.2` / `kimi-k2.6` 两个模型可用。现在回退表不再参与线路过滤，并以 `wireResolved` 标志取代「`callableKeys` 非空」作为「线路目录已解析」的判据，避免空目录被误读为「没有模型可用」。新增回归测试覆盖该路径；该缺陷在本仓库 1.3.0 上本来就会失败（与内核升级无关），修复后 `pnpm run test` 首次达到 157/157 全绿（此前 154/156）。
+
+## 1.3.0 (2026-09-08)
+
+### Changes
+
+- 模型名称内嵌积分倍率，与 Trae 自身模型菜单的显示格式一致（如 `GLM-5.2 · x0.79`）：DSH 模型选择器中由本插件注册的模型名在 Trae 公布 `consumption_rate` 时带上 `· x倍率` 后缀，倍率随目录刷新更新，未公布倍率的模型保持原名；模型 id 与内部目录仍用原始名称（不影响 wire 解析与已保存的选择）。插件设置卡片模型行的倍率同步改为 `· x0.79` 内联显示；`lastCatalog` 设置模式新增 `creditMultiplier` 字段声明，保证倍率跨重启持久化。
+
 ## 1.2.0 (2026-09-04)
 
 ### Changes

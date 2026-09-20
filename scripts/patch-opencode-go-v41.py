@@ -40,23 +40,20 @@ def fail(message: str) -> None:
 
 
 def default_catalog() -> Path:
+    """定位 pi-ai 的 opencode-go.json，兼容 DSH 0.1.2 内嵌与 0.1.5+ 提升两种布局。"""
     appdata = os.environ.get("APPDATA")
     if not appdata:
         fail("环境变量 APPDATA 未设置；请显式传入 opencode-go.json 路径")
-    return (
-        Path(appdata)
-        / "npm"
-        / "node_modules"
-        / "@deepseek-ai"
-        / "dsh"
-        / "node_modules"
-        / "@earendil-works"
-        / "pi-ai"
-        / "dist"
-        / "providers"
-        / "data"
-        / "opencode-go.json"
-    )
+    npm_root = Path(appdata) / "npm" / "node_modules"
+    tail = Path("@earendil-works") / "pi-ai" / "dist" / "providers" / "data" / "opencode-go.json"
+    candidates = [
+        npm_root / "@deepseek-ai" / "dsh" / "node_modules" / tail,  # 0.1.2-rc.1 内嵌布局
+        npm_root / tail,                                            # 0.1.5+ 提升布局
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return candidates[1]
 
 
 def load_json(path: Path) -> dict:

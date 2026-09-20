@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 const require = createRequire(import.meta.url);
-const { createImageConnectionActions, createStoredKeyModelDiscoveryActions, panelSections } = require('../src/client-bundle.cjs');
+const { createImageConnectionActions, createStoredKeyModelDiscoveryActions, createMetaMathHeroTitleInstaller, panelSections } = require('../src/client-bundle.cjs');
 
 test('说明面板覆盖用途、输入、输出、限制、依赖与状态', () => {
   const card = {
@@ -68,6 +68,8 @@ test('品牌与 favicon 使用桌面快捷方式 ICO，覆盖展开和收起侧�
   assert.match(build, /\.\.\/\.\.\/MetaMath-Harness\.ico/);
   assert.match(source, /metaMathBrandIcon/);
   assert.match(source, /__METAMATH_BRAND_ICON__/);
+  assert.ok(source.includes('function ensureMathmodelStyle()'));
+  assert.match(source, /async function apply\(ctx\) \{\s*ensureMathmodelStyle\(\);/, '插件 apply 必须恢复可能被客户端生命周期清空的样式节点');
   assert.match(source, /sidebar\.brand\.mark/);
   assert.match(source, /sidebar\.brand\.name/);
   assert.match(source, /installMetaMathFavicon/);
@@ -76,6 +78,7 @@ test('品牌与 favicon 使用桌面快捷方式 ICO，覆盖展开和收起侧�
   assert.doesNotMatch(source, /svg\[width="182"\]\[height="24"\]/);
   assert.match(source, /word\.textContent = 'MetaMath'/);
   assert.match(source, /chip\.textContent = 'HARNESS'/);
+  assert.ok(source.includes('color:var(--dsw-alias-label-primary,#16181d)'), '品牌文字必须跟随当前主题前景色，避免深色/图片背景下不可见');
   assert.ok(embeddedIcon, '构建产物必须包含桌面快捷方式 ICO');
   assert.equal(
     createHash('sha256').update(Buffer.from(embeddedIcon, 'base64')).digest('hex'),
@@ -84,16 +87,114 @@ test('品牌与 favicon 使用桌面快捷方式 ICO，覆盖展开和收起侧�
   );
 });
 
-test('品牌修复不改动大道至简相关源码片段', async () => {
+// ---- 大道至简标题适配：最小假 DOM 行为测试（GOAL-84 / M01）----
+function makeEl(tag, className = '') {
+  const el = {
+    tagName: tag.toUpperCase(),
+    className,
+    dataset: {},
+    style: {},
+    children: [],
+    parentElement: null,
+    _text: '',
+    classList: {
+      _added: [],
+      add(c) { this._added.push(c); },
+      contains(c) { return this._added.includes(c); },
+    },
+  };
+  Object.defineProperty(el, 'textContent', {
+    get() { return el._text; },
+    set(v) { el._text = v; el.children = []; },
+  });
+  el.appendChild = (child) => { el.children.push(child); child.parentElement = el; el._text = ''; return child; };
+  return el;
+}
+
+function makeDoc({ headlineText = null, titleGroup = null, badge = null } = {}) {
+  return {
+    createElement: (tag) => makeEl(tag),
+    querySelector(sel) {
+      if (sel === 'span[class*="_headlineText"]') return headlineText;
+      if (sel === 'span[class*="_titleGroup"]') return titleGroup;
+      if (sel === 'span[class*="_previewBadge"]') return badge;
+      return null;
+    },
+  };
+}
+
+const HERO_SRC = 'data:image/png;base64,HERO-FIXTURE';
+
+test('新版宿主 DOM：_titleGroup 内无 class 标题 span 被替换为大道至简艺术字，徽章隐藏', () => {
+  const text = makeEl('span');
+  text.textContent = '探索未至之境';
+  const badge = makeEl('span', 'pXSMma_previewBadge');
+  badge.textContent = '预览版';
+  const group = makeEl('span', 'pXSMma_titleGroup');
+  group.appendChild(text);
+  group.appendChild(badge);
+  const install = createMetaMathHeroTitleInstaller(makeDoc({ titleGroup: group, badge }), HERO_SRC);
+  install();
+  assert.equal(text.children.length, 1, '官方标题文本必须被替换为图片');
+  assert.equal(text.children[0].tagName, 'IMG');
+  assert.equal(text.children[0].alt, '大道至简');
+  assert.equal(text.children[0].src, HERO_SRC, '必须使用原艺术字资产');
+  assert.equal(badge.style.display, 'none', '预览版徽章必须隐藏');
+  assert.equal(group.dataset.dshMetamathTitle, 'true');
+});
+
+test('重复执行与 DOM 重建后保持单一标题，不重复插入图片', () => {
+  const text = makeEl('span');
+  text.textContent = '探索未至之境';
+  const group = makeEl('span', 'pXSMma_titleGroup');
+  group.appendChild(text);
+  const install = createMetaMathHeroTitleInstaller(makeDoc({ titleGroup: group }), HERO_SRC);
+  install();
+  install();
+  install();
+  assert.equal(text.children.length, 1, '重复执行不得重复插入图片');
+  // 模拟首页重新挂载：全新 titleGroup（无 data 标记）应重新适配。
+  const text2 = makeEl('span');
+  text2.textContent = '探索未至之境';
+  const group2 = makeEl('span', 'pXSMma_titleGroup');
+  group2.appendChild(text2);
+  const install2 = createMetaMathHeroTitleInstaller(makeDoc({ titleGroup: group2 }), HERO_SRC);
+  install2();
+  assert.equal(text2.children.length, 1);
+  assert.equal(text2.children[0].alt, '大道至简');
+});
+
+test('旧版宿主 DOM：_headlineText 分支仍然命中并整行居中', () => {
+  const headline = makeEl('span', 'pXSMma_headlineText');
+  headline.textContent = '探索未至之境';
+  const row = makeEl('div', 'pXSMma_row');
+  row.appendChild(headline);
+  const install = createMetaMathHeroTitleInstaller(makeDoc({ headlineText: headline }), HERO_SRC);
+  install();
+  assert.equal(headline.children.length, 1);
+  assert.equal(headline.children[0].alt, '大道至简');
+  assert.ok(headline.classList.contains('dsh-mm-hero-title'));
+  assert.equal(row.style.gridTemplateColumns, 'auto');
+  assert.equal(row.style.justifyContent, 'center');
+});
+
+test('标题组内没有可定位的标题文本时不做任何修改', () => {
+  const onlyBadge = makeEl('span', 'pXSMma_previewBadge');
+  const group = makeEl('span', 'pXSMma_titleGroup');
+  group.appendChild(onlyBadge);
+  const install = createMetaMathHeroTitleInstaller(makeDoc({ titleGroup: group }), HERO_SRC);
+  assert.doesNotThrow(() => install());
+  assert.equal(onlyBadge.children.length, 0, '不得把艺术字插入徽章');
+  assert.equal(group.dataset.dshMetamathTitle, undefined, '未命中时不得打标记');
+});
+
+test('原艺术字资产存在且构建脚本继续嵌入，实现不再被哈希冻结', async () => {
+  const asset = await readFile(new URL('../src/assets/metamath-hero-title.png', import.meta.url));
+  assert.ok(asset.length > 100_000, '原 PNG 资产必须保留');
+  const build = await readFile(new URL('../scripts/build.mjs', import.meta.url), 'utf8');
+  assert.match(build, /metamath-hero-title\.png/);
   const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
-  const start = source.indexOf('// 中央主视觉：');
-  const endMarker = 'new MutationObserver(installMetaMathHeroTitle).observe(document.documentElement, { childList: true, subtree: true });';
-  const end = source.indexOf(endMarker, start) + endMarker.length;
-  assert.ok(start >= 0 && end >= endMarker.length, '必须能定位大道至简相关源码片段');
-  assert.equal(
-    createHash('sha256').update(source.slice(start, end)).digest('hex').toUpperCase(),
-    'ACDEB684B7E9A4CD7336BCC8D128381B491078C51F22233BBB661817C7A78FCC',
-  );
+  assert.match(source, /createMetaMathHeroTitleInstaller/);
 });
 
 test('中央主视觉官方鲸鱼由插件运行时隐藏，且不修改官方包（GOAL-35）', async () => {
@@ -109,8 +210,9 @@ test('中央主标题替换为“大道至简”金属艺术字图并隐藏预�
   const source = await readFile(new URL('../src/client-bundle.cjs', import.meta.url), 'utf8');
   assert.match(source, /metaMathHeroTitle/);
   assert.match(source, /__METAMATH_HERO_TITLE__/);
-  assert.match(source, /titleImg\.alt = '大道至简'/);
+  assert.match(source, /img\.alt = '大道至简'/);
   assert.match(source, /span\[class\*="_headlineText"\]/);
+  assert.match(source, /span\[class\*="_titleGroup"\]/);
   assert.match(source, /span\[class\*="_previewBadge"\]/);
   assert.match(source, /badge\.style\.display = 'none'/);
   assert.match(source, /row\.style\.gridTemplateColumns = 'auto'/);
@@ -124,11 +226,13 @@ test('技能说明入口与说明抽屉跟随 better-sidebar 布局变量避让�
   // 变量缺省（未安装该插件或已收起）时回退 0，行为与历史版本一致。
   assert.match(source, /\.dsh-mm-info-launcher\{position:fixed;z-index:89;top:12px;right:calc\(72px \+ var\(--dsh-sidebar-width,0px\)\)/);
   assert.match(source, /\.dsh-mm-info\{position:fixed;z-index:90;top:56px;right:calc\(12px \+ var\(--dsh-sidebar-width,0px\)\)/);
-  // 插件在场（panel-host 存在）时四按钮统一为角标簇规格 28×28@y3：
-  // 入口右距 = 64 + var（展开态与 28px Session log 保持 8px）；
-  // 收起态 better-sidebar 把官方头右内边距推到 78px，入口右距 = 78 + 28 + 8 = 114。
-  assert.match(source, /body:has\(\[data-dsh-panel-host\]\) \.dsh-mm-info-launcher\{top:3px;right:calc\(64px \+ var\(--dsh-sidebar-width,0px\)\);width:28px;height:28px;min-height:28px;border-radius:9px\}/);
+  // 插件在场（panel-host 存在）时五按钮统一为角标簇规格 28×28@y11：
+  // 入口右距 = 84 + var（在「在本地打开」左侧标准槽位，「更多操作」容器左移 36px 腾位）；
+  // 收起态 better-sidebar 把官方头右内边距推到 78px，官方簇左移 50px，入口右距 = 84 + 50 = 134。
+  assert.match(source, /body:has\(\[data-dsh-panel-host\]\) \.dsh-mm-info-launcher\{top:11px;right:calc\(84px \+ var\(--dsh-sidebar-width,0px\)\);width:28px;height:28px;min-height:28px;border-radius:9px\}/);
+  assert.match(source, /body:has\(\[data-dsh-panel-host\]\) span:has\(>\.nL4_yW_moreButton\)\{margin-right:36px\}/);
   assert.match(source, /body\[data-dsh-sidebar-collapsed\] \.dsh-mm-info-launcher\{right:114px\}/);
+  assert.match(source, /body:has\(\[data-dsh-panel-host\]\)\[data-dsh-sidebar-collapsed\] \.dsh-mm-info-launcher\{right:134px\}/);
   assert.match(source, /body:has\(\[data-dsh-panel-host\]\) \[data-slot="conversation\.session\.header\.utilities"\]>button\[class\*="_sessionLogButton"\]\{width:28px!important;height:28px!important;min-width:28px!important;border-radius:9px!important;transform:translateY\(-11px\)\}/);
   // 窄屏媒体查询保持覆盖式定位，不叠加推挤变量。
   assert.match(source, /@media\(max-width:760px\)\{\.dsh-mm-info\{top:56px;right:6px/);

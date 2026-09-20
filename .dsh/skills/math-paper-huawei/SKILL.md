@@ -1,6 +1,6 @@
 ---
 name: math-paper-huawei
-description: "Use when the user wants an end-to-end 华为杯（中国研究生数学建模竞赛）workflow with the GMCMthesis template, Python data figures, project-locked Draw.io or AI non-data figures, step0-step5 hard gates, and final LaTeX/PDF output."
+description: "Use when the user wants an end-to-end 华为杯（中国研究生数学建模竞赛）workflow with the GMCMthesis template, Python data figures, project-locked Draw.io/HTML or AI non-data figures, step0-step5 hard gates, and final LaTeX/PDF output."
 user-invocable: true
 disable-model-invocation: true
 ---
@@ -14,23 +14,26 @@ disable-model-invocation: true
 ## DeepSeek Harness mathmodel 入口契约
 
 - 本 Skill 只能由用户手动调用。若调用文本包含 `dsh.mathmodel.request/v1` JSON，先校验 `skill` 必须为 `math-paper-huawei`，再把 `options` 作为本次运行的锁定配置；卡片已经提供的值不得再次询问。`problem_path` 和 `output_dir` 相对路径均以当前工作区解析，禁止回退到历史固定盘符。
-- 锁定字段必须贯穿项目状态和门禁：`body_pages` 控制正文目标页数，但不得突破当届华为杯官方页数或字数上限；`competition_language` 锁定赛事语言为中文或英文；`figure_total` 控制全文最终入文图片目标总数，默认 15 张并允许用户自定义；`bar_policy` 分别表示禁用柱状图、仅在既有例外条件成立时少用、按图型决策正常使用；`three_d_preference`、`reference_excellent_papers` 分别控制三维图评估和优秀论文完成度校准；`userNotes` 作为补充约束。卡片值与官方规则冲突时以官方规则为准并记录冲突。
-- `drawing_mode=Draw.io成图+AI概念提示词` 时用 Draw.io 生成流程类图并只保留概念图提示词；`Draw.io成图` 时仍保留门禁要求的可追溯概念提示词但不调用生图；`AI全自动绘图` 只有在 `image_generate` 健康、`confirm_paid_calls=true` 且 `ai_image_limit>0` 时才能调用，累计数量不得超过上限。任一条件不满足时自动退回 Draw.io 成图加概念提示词并在 manifest 记录原因，不重复追问、不产生费用。
+- 锁定字段必须贯穿项目状态和门禁：`body_pages` 控制正文目标页数，但不得突破当届华为杯官方页数或字数上限；`competition_language` 锁定赛事语言为中文或英文；`figure_total` 控制全文最终入文图片目标总数，默认 15 张并允许用户自定义；`bar_policy` 分别表示禁用柱状图、仅在既有例外条件成立时少用、按图型决策正常使用；`subplot_policy` 控制 Python 入文图的语义面板数策略；`python_chart_repeat_policy` 控制 Python 图型重复三模式（默认少重复：重复图型类别数 G≤2；模型自行分析：按论证需要选图但须记录重复用途；禁止重复：G=0）；`three_d_preference`、`reference_excellent_papers` 分别控制三维图评估和优秀论文视觉校准；`userNotes` 作为补充约束。卡片值与官方规则冲突时以官方规则为准并记录冲突。
+- `drawing_mode=Draw.io成图+AI概念提示词` 时用 Draw.io 生成流程类图并只保留概念图提示词；`Draw.io成图` 时仍保留门禁要求的可追溯概念提示词但不调用生图；`HTML矢量成图` 时流程类图改用技能内置的 HTML+CSS→Electron 矢量 PDF 链路（工具与模板随技能自带，运行时不依赖外部 html-paper-figure 技能；概念类图同样只保留 2–4 份提示词），Electron/node 不可用时自动退回 Draw.io 成图加概念提示词并在 manifest 记录原因；`AI全自动绘图` 只有在 `image_generate` 健康、`confirm_paid_calls=true` 且 `ai_image_limit>0` 时才能调用，累计数量不得超过上限。任一条件不满足时自动退回 Draw.io 成图加概念提示词并在 manifest 记录原因，不重复追问、不产生费用。
 - `run_to_pdf=true` 时先调用 `get_goal`；当前会话无 Goal 时调用 `create_goal`，目标明确写为持续完成本项目并交付通过门禁的 PDF。已有同一目标则继续，禁止覆盖无关 Goal。持续推进 step0–step5，只有缺少不可替代的赛题、必要数据或官方赛事规则且同一阻塞连续存在达到 Goal 规则阈值时才可标记 blocked；不得因工作量、普通工具失败或可替代方案而停止。只有最终 PDF、step5 报告与 `verify_delivery.py` 全部通过后才能标记 complete。
 
 ## 总原则
 
 - 全程严格使用 `competition_language` 选择的赛事语言：选择中文时正文、图片、图注、坐标轴、图例、Excel 与流程图文字全部中文；选择英文时上述内容全部使用规范学术英文。代码关键字与必要专有名词除外。
-- 严禁编造、胡编、篡改数据，严禁抄袭；所有数据、方法、结论和参考文献都必须可追溯。需要假设时必须标注依据，任何数据缺失、异常或与题目矛盾都要先报告，不得自行补齐或替换。
+- 严禁编造、胡编、篡改数据，严禁抄袭；所有数据、方法、结论和参考文献都必须可追溯。需要假设时必须标注依据，任何数据缺失、异常或与题目矛盾都要先报告，不得自行补齐或替换。文献按三类分流：学术/技术证据（领域论文、方法原始论文、与题目直接相关的 GB/T 与 ASTM 等技术标准、官方数据源）可进入最终 `thebibliography` 且必须被正文真实引用；通用数学建模教材属内部学习资料，赛事论文格式规范、模板说明与参赛规则属合规资料，两者都不得作为文后条目。每条最终参考文献都要能指出它支撑的事实、方法、参数或数据及其章节位置，不得为凑数量增加条目。
 - 全流程从零持续推进到格式规范的完整 LaTeX/PDF 论文，禁止中途等待确认、暂停或无界重试。同一失败原因采用同一修复策略最多连续尝试 3 次；仍失败时必须分析根因并切换安全替代方案，继续完成后续工作，禁止重复执行无状态变化的命令。门禁失败必须自动修复并重跑，但不得以 Word 生成或转换作为补救方案。
+- 图像链路统一采用“硬缺陷驱动、合格即冻结”：候选图的硬 QA 全部通过（数据与题意一致、无造假、无乱码、无重叠、无裁切、导出完整、文本可编辑、版面缩印可读、论文插入正常）且无事实错误时，立即标记 `paper_ready=true` 并冻结，不得以“也许还能更漂亮”“再高级一点”“再优化一下”为唯一理由整图重画。每次重画必须对应一个具体缺陷（重叠、文字过小、坐标错误、题意不符、数据不一致等），纯审美调整最多做一次局部修正；同一根因最多 3 轮且每轮必须产生针对该缺陷的状态变化，无状态变化立即停止并切换策略。新候选只有在硬 QA 不低于当前已合格版本时才可替换正式产物，禁止把已合格图覆盖为更差版本；AI 付费生图在已合格时不得重复调用。
 - 数学建模图表必须按 `competition_language` 选择的中文或英文达到顶刊一区 Top 1 绘图标准，包括信息密度、构图、配色、字体层级、图例、坐标轴、图注与印刷可读性。优先使用有效的 mathmodel 卡片锁定绘图模式并同步写入 `项目状态.json` 与 `figures/manifest.json`；仅在没有结构化配置的手动调用或旧项目缺记录时询问一次，不得重复询问、猜测或静默切换。数据相关绘图始终沿用既有 Python 链路。
-- 非数据绘图严格按 `references/drawing-pipeline.md` 执行。Draw.io 模式只自动生成流程图、问题分析流程图和技术路线图，概念类图保留 2–4 份提示词且不生图；AI 模式保留 2–4 份概念类提示词并逐份自动调用 Image Gen 生成候选图，另至少生成一张流程类图，不等待二次确认。任一必需成图、工具验证或 QA 缺失均硬阻断交付。
-- 技术路线图必须使用 `drawio_pipeline.py build --brief ... --labels-json ...` 原子选择并生成，禁止手写 XML、回退旧模板或自造 `template_id`；英文原型与当前题目不同只能通过 labels 中文化，最终源文件结构和 manifest 必须通过模板指纹一致性门禁。
+- 非数据绘图严格按 `references/drawing-pipeline.md` 执行。Draw.io 模式只自动生成流程图、问题分析流程图和技术路线图，概念类图保留 2–4 份提示词且不生图；HTML 模式自动生成范围与 Draw.io 模式完全一致，流程类图由技能内置 HTML 引擎出矢量 PDF，概念类图同样只保留 2–4 份提示词且不生图；AI 模式保留 2–4 份概念类提示词并逐份自动调用 Image Gen 生成候选图，另至少生成一张流程类图，不等待二次确认。任一必需成图、工具验证或 QA 缺失均硬阻断交付。
+- Draw.io 模式的技术路线图必须使用 `drawio_pipeline.py build --brief ... --labels-json ...` 原子选择并生成，禁止手写 XML、回退旧模板或自造 `template_id`；英文原型与当前题目不同只能通过 labels 中文化，最终源文件结构和 manifest 必须通过模板指纹一致性门禁。HTML 模式的技术路线图必须由内置 HTML 引擎按骨架池种子确定性生成，`template_id` 记录骨架池四类之一，禁止手写绝对坐标布局或伪造骨架记录。
 - 所有 Python 绘图必须先按“任务语义 -> 图型”决策，再走本技能内置顶刊绘图链路，导出 `svg + pdf + png` 并完成中文字体、可编辑文本和论文级版式 QA；交付前必须检查标题、坐标轴、图例、注释是否乱码、丢字、方框或问号替代字符，未通过者不得入文；不得依赖外部 `Py-Nature` skill 或外部绘图模板路径。
 - `bar_policy=禁用` 是零例外硬约束：任何数据语义（包括时间轴、甘特图和区间图）都不得调用柱形 API（`bar/Bar`、`barh`、`broken_barh`、`barplot`、`mark_bar`、`vbar/hbar`、`kind="bar/barh"` 等），区间改用 `hlines/plot` 与端点标记；`bar_policy=少用` 仅在“类别很少、必须零基线、核心任务是绝对高度比较”同时成立且同源 manifest 条目写明完整 `bar_exception` 时允许；`bar_policy=正常` 仍须服从任务语义与信息密度。
 - Python 图优先评估顶刊一区中文三维图（非必须）：每轮图型决策判断三维曲面、散点、轨迹、场或响应面能否提升信息密度，并在三轮自查中记录“三维图可行性评估”。
+- `subplot_policy` 用“语义面板数 `panel_count`”约束子图，而不是数 Matplotlib `Axes` 对象：`panel_count=1` 表示只有一个独立数据视图，colorbar 与 legend 不计入；`panel_count>1` 表示同一成图内存在两个以上独立数据视图（(a)(b)(c)、hero/support、并排或网格面板），inset 小窗算第二个语义视图。三种模式为：`默认（模型自行判断）`单图优先，仅当多个视图共同回答同一研究问题且需共享坐标、共享图例或直接并列比较时才用多面板，互相独立的结论拆为多张单图；`少用子图`最终入文多面板 Python 图最多 4 张，其余为单 panel，原多面板模板优先换等价单图或拆为顺序编号的独立图；只有 `项目状态.json` 同时存在 `subplot_sparse_max`（非负整数）与 `subplot_sparse_override_request`（用户原话）时才按该整数放宽，检查器不从 `user_notes` 自然语言推断授权；`禁用子图`要求所有最终入文 Python 图 `panel_count=1`，禁止 hero/support、多行多列 panel 与 inset，colorbar/legend 保留。每个 Python 图 manifest 条目必须记录 `panel_count`，实际值与内置模板语义一致；`panel_count` 只约束 Python 数据图，不影响 `bar_policy`、`three_d_preference` 与 `figure_total` 的原有含义。
+- `python_chart_repeat_policy` 以“重复图型类别数 G”计量：每个图项按语义面板登记 `panel_chart_types`（二维数组，缺省时未改绘模板可用注册表默认元数据推导，改绘后必须显式给出）；对每个图型 t，n(t)=包含 t 的最终入文图项数，G=满足 n(t)≥2 的图型数。换颜色、标题、模板名或图例不算新类型；折线族（multi_line/line_band/收敛/带点折线与置信带）归 line_2d，矩阵与一行列热图同族；同图多格式导出与重复引用只算一张；同 source 多图分别计数；优秀论文截图、Draw.io/HTML/AI 图与非数据流程图不参与统计且不因此豁免子图检查。step3 统计拟入文图，step4/5 按实际引用核对最终入文集合并与清单一致性核对（未入文项与未登记引用都要报告）。新项目创建时必须把默认值“默认（少重复）”显式写入 项目状态.json；旧项目双缺字段按“模型自行分析”兼容（policy_source=legacy_missing），缺元数据时 G=null 并列未知项，不新增硬阻断。
 - 全文最终入文图片以 `figure_total` 为唯一数量目标；结合各问复杂度、信息密度、论文篇幅和论证价值动态分配，允许重点问题多图、简单问题少图，但每张图必须承担不可替代的论证职责，禁止重复图、换色变体和为凑总数生成空洞图片。默认优先覆盖数据预处理、技术路线、灵敏度分析、核心结果与必要的原理/概念/模型图，最终严格核对总数与 `figure_total`。
-- 问题分析、技术路线图和流程图必须来自锁定模式：Draw.io 模式保留 `.drawio`、SVG、PDF、2× PNG；AI 模式保留提示词和可解码成图。两种模式都必须完成内容、中文、符号、裁切、清晰度、路由/重叠、单/双栏缩印和正文回填检查。
+- 问题分析、技术路线图和流程图必须来自锁定模式：Draw.io 模式保留 `.drawio`、SVG、PDF、2× PNG；HTML 模式保留 `.html` 源、矢量 PDF 与 2× PNG；AI 模式保留提示词和可解码成图。三种模式都必须完成内容、中文、符号、裁切、清晰度、路由/重叠、单/双栏缩印和正文回填检查。
 - 技术路线图或问题分析流程图不能只停留在孤立 PNG；必须保留所选模式的可追溯源和 manifest，并在 `论文/main.tex` 中用 `\includegraphics` 正式插入正文。缺源、缺导出、缺提示词对应关系或伪造 QA 均不得入文。
 - 所有最终数值结果必须先写入 `results/final_results.json`，论文正文、摘要、README 和 result.md 只能引用该唯一结果源，禁止保留互相冲突的多套结果；`scripts/` 只能作为共享工具、总控脚本和检查脚本目录保留，每个非空 Q1/Q2/Q3/Q4 问题目录都必须保留本问主脚本或包装脚本、模型说明和结果文件，禁止所有代码与结果链路只集中在 `scripts/`。
 - 根据实际赛题问数动态覆盖 `Q1/` 到 `Qn/`；每个实际 Q 目录都必须包含 `README.md`、`result.md`、本问主脚本或包装脚本、`figures/` 子目录，每个 `Qn/figures/` 至少存放本问 1 张相关生成图；若确实不出图，必须在 `Qn/result.md` 写明“不出图理由”和“可复现结果来源”。每个 `Qn/result.md` 都必须面向未参与建模的队友或评委助理，完整、通俗、可复现地说明本问的目标、输入数据、核心假设、模型思路、关键公式通俗解释、运行命令、输出文件、核心数值结果、图表清单、结果解释、局限与下一问衔接。
@@ -38,8 +41,10 @@ disable-model-invocation: true
 - 论文允许自然留白，但禁止出现大半页空白；正文中不得用强制分页、大段 `\vspace`、`\vfill` 或空图表占位制造留白。若用户约定正文页数且正文不足，必须优先深化各问“模型建立与求解”：补充变量定义、约束来源、推导链、适用条件、边界讨论、求解细节和结果解释，禁止另增无关章节、堆砌套话或重复图表凑页数。
 - 论文正文从标题页开始，包括标题、摘要、关键词、问题重述至参考文献的全部内容；只排除附录中的支撑材料文件目录和代码。正文硬约束为大于 25 页（不少于 26 页），该约束由门禁强制执行，附录不超过 10 页；页数不足时不得通过扩充参考文献或新增章节凑页。
 - 论文正文必须严格遵守内置 GMCMthesis 模板主结构：一、问题重述，二、模型假设与符号说明，随后按实际赛题问数依次为“问题一至问题 N 模型建立与求解”，最后是“模型总结与评价”，参考文献使用 `thebibliography` 环境；正文禁止新增主章节，禁止把候选方法比较、体系结构、AI 痕迹检测、边界讨论、问题衔接、方法论启示、整体发现总结、数据-结果回扣、可复现性、运行顺序等作为独立 `\section`，相关技术内容只能并入对应“问题 X 模型建立与求解”章节或放入 README、检查结果、附录说明。
+- 符号说明按固定顺序落版（源码与编译 PDF 一致）：模型假设 → 符号说明标题 → 符号表 → 问题一主章节；符号说明标题与符号表之间只允许一段符号口径简介，禁止插入 EDA 结果、数据图、流程图或模型推导。符号表使用非浮动容器：短表直接 `tabular`/`tabularx`，实际超过一页用 class 已加载的 `longtable` 重复表头；禁止用 `\begin{table}[htp!]` 等可漂移浮动容器承载符号表，也不得全局把图表改成 `[H]`。符号表不加 caption、不占用正式结果表编号（longtable 分支保存并恢复 table 计数）。允许自然跨页，但标题不得孤悬在首表头/首数据行之前一页。
 - 正文禁止出现内部文件路径和绝对路径；唯一例外是原理图、模型图、概念示意图提示词的相对路径，必须写成 `手绘图/*.md`，如项目已有 AI 绘图目录可写成 `AI绘图/*.md` 或 `ai绘图/*.md`。
 - 论文正文禁止出现实际字符 `•` 和 `☐`，不得使用项目符号或复选框式无序列表组织正文；如需列举，改写为连续论述、编号句或表格。
+- 论文正文同时禁止原始中点字符 `·`（U+00B7）：数学乘法使用 LaTeX `\cdot` 等规范命令，不从参考样本或写作习惯中带回装饰性中点；数学环境与 `\cdot` 系列命令不受该禁令影响，也不无差别扩大 Unicode 黑名单。
 - 摘要与关键词合计不得超过两页（华为杯官方允许）：`\begin{abstract}` 后紧跟 `\label{abstract:start}`，`\keywords{}` 之后放 `\label{abstract:end}`，编译后两标记的 aux 页码跨度不得超过 2；摘要有效文字不得少于 800 字，建议 850–1050 字。必须使用 GMCMthesis 模板原生 `abstract` 环境与 `\keywords{}` 命令，禁止另造摘要环境、缩小字号、压缩行距或用负间距规避门禁。
 - 正文引用必须使用与参考文献条目真实关联的引用命令，并在引用处显示为右上角数字角标；LaTeX 优先沿用模板已有上标引文命令，缺失时定义兼容模板的 `\supercite{key}`（内部调用 `\cite{key}`），禁止手写 `[1]`、手工编号或使用与文后条目失联的角标。连续引用按模板排序、压缩，编译后抽查角标位置、编号和文后条目一一对应。
 - 公式只给承担全文主链的少数关键式编号，例如核心机理、目标函数、关键约束、最终判据和直接支撑结论的公式；定义性补充、中间代换、重复指标与解释性推导使用无编号环境。多行但同属一个逻辑单元的公式整组只保留一个编号，编号必须唯一、连续并位于公式右侧；不得改动公式内容来迁就编号。
@@ -50,7 +55,9 @@ disable-model-invocation: true
 - 附录代码必须保持纯代码形态，禁止 Markdown 代码围栏、标题符号、装饰分隔线等格式符号，禁止注释，禁止连续大量空行。
 - 真实业务代码保持不变，论文附录仅使用 `scripts/prepare_appendix_code.py` 从真实 Python 脚本生成的等价净化副本；详细配置、局部变量改名边界和回归规则见 `references/appendix-code-prose-style.md`。原版与净化版未在同一环境运行通过，或结构化结果不一致时不得交付。
 - 论文标题、摘要至“模型总结与评价”的可见论述禁止使用“首先、其次、然后、接着”；正常论述中的 `（）`、`【】` 和裸 `[]` 每千字合计不超过 4 组。句式应自然变化，第一人称只在确有必要时少量使用，具体规则见 `references/appendix-code-prose-style.md`。
-- 当卡片 `reference_excellent_papers=true` 或用户要求参考往届作品时，调用 `../_shared/scripts/discover_excellent_papers.py --competition 华为杯 --problem <当前题号> --limit 2`，只读取 `<DSH_HOME>/往年优秀论文/华为杯/` 中发现脚本返回的同题样本，并执行 `../_shared/references/excellent-paper-policy.md`。必须在项目状态中记录返回状态和实际样本；返回 `catalog_missing`、`catalog_invalid`、`no_matching_sample`、`file_missing` 或 `hash_mismatch` 时写明“暂无匹配样本”及原因，继续使用官方规则、GMCMthesis 模板和通用量表，不得跨题套用或阻断论文流程。开关关闭时不得扫描或读取论文库。
+- 论文标题、摘要至“模型总结与评价”的可见论述对“判决”“判定”零容忍，按语义改为判断、确定、识别、界定、筛选、比较或归类等具体表述；“验证”“检验”“核对”属于低频词，不设粗暴零值以免误伤“假设检验”等专业术语，但应优先改写为与实测数据比较、复算结果一致性、对照边界条件、敏感性分析、稳健性分析、残差分析、交叉比较或检查约束是否满足等具体动作。禁止“本图充分验证了……”“从图中可以清晰看出……”一类空泛模板句。参考文献、代码和数学环境中的词不作为可见论述误报。
+- 当卡片 `reference_excellent_papers=true` 或用户要求参考往届作品时，调用 `../_shared/scripts/discover_excellent_papers.py --competition 华为杯 --problem <当前题号> --limit 2`，只读取 `<DSH_HOME>/往年优秀论文/华为杯/` 中发现脚本返回的同题样本，并执行 `../_shared/references/excellent-paper-policy.md` 与 `references/excellent-paper-visual-calibration.md`。必须在项目状态中记录返回状态和实际样本；返回 `catalog_missing`、`catalog_invalid`、`no_matching_sample`、`file_missing` 或 `hash_mismatch` 时写明“暂无匹配样本”及原因，继续使用官方规则、GMCMthesis 模板和通用量表，不得跨题套用或阻断论文流程。开关关闭时不得扫描或读取论文库，也不得创建 `截图/`。
+- 开启后除完成度校准，还必须执行视觉校准：运行 `python "<技能目录>/scripts/excellent_paper_visual_review.py" --project "<项目根目录>" --competition 华为杯 --problem <当前题号>`，在项目根 `截图/` 下为每篇样本渲染 3–5 张代表页 PNG（摘要、模型建立/求解、图表组织、整体版式），生成 `截图/优秀论文参考记录.md` 与权威报告 `检查结果/excellent_paper_visual_review.json`（初始观察状态为“未读取”，重跑按 relativePath+sha256 内容身份保留已填写观察），并在进入 Step4/Step5 前用 `read_image` 或 `vision_analyze` 逐个读取 PNG、逐页回填具体观察结论（只写“版式好/布局好/文风好”不算完成）；没有视觉读取记录时不得声称“已参考优秀论文”。只借鉴页面留白与信息密度、标题层级与段落节奏、单图/多图使用频率、图表与解释的相对位置、图表尺寸占比、摘要与问题段落的信息组织和文风克制程度；永久禁止复制样本原句或近似改写、公式、变量、方法结论、数据、图表、数值结论与装饰性符号。`截图/` 只作项目内审计证据，绝不插入最终论文、不进入参考文献。
 - 本技能内置可跨电脑分发的华为杯 LaTeX 模板，统一位于 `assets/templates/`：主稿 `main.tex`、类文件 `gmcmthesis.cls`、样式 `gmcm.bst`、封面图 `figures/logo.pdf` 与 `figures/title.pdf`、官方示例 `example.tex`；论文内容组织、排版编译与最终交付默认以此为唯一模板来源。step0 初始化项目时，把 `gmcmthesis.cls`、`gmcm.bst`、`figures/logo.pdf`、`figures/title.pdf` 从 `assets/templates/` 复制到项目 `论文/` 与 `论文/figures/` 下，主稿以 `assets/templates/main.tex` 为基座落地。论文必须保持 `\documentclass[bwprint]{gmcmthesis}`、封面信息（`\title`、`\baominghao`、`\schoolname`、`\membera/b/c`）、原生 `abstract`、`\keywords{}`、`thebibliography` 参考文献与 `appendices` 附录结构；禁止改写成普通 `article/ctexart`、另造封面或替换官方封面图。封面由 `\maketitle` 生成、目录由 GMCMthesis 模板原生 `\maketoc` 生成（位于摘要之后，官方顺序为封面→摘要→目录→正文，与官方示例 `example.tex` 一致），二者均属模板规定动作，不得删除或调序；禁止另行手写目录环境。附录先放数据附录（正文放不下的大表、大规模矩阵与完整数值结果，正文用“限于篇幅，XX 见附录X”引用），后放代码附录；附录代码使用模板原生 `Matlab`/`Python` 代码环境内联排版（环境 title 参数中的下划线必须转义为 `\_`），禁止 `lstinputlisting` 等外部引入方式。
 - 在 step0 只运行无网络快速探测 `scripts/latex/latex_runtime.py probe --project <项目根目录>`；缺少 XeLaTeX 时记录为延后安装并继续 step1–step3，不得在 step0 阻塞下载。step4 首次草稿编译前由 `latex_runtime.py compile` 自动准备用户级 TeX Live：复用现有环境和缓存，优先校验离线包，再对清单中的镜像各尝试一次。安装或网络失败必须写入门禁报告；同一环境条件下不得反复调用安装，修复网络、空间、权限或离线包条件后再重跑。详细规则见 `references/latex-bootstrap.md`。
 - 当信息不足时，先采用最合理假设继续推进并把假设点标记清楚；除非出现关键分歧，不要追问，优先执行。
@@ -131,7 +138,7 @@ step5 运行全部注册检查并生成 `检查结果/check_report.json`、`chec
 
 门禁覆盖 LaTeX 环境、阶段契约、唯一结果源、结果一致性、代码目录分区、摘要、图片、绘图模式、Python 数据图、技术路线图、Q 目录、模板、论文结构、页数、留白、附录代码、三轮自查、路径、数据来源和最终交付评分卡。
 
-最终交付前必须完成三轮全链路自查，并写入 `检查结果/三轮自查.md`：第一轮检查内容与数据链，第二轮检查论文与版式链，第三轮检查代码与复现链；除既有检查外，第一轮必须复核自然衔接、句式长短变化、括号密度和第一人称必要性，第二轮必须确认模板摘要示例与实际论文通过文风门禁，第三轮必须确认真实源代码未修改、局部改名边界正确、注释与空行已清理、代码结构已复核且原版与净化版运行结果一致；三轮均确认通过后才允许给出最终交付结论。
+最终交付前必须完成三轮全链路自查，并写入 `检查结果/三轮自查.md`：第一轮检查内容与数据链，第二轮检查论文与版式链，第三轮检查代码与复现链；除既有检查外，第一轮必须复核自然衔接、句式长短变化、括号密度和第一人称必要性，第二轮必须确认模板摘要示例与实际论文通过文风门禁，并写明“子图策略复核”“图表解释位置”“合格即冻结与重画终止条件”三项结论，第三轮必须确认真实源代码未修改、局部改名边界正确、注释与空行已清理、代码结构已复核且原版与净化版运行结果一致；三轮均确认通过后才允许给出最终交付结论。
 
 ## 详细规则
 
@@ -140,4 +147,4 @@ Python 顶刊绘图决策树、配色导出规范和模板范式见 `references/
 跨电脑使用时所需的华为杯 LaTeX 模板统一位于 `assets/templates/`（含 `main.tex`、`gmcmthesis.cls`、`gmcm.bst`、封面图 `figures/` 与官方示例 `example.tex`）。
 Windows LaTeX 自动自举与恢复见 `references/latex-bootstrap.md`。
 全自动执行清单见 `references/auto-checklist.md`。
-双绘图选路、Draw.io 内置工具与 AI 成图契约见 `references/drawing-pipeline.md` 和 `scripts/drawing/drawio_pipeline.py`。
+三绘图选路、Draw.io 内置工具、HTML 矢量成图引擎与 AI 成图契约见 `references/drawing-pipeline.md`、`references/html-figure-engine.md` 和 `scripts/drawing/drawio_pipeline.py`；HTML 引擎的出图工具、KaTeX 素材与兜底模板整体内置在 `assets/html-figure/`，跨电脑使用无需附加任何外部绘图技能。

@@ -2,14 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import YAML from 'yaml';
 
 const workspaceRoot = resolve(import.meta.dirname, '../../../');
 const skillRoot = resolve(workspaceRoot, '.dsh/skills/image-to-editable-ppt');
 const presetFile = resolve(workspaceRoot, '.dsh/.agent-presets/editable-ppt/agent.cordis.yml');
 // DSH 0.1.2-rc.1 把 standard preset 移入 dsh-agent-presets 子包；保留旧路径作回退探测。
+const npmRoot = resolve(process.env.APPDATA ?? '', 'npm', 'node_modules', '@deepseek-ai', 'dsh');
 const standardCandidates = [
-  'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\node_modules\\@deepseek-ai\\dsh-agent-presets\\presets\\standard\\agent.cordis.yml',
-  'C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\node_modules\\@deepseek-ai\\dsh\\config\\agent-presets\\standard\\agent.cordis.yml',
+  resolve(npmRoot, 'node_modules', '@deepseek-ai', 'dsh-agent-presets', 'presets', 'standard', 'agent.cordis.yml'),
+  resolve(npmRoot, 'config', 'agent-presets', 'standard', 'agent.cordis.yml'),
 ];
 const { access } = await import('node:fs/promises');
 const standardFile = await (async () => {
@@ -28,13 +30,17 @@ test('editable-ppt Persona 声明 DSH 当前连接边界但不复制工具 schem
   assert.match(source, /任务开始时锁定/);
   // Persona 保持短小：不含枚举 schema、错误矩阵或执行步骤清单。
   assert.doesNotMatch(source, /additionalProperties|"enum"|codex_backend_forbidden|dsh_current_cli_forbidden/);
-  const personaText = source.match(/text: >-\n((?: {6}.+\n?)+)/)?.[1] ?? '';
+  // 0.1.5-rc.2 起 persona 文本字段为 config.prefix（旧版为 text）。
+  const personaText = source.match(/prefix: >-\n((?: {6}.+\n?)+)/)?.[1] ?? '';
   assert.ok(personaText.length > 0 && personaText.length < 800, `Persona 应保持短小，当前 ${personaText.length} 字符`);
 });
 
 test('editable-ppt roster 与官方 standard 无差异（仅 Persona 文本不同）', async () => {
   const [source, baseline] = await Promise.all([readFile(presetFile, 'utf8'), readFile(standardFile, 'utf8')]);
   assert.deepEqual(ids(source), ids(baseline));
+  // 不仅比较 ID，避免官方新增配置被旧快照悄悄丢弃。
+  const withoutPersona = (text) => YAML.parse(text, { logLevel: 'silent' }).filter((row) => row.id !== 'persona');
+  assert.deepEqual(withoutPersona(source), withoutPersona(baseline));
 });
 
 test('dsh-current Worker 分支：锁定连接、串行、import 校验哈希、失败 passed:false，且无 Codex/config/Key 建议', async () => {

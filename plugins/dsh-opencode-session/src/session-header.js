@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 
 // 私有适配点必须同时通过版本及函数指纹检查，升级后禁止盲目套用。
-export const SUPPORTED_VERSION = '0.1.2-rc.1';
-export const SUPPORTED_HASH = 'dcc4a4542e09a92a96aba3e76a27a32ac428cbe7c7ae71e7d897c5c908b1bfe1';
+export const SUPPORTED_VERSION = '0.1.5-rc.2';
+export const SUPPORTED_HASH = '2bac107cc0f85b31ff9f5f05d975775909101fd284218a711d7bc741811addca';
 const installed = new WeakMap();
 
 export function withSessionHeader(options, snapshot) {

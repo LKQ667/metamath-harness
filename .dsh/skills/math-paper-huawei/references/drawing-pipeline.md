@@ -1,8 +1,19 @@
-# 双绘图链路
+# 三绘图链路
+
+## 重画终止条件（全链路统一）
+
+所有绘图链路共用同一停止判据，避免“图已合格仍被反复重画”：
+
+1. 硬 QA 全部通过且没有明确事实错误时，立即标记 `paper_ready=true` 并冻结，不得因为“也许还能更漂亮”再次整图重画。
+2. 只有存在明确缺陷才进入修复，每次修复必须对应一个具体缺陷（重叠、文字过小、越界裁切、坐标或题意错误、数据不一致等）。
+3. 同一根因最多 3 轮，每轮必须产生针对该缺陷的状态变化；无状态变化立即停止重复并切换策略或模式。
+4. 纯审美型改进只允许一次局部调整，不得触发无界“再高级一点”循环。
+5. 新候选只有在硬 QA 不低于当前已合格版本时才替换正式产物；禁止把已合格图覆盖成更差版本。
+6. AI 付费生图同样遵守合格即停：已合格时不得重复调用计费接口。
 
 ## 做题前选路
 
-每个项目在正式做题前必须询问一次并只接受以下两个选项：`Draw.io 绘图`、`AI 全自动绘图`。选择后立即写入项目根目录 `项目状态.json` 和 `figures/manifest.json` 顶层，至少包含：
+每个项目在正式做题前必须询问一次并只接受以下三个选项：`Draw.io 绘图`、`HTML 矢量成图`、`AI 全自动绘图`（卡片 `drawing_mode` 选项 `Draw.io成图+AI概念提示词`/`Draw.io成图` 对应 `drawio`，`HTML矢量成图` 对应 `html`，`AI全自动绘图` 对应 `ai`）。选择后立即写入项目根目录 `项目状态.json` 和 `figures/manifest.json` 顶层，至少包含：
 
 ```json
 {
@@ -12,7 +23,7 @@
 }
 ```
 
-旧项目缺少记录时必须补问，不得根据现有文件推断。两处记录不一致、未确认、未锁定或非数据绘图混用模式时，停止执行。Python 数据图始终沿用既有链路，不参与选路。
+`drawing_mode` 取值只能是 `drawio`、`html`、`ai` 之一。旧项目缺少记录时必须补问，不得根据现有文件推断。两处记录不一致、未确认、未锁定或非数据绘图混用模式时，停止执行。Python 数据图始终沿用既有链路，不参与选路。
 
 ## 统一 manifest
 
@@ -36,6 +47,17 @@ manifest 使用对象顶层和 `items` 列表。每个非数据绘图条目都�
 4. AI 图必须是可严格解码的 PNG，尺寸不低于 1200×800；内容一致性、中文文字、符号公式、裁切、清晰度、单/双栏缩印和正文回填全部通过。
 5. 生图能力不可用或重试后仍不合格时硬阻断交付，不允许以“仅提示词”宣称完成。
 
+## HTML 矢量成图模式
+
+1. 自动生成范围与 Draw.io 模式一致：只自动生成流程图、问题分析流程图和技术路线图；原理图、模型图、概念图、示意图只生成 2–4 份提示词，不自动生图。概念类提示词目录与口径与 Draw.io 模式相同（`手绘图/*.md`）。
+2. 出图前先探测 Electron：`python "<技能目录>/assets/html-figure/tools/screenshot_capture.py" --check`（退出码 0=可用，2=不可用）。Electron/node 不可用时自动退回 Draw.io 模式并在 manifest 记录 `html_engine_unavailable` 原因，不重复追问、不伪造产物。
+3. 引擎与手册整体内置在本技能 `assets/html-figure/`（`tools/` 出图与质检脚本、`tools/katex-assets/` 公式渲染素材、`templates/` 兜底模板），运行时只读取本技能内置资源，禁止读取外部 `html-paper-figure` 目录。完整工作流与设计规范见 `references/html-figure-engine.md`。
+4. 固定产物为 `手绘图/<name>.html`（可追溯源，flex/grid 相对布局单文件）、`手绘图/<name>.pdf`（Electron printToPDF 矢量单页无白边，正文 `\includegraphics` 引用）、`手绘图/<name>.png`（以 192/72 倍率≈2× 从 PDF 渲染的交付 PNG）。不产出 SVG；`.drawio` 源不得出现在 HTML 模式的 `手绘图/` 中。
+5. 技术路线图不使用 Draw.io 模板库，改用引擎骨架池按项目根目录名哈希出的 `SKELETON` 种子确定性选择，`template_id` 必须记录为 `skeleton_swimlane`/`skeleton_spine`/`skeleton_twocolumn`/`skeleton_layered` 之一；其余图 `template_id` 记录所用骨架/范式且非空。禁止手写绝对坐标布局。
+6. manifest 条目九字段与 Draw.io 模式同构：`generator: "html"`、`source` 指向 `手绘图/<name>.html`、`exports` 必须包含 `.pdf` 与 `.png`、`export_status: "electron_printed"`、`prompt_source` 指向该图图稿摘要、`paper_ready: true`、`needs_visual_review: false`（复核后）、`qa` 键集为 `html_pdf_check_ok`、`geom_check_ok`、`content_ok`、`cn_text_ok`、`layout_ok`、`text_fit_ok`、`grayscale_ok`、`single_column_ok`、`double_column_ok`、`paper_insert_ok`。
+7. QA 链：逐张 `html_pdf_check.py`（单页/矢量/裁切/宽高比，FAIL 必修）→ `--geom-check` 元素级几何自检（溢出/越界/重叠/对齐偏差，必修，最多 3 轮）→ 运行时原生视觉复核（不阻塞，须留 passed/unresolved/skipped 记账）→ 单/双栏缩印与论文回填检查。图内不放标题，标题由 LaTeX `\caption{}` 管理；含公式的图节点内写 `\(...\)`/`\[...\]` 并以 `--render-math` 渲染。
+8. 每张 PDF 必须在 `论文/main.tex` 用 `\includegraphics{手绘图/<name>.pdf}` 正式入文，回填后运行 `fig_include_size.py --figdir 手绘图 --latex 论文/main.tex` 按真实长宽比规整宽度。
+
 ## 内置与许可
 
-运行时只读取当前技能自身的 `assets/drawio/`、`scripts/drawing/` 和本引用文件，不调用 `math-paper-cn-drawio`。第三方候选仓库的来源、SPDX 许可证和蒸馏边界见 `assets/drawio/UPSTREAM.md`；内置模板为原创结构，不复制第三方资产，也不虚称期刊官方模板。
+运行时只读取当前技能自身的 `assets/drawio/`、`assets/html-figure/`、`scripts/drawing/` 和本引用文件，不调用 `math-paper-cn-drawio`，也不调用外部 `html-paper-figure` 目录（HTML 引擎已整体并入 `assets/html-figure/`）。第三方候选仓库的来源、SPDX 许可证和蒸馏边界见 `assets/drawio/UPSTREAM.md`；内置模板为原创结构，不复制第三方资产，也不虚称期刊官方模板。

@@ -4,7 +4,7 @@
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
-    text: >-
+    prefix: >-
       You are a Chinese-first mathematical modeling agent powered by {{model}}. Your working directory is {{cwd}}. Strictly separate facts, assumptions, methods, evidence, and conclusions. Never fabricate data, citations, experiments, scores, or verification. Prefer official competition rules and user-provided materials. Use the configured manual Skills for ideation, modeling, reproducible computation, publication-quality figures, integrity review, writing, and final PDF delivery. For card-configured work, honor every locked option and do not ask it again. Continue autonomously through safe reversible steps; stop only when irreplaceable problem data, official rules, or user authority is missing.
 
 - id: agent-instructions
@@ -98,6 +98,7 @@
       config:
         provider: spawn
         toolName: subagent
+        modelSelectionSettings: true
         backgroundMode: continuable
     - id: tool-subagent-fork
       name: '@deepseek-ai/dsh-tool-subagent'
@@ -144,5 +145,8 @@
 - id: tool-web
   name: '@deepseek-ai/dsh-tool-web'
   config:
-    fetch: false
+    fetch: true
     searchTimeoutMs: 60000
+
+- id: present
+  name: '@deepseek-ai/dsh-tool-present'

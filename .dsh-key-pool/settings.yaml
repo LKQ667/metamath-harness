@@ -1,0 +1,29 @@
+ui-onboarding:
+  welcomeNoticeVersion: 2026-08-13.1
+api-key-pool:
+  schema: dsh.api-key-pool/v1
+  allowLoopbackHttpForTests: false
+  pools:
+    {
+      vision-test:
+        {
+          displayName: vision-test,
+          api: openai-completions,
+          baseURL: https://api.deepseek.com,
+          models:
+            [
+              {
+                  id: deepseek-v4-flash-vision-exp,
+                  name: deepseek-v4-flash-vision-exp,
+                  contextWindow: 262144,
+                  maxTokens: 32768
+                }
+            ],
+          keyIds: [],
+          selection: round-robin,
+          cooldownMs: 30000,
+          maxCooldownMs: 3600000,
+          maxRetries: 3,
+          enabled: true
+        }
+    }

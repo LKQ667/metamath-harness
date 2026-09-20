@@ -24,10 +24,14 @@ describe('package version sync', () => {
   /**
    * The define reads package.json at BUILD time, so a release that bumps the
    * version after building ships artifacts reporting the old one (issue #1:
-   * v0.2.2 bundles said 0.2.1). The version literal lands in the
-   * host-heartbeat chunk (bin.js imports it from there); when lib/ artifacts
-   * are present, that chunk must carry the current version. Skipped on a
-   * fresh clone before the first build.
+   * v0.2.2 bundles said 0.2.1). Skipped on a fresh clone before the first build.
+   *
+   * The version literal may land in `index.js` or in a shared chunk beside it
+   * (rollup decides which, and the chunk's hashed filename changes with the
+   * module graph), so every emitted `.js` is scanned rather than one guessed
+   * filename. Searching all of them is what keeps this guard meaningful: the
+   * assertion is "the shipped artifacts carry this version", not "the bundle
+   * was laid out this way".
    */
   it('built lib/ artifacts carry the current version when present', () => {
     const libDir = new URL('../lib/', import.meta.url)
@@ -35,10 +39,15 @@ describe('package version sync', () => {
     const pkg = JSON.parse(
       readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
     ) as { version: string }
-    const chunks = readdirSync(libDir).filter(f => /^host-heartbeat-.*\.js$/.test(f))
-    expect(chunks.length, 'host-heartbeat chunk missing from lib/ — update this guard if the build layout changed').toBeGreaterThan(0)
-    for (const chunk of chunks) {
-      expect(readFileSync(new URL(`../lib/${chunk}`, import.meta.url), 'utf8'), `${chunk} is stale — rebuild before committing or publishing`).toContain(`"${pkg.version}"`)
-    }
+    const bundles = readdirSync(libDir).filter(name => name.endsWith('.js'))
+    expect(bundles.length, 'no built bundles in lib/ — run the build before this test').toBeGreaterThan(0)
+    const declaring = bundles.filter(bundle =>
+      readFileSync(new URL(`../lib/${bundle}`, import.meta.url), 'utf8')
+        .includes(`WORKBUDDY_CONNECT_VERSION = "${pkg.version}"`),
+    )
+    expect(
+      declaring,
+      `no built bundle declares WORKBUDDY_CONNECT_VERSION as "${pkg.version}" — rebuild before committing or publishing`,
+    ).not.toHaveLength(0)
   })
 })

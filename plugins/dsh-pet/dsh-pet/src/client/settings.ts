@@ -62,6 +62,9 @@ export const zh = {
   balanceEnabledHint: '启用后该宠物触发余额动画并显示余额气泡。',
   whisperEnabled: '碎碎念',
   whisperEnabledHint: '启用后该宠物按周期用 AI 生成一句话并播碎碎念动画（人设与周期在配置文件顶层）。',
+  workStatusEnabled: '工作状态联动',
+  workStatusEnabledHint:
+    '启用后该宠物跟随 DSH 工作状态：思考/工作中/等待确认/完成/出错时自动切对应动画并弹气泡（动画池在配置顶层，仅监听不调用模型）。',
   displayLabel: '显示位置',
   displayHint: 'web=仅浏览器 / desktop=仅桌面 / both=两者都显示 / none=都不显示',
   'display.web': '仅浏览器',
@@ -91,6 +94,12 @@ export const zh = {
   extraPetsHint: '另 {n} 只文件宠物由 pet/ 目录定义，并在列表中标记为“文件”；请通过对应配置文件维护。',
   notifyToggle: '系统通知',
   notifyToggleHint: '对话完成 / 生成失败 / 权限申请 / 用户选择，在窗口失焦时弹出系统级通知（桌面右下角）。',
+  whisperImageToggle: '碎碎念配图',
+  whisperImageToggleHint:
+    '碎碎念时从表情包池随机抽一张，连同那句话一起显示（图片映射在配置文件顶层 memes）。token：碎碎念本来就每次生成都要调一次模型，配图只是把抽中那张的名称+描述（约 100 字符 / ≈60 token）加进同一次请求，增量可忽略。',
+  chatImageToggle: '对话配图',
+  chatImageToggleHint:
+    '对话时由 AI 按当前语境从表情包池挑一张配图（可不挑；图片映射在配置文件顶层 memes）。token：每条消息都要把整张清单附进请求，当前约 1.1k 字符（≈650 token，约碎碎念配图的 11 倍），并随图片数量线性增长；关掉则一个字符都不附。',
   notifyGetPermission: '获取权限',
   notifyPermissionOk: '已获得通知权限，右下角出现测试通知。',
   notifyDenyUnsupported: '当前环境不支持系统通知（浏览器无 Notification API）。',
@@ -98,6 +107,21 @@ export const zh = {
   notifyDenyRejected: '你在权限询问弹窗中选择了「阻止」。',
   notifyDenyError: '申请权限时出错',
   notifyGuide: '引导：点击地址栏左侧 🔒/ⓘ →「网站设置」→「通知」→ 改为「允许」，刷新页面后重试。',
+  storageTitle: '卸载与存储',
+  storageHint: '插件在本机落下的全部位置。删缓存不影响使用（会自动重下/重建）；删「插件用户数据」会丢配置与对话记忆。',
+  'storage.userData':
+    '插件用户数据：自定义配置 main-config.json、对话记忆 memory.json、自定义动画素材 main-animation/、文件宠物 pet/',
+  'storage.electron': '桌面宠物用的 Electron 运行时（体积较大；删除后下次启用桌面模式会自动重新下载）',
+  'storage.desktopCache': '桌面宠物窗口的缓存与主屏缩放缓存（可删，会自动重建）',
+  'storage.electronCache': 'Electron 安装包下载缓存（可删，需要时会重新下载）',
+  'storage.package': '插件本体（由 DSH 管理，用下面的卸载命令移除，不要手删）',
+  storageMissing: '（尚未创建）',
+  uninstallTitle: '卸载方法',
+  uninstallStep1: '1. 先退出 DSH（桌面宠物随之退出）；不要在桌宠运行时删除上面的文件。',
+  uninstallStep2: '2. 卸载插件本体（终端执行，会同时从 profile 的 bundle 层移除）：',
+  uninstallStep3:
+    '3. 按需删除上面的位置：缓存类删了无影响；「插件用户数据」删了会丢配置与对话记忆（想保留就先备份其中的 main-config.json）。',
+  uninstallCmd: 'dsh plugin --profile {profile} remove dsh-pet',
 };
 
 export const en = {
@@ -131,6 +155,9 @@ export const en = {
   whisperEnabled: 'Whisper',
   whisperEnabledHint:
     'When enabled, this pet periodically generates a line via AI and plays the whisper animation (persona & interval live in the top-level config).',
+  workStatusEnabled: 'Work status',
+  workStatusEnabledHint:
+    'When enabled, this pet follows DSH work state: thinking / working / waiting / done / error switch animations and show bubbles (pool in top-level config; listening only, no model calls).',
   displayLabel: 'Display',
   displayHint: 'web = browser only / desktop = desktop only / both = both / none = neither',
   'display.web': 'Browser only',
@@ -164,6 +191,12 @@ export const en = {
   notifyToggle: 'System notifications',
   notifyToggleHint:
     'OS-level toasts (bottom-right of the desktop) for conversation completion, failures, permission requests, and questions — only while this window is unfocused.',
+  whisperImageToggle: 'Whisper images',
+  whisperImageToggleHint:
+    'Attach one random meme from the pool to each whisper line (image mapping lives in the top-level `memes` config field). Tokens: a whisper already calls the model every cycle, so the image only appends the name + description of that one meme (~100 chars / ~60 tokens) to the same request — negligible.',
+  chatImageToggle: 'Chat images',
+  chatImageToggleHint:
+    'Let the AI pick one meme from the pool that fits the current context (optional; mapping lives in the top-level `memes` config field). Tokens: every message carries the whole catalog — currently ~1.1k chars (~650 tokens, about 11x the whisper case) and growing with the number of images; turning this off appends nothing at all.',
   notifyGetPermission: 'Get permission',
   notifyPermissionOk: 'Notification permission granted — a test notification was sent.',
   notifyDenyUnsupported: 'System notifications are not supported in this environment (no Notification API).',
@@ -172,6 +205,25 @@ export const en = {
   notifyDenyError: 'Failed to request permission',
   notifyGuide:
     'Guide: click the 🔒/ⓘ icon next to the address bar → Site settings → Notifications → set to "Allow", then refresh and retry.',
+  storageTitle: 'Uninstall & storage',
+  storageHint:
+    'Every location this plugin writes to. Deleting cache folders is harmless (they re-download / rebuild); deleting "plugin user data" loses your config and chat memory.',
+  'storage.userData':
+    'Plugin user data: custom config main-config.json, chat memory memory.json, custom animation assets main-animation/, file pets pet/',
+  'storage.electron':
+    'Electron runtime used by the desktop pet (large; re-downloaded automatically the next time desktop mode starts)',
+  'storage.desktopCache':
+    'Desktop pet window cache and primary-monitor scale cache (safe to delete, rebuilt automatically)',
+  'storage.electronCache': 'Electron installer download cache (safe to delete, re-downloaded when needed)',
+  'storage.package': 'The plugin itself (managed by DSH — remove it with the command below instead of deleting it)',
+  storageMissing: ' (not created yet)',
+  uninstallTitle: 'How to uninstall',
+  uninstallStep1:
+    '1. Quit DSH first (the desktop pet exits with it); do not delete these files while the pet is running.',
+  uninstallStep2: '2. Remove the plugin itself (run in a terminal; this also drops it from the profile bundle layer):',
+  uninstallStep3:
+    '3. Delete the locations above as needed: cache folders are harmless; deleting "plugin user data" loses your config and chat memory (back up main-config.json first if you want to keep it).',
+  uninstallCmd: 'dsh plugin --profile {profile} remove dsh-pet',
 };
 
 const MAX_IMPORT_BYTES = 192 * 1024 * 1024;
@@ -233,6 +285,9 @@ export function makePetConfigSection(rt: {
     outline: 'none',
   } as CSSProperties;
 
+  /** 等宽字体栈（路径与命令展示用；不引外部字体，走系统栈，避免多拉一份资源） */
+  const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace';
+
   /** 生成一个未占用的宠物 id（pet-2、pet-3…） */
   const nextId = (list: Pet[]): string => {
     let n = 2;
@@ -257,8 +312,16 @@ export function makePetConfigSection(rt: {
     });
     // 确认弹窗（仿官方弹窗：遮罩 + 居中卡片 + 双按钮）
     const [confirm, setConfirm] = useState<null | 'remove' | 'reset'>(null);
-    // 配置文件地址（「高级配置」区块；读取失败仅缺省不显示，不影响表单）
-    const [paths, setPaths] = useState<null | { user: string; default: string; animations: string }>(null);
+    // 配置文件地址与存储位置清单（「高级配置」「卸载与存储」区块；读取失败仅缺省不显示，不影响表单）
+    const [paths, setPaths] = useState<null | {
+      user: string;
+      default: string;
+      animations: string;
+      /** 插件落盘的全部位置（路径 + 是否已存在），host 按平台推导 */
+      storage?: Array<{ key: string; path: string; exists?: boolean }>;
+      /** 当前 profile 名（拼卸载命令用；反推不出时为空串） */
+      profile?: string;
+    }>(null);
     useEffect(() => {
       fetch('/dsh-pet-7340/config/meta')
         .then((r) => (r.ok ? r.json() : null))
@@ -321,20 +384,25 @@ export function makePetConfigSection(rt: {
 
     // 系统通知总开关（全局：读写用户级配置 main-config.json 的 notificationsEnabled；即时生效）
     const [notifyEnabled, setNotifyEnabled] = useState(true);
+    // 表情包配图开关（全局：写用户级配置；与「保存」一起提交，不做即时写入）
+    const [whisperImage, setWhisperImage] = useState(false);
+    const [chatImage, setChatImage] = useState(false);
     // 权限申请按钮的反馈（就地显示在按钮旁，与全局保存反馈分离）
     const [permMsg, setPermMsg] = useState<{ kind: 'ok' | 'err' | ''; text: string }>({ kind: '', text: '' });
     useEffect(() => {
       let alive = true;
-      // 成品聚合的 main 条目已带合并后的 notificationsEnabled（用户手写值优先）
+      // 成品聚合的 main 条目已带合并后的全局字段（用户手写值优先）
       fetch('/dsh-pet-7340/config')
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => {
-          const v =
-            d && d.main && typeof d.main.notificationsEnabled === 'boolean' ? d.main.notificationsEnabled : null;
-          if (alive && v !== null) setNotifyEnabled(v);
+          if (!alive || !d || !d.main) return;
+          const m = d.main as Record<string, unknown>;
+          if (typeof m.notificationsEnabled === 'boolean') setNotifyEnabled(m.notificationsEnabled);
+          if (typeof m.whisperImageEnabled === 'boolean') setWhisperImage(m.whisperImageEnabled);
+          if (typeof m.chatImageEnabled === 'boolean') setChatImage(m.chatImageEnabled);
         })
         .catch(() => {
-          /* 成品拉取失败时保持默认（true） */
+          /* 成品拉取失败时保持默认（通知开、配图关） */
         });
       return () => {
         alive = false;
@@ -347,11 +415,17 @@ export function makePetConfigSection(rt: {
       try {
         // 开启时先借用户手势申请系统通知权限（无手势的自动申请可能被浏览器静默压制）
         if (v) await requestNotificationPermission();
-        // 与保存同构：整包写用户级配置（pets + 开关），避免开关写入被 sanitize 拒绝
+        // 与保存同构：整包写用户级配置（pets + 全部全局开关），避免开关写入被 sanitize 拒绝
+        // 携带配图开关的当前 UI 值：整包写入下漏传即等于把它们重置掉
         const res = await fetch('/dsh-pet-7340/config', {
           method: 'PUT',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ pets: pets, notificationsEnabled: v }),
+          body: JSON.stringify({
+            pets: pets,
+            notificationsEnabled: v,
+            whisperImageEnabled: whisperImage,
+            chatImageEnabled: chatImage,
+          }),
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         setNotifyEnabled(v);
@@ -461,7 +535,12 @@ export function makePetConfigSection(rt: {
       setMsg({ kind: '', text: '' });
       try {
         // 通知总开关随保存一起写：UI 状态初始来自成品 main 条目（即保留用户手写值，不会静默覆盖）
-        const body: Record<string, unknown> = { pets: pets, notificationsEnabled: notifyEnabled };
+        const body: Record<string, unknown> = {
+          pets: pets,
+          notificationsEnabled: notifyEnabled,
+          whisperImageEnabled: whisperImage,
+          chatImageEnabled: chatImage,
+        };
         const res = await fetch('/dsh-pet-7340/config', {
           method: 'PUT',
           headers: { 'content-type': 'application/json' },
@@ -513,6 +592,7 @@ export function makePetConfigSection(rt: {
           size: tpl.size,
           balanceEnabled: tpl.balanceEnabled,
           whisperEnabled: tpl.whisperEnabled,
+          workStatusEnabled: tpl.workStatusEnabled,
           display: tpl.display,
           position: { ...tpl.position },
         },
@@ -881,6 +961,30 @@ export function makePetConfigSection(rt: {
                     color: 'var(--dsw-alias-label-secondary)',
                   },
                   children: [
+                    t('workStatusEnabled'),
+                    h('input', {
+                      type: 'checkbox',
+                      checked: !!cur.workStatusEnabled,
+                      disabled: busy,
+                      onChange: (e: ChangeEvent<HTMLInputElement>) =>
+                        updateSel({ workStatusEnabled: e.target.checked }),
+                      style: { width: '16px', height: '16px', accentColor: 'var(--dsw-alias-state-business-primary)' },
+                    }),
+                    h('span', {
+                      style: { fontSize: '11px', color: 'var(--dsw-alias-label-tertiary)' },
+                      children: t('workStatusEnabledHint'),
+                    }),
+                  ],
+                }),
+                h('label', {
+                  style: {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    fontSize: '12px',
+                    color: 'var(--dsw-alias-label-secondary)',
+                  },
+                  children: [
                     t('displayLabel'),
                     h('select', {
                       value: cur.display,
@@ -969,6 +1073,40 @@ export function makePetConfigSection(rt: {
             }),
           ],
         }),
+
+        // 表情包配图开关（全局，随「保存」写入用户级配置；不即时写入——不改变正在进行的渲染）
+        ...(
+          [
+            ['whisperImageToggle', whisperImage, setWhisperImage] as const,
+            ['chatImageToggle', chatImage, setChatImage] as const,
+          ] as const
+        ).map(([label, value, setter]) =>
+          h('label', {
+            key: label,
+            style: {
+              display: 'flex',
+              gap: '8px',
+              alignItems: 'center',
+              marginTop: '8px',
+              fontSize: '13px',
+              color: 'var(--dsw-alias-label-primary)',
+            },
+            children: [
+              h('input', {
+                type: 'checkbox',
+                checked: value,
+                disabled: busy,
+                onChange: (e: ChangeEvent<HTMLInputElement>) => setter(e.target.checked),
+                style: { width: '16px', height: '16px', accentColor: 'var(--dsw-alias-state-business-primary)' },
+              }),
+              h('span', { children: t(label) }),
+              h('span', {
+                style: { fontSize: '11px', color: 'var(--dsw-alias-label-tertiary)' },
+                children: t(label + 'Hint'),
+              }),
+            ],
+          }),
+        ),
 
         // 权限获取按钮 + 反馈（独立一行，样式对齐设置页现有按钮）
         h('div', {
@@ -1092,6 +1230,74 @@ export function makePetConfigSection(rt: {
                   style: { fontSize: '12px', lineHeight: '18px', wordBreak: 'break-all' },
                   children: t('animationDir') + '：' + paths.animations,
                 }),
+              ],
+            })
+          : null,
+
+        // 卸载与存储：先列出插件落盘的全部位置（路径在前、作用在后），再给出卸载方法
+        paths && paths.storage && paths.storage.length > 0
+          ? h('div', {
+              style: {
+                marginTop: '12px',
+                padding: '10px 14px',
+                border: '1px solid var(--dsw-alias-border-l2)',
+                borderRadius: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+                fontSize: '12px',
+                color: 'var(--dsw-alias-label-secondary)',
+              },
+              children: [
+                h('div', {
+                  style: { fontSize: '12px', color: 'var(--dsw-alias-label-primary)', fontWeight: 500 },
+                  children: t('storageTitle'),
+                }),
+                h('div', { style: { fontSize: '12px', lineHeight: '20px' }, children: t('storageHint') }),
+                // 存储位置清单：每条都是「路径（等宽、可选中复制）→ 作用」
+                ...paths.storage.map((s) =>
+                  h('div', {
+                    key: s.key,
+                    style: { fontSize: '12px', lineHeight: '18px', wordBreak: 'break-all', userSelect: 'text' },
+                    children: [
+                      h('span', {
+                        style: { color: 'var(--dsw-alias-label-primary)', fontFamily: MONO },
+                        children: s.path,
+                      }),
+                      // 尚未产生的目录（如从未启用桌面模式的 Electron）标一下，避免用户去找不存在的文件夹
+                      h('span', {
+                        children: ' — ' + t('storage.' + s.key) + (s.exists === false ? t('storageMissing') : ''),
+                      }),
+                    ],
+                  }),
+                ),
+                h('div', {
+                  style: {
+                    marginTop: '4px',
+                    fontSize: '12px',
+                    color: 'var(--dsw-alias-label-primary)',
+                    fontWeight: 500,
+                  },
+                  children: t('uninstallTitle'),
+                }),
+                h('div', { style: { fontSize: '12px', lineHeight: '20px' }, children: t('uninstallStep1') }),
+                h('div', { style: { fontSize: '12px', lineHeight: '20px' }, children: t('uninstallStep2') }),
+                h('div', {
+                  style: {
+                    fontFamily: MONO,
+                    fontSize: '12px',
+                    lineHeight: '18px',
+                    wordBreak: 'break-all',
+                    userSelect: 'text',
+                    padding: '6px 10px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--dsw-alias-border-l2)',
+                    background: 'var(--dsw-alias-interactive-bg-active)',
+                    color: 'var(--dsw-alias-label-primary)',
+                  },
+                  children: t('uninstallCmd').replace('{profile}', paths.profile || '<profile>'),
+                }),
+                h('div', { style: { fontSize: '12px', lineHeight: '20px' }, children: t('uninstallStep3') }),
               ],
             })
           : null,

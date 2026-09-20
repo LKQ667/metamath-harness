@@ -123,8 +123,19 @@ function animationsValid(a: unknown): boolean {
   const evEntries = ev as Record<string, unknown>;
   for (const pool of Object.values(evEntries)) {
     if (!Array.isArray(pool) || pool.length === 0) return false;
-    for (const name of pool) {
-      if (typeof name !== 'string' || name.length === 0) return false;
+    for (const slot of pool) {
+      // 档位槽位：单个动画名（原行为）或候选数组（档内随机抽 1，见 shared/pickers pickSlot）；
+      // 空字符串 / 空数组 / 成员为空串的数组均非法
+      if (typeof slot === 'string') {
+        if (slot.length === 0) return false;
+      } else if (Array.isArray(slot)) {
+        if (slot.length === 0) return false;
+        for (const name of slot) {
+          if (typeof name !== 'string' || name.length === 0) return false;
+        }
+      } else {
+        return false;
+      }
     }
   }
   return true;
@@ -165,6 +176,18 @@ function physicsValid(value: unknown): boolean {
   );
 }
 
+/** workStatusTexts 段校验：二维数组——外层每项都是非空字符串数组（档位文案，每档可多句随机）；空数组不可用 */
+function workStatusTextsValid(value: unknown): boolean {
+  if (!Array.isArray(value) || value.length === 0) return false;
+  for (const group of value) {
+    if (!Array.isArray(group) || group.length === 0) return false;
+    for (const text of group) {
+      if (typeof text !== 'string' || text.length === 0) return false;
+    }
+  }
+  return true;
+}
+
 /** 顶层标量字段的合法性（非法与缺失同处理：取默认值 + 告警） */
 function topFieldValid(key: string, value: unknown): boolean {
   switch (key) {
@@ -176,12 +199,18 @@ function topFieldValid(key: string, value: unknown): boolean {
     }
     case 'notificationsEnabled':
       return typeof value === 'boolean';
+    case 'whisperImageEnabled':
+      return typeof value === 'boolean';
+    case 'chatImageEnabled':
+      return typeof value === 'boolean';
     case 'animations':
       return animationsValid(value);
     case 'animationWeights':
       return weightsValid(value);
     case 'physics':
       return physicsValid(value);
+    case 'workStatusTexts':
+      return workStatusTextsValid(value);
     default:
       return true;
   }
@@ -336,6 +365,7 @@ function mergePet(
     size: petNumber(p.size, base.size, 1, label, 'size', id),
     balanceEnabled: petBool(p.balanceEnabled, base.balanceEnabled, label, 'balanceEnabled', id),
     whisperEnabled: petBool(p.whisperEnabled, base.whisperEnabled, label, 'whisperEnabled', id),
+    workStatusEnabled: petBool(p.workStatusEnabled, base.workStatusEnabled, label, 'workStatusEnabled', id),
     display: petEnum(p.display, PET_DISPLAY_SET, base.display, label, 'display', id),
     position: {
       corner: petEnum(ownPos.corner, CORNER_SET, basePos.corner, label, 'position.corner', id),
@@ -431,16 +461,17 @@ export async function setFilePetVisibility(
 }
 
 /**
- * 保存用户层（PUT /config）：更新 main-config.json，接受可编辑字段（pets + notificationsEnabled）。
- * 编辑语义：**非白名单顶层字段（physics / whisperPrompt / chatMemoryRounds / eventsRefreshSec 等）
- * 从 `existing`（当前磁盘上的用户文件原对象）原样透传保留**——
+ * 保存用户层（PUT /config）：更新 main-config.json，接受可编辑字段（pets + 全局开关：
+ * notificationsEnabled / whisperImageEnabled / chatImageEnabled）。
+ * 编辑语义：**非白名单顶层字段（physics / whisperPrompt / chatMemoryRounds / eventsRefreshSec /
+ * memes 等）从 `existing`（当前磁盘上的用户文件原对象）原样透传保留**——
  * 用户手动编辑的精调配置不会被设置页保存抹掉（旧实现是纯白名单重建，会整体覆盖丢失）。
  * 非法 → 返回 null（宿主回 400）。与读取分离——文件宠物永不回写、不在本模式内。
  */
 export function saveUserConfig(
   raw: unknown,
   existing?: Record<string, unknown>,
-): { pets: unknown[]; notificationsEnabled?: boolean; [key: string]: unknown } | null {
+): { pets: unknown[]; [key: string]: unknown } | null {
   const o = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
   const arr = Array.isArray(o.pets) ? o.pets : null;
   if (!arr || !arr.length) return null;
@@ -463,6 +494,8 @@ export function saveUserConfig(
     if (typeof balanceEnabled !== 'boolean') return null;
     const whisperEnabled = pp.whisperEnabled;
     if (whisperEnabled !== undefined && typeof whisperEnabled !== 'boolean') return null;
+    const workStatusEnabled = pp.workStatusEnabled;
+    if (workStatusEnabled !== undefined && typeof workStatusEnabled !== 'boolean') return null;
     const display = String(pp.display ?? '');
     if (!PET_DISPLAY_SET.has(display)) return null;
     const pos = pp.position && typeof pp.position === 'object' ? (pp.position as Record<string, unknown>) : {};
@@ -471,19 +504,40 @@ export function saveUserConfig(
     const marginX = Number(pos.marginX);
     const marginY = Number(pos.marginY);
     if (!Number.isFinite(marginX) || !Number.isFinite(marginY)) return null;
-    out.push({ id, name, size, balanceEnabled, whisperEnabled, display, position: { corner, marginX, marginY } });
+    out.push({
+      id,
+      name,
+      size,
+      balanceEnabled,
+      whisperEnabled,
+      workStatusEnabled,
+      display,
+      position: { corner, marginX, marginY },
+    });
   }
   const ne = o.notificationsEnabled;
   if (ne !== undefined && typeof ne !== 'boolean') return null;
-  // 白名单可编辑字段：pets 来自请求体、notificationsEnabled 来自请求体（未传则不写）
-  const outConfig: { pets: unknown[]; notificationsEnabled?: boolean; [key: string]: unknown } = { pets: out };
+  const wie = o.whisperImageEnabled;
+  if (wie !== undefined && typeof wie !== 'boolean') return null;
+  const cie = o.chatImageEnabled;
+  if (cie !== undefined && typeof cie !== 'boolean') return null;
+  // 白名单可编辑字段：pets 来自请求体、三个全局开关来自请求体（未传则不写）
+  const outConfig: { pets: unknown[]; [key: string]: unknown } = { pets: out };
   if (ne !== undefined) outConfig.notificationsEnabled = ne;
+  if (wie !== undefined) outConfig.whisperImageEnabled = wie;
+  if (cie !== undefined) outConfig.chatImageEnabled = cie;
   // 透传保留：请求体未携带的顶层字段，从 existing（磁盘现有用户文件）原样带回——
-  // 设置页只提交 pets(+notificationsEnabled)，手改的 physics/whisperPrompt/... 借此保住
+  // 设置页只提交 pets(+全局开关)，手改的 physics/whisperPrompt/memes/... 借此保住。
+  // 全局开关只在「请求体传了」时才算白名单（已由上方写入）；未传时走这里透传磁盘旧值——
+  // 否则整包调用的调用方漏传一个开关，就会把用户既有设置悄悄抹成默认。
+  const bodyOwned = new Set(['pets']);
+  if (ne !== undefined) bodyOwned.add('notificationsEnabled');
+  if (wie !== undefined) bodyOwned.add('whisperImageEnabled');
+  if (cie !== undefined) bodyOwned.add('chatImageEnabled');
   if (existing && typeof existing === 'object') {
     for (const key of Object.keys(existing)) {
-      if (key === 'pets' || key === 'notificationsEnabled') continue; // 白名单字段由上方请求体决定
-      // 只透传可精调的顶层字段，其余（如 unknown/占位）一并保留，不丢弃用户内容
+      if (bodyOwned.has(key)) continue; // 白名单字段由请求体决定
+      // 只透传可精调的顶层字段，其余（如 memes/unknown/占位）一并保留，不丢弃用户内容
       outConfig[key] = existing[key];
     }
   }

@@ -14,8 +14,8 @@ describe('Trae persisted identity', () => {
     await mkdir(join(root, 'User', 'globalStorage'), { recursive: true })
     await writeFile(join(root, 'machineid'), 'machine-stable')
     await writeFile(storage, JSON.stringify({ 'telemetry.devDeviceId': 'device-stable', 'telemetry.machineId': 'telemetry-machine', 'iCubeAuthInfo://icube-dc:221464824136636': 'encrypted', iCubeLastVersion: '2.3.1' }))
-    const first = await readTraeIdentity({ edition: 'cn', path: storage }, { platform: 'darwin', home: root, env: {} })
-    const second = await readTraeIdentity({ edition: 'cn', path: storage }, { platform: 'darwin', home: root, env: {} })
+    const first = await readTraeIdentity({ edition: 'cn', path: storage, source: 'desktop' }, { platform: 'darwin', home: root, env: {} })
+    const second = await readTraeIdentity({ edition: 'cn', path: storage, source: 'desktop' }, { platform: 'darwin', home: root, env: {} })
     expect(first).toEqual(second)
     expect(first).toMatchObject({ machineId: 'telemetry-machine', deviceId: '221464824136636', buildVersion: '2.3.1', platform: 'darwin' })
     // darwin install: no win32/windows-specific device type.
@@ -28,7 +28,7 @@ describe('Trae persisted identity', () => {
     await mkdir(join(root, 'User', 'globalStorage'), { recursive: true })
     await writeFile(join(root, 'machineid'), 'machine-stable')
     await writeFile(storage, '{}')
-    const value = await readTraeIdentity({ edition: 'cn', path: storage }, { platform: 'darwin', home: root, env: {} })
+    const value = await readTraeIdentity({ edition: 'cn', path: storage, source: 'desktop' }, { platform: 'darwin', home: root, env: {} })
     expect(value.deviceId).toMatch(/^[a-f0-9]{32}$/)
   })
 
@@ -40,7 +40,7 @@ describe('Trae persisted identity', () => {
     const productDir = join(root, 'local', 'Programs', 'TRAE SOLO CN', 'resources', 'app')
     await mkdir(productDir, { recursive: true })
     await writeFile(join(productDir, 'product.json'), JSON.stringify({ appVersion: '0.1.56', version: '1.107.1', buildId: '1207052290818' }))
-    const value = await readTraeIdentity({ edition: 'solo', path: storage }, { platform: 'win32', home: root, env: { LOCALAPPDATA: join(root, 'local') } })
+    const value = await readTraeIdentity({ edition: 'solo', path: storage, source: 'desktop' }, { platform: 'win32', home: root, env: { LOCALAPPDATA: join(root, 'local') } })
     expect(value.appVersion).toBe('0.1.56')
     expect(value.platform).toBe('win32')
     expect(identityHeaders(value)['x-device-type']).toBe('windows')
@@ -55,7 +55,7 @@ describe('Trae persisted identity', () => {
     const productDir = join(root, 'AppData', 'Local', 'Programs', 'TRAE SOLO CN', 'resources', 'app')
     await mkdir(productDir, { recursive: true })
     await writeFile(join(productDir, 'product.json'), JSON.stringify({ appVersion: '0.1.57' }))
-    const value = await readTraeIdentity({ edition: 'solo', path: storage }, { platform: 'win32', home: root, env: {} })
+    const value = await readTraeIdentity({ edition: 'solo', path: storage, source: 'desktop' }, { platform: 'win32', home: root, env: {} })
     expect(value.appVersion).toBe('0.1.57')
     expect(value.platform).toBe('win32')
   })
@@ -65,7 +65,7 @@ describe('Trae persisted identity', () => {
     const storage = join(root, 'User', 'globalStorage', 'storage.json')
     await mkdir(join(root, 'User', 'globalStorage'), { recursive: true })
     await writeFile(storage, JSON.stringify({ 'telemetry.devDeviceId': 'device-stable', 'telemetry.machineId': 'telemetry-machine' }))
-    const value = await readTraeIdentity({ edition: 'cn', path: storage }, { platform: 'linux', home: root, env: {} })
+    const value = await readTraeIdentity({ edition: 'cn', path: storage, source: 'desktop' }, { platform: 'linux', home: root, env: {} })
     expect(value.appVersion).toBeUndefined()
     expect(value.platform).toBe('linux')
   })
@@ -79,7 +79,7 @@ describe('Trae persisted identity', () => {
     await mkdir(productDir, { recursive: true })
     await writeFile(join(productDir, 'product.json'), JSON.stringify({ appVersion: '9.9.9' }))
     for (const edition of ['sg', 'solo-sg'] as const) {
-      const value = await readTraeIdentity({ edition, path: storage }, { platform: 'win32', home: root, env: { LOCALAPPDATA: join(root, 'local') } })
+      const value = await readTraeIdentity({ edition, path: storage, source: 'desktop' }, { platform: 'win32', home: root, env: { LOCALAPPDATA: join(root, 'local') } })
       expect(value.appVersion).toBeUndefined()
       expect(value.platform).toBe('win32')
     }
@@ -94,8 +94,8 @@ describe('Trae persisted identity', () => {
     await writeFile(soloStorage, JSON.stringify({ 'telemetry.devDeviceId': 'device-stable', 'telemetry.machineId': 'telemetry-machine' }))
     const value = await pickTraeStorageIdentity(
       [
-        { edition: 'cn', path: cnStorage },
-        { edition: 'solo', path: soloStorage },
+        { edition: 'cn', path: cnStorage, source: 'desktop' },
+        { edition: 'solo', path: soloStorage, source: 'desktop' },
       ],
       { platform: 'win32', home: root, env: {} },
     )
@@ -110,8 +110,8 @@ describe('Trae persisted identity', () => {
     const soloStorage = join(root, 'TRAE SOLO CN', 'User', 'globalStorage', 'storage.json')
     await expect(pickTraeStorageIdentity(
       [
-        { edition: 'cn', path: cnStorage },
-        { edition: 'solo', path: soloStorage },
+        { edition: 'cn', path: cnStorage, source: 'desktop' },
+        { edition: 'solo', path: soloStorage, source: 'desktop' },
       ],
       { platform: 'win32', home: root, env: {} },
     )).rejects.toThrow(/Trae storage was not found/)

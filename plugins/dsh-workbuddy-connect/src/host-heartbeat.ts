@@ -99,6 +99,49 @@ export async function readHostHeartbeat(): Promise<WorkBuddyHostHeartbeat | unde
 }
 
 /**
+ * Whether the deprecated `wmic` probe is still worth trying on this host.
+ * `wmic` is removed on Windows 11 24H2+ and on Server builds with the
+ * optional feature off, so the first `ENOENT` disables it for the process.
+ */
+let windowsWmicUsable = process.platform !== 'win32'
+
+/** WMI `CreationDate` probe (`YYYYMMDDHHMMSS.mmm+zzzz`, UTC). */
+function wmicStartTimeMs(pid: number): number | undefined {
+  const out = execFileSync(
+    'wmic',
+    ['process', 'where', `processid=${pid}`, 'get', 'CreationDate'],
+    { encoding: 'utf8', windowsHide: true },
+  )
+  const m = out.match(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\.\d+([+-]\d{4})/)
+  if (m === null) return undefined
+  const [, y, mo, d, h, mi, s] = m
+  const ms = Date.UTC(Number(y), Number(mo) - 1, Number(d), Number(h), Number(mi), Number(s))
+  return Number.isFinite(ms) ? ms : undefined
+}
+
+/**
+ * Windows fallback that does not need `wmic`: PowerShell's
+ * `Get-Process.StartTime` is the supported replacement and ships with every
+ * Windows build this plugin supports. The value is formatted as ISO-8601 UTC so
+ * parsing does not depend on the host locale.
+ */
+function powershellStartTimeMs(pid: number): number | undefined {
+  const out = execFileSync(
+    'powershell.exe',
+    [
+      '-NoProfile',
+      '-NonInteractive',
+      '-Command',
+      `$p = Get-Process -Id ${pid} -ErrorAction Stop; $p.StartTime.ToUniversalTime().ToString('o')`,
+    ],
+    { encoding: 'utf8', windowsHide: true },
+  ).trim()
+  if (out === '') return undefined
+  const ms = Date.parse(out)
+  return Number.isFinite(ms) ? ms : undefined
+}
+
+/**
  * Absolute start time (epoch ms) of the process holding `pid`, or `undefined`
  * when it cannot be determined (no such PID, platform lacks a readable source).
  *
@@ -106,28 +149,36 @@ export async function readHostHeartbeat(): Promise<WorkBuddyHostHeartbeat | unde
  *   `Date.parse` resolves it against the local clock, which matches how
  *   `registeredAt` (a `Date.now()` absolute value) is expressed.
  * - Windows: WMI `CreationDate` is UTC (`YYYYMMDDHHMMSS.mmm+zzzz`); parsed with
- *   `Date.UTC`, again comparable to `registeredAt`.
+ *   `Date.UTC`, again comparable to `registeredAt`. When `wmic` is absent the
+ *   PowerShell `Get-Process.StartTime` probe is used instead, so PID-recycle
+ *   detection keeps working on hosts that no longer ship `wmic`.
  *
  * Failures return `undefined` so callers can fall back to plain PID liveness
  * rather than mis-report a running host as dead.
  */
 export function processStartTimeMs(pid: number): number | undefined {
+  // The PID is interpolated into a shell command below; reject anything that is
+  // not a positive integer so a malformed heartbeat file cannot inject flags.
+  const safePid = Math.trunc(pid)
+  if (!Number.isInteger(safePid) || safePid <= 0) return undefined
   try {
     if (process.platform === 'win32') {
-      const out = execFileSync(
-        'wmic',
-        ['process', 'where', `processid=${pid}`, 'get', 'CreationDate'],
-        { encoding: 'utf8', windowsHide: true },
-      )
-      const m = out.match(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\.\d+([+-]\d{4})/)
-      if (m === null) return undefined
-      const [, y, mo, d, h, mi, s] = m
-      const ms = Date.UTC(Number(y), Number(mo) - 1, Number(d), Number(h), Number(mi), Number(s))
-      return Number.isFinite(ms) ? ms : undefined
+      if (windowsWmicUsable) {
+        try {
+          const viaWmic = wmicStartTimeMs(safePid)
+          if (viaWmic !== undefined) return viaWmic
+        } catch (error: unknown) {
+          // Only "wmic is not installed" disables the probe; a transient
+          // failure keeps it enabled for the next call.
+          if ((error as { code?: string } | null)?.code !== 'ENOENT') throw error
+          windowsWmicUsable = false
+        }
+      }
+      return powershellStartTimeMs(safePid)
     }
     const out = execFileSync(
       'ps',
-      ['-o', 'lstart=', '-p', String(pid)],
+      ['-o', 'lstart=', '-p', String(safePid)],
       { encoding: 'utf8', env: { ...process.env, LC_ALL: 'C', LANG: 'C' } },
     ).trim()
     if (out === '') return undefined

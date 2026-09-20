@@ -87,6 +87,9 @@ export function resolvePoolProfiles(config) {
         `dsh-api-key-pool: 池 "${route}" retryPolicy`,
       ),
       configuredMaxTokens,
+      // DSH 0.1.5 起父适配器在解析模型前读取该表；号池配置已在本层完成
+      // 结构校验，因此正常目录从空错误表开始。
+      modelErrors: new Map(),
       piProvider: buildPoolProvider(route, pool),
     });
   }

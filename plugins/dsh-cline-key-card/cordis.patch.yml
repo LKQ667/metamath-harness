@@ -1,0 +1,5 @@
+# 纯客户端卡片插件：宿主侧无服务，仅以最小 insert 让包进入 loader entries，
+# 使 dsh.client 客户端扫描能发现本包并下发卡片。
+- insert:
+    - id: cline-key-card
+      name: dsh-cline-key-card

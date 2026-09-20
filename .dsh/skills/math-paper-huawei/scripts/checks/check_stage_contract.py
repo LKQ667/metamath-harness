@@ -109,7 +109,7 @@ def check_step0(project: Path, state: dict, errors: list[str]) -> None:
         ),
         errors,
     )
-    if state.get("drawing_mode") not in {"drawio", "ai"}:
+    if state.get("drawing_mode") not in {"drawio", "html", "ai"}:
         errors.append("项目状态缺少有效 drawing_mode")
     if state.get("drawing_mode_locked") is not True or state.get("drawing_mode_confirmed") is not True:
         errors.append("绘图模式必须已确认并锁定")

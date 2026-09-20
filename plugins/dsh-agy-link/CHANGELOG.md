@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.4.27 (2026-09-11)
+
+- **Fixed: Windows binary discovery misses the official Google installer path (Issue #7).**
+  - `resolveAgyBin()` now probes `%LOCALAPPDATA%\agy\bin\agy.exe` (plus `.cmd`/`.bat` siblings and the WinGet Links shim), so installs via `irm https://antigravity.google/cli/install.ps1 | iex` no longer raise `AGY_NOT_INSTALLED` when PATH has not propagated to the GUI process.
+- **Fixed: Quota unavailable on Linux (Issue #8).**
+  - Added `readLinuxSecretToken()`: the primary account's OAuth credential is now read from the FreeDesktop Secret Service (GNOME Keyring / KDE Wallet) via `secret-tool`, with a python3-dbus fallback — the same `service="gemini" / username="antigravity"` go-keyring slot agy writes on Linux.
+  - `QuotaService.readSystemKeychainToken()` now dispatches per platform (darwin → Keychain, linux → Secret Service), restoring quota refresh on Linux where no on-disk token file exists.
+  - Shared go-keyring payload parsing (raw or `go-keyring-base64:` prefixed JSON) extracted into `parseGoKeyringPayload`.
+
+## 0.4.26 (2026-09-07)
+
+- **Added: Support for `gemini-3.8-flash` in Fallback Models Catalog (Issue #6).**
+  - **Root cause**: `DEFAULT_FALLBACK_MODELS` defined in `src/common/types.ts` had not been synced with Google's latest model line-up, stopping at `gemini-3.7-flash`. When DSH booted or ran offline prior to dynamic `agy models` discovery, `gemini-3.8-flash` was missing from the model picker.
+  - **Fix**: Added `{ id: 'gemini-3.8-flash', name: 'Gemini 3.8 Flash', efforts: ['low', 'medium', 'high'] }` to `DEFAULT_FALLBACK_MODELS`.
+- **Fixed: Client Bundle `process is not defined` (PR #5 / realguan).**
+  - In `tsdown.config.ts`, marked `react-dom` and `react/jsx-runtime` as external dependencies for client bundling (`platform: "browser"`), preventing development React runtime from being inlined into `dist/client.js` and eliminating browser `ReferenceError: process is not defined`.
+- **Hardened: Test Suite Stability & Debounce Timing on macOS.**
+  - Relaxed duplicate submission debounce window in `AgyAdapter` to 10,000ms with automatic size-capped map pruning, and adjusted test thresholds to account for cold Node subprocess spawning latency on macOS. All 151 unit tests passing.
+
+## 0.4.25 (2026-09-04)
+
+- **Fixed: Plugin Startup Blocker on DSH >= 0.1.1-rc.x / 0.1.2-rc.1 (`missing export 'CallId'`, issue #4).**
+  - **Root cause**: Newer `@deepseek-ai/dsh-llm` versions (e.g. `0.1.2-alpha.1` ~ `0.1.2-rc.1`) renamed `CallId` to `ToolCallId`. A named import `import { CallId } from '@deepseek-ai/dsh-llm'` caused Node ESM static resolution to fail at startup with `The requested module '@deepseek-ai/dsh-llm' does not provide an export named 'CallId'`, surfacing as a plugin load failure on DSH Desktop 2.0.5 and CLI.
+  - **Fix**: Replaced named import with a namespace fallback resolution `toToolCallId = dshLlm.ToolCallId ?? dshLlm.CallId ?? identity`. This avoids missing named export evaluation errors and ensures seamless backwards and forwards compatibility across all DSH host versions.
+  - **Ecosystem & Test Hardening**: Upgraded development dependencies to `@deepseek-ai/dsh-*@0.1.2-rc.1`. Configured `--test-concurrency=1` in test runner to prevent mock environment variable collisions across concurrent subprocess tests, achieving 100% pass rate across all 151 unit tests. Verified live startup with DSH 0.1.2-rc.1 and `dsh-lark-link`.
+
 ## 0.4.24 (2026-08-28)
 
 - **Fixed: Antigravity Models Missing From Picker When Logged In (已登录/显示余量但模型列表不显示 — issue #1).**

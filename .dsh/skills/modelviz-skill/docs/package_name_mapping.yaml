@@ -1,0 +1,39 @@
+# import 名与 pip 包名映射。仅使用明确已知映射，不让模型猜测包名。
+# 键是模板代码中出现的 import 顶层模块名，值是对应的 pip 包名。
+# 模板脚本中出现的新第三方库需要同步登记到这里，否则依赖检查阶段会以
+# 「无法映射包名」为由中止，而不是由模型猜测一个包名去安装。
+sklearn: scikit-learn
+cv2: opencv-python
+PIL: Pillow
+yaml: PyYAML
+skimage: scikit-image
+mpl_toolkits: matplotlib
+dateutil: python-dateutil
+matplotlib: matplotlib
+numpy: numpy
+pandas: pandas
+scipy: scipy
+seaborn: seaborn
+networkx: networkx
+plotly: plotly
+shap: shap
+xgboost: xgboost
+lightgbm: lightgbm
+catboost: catboost
+rasterio: rasterio
+pingouin: pingouin
+pygam: pygam
+ternary: python-ternary
+joblib: joblib
+statsmodels: statsmodels
+tqdm: tqdm
+skbio: scikit-bio
+osgeo: GDAL
+factor_analyzer: factor_analyzer
+matplotlib_venn: matplotlib-venn
+skill_metrics: SkillMetrics
+PyALE: PyALE
+geoshapley: geoshapley
+# pyCirclize 的 import 写法存在大小写混用，两种写法都登记，避免查表未命中。
+pyCirclize: pyCirclize
+pycirclize: pyCirclize

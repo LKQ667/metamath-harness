@@ -15,7 +15,9 @@
  *   3. 原始 1200×1200 母版不得进 npm 包（体积超限，应放 GitHub Releases）
  *   4. client.js 是官方 bundle 形态（__ModuleLoader__.load + exports.apply）
  *   5. package.json 声明了 dsh.bundle 和 dsh.client（否则装不上）
- *   6. 包总大小 < 200MB（自设软上限，防误塞母版；npm 硬上限远更大）
+ *   6. 表情包图片确实随包发布（files 白名单含 assets/memes 且目录里有 png；
+ *      配图功能只读包内 assets/memes，漏发即功能整体失效），并核对 memes 键与图片对齐
+ *   7. 包总大小 < 200MB（自设软上限，防误塞母版；npm 硬上限远更大）
  *
  * ============================================================================
  */
@@ -31,6 +33,38 @@ const fail = (msg) => {
   process.exitCode = 1;
 };
 const ok = (msg) => console.log(`[prepack-check] ok: ${msg}`);
+/** JSONC → JSON：字符串感知地剥离行注释与块注释（config.jsonc 里有行尾注释） */
+const stripJsonc = (s) => {
+  let out = '';
+  let inStr = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) {
+      out += c;
+      if (c === '\\') out += s[++i] ?? '';
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') {
+      inStr = true;
+      out += c;
+      continue;
+    }
+    if (c === '/' && s[i + 1] === '/') {
+      while (i < s.length && s[i] !== '\n') i++;
+      out += '\n';
+      continue;
+    }
+    if (c === '/' && s[i + 1] === '*') {
+      i += 2;
+      while (i < s.length && !(s[i] === '*' && s[i + 1] === '/')) i++;
+      i++;
+      continue;
+    }
+    out += c;
+  }
+  return out;
+};
 
 // ---- 1. 必需文件存在性 ----
 const required = [
@@ -80,7 +114,35 @@ else fail('package.json missing dsh.bundle.patch');
 if (pkg.dsh?.client?.platform === 'web') ok('dsh.client.web declared');
 else fail('package.json missing dsh.client platform web');
 
-// ---- 6. 包总大小估算（排除 node_modules/.git/脚本/素材源目录/README预览GIF） ----
+// ---- 6. 表情包图片必须随包发布（配图功能的素材源） ----
+// 坑：scripts/prepare.js 每次发布都会用**硬编码白名单覆盖** package.json 的 files，
+// 只在 package.json 里加一行是无效的 → 这里显式断言，防止再次静默漏发。
+const memesDir = join(ROOT, 'assets', 'memes');
+if (Array.isArray(pkg.files) && pkg.files.includes('assets/memes')) ok('files includes assets/memes');
+else fail('package.json files must include assets/memes (meme images would not ship)');
+const memePngs = existsSync(memesDir) ? readdirSync(memesDir).filter((n) => n.endsWith('.png')) : [];
+if (memePngs.length > 0) ok(`meme images present (${memePngs.length} png)`);
+else fail('no png in assets/memes (whisper/chat 配图会整体失效)');
+// memes 键 ↔ 图片文件对齐：缺图条目会被 host 静默剔除（设计如此，不阻断发布），
+// 但数字对不上值得发布前看一眼，故只提示
+try {
+  const conf = JSON.parse(stripJsonc(readFileSync(join(ROOT, 'assets', 'config.jsonc'), 'utf8')));
+  const keys = Object.keys(conf.memes ?? {});
+  const onDisk = new Set(memePngs.map((n) => n.slice(0, -'.png'.length)));
+  const missing = keys.filter((k) => !onDisk.has(k));
+  const extra = [...onDisk].filter((k) => !keys.includes(k));
+  if (!missing.length && !extra.length) ok(`memes mapping aligned (${keys.length} keys = ${memePngs.length} png)`);
+  else
+    console.log(
+      `[prepack-check] note: memes 键与图片不齐 —— 缺图 ${missing.length} 条${
+        missing.length ? `（${missing.join('、')}）` : ''
+      }；没写进配置的图 ${extra.length} 张${extra.length ? `（${extra.join('、')}）` : ''}`,
+    );
+} catch (e) {
+  console.log(`[prepack-check] note: 跳过 memes 键对齐核对（config.jsonc 解析失败：${e.message}）`);
+}
+
+// ---- 7. 包总大小估算（排除 node_modules/.git/脚本/素材源目录/README预览GIF） ----
 let total = 0;
 const walk = (dir) => {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {

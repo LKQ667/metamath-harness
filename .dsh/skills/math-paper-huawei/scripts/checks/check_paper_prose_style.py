@@ -11,6 +11,11 @@ from common import paper_body_region, project_arg, read_text, write_report
 
 
 FORBIDDEN_TRANSITIONS = ("首先", "其次", "然后", "接着")
+# 硬禁词：论文可见论述零容忍，按语义改为判断/确定/识别/界定/筛选/比较/归类等，不做机械一词替一词。
+HARD_FORBIDDEN_WORDS = ("判决", "判定")
+# 软词：不设粗暴零值，避免误伤“假设检验”等专业术语，只做低频统计与具体化改写提示。
+SOFT_WORDS = ("验证", "检验", "核对")
+SOFT_WORD_NOTICE_LIMIT = 3
 MECHANICAL_PHRASES = (
     "值得注意的是",
     "不难发现",
@@ -18,6 +23,8 @@ MECHANICAL_PHRASES = (
     "具有重要意义",
     "提供了有力支撑",
     "充分体现了",
+    "本图充分验证了",
+    "从图中可以清晰看出",
 )
 MAX_BRACKET_GROUPS_PER_1000 = 4.0
 MATH_ENV_RE = re.compile(
@@ -89,6 +96,21 @@ def main() -> int:
         count = prose.count(token)
         if count:
             errors.append(f"论文可见论述出现机械连接词“{token}” {count} 次。")
+    hard_hits = {word: prose.count(word) for word in HARD_FORBIDDEN_WORDS}
+    for word, count in hard_hits.items():
+        if count:
+            errors.append(
+                f"论文可见论述出现零容忍词“{word}” {count} 次；请按语义改为判断、确定、识别、界定、筛选、比较或归类等具体表述。"
+            )
+    soft_hits = {word: prose.count(word) for word in SOFT_WORDS}
+    suggestions: list[str] = []
+    if sum(soft_hits.values()) > SOFT_WORD_NOTICE_LIMIT:
+        detail = "、".join(f"{word} {count} 次" for word, count in soft_hits.items() if count)
+        suggestions.append(
+            f"论文可见论述低频词统计（{detail}）：这是编辑建议而非失败项。“假设检验”等不可替代专业术语可保留，"
+            "其余应优先改为与实测数据比较、复算结果一致性、对照边界条件、敏感性分析、稳健性分析、残差分析、交叉比较或检查约束是否满足等具体动作；"
+            "空泛句请结合具体证据改写。"
+        )
     for phrase in MECHANICAL_PHRASES:
         count = prose.count(phrase)
         if count >= 2:
@@ -101,7 +123,13 @@ def main() -> int:
             f"论文可见论述括号密度为每千字 {density:.2f} 组，"
             f"超过 {MAX_BRACKET_GROUPS_PER_1000:.0f} 组限制。"
         )
-    return write_report(not errors, "check_paper_prose_style", errors, args.output)
+    return write_report(
+        not errors,
+        "check_paper_prose_style",
+        errors,
+        args.output,
+        {"soft_word_counts": soft_hits, "suggestions": suggestions},
+    )
 
 
 if __name__ == "__main__":

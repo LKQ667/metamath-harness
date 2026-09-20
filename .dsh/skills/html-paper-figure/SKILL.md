@@ -31,7 +31,7 @@ DSH 下 **FAST_MODE 默认 0**（质量优先）。当用户在当前对话明�
 
 ## ⛔ 工具路径解析（每次会话开头先定位，实际执行时在各次 pwsh 调用里重新赋值）
 
-**MetaMath Harness（DSH）环境下没有后端注入的 `_templates/`、`_utils/`**，本 skill 的完整安装位置（含 templates/ tools/）是 `F:\DeepSeekHarness\.dsh\skills\html-paper-figure\`，出图工具 screenshot_capture.py + capture.js + katex-assets 已随 skill 安装。优先用工作区副本（`_templates/`、`_utils/`、`tools/`，若存在），没有才回退安装目录。防御式解析，找不到再报错：
+**MetaMath Harness（DSH）环境下没有后端注入的 `_templates/`、`_utils/`**，本 skill 的完整安装位置（含 templates/ tools/）是 `<项目根>\.dsh\skills\html-paper-figure\`，出图工具 screenshot_capture.py + capture.js + katex-assets 已随 skill 安装。优先用工作区副本（`_templates/`、`_utils/`、`tools/`，若存在），没有才回退安装目录。防御式解析，找不到再报错：
 
 ```powershell
 # ⛔ 这台机器必须用 python，不能用 python3（python3 触发 Microsoft Store 存根，exit 49）

@@ -10,11 +10,23 @@ from pathlib import Path
 from common import paper_body_region, project_arg, read_text, write_report
 
 
-FORBIDDEN = {"•": "项目符号", "☐": "复选框式无序列表符号"}
+FORBIDDEN = {
+    "•": "项目符号",
+    "☐": "复选框式无序列表符号",
+    "·": "装饰性中点字符（数学乘法请用 \\cdot）",
+}
+MATH_COMMAND_RE = re.compile(r"\\(?:cdot|cdots|dotsb|dotsc|ldotp|times|ast|bullet)\b")
+LEFT_MATH_RE = re.compile(r"\$[^$]*\$|\\\([^)]*\\\)|\\\[.*?\\\]", re.DOTALL)
 
 
 def strip_comment(line: str) -> str:
     return re.split(r"(?<!\\)%", line, maxsplit=1)[0]
+
+
+def strip_math(text: str) -> str:
+    """数学环境与 \\cdot 等规范数学命令不参与原始中点字符检查。"""
+    text = LEFT_MATH_RE.sub(" ", text)
+    return MATH_COMMAND_RE.sub(" ", text)
 
 
 def main() -> int:
@@ -32,7 +44,7 @@ def main() -> int:
     if boundary_errors:
         return write_report(False, "check_paper_body_forbidden_symbols", boundary_errors, args.output)
     for line_no, raw in enumerate(body.splitlines(), 1):
-        line = strip_comment(raw)
+        line = strip_math(strip_comment(raw))
         for symbol, name in FORBIDDEN.items():
             if symbol in line:
                 errors.append(f"论文正文第 {line_no} 行存在禁止的{name}。")

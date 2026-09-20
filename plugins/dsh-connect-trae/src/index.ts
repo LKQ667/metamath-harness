@@ -6,7 +6,7 @@ import type {} from '@deepseek-ai/dsh-attachment'
 import type {} from '@deepseek-ai/dsh-host-webserver'
 import { createTraeAdapter, TRAE_PROVIDER } from './adapter.ts'
 import { TraeCredentialStore } from './auth.ts'
-import { applyImageSelection, deriveCatalog, discoveredCatalog, FALLBACK_TRAE_MODELS, mergeTraeModelSources, sanitizeCatalog, TraeCatalog, traeInputModalities, type TraeModelInfo } from './catalog.ts'
+import { applyImageSelection, deriveCatalog, discoveredCatalog, FALLBACK_TRAE_MODELS, mergeTraeModelSources, sanitizeCatalog, TraeCatalog, traeInputModalities, traeModelDisplayName, type TraeModelInfo } from './catalog.ts'
 import { refreshTraeCredential } from './refresh.ts'
 import { pickTraeStorageIdentity, readTraeIdentity } from './identity.ts'
 import { traeStorageCandidates } from './paths.ts'
@@ -24,7 +24,7 @@ import { registerTraeUsageRoute } from './web-status.ts'
 
 export { createTraeAdapter, TRAE_PROVIDER, TRAE_STREAM_IDLE_TIMEOUT_MS } from './adapter.ts'
 export { normalizeTraeCredential, traeOwnAuthPath, TraeCredentialStore, type TraeCredential } from './auth.ts'
-export { applyContextBudgets, applyImageSelection, deriveCatalog, discoveredCatalog, FALLBACK_TRAE_MODELS, mergeTraeModelSources, sanitizeCatalog, TraeCatalog, traeInputModalities, type TraeContextBudget, type TraeInputModality, type TraeModelInfo, type TraeWireModel } from './catalog.ts'
+export { applyContextBudgets, applyImageSelection, deriveCatalog, discoveredCatalog, FALLBACK_TRAE_MODELS, mergeTraeModelSources, sanitizeCatalog, TraeCatalog, traeInputModalities, traeModelDisplayName, type TraeContextBudget, type TraeInputModality, type TraeModelInfo, type TraeWireModel } from './catalog.ts'
 export { decryptTraeStorageValue, parseTraeAuthValue, parseTraeStorageDocument } from './decrypt.ts'
 export { identityHeaders, pickTraeStorageIdentity, readTraeIdentity, type TraeIdentity } from './identity.ts'
 export { parseObservedModelConfig, type TraeObservedModelConfig } from './model-config.ts'
@@ -95,6 +95,9 @@ const modelConfig = z.object({
   contextWindow: z.number().step(1).min(1),
   maxTokens: z.number().step(1).min(1),
   input: z.array(z.union(['text', 'image'])),
+  // Declared so the multiplier survives future hosts whose settings schema
+  // might strip unknown fields; it feeds the DSH-facing display name.
+  creditMultiplier: z.number(),
 })
 
 export const Config: z<Config> = z.object({
@@ -119,11 +122,16 @@ export function apply(ctx: Context, config: Config): void {
   // `Doubao-Seed-Code` / `glm-5.3`) and must never be served — even from a stale
   // saved `lastCatalog` / `models` / `enabledModelIds` that still lists it.
   const callableKeys = new Set<string>()
+  // Whether discovery has actually produced a directory this run. Only a
+  // completed merge may filter anything: an empty `callableKeys` means "no wire
+  // answer yet" (no credentials, startup discovery failed or still in flight)
+  // and must not be read as "nothing is callable".
+  let wireResolved = false
   // Drop dead rows from a (possibly stale) saved directory. No-op when the wire
-  // map has not been resolved yet (startup discovery failed or is in flight),
-  // so a transient network failure never hides the whole catalog.
+  // map has not been resolved yet, so a transient network failure never hides
+  // the whole catalog.
   const dropDeadModels = (rows: readonly TraeModelInfo[]): readonly TraeModelInfo[] => {
-    if (callableKeys.size === 0) return rows
+    if (!wireResolved) return rows
     return rows.filter(model =>
       callableKeys.has(model.id.trim().toLowerCase()) || callableKeys.has(model.name.trim().toLowerCase()))
   }
@@ -133,21 +141,28 @@ export function apply(ctx: Context, config: Config): void {
   // Dead config_names are dropped against the live wire map, so a stale save
   // cannot resurrect `Doubao-Seed-Code` / `glm-5.3`. An empty selection serves
   // the whole directory, so a never-configured plugin still exposes models.
+  // Built-in last resort. It is this plugin's own static list, never a row
+  // Remote advertised, so it must NOT be run through `dropDeadModels`: the
+  // live wire map can only ever confirm the ids it happens to know, and
+  // filtering against it would let a partial catalog delete the safety net
+  // precisely when it is needed. Its ids are the well-known Trae model names.
+  const fallbackModels = (value: Config): readonly TraeModelInfo[] =>
+    applyImageSelection(FALLBACK_TRAE_MODELS, imageSet(value))
   const derive = (value: Config, raw: readonly TraeModelInfo[]): readonly TraeModelInfo[] => {
     const selectedImages = imageSet(value)
     const derived = deriveCatalog(applyImageSelection(sanitizeCatalog(dropDeadModels(raw)), selectedImages), enabledSet(value), value.contextBudgets ?? {})
-    return derived.length > 0 ? derived : applyImageSelection(dropDeadModels(FALLBACK_TRAE_MODELS), selectedImages)
+    return derived.length > 0 ? derived : fallbackModels(value)
   }
   const configuredModels = (value: Config): readonly TraeModelInfo[] =>
     value.lastCatalog?.length ? derive(value, value.lastCatalog)
       : value.models?.length ? derive(value, value.models)
-        : applyImageSelection(dropDeadModels(FALLBACK_TRAE_MODELS), imageSet(value))
+        : fallbackModels(value)
   // What the plugin card displays: the last-refreshed raw directory, so the
   // user re-reads the current Trae catalog rather than a stale saved snapshot.
   const displayModels = (value: Config): readonly TraeModelInfo[] =>
     value.lastCatalog?.length ? dropDeadModels(sanitizeCatalog(value.lastCatalog))
       : value.models?.length ? dropDeadModels(sanitizeCatalog(value.models))
-        : dropDeadModels(FALLBACK_TRAE_MODELS)
+        : FALLBACK_TRAE_MODELS
   const store = new TraeCredentialStore({
     ...config.authFile === undefined ? {} : { storagePath: config.authFile },
     edition: config.edition ?? 'auto',
@@ -160,8 +175,8 @@ export function apply(ctx: Context, config: Config): void {
     // often install only SOLO, so pinning the first (cn) candidate and reading a
     // missing file used to throw ENOENT and break every refresh/chat request.
     const candidates = config.authFile === undefined
-      ? traeStorageCandidates().filter(item => (item.edition === 'cn' || item.edition === 'solo') && (config.edition === undefined || config.edition === 'auto' || item.edition === config.edition))
-      : [{ edition: config.edition === undefined || config.edition === 'auto' ? 'solo' as const : config.edition, path: config.authFile }]
+      ? traeStorageCandidates().filter(item => item.source === 'desktop' && (item.edition === 'cn' || item.edition === 'solo') && (config.edition === undefined || config.edition === 'auto' || item.edition === config.edition))
+      : [{ edition: config.edition === undefined || config.edition === 'auto' ? 'solo' as const : config.edition, path: config.authFile, source: 'desktop' as const }]
     if (candidates.length === 0) throw new Error('Trae storage was not found')
     return pickTraeStorageIdentity(candidates)
   }
@@ -247,6 +262,12 @@ export function apply(ctx: Context, config: Config): void {
       callableKeys.add(model.id.trim().toLowerCase())
       callableKeys.add(model.name.trim().toLowerCase())
     }
+    // Mark the wire map authoritative only once a merge produced rows. A live
+    // Trae account that reports only part of the catalog (or an edition whose
+    // `/models` list is a subset) would otherwise let this filter delete every
+    // model it did not mention — including the built-in fallback set, which
+    // Remote never advertised and so can never appear in `callableKeys`.
+    wireResolved = merged.length > 0
     // Populate the startup wire resolver (display id and display name → wire
     // config_name) so the chat bridge resolves the real config_name even when
     // the persisted catalog lacks `wireConfigName` (the settings schema drops
@@ -308,16 +329,15 @@ export function apply(ctx: Context, config: Config): void {
     void shim.close()
   })
 
-  void shim.ready.then(async () => {
+  void shim.ready.then(() => {
     if (stopped) return
-    // Resolve the wire-id map once at startup before serving requests, so the
-    // chat bridge can translate display ids to real config_names without the
-    // user ever opening the model card or re-saving the directory.
-    try {
-      await discoverModels()
-    } catch (error: unknown) {
-      ctx.logger.warn('dsh-connect-trae: wire-id resolution failed at startup; falling back to display ids', error)
-    }
+    // Register the provider first so the model picker never depends on network
+    // discovery: registration must be deterministic on a machine with no Trae
+    // credentials and no network. The wire-id map (Remote/SOLO /models) is
+    // resolved afterwards and only enriches the catalog — `configuredModels`
+    // returns the unfiltered rows while `wireResolved` is still false, so an
+    // unresolved or failed discovery degrades to the configured/fallback ids
+    // instead of leaving the provider unregistered.
     catalog.set(configuredModels(current()))
     const trae = createTraeAdapter({
       shim,
@@ -345,7 +365,7 @@ export function apply(ctx: Context, config: Config): void {
         )
         return next.map(model => ({
           id: model.id,
-          name: model.name,
+          name: traeModelDisplayName(model),
           ...model.contextWindow === undefined ? {} : { contextWindow: model.contextWindow },
           ...model.maxTokens === undefined ? {} : { maxTokens: model.maxTokens },
           // Current dsh-llm discovery types do not yet declare this field, but
@@ -376,6 +396,19 @@ export function apply(ctx: Context, config: Config): void {
       releaseAdapter?.()
       releaseDirectory?.()
     }
+    // Resolve the wire-id map once at startup so the chat bridge can translate
+    // display ids to real config_names without the user ever opening the model
+    // card or re-saving the directory. Runs after registration; a failure is
+    // non-fatal and leaves the configured/fallback catalog in place.
+    void discoverModels()
+      .then(() => {
+        if (stopped) return
+        catalog.set(configuredModels(current()))
+        invalidateAdapter()
+      })
+      .catch((error: unknown) => {
+        ctx.logger.warn('dsh-connect-trae: wire-id resolution failed at startup; falling back to display ids', error)
+      })
   }).catch((error: unknown) => {
     ctx.logger.error('dsh-connect-trae: loopback shim failed; provider not registered', error)
   })

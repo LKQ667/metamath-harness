@@ -1,0 +1,6 @@
+node_modules/
+*.tgz
+package-lock.json
+bun.lock
+*.tsbuildinfo
+.DS_Store

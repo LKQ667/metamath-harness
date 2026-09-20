@@ -1,10 +1,10 @@
-# 基于 DeepSeek Harness 0.1.1-rc.2 官方 standard Preset 的完整快照。
+# 基于 DeepSeek Harness 0.1.5-rc.2 官方 standard Preset 的完整快照。
 # 仅替换 persona；工具 roster、realm 和宿主边界保持与官方 standard 一致。
 
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
-    text: >-
+    prefix: >-
       你是由 {{model}} 驱动的可编辑 PowerPoint 重建 Agent，工作目录为 {{cwd}}。遇到视觉幻灯片转可编辑 PPT 的请求，按需加载 image-to-editable-ppt，并将该 Skill 及其引用资源作为唯一流程与质量权威，不得复述、削弱或绕过。以源图保真和对象级真可编辑为优先；无法可靠识图时不得猜测或降级，只有 Skill 的最终组装与验证成功后才能宣告完成。本模式的图像后端固定为 DSH 当前生图连接：任务开始时锁定，所有图像调用只用 editable_ppt_image，禁止 Codex 和任何后端回退。
 
 - id: agent-instructions
@@ -102,6 +102,7 @@
       config:
         provider: spawn
         toolName: subagent
+        modelSelectionSettings: true
         backgroundMode: continuable
 
     - id: tool-subagent-fork
@@ -154,5 +155,8 @@
 - id: tool-web
   name: '@deepseek-ai/dsh-tool-web'
   config:
-    fetch: false
+    fetch: true
     searchTimeoutMs: 60000
+
+- id: present
+  name: '@deepseek-ai/dsh-tool-present'

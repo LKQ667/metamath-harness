@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$ProjectRoot,
     [switch]$ReuseCache,
@@ -234,7 +234,7 @@ function Assert-Sanitized([string]$Root) {
         privateKey = '(?i)-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'
         token = '(?i)(?<![A-Za-z0-9])(?:sk-(?=[A-Za-z0-9_\-]{24,})(?=[A-Za-z0-9_\-]*[0-9])[A-Za-z0-9_\-]{24,}|AIza[A-Za-z0-9_\-]{30,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})'
         credentialUrl = '(?i)https?://[^\s/:]{3,}:[^\s/@]{12,}@'
-        absolutePath = '(?i)(?:F:\\|D:\\python|E:\\texlive|\\Users\\Lenovo|codex-runtimes)'
+        absolutePath = '(?i)(?:[A-Z]:\\|\\Users\\|codex-runtimes)'
     }
     $scanRoots = @((Join-Path $Root 'app'), (Join-Path $Root 'portable')) | Where-Object { Test-Path -LiteralPath $_ }
     $scanFiles = @($scanRoots | ForEach-Object { Get-ChildItem -LiteralPath $_ -Recurse -File })

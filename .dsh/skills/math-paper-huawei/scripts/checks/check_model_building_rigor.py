@@ -37,7 +37,7 @@ def count_any(text: str, tokens: tuple[str, ...]) -> int:
 
 
 def main() -> int:
-    parser = project_arg("检查五、模型建立与求解是否具备公式推导和论证深度")
+    parser = project_arg("检查模型建立与求解（问题一至问题 N）是否具备公式推导和论证深度")
     args = parser.parse_args()
     project = Path(args.project).resolve()
     tex_path = project / "论文" / "main.tex"
@@ -59,7 +59,7 @@ def main() -> int:
                 blocks.append(text[match.start():end])
         block = "\n".join(blocks)
     if not block:
-        errors.append("缺少“五、模型建立与求解”章节。")
+        errors.append("缺少“模型建立与求解”章节（问题一至问题 N 各问主章节）。")
         return write_report(False, "check_model_building_rigor", errors, args.output)
 
     display_math = len(DISPLAY_MATH_RE.findall(block))

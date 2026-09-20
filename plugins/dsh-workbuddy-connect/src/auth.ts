@@ -10,9 +10,11 @@
 
 import { readFile, rm, stat } from 'node:fs/promises'
 import { homedir, release } from 'node:os'
-import { basename, join } from 'node:path'
+import { basename, dirname, join, posix } from 'node:path'
 import { withFileLock, writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
 import { resolveDshHome } from '@deepseek-ai/dsh-home-paths'
+import { regionOf } from './upstream.ts'
+import type { WorkBuddyVariant } from './variants.ts'
 import type { WorkBuddyRefreshOutcome } from './upstream.ts'
 
 /** Normalized WorkBuddy credential, timestamps in epoch milliseconds. */
@@ -37,10 +39,17 @@ export interface WorkBuddyAuthStatus {
   nickname?: string
   domain?: string
   source?: 'desktop' | 'dsh'
+  /**
+   * Why no credential is usable, when the reason is diagnosable rather than
+   * "nobody is signed in" — a region mismatch being the case that matters.
+   * Present only on `signed-out`, and never a substitute for fixing the file.
+   */
+  reason?: string
 }
 
 /** Constructor options; only {@link refresh} is required. */
 export interface WorkBuddyStoreOptions {
+  variant?: WorkBuddyVariant
   /** Explicit desktop auth-file path, overriding env and platform defaults. */
   desktopPath?: string
   /** Explicit plugin-owned copy path, defaulting under `$DSH_HOME`. */
@@ -85,26 +94,34 @@ function isWsl(): boolean {
   return release().toLowerCase().includes('microsoft')
 }
 
-/** Convert a Windows drive path to WSL's conventional `/mnt/<drive>` form. */
+/**
+ * Convert a Windows drive path to WSL's conventional `/mnt/<drive>` form.
+ *
+ * Built with `posix.join`, never the host `path.join`: a WSL mount path is
+ * POSIX by definition, so the result must not inherit the separators of the
+ * host the process happens to run on (a Windows host driving the WSL branch —
+ * e.g. a cross-platform test or a compatibility layer — would otherwise emit
+ * `\mnt\c\...`, which no WSL process can resolve).
+ */
 function windowsPathForWsl(value: string | undefined): string | undefined {
   const path = value?.trim()
   if (!path) return undefined
   if (path.startsWith('/')) return path
   const drivePath = /^([a-z]):[\\/](.*)$/iu.exec(path)
   if (drivePath === null) return undefined
-  return join('/mnt', drivePath[1]!.toLowerCase(), ...drivePath[2]!.split(/[\\/]+/u))
+  return posix.join('/mnt', drivePath[1]!.toLowerCase(), ...drivePath[2]!.split(/[\\/]+/u))
 }
 
 /** Windows desktop credential candidates visible from a WSL process. */
 function wslDesktopAuthCandidates(home: string): string[] {
   const profile = windowsPathForWsl(process.env['USERPROFILE'])
-    ?? join('/mnt/c/Users', basename(home))
+    ?? posix.join('/mnt/c/Users', basename(home))
   const localAppData = windowsPathForWsl(process.env['LOCALAPPDATA'])
-    ?? join(profile, 'AppData', 'Local')
+    ?? posix.join(profile, 'AppData', 'Local')
   const roamingAppData = windowsPathForWsl(process.env['APPDATA'])
-    ?? join(profile, 'AppData', 'Roaming')
+    ?? posix.join(profile, 'AppData', 'Roaming')
   return [localAppData, roamingAppData].flatMap((authRoot) =>
-    DESKTOP_AUTH_FILENAMES.map((filename) => join(authRoot, ...DESKTOP_AUTH_DIR, filename)),
+    DESKTOP_AUTH_FILENAMES.map((filename) => posix.join(authRoot, ...DESKTOP_AUTH_DIR, filename)),
   )
 }
 
@@ -126,15 +143,29 @@ export function defaultDesktopAuthCandidates(): string[] {
     )
   }
   if (process.platform === 'linux') {
-    const linuxCandidates = DESKTOP_AUTH_RELATIVE_PATHS.map((relativePath) => join(home, '.config', ...relativePath))
+    // Linux paths are POSIX too; `posix.join` keeps the WSL branch's output
+    // comparable with the native branch on every host.
+    const linuxCandidates = DESKTOP_AUTH_RELATIVE_PATHS.map((relativePath) => posix.join(home, '.config', ...relativePath))
     return isWsl() ? [...wslDesktopAuthCandidates(home), ...linuxCandidates] : linuxCandidates
   }
   return []
 }
 
+/**
+ * The platform-default candidates for one variant, in probe order.
+ *
+ * Both apps write into the *same* shared `CodeBuddyExtension` auth directory
+ * and differ only in the file's basename, so the per-platform ordering above
+ * is reused verbatim and just the filename is swapped.
+ */
+export function desktopAuthCandidatesFor(variant: WorkBuddyVariant): string[] {
+  return defaultDesktopAuthCandidates().map(path => join(dirname(path), variant.desktopFilename))
+}
+
 /** First platform-default candidate; see {@link defaultDesktopAuthCandidates}. */
-export function defaultDesktopAuthPath(): string | undefined {
-  return defaultDesktopAuthCandidates()[0]
+export function defaultDesktopAuthPath(variant?: WorkBuddyVariant): string | undefined {
+  const candidates = variant === undefined ? defaultDesktopAuthCandidates() : desktopAuthCandidatesFor(variant)
+  return candidates[0]
 }
 
 /** Normalize an expiry that may arrive in seconds or milliseconds. */
@@ -209,9 +240,29 @@ function parseOwnDocument(text: string): WorkBuddyCredential | undefined {
   const document = parsed as Record<string, unknown>
   if (document['version'] !== OWN_FORMAT_VERSION) return undefined
   if (typeof document['credential'] !== 'object' || document['credential'] === null) return undefined
-  const credential = parseWorkBuddyAuth(JSON.stringify({ auth: document['credential'] }))
-  if (credential === undefined) return undefined
-  return { ...credential, source: 'dsh' }
+  // The owned copy stores the normalized credential itself (camelCase
+  // `expiresAtMs`, identity fields at the top level), not the desktop
+  // document shape. Round-tripping through parseWorkBuddyAuth reads
+  // `expiresAt` and an `account` object, finds neither, zeroes the expiry,
+  // and drops uid/enterprise/nickname — so a surviving copy refreshed on
+  // every request and lost its identity headers.
+  const stored = document['credential'] as Record<string, unknown>
+  const accessToken = typeof stored['accessToken'] === 'string' ? stored['accessToken'] : ''
+  if (accessToken === '') return undefined
+  const refreshExpiresAtMs = typeof stored['refreshExpiresAtMs'] === 'number' ? stored['refreshExpiresAtMs'] : undefined
+  const enterpriseId = optionalString(stored['enterpriseId'])
+  const nickname = optionalString(stored['nickname'])
+  return {
+    accessToken,
+    refreshToken: typeof stored['refreshToken'] === 'string' ? stored['refreshToken'] : '',
+    expiresAtMs: typeof stored['expiresAtMs'] === 'number' ? stored['expiresAtMs'] : 0,
+    ...refreshExpiresAtMs === undefined ? {} : { refreshExpiresAtMs },
+    domain: optionalString(stored['domain']) ?? '',
+    uid: optionalString(stored['uid']) ?? '',
+    ...enterpriseId === undefined ? {} : { enterpriseId },
+    ...nickname === undefined ? {} : { nickname },
+    source: 'dsh',
+  }
 }
 
 /** Whether a filesystem error reports an absent path. */
@@ -229,6 +280,7 @@ function isENOENT(error: unknown): boolean {
  * not take down a working session.
  */
 export class WorkBuddyCredentialStore {
+  private readonly variant: WorkBuddyVariant | undefined
   private readonly refresh: WorkBuddyStoreOptions['refresh']
   private readonly refreshMarginMs: number
   private readonly ownPath: string
@@ -236,9 +288,10 @@ export class WorkBuddyCredentialStore {
   private inflight: Promise<WorkBuddyCredential> | undefined
 
   constructor(options: WorkBuddyStoreOptions) {
+    this.variant = options.variant
     this.refresh = options.refresh
     this.refreshMarginMs = options.refreshMarginMs ?? 5 * 60 * 1000
-    this.ownPath = options.ownPath ?? workbuddyOwnAuthPath()
+    this.ownPath = options.ownPath ?? (options.variant ? join(resolveDshHome(), options.variant.ownFilename) : workbuddyOwnAuthPath())
     this.desktopPathOverride = options.desktopPath
   }
 
@@ -248,11 +301,13 @@ export class WorkBuddyCredentialStore {
    * explicit path is used verbatim; the defaults are a probe order.
    */
   private resolveDesktopCandidates(): string[] {
-    const fromEnv = process.env[WORKBUDDY_AUTH_FILE_ENV]
+    const fromEnv = process.env[this.variant?.env ?? WORKBUDDY_AUTH_FILE_ENV]
     const explicit = this.desktopPathOverride
       ?? (fromEnv !== undefined && fromEnv.trim() !== '' ? fromEnv : undefined)
     if (explicit !== undefined) return [explicit]
-    return defaultDesktopAuthCandidates()
+    return this.variant === undefined
+      ? defaultDesktopAuthCandidates()
+      : desktopAuthCandidatesFor(this.variant)
   }
 
   private resolveDesktopPath(): string | undefined {
@@ -279,8 +334,34 @@ export class WorkBuddyCredentialStore {
   /** Read the freshest stored credential without refreshing anything. */
   async current(): Promise<WorkBuddyCredential | undefined> {
     const [desktop, own] = await Promise.all([this.readDesktop(), this.readOwn()])
+    // A credential belonging to the other product is refused rather than used:
+    // the two apps share one auth directory and differ only by filename, so a
+    // misconfigured `authFile` / env var is a realistic mistake, and sending one
+    // region's token to the other's endpoint would leak it across products.
+    // Naming the file and the expected region is what makes it fixable.
+    if (this.variant !== undefined) {
+      for (const [label, credential] of [['desktop file', desktop], ['plugin copy', own]] as const) {
+        if (credential === undefined) continue
+        const region = regionOf(credential.domain)
+        if (region !== this.variant.region) {
+          throw new Error(
+            `${this.variant.displayName} received a ${region === 'cn' ? 'WorkBuddy (CN)' : 'WorkBuddy AI'} credential`
+            + ` in its ${label} (domain ${JSON.stringify(credential.domain)});`
+            + ` point ${this.variant.env} at the ${this.variant.appName} sign-in, or remove the mismatched file`,
+          )
+        }
+      }
+    }
     if (desktop === undefined) return own
     if (own === undefined) return desktop
+    // Identity beats expiry. The plugin's own copy is written by its own
+    // refreshes, so after the user switches accounts in the desktop app the copy
+    // still belongs to the *previous* account — and may well expire later,
+    // because the plugin refreshed it. Preferring it by expiry would send the old
+    // account's uid in `X-User-Id` and answer as the wrong user. The desktop
+    // file is the authority on who is signed in now; a differing identity means
+    // the copy is stale regardless of its timestamp.
+    if (desktop.uid !== own.uid || desktop.enterpriseId !== own.enterpriseId) return desktop
     return own.expiresAtMs > desktop.expiresAtMs ? own : desktop
   }
 
@@ -293,9 +374,10 @@ export class WorkBuddyCredentialStore {
     if (credential === undefined) {
       const candidates = this.resolveDesktopCandidates()
       const desktop = candidates.length > 0 ? candidates.join(' or ') : '(no desktop path on this platform)'
+      const app = this.variant?.appName ?? 'WorkBuddy'
       throw new Error(
-        `workbuddy: no signed-in WorkBuddy account found; sign in once in the WorkBuddy desktop app`
-        + ` (expected ${desktop} or WORKBUDDY_AUTH_FILE), or refresh an existing session`,
+        `workbuddy: no signed-in ${app} account found; sign in once in the ${app} desktop app`
+        + ` (expected ${desktop} or ${this.variant?.env ?? WORKBUDDY_AUTH_FILE_ENV}), or refresh an existing session`,
       )
     }
     if (!this.needsRefresh(credential)) return credential
@@ -319,8 +401,13 @@ export class WorkBuddyCredentialStore {
         ...credential.domain === '' ? {} : { domain: credential.domain },
         source: credential.source,
       }
-    } catch {
-      return { state: 'signed-out' }
+    } catch (error: unknown) {
+      // A region mismatch (or an unreadable file) is a *diagnosable* signed-out
+      // state, not a silent one: the user needs the path to the file that is
+      // wrong, and which provider it actually belongs to. Reported as a status
+      // rather than thrown, because `status()` is documented never to throw and
+      // the card renders `reason` verbatim.
+      return { state: 'signed-out', reason: error instanceof Error ? error.message : String(error) }
     }
   }
 

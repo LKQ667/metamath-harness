@@ -4,16 +4,19 @@
   "dependencies": {
     "@deepseek-harness/dsh-api-key-pool": "file:../../../plugins/dsh-api-key-pool",
     "@deepseek-harness/dsh-mathmodel": "file:../../../plugins/dsh-mathmodel",
+    "@jiesou/dsh-cline-free-provider": "file:../../../plugins/dsh-cline-free-provider",
     "dsh-agy-link": "file:../../../plugins/dsh-agy-link",
-    "dsh-better-sidebar": "0.17.1",
+    "dsh-better-sidebar": "0.19.1",
     "dsh-client-ui-skins": "file:../../../plugins/dsh-client-ui-skins",
+    "dsh-cline-key-card": "file:../../../plugins/dsh-cline-key-card",
     "dsh-connect-trae": "file:../../../plugins/dsh-connect-trae",
+    "dsh-provider-qoder": "file:../../../plugins/dsh-provider-qoder",
     "dsh-free-search": "file:../../../plugins/dsh-free-search",
     "dsh-knowledge-sqlite": "file:../../../plugins/dsh-knowledge-sqlite",
-    "dsh-pet": "file:../../../plugins/dsh-pet/dsh-pet",
     "dsh-opencode-session": "file:../../../plugins/dsh-opencode-session",
-    "dsh-plugin-subscriptions": "0.6.0",
-    "dsh-session-link": "0.1.4",
+    "dsh-pet": "file:../../../plugins/dsh-pet/dsh-pet",
+    "dsh-plugin-subscriptions": "0.9.2",
+    "dsh-session-link": "0.2.1",
     "dsh-workbuddy-connect": "file:../../../plugins/dsh-workbuddy-connect"
   },
   "dsh": {
@@ -32,7 +35,10 @@
         "dsh-agy-link",
         "dsh-workbuddy-connect",
         "dsh-connect-trae",
-        "dsh-opencode-session"
+        "dsh-opencode-session",
+        "@jiesou/dsh-cline-free-provider",
+        "dsh-cline-key-card",
+        "dsh-provider-qoder"
       ]
     }
   }

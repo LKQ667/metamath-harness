@@ -4,15 +4,58 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import type { PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type {} from '@deepseek-ai/dsh-client-ui-settings-plugins/client'
-import { WORKBUDDY_STATUS_PATH } from '../status-paths.ts'
-import type { WorkBuddyWebModelBadge, WorkBuddyWebStatus } from '../status-paths.ts'
+import { WORKBUDDY_AI_PROBE_PATH, WORKBUDDY_AI_STATUS_PATH, WORKBUDDY_PROBE_PATH, WORKBUDDY_STATUS_PATH } from '../status-paths.ts'
+import type { WorkBuddyWebModelBadge, WorkBuddyWebProbeSection, WorkBuddyWebStatus } from '../status-paths.ts'
 import type { WorkBuddySettingsKey } from './locales.ts'
 
 /** Localized copy injected by the browser-plugin registration. */
 export interface WorkBuddyPluginCardInjected {
   t: (key: WorkBuddySettingsKey, params?: Record<string, unknown>) => string
+  /**
+   * Which product variant this card instance renders.
+   *
+   * Both cards share this component; the variant selects the status/probe
+   * routes and the title/intro copy. Defaults to the CN variant so a card
+   * rendered without the injection keeps working.
+   */
+  variant?: WorkBuddyCardVariant
 }
 
+/** The browser-visible half of a variant: identity, routes, and copy keys. */
+export interface WorkBuddyCardVariant {
+  id: string
+  /** Locale key for the card title. */
+  titleKey: WorkBuddySettingsKey
+  /** Locale key for the card intro line. */
+  introKey: WorkBuddySettingsKey
+  /** Locale key for the not-signed-in hint. */
+  signedOutKey: WorkBuddySettingsKey
+  statusPath: string
+  probePath: string
+}
+
+/** CN WorkBuddy; the plugin's long-standing card and default. */
+export const CN_CARD_VARIANT: WorkBuddyCardVariant = {
+  id: 'workbuddy',
+  titleKey: 'title',
+  introKey: 'intro',
+  signedOutKey: 'signedOutHint',
+  statusPath: WORKBUDDY_STATUS_PATH,
+  probePath: WORKBUDDY_PROBE_PATH,
+}
+
+/** International WorkBuddy AI. */
+export const AI_CARD_VARIANT: WorkBuddyCardVariant = {
+  id: 'workbuddy-ai',
+  titleKey: 'titleAI',
+  introKey: 'introAI',
+  signedOutKey: 'signedOutHintAI',
+  statusPath: WORKBUDDY_AI_STATUS_PATH,
+  probePath: WORKBUDDY_AI_PROBE_PATH,
+}
+
+/** Both cards, in display order. */
+export const CARD_VARIANTS: readonly WorkBuddyCardVariant[] = [CN_CARD_VARIANT, AI_CARD_VARIANT]
 /** Props delivered by the Plugin configuration item slot. */
 export type WorkBuddyPluginCardProps =
   PropsRuntime<'settings.plugin.item'>
@@ -65,13 +108,83 @@ const modelBadgeChipStyle: CSSProperties = {
   color: 'var(--dsw-alias-state-success-primary, #22a06b)',
 }
 
-/** Localize an upstream promotional badge label, with an unknown-badge fallback. */
+/**
+ * Localize an upstream promotional badge label, with an unknown-badge fallback.
+ *
+ * The CN catalog spells badges in Chinese (`限时免费`, `夜间折扣`); the
+ * international document's `modelPromotions` carries English (`Free now`). Both
+ * are mapped so the same promotion reads consistently in either UI language,
+ * and anything else passes through verbatim — an unrecognized badge is still
+ * information the upstream chose to show.
+ */
 function modelBadgeLabel(badge: string, t: WorkBuddyPluginCardInjected['t']): string {
   if (badge === '限时免费') return t('badgeLimitedFree')
   if (badge === '夜间折扣') return t('badgeNightDiscount')
+  if (badge === 'Free now') return t('badgeFreeNow')
   return badge
 }
 const progressTrackStyle: CSSProperties = { height: 8, overflow: 'hidden', borderRadius: 999, background: 'var(--dsw-alias-bg-layer-2, rgba(0, 0, 0, 0.08))' }
+
+/**
+ * Inline confirmation box for a paid detection. Replaces the previous
+ * `window.confirm`: the decision is one line plus two buttons, and a modal
+ * alert for that is heavier than the action it guards.
+ */
+const confirmBoxStyle: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 10,
+  padding: '10px 12px',
+  border: '1px solid var(--dsw-alias-border-l2)',
+  borderRadius: 8,
+  background: 'var(--dsw-alias-bg-layer-1)',
+}
+const confirmRowStyle: CSSProperties = { display: 'flex', justifyContent: 'flex-end', gap: 8 }
+
+/** One probeable model's row: name on the left, state and action on the right. */
+const probeRowStyle: CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }
+const probeRowEndStyle: CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 8, flex: '0 0 auto' }
+
+/**
+ * Tab strip for the card body. Kept visually light — a full pill would compete
+ * with the section headings, and the card is already the densest surface the
+ * plugin owns.
+ */
+const tabBarStyle: CSSProperties = {
+  display: 'flex',
+  gap: 4,
+  marginTop: 4,
+  borderBottom: '1px solid var(--dsw-alias-border-l2)',
+}
+const tabStyle: CSSProperties = {
+  padding: '6px 12px',
+  border: 0,
+  borderBottom: '2px solid transparent',
+  background: 'transparent',
+  color: 'var(--dsw-alias-label-tertiary)',
+  font: 'inherit',
+  fontSize: 13,
+  lineHeight: '20px',
+  cursor: 'pointer',
+}
+const tabActiveStyle: CSSProperties = {
+  borderBottom: '2px solid var(--dsw-alias-brand-primary)',
+  color: 'var(--dsw-alias-label-primary)',
+  fontWeight: 600,
+}
+const tabPanelStyle: CSSProperties = { display: 'flex', flexDirection: 'column', gap: 18, paddingTop: 16 }
+
+/**
+ * Primary action of the inline confirmation. Fill and text colour come from the
+ * theme as a pair: `brand-primary` is a light accent here, so pairing it with a
+ * hardcoded white would render white-on-white.
+ */
+const primaryButtonStyle: CSSProperties = {
+  ...buttonStyle,
+  border: '1px solid var(--dsw-alias-button-primary-fill)',
+  background: 'var(--dsw-alias-button-primary-fill)',
+  color: 'var(--dsw-alias-label-primary-foreground)',
+}
 
 function progressFillStyle(percent: number): CSSProperties {
   return {
@@ -152,17 +265,237 @@ function ModelOfferRow({ model, t }: {
           {model.free === true ? <span style={modelBadgeChipStyle}>{t('freeModel')}</span> : null}
         </span>
       </div>
-      {model.credits === undefined ? null : <span style={modelRateStyle}>{t('rate', { rate: model.credits })}</span>}
+      {model.credits === undefined
+        // No rate to show. When the plugin withheld it because the price came
+        // from an ended promotion, say so plainly rather than showing nothing —
+        // silence here reads as "free", which is the claim being avoided.
+        ? model.rateUnknown === true ? <span style={modelRateStyle}>{t('rateUnknown')}</span> : null
+        : <span style={modelRateStyle}>{t('rate', { rate: model.credits })}</span>}
+    </div>
+  )
+}
+
+/**
+ * Context capacity, listed in full.
+ *
+ * Every model the upstream reports a capacity for, largest first. A one-line
+ * summary with the exceptions on hover was tried and rejected: capacity is
+ * reference data you scan by model, and hiding most of it behind a hover made
+ * the common case (a model you already have in mind) the hard one to look up.
+ *
+ * Purely a report of the upstream's own numbers. The plugin offers no tier
+ * picker: the CN catalog declares one capacity per model and publishes no
+ * alternatives, so a menu there would mean inventing client-side policy. The
+ * international document does declare alternatives (`supportedLengths`), and
+ * they are shown as a secondary figure rather than merged into one number —
+ * the default is the budget actually requested, while the larger value is a
+ * ceiling the upstream would accept.
+ */
+function ContextTable({ models, t }: {
+  models: readonly WorkBuddyWebModelBadge[] | undefined
+  t: WorkBuddyPluginCardInjected['t']
+}): React.ReactNode {
+  const known = (models ?? [])
+    .filter(model => model.contextWindow !== undefined)
+    // Largest first: the big windows are the ones a user reaches for, and the
+    // small ones are then easy to spot at the end.
+    .sort((a, b) => (b.contextWindow as number) - (a.contextWindow as number))
+  if (known.length === 0) return null
+  return (
+    <div style={quotaListStyle}>
+      <h3 style={quotaTitleStyle}>{t('contextHeading')}</h3>
+      {known.map(model => {
+        const capacity = model.contextWindow as number
+        // Only shown when the upstream declared a larger alternative, so the
+        // CN list (which declares none) is unchanged.
+        const alternative = model.maxContextWindow !== undefined && model.maxContextWindow > capacity
+          ? model.maxContextWindow
+          : undefined
+        return (
+          <div key={model.id} style={quotaLabelStyle}>
+            <span>{model.name}</span>
+            <span style={modelOfferStyle}>
+              <span style={{ textAlign: 'right' }}>{formatTokens(capacity)}</span>
+              {alternative === undefined
+                ? null
+                : <span style={modelRateStyle}>{t('contextUpTo', { size: formatTokens(alternative) })}</span>}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+/**
+ * Compact token count for display: the catalog's own round numbers (`200000`,
+ * `1000000`) read better as `200K` / `1M`, and no precision is lost because
+ * these values are always whole thousands.
+ */
+function formatTokens(tokens: number): string {
+  if (tokens >= 1_000_000 && tokens % 1_000_000 === 0) return `${tokens / 1_000_000}M`
+  if (tokens >= 1_000 && tokens % 1_000 === 0) return `${tokens / 1_000}K`
+  return String(tokens)
+}
+
+/**
+ * Reasoning-effort detection section: consent switches, per-model detection,
+ * and the recorded observations.
+ *
+ * Two deliberate UX rules from the plan (§3.1, §3.2):
+ * - the confirmation is shown *before* any request, and its copy states the
+ *   credit caveat;
+ * - a `non-validating` result is presented as an observation about the
+ *   parameter ("this model does not check it"), never as a statement that a
+ *   level is unsupported.
+ */
+function ProbeSection({ probe, t, onDetect, onClear, busy }: {
+  probe: WorkBuddyWebProbeSection
+  t: WorkBuddyPluginCardInjected['t']
+  onDetect: (modelId: string) => void
+  onClear: () => void
+  busy: boolean
+}): React.ReactNode {
+  // Which model is awaiting confirmation. Confirmation is inline for the same
+  // reason the Composer entry uses a bubble: a modal alert for a one-line
+  // decision is heavier than the action it guards.
+  const [pending, setPending] = useState<string>()
+  // Which model this card last asked to detect. `busy` alone cannot answer
+  // that — it is true for any in-flight request — so the running label needs
+  // the id, otherwise every candidate button claims to be running at once.
+  const [runningModel, setRunningModel] = useState<string>()
+  // A sweep that finishes (or a catalogue change that removes the candidate)
+  // must not leave a stale confirmation behind.
+  useEffect(() => {
+    if (pending !== undefined && !probe.candidates.includes(pending)) setPending(undefined)
+  }, [pending, probe.candidates])
+  // Clear the running label once the request settles.
+  //
+  // Keyed on `busy` alone this would fire immediately: the click that starts a
+  // detection sets `runningModel` and `busy` in one batch, and an effect that
+  // only checks `!busy` can still observe the pre-update value. So the label is
+  // armed on the way up and released only after the run has actually been seen
+  // in flight.
+  const runningArmed = useRef(false)
+  useEffect(() => {
+    if (runningModel === undefined) return
+    if (busy || probe.running) {
+      runningArmed.current = true
+      return
+    }
+    if (!runningArmed.current) return
+    runningArmed.current = false
+    setRunningModel(undefined)
+  }, [runningModel, busy, probe.running])
+  return (
+    <div style={quotaListStyle}>
+      <h3 style={quotaTitleStyle}>{t('probeHeading')}</h3>
+      <p style={bodyStyle}>{t('probeIntro')}</p>
+      <p style={bodyStyle}>{t('probeConsentHint')}</p>
+      {probe.running ? <p style={bodyStyle}>{t('probeRunningGeneric')}</p> : null}
+      {/*
+        * One row per probeable model, each carrying its own state and button.
+        *
+        * Previously the buttons lived in a block above the results, so a model
+        * that had been detected left the button list and reappeared only as a
+        * result below — re-running it meant clearing every other result. Rows
+        * keep the model and its action together, and the order is fixed by the
+        * catalog, so nothing moves when a detection lands.
+        */}
+      {probe.candidates.length === 0
+        ? <p style={bodyStyle}>{t('probeResultEmpty')}</p>
+        : (
+          <div style={quotaGroupStyle}>
+            {probe.candidates.map(id => {
+              const result = probe.results.find(entry => entry.id === id)
+              const name = result?.name ?? id
+              return (
+                <div key={id} style={modelOfferStyle}>
+                  <div style={probeRowStyle}>
+                    <span>{name}</span>
+                    <span style={probeRowEndStyle}>
+                      {result === undefined ? null : (
+                        <span style={modelBadgeChipStyle}>
+                          {result.validation === 'validating' && result.efforts.length > 0
+                            ? result.efforts.join(' / ')
+                            : t(result.validation === 'non-validating' ? 'probeResultNotValidating' : 'probeResultUnknown')}
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        style={buttonStyle}
+                        disabled={probe.running || busy}
+                        onClick={() => { setPending(id) }}
+                      >
+                        {/*
+                          * Only the button that was actually pressed reports
+                          * progress; the card-wide `busy` flag is true for any
+                          * in-flight request, so it cannot pick the label.
+                          */}
+                        {runningModel === id
+                          ? t('probeRunning', { model: id })
+                          : t(result === undefined ? 'probeStart' : 'probeRedetect')}
+                      </button>
+                    </span>
+                  </div>
+                  {result === undefined ? null
+                    : <span style={modelRateStyle}>{t('probeResultAt', { time: formatTime(result.probedAt) })}</span>}
+                  {/*
+                    * The confirmation expands inside the row it belongs to.
+                    * Rendered after the whole list it sat at the bottom of a
+                    * long candidate list, so the question ("send requests to
+                    * this model?") was a screen away from the button that
+                    * asked it. In-flow placement keeps them together and needs
+                    * no positioning or overflow handling.
+                    */}
+                  {pending === id ? (
+                    <div style={confirmBoxStyle}>
+                      <p style={bodyStyle}>{t('probeConfirmBody', { model: name })}</p>
+                      <div style={confirmRowStyle}>
+                        <button type="button" style={buttonStyle} onClick={() => { setPending(undefined) }}>
+                          {t('cancel')}
+                        </button>
+                        <button
+                          type="button"
+                          style={primaryButtonStyle}
+                          disabled={probe.running || busy}
+                          onClick={() => {
+                            setRunningModel(id)
+                            setPending(undefined)
+                            onDetect(id)
+                          }}
+                        >
+                          {t('probeConfirmAction')}
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+      {probe.results.length === 0 ? null : (
+        <button type="button" style={buttonStyle} disabled={busy} onClick={() => { onClear() }}>
+          {t('probeClear')}
+        </button>
+      )}
     </div>
   )
 }
 
 /** Render WorkBuddy sign-in state and credit as one expandable card. */
-export function WorkBuddyPluginCard({ t }: WorkBuddyPluginCardProps) {
+export function WorkBuddyPluginCard({ t, variant = CN_CARD_VARIANT }: WorkBuddyPluginCardProps) {
   if (t === undefined) throw new Error('WorkBuddy plugin card requires its translation function')
   const [open, setOpen] = useState(false)
   const [status, setStatus] = useState<WorkBuddyWebStatus>({ status: 'signed-out' })
   const [busy, setBusy] = useState(false)
+  // Three tabs. Default is the live status plus the one action the card
+  // carries; the two reference sets — context capacity, then rates and the
+  // per-package breakdown — are deliberate visits, since neither changes while
+  // you watch.
+  const [tab, setTab] = useState<'status' | 'context' | 'details'>('status')
   const mounted = useRef(true)
 
   useEffect(() => {
@@ -172,7 +505,7 @@ export function WorkBuddyPluginCard({ t }: WorkBuddyPluginCardProps) {
 
   const refresh = useCallback(async (signal?: AbortSignal): Promise<void> => {
     try {
-      const response = await fetch(WORKBUDDY_STATUS_PATH, {
+      const response = await fetch(variant.statusPath, {
         headers: { accept: 'application/json' },
         credentials: 'same-origin',
         ...signal === undefined ? {} : { signal },
@@ -185,7 +518,7 @@ export function WorkBuddyPluginCard({ t }: WorkBuddyPluginCardProps) {
         setStatus({ status: 'error', message: error instanceof Error ? error.message : t('requestFailed') })
       }
     }
-  }, [t])
+  }, [t, variant.statusPath])
 
   useEffect(() => {
     if (!open) return
@@ -213,9 +546,83 @@ export function WorkBuddyPluginCard({ t }: WorkBuddyPluginCardProps) {
     }
   }
 
-  const title = t('title')
+  /**
+   * Ask the host to re-read the credential and re-fetch this variant's catalog.
+   *
+   * Shares the probe route's key and guards: it is a write that spends an
+   * upstream request, so it does not belong on the read-only status GET. A
+   * failure is surfaced through the refreshed document's `catalog.error` rather
+   * than thrown away, so the reason survives the round trip.
+   */
+  const refreshModels = useCallback(async (): Promise<void> => {
+    const key = status.status === 'signed-in' ? status.probeKey : undefined
+    if (key === undefined) return
+    setBusy(true)
+    try {
+      const response = await fetch(variant.probePath, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-WorkBuddy-Probe-Key': key },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'refresh' }),
+      })
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    } catch (error: unknown) {
+      if (mounted.current) {
+        setStatus(previous => ({ status: 'error', message: error instanceof Error ? error.message : t('requestFailed') }))
+      }
+      return
+    } finally {
+      if (mounted.current) setBusy(false)
+    }
+    await refresh()
+  }, [refresh, status, t, variant.probePath])
+
+  /**
+   * Run one control action and refresh the card's state afterwards.
+   *
+   * The key travels in a header, not the body: it authorizes the write, and
+   * the host never accepts a prompt, a sentinel, or a model outside its own
+   * catalog from here.
+   */
+  const control = useCallback(async (action: { action: 'probe'; model: string } | { action: 'clear' }): Promise<void> => {
+    const key = status.status === 'signed-in' ? status.probeKey : undefined
+    if (key === undefined) return
+    setBusy(true)
+    try {
+      const response = await fetch(variant.probePath, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-WorkBuddy-Probe-Key': key },
+        credentials: 'same-origin',
+        body: JSON.stringify(action),
+      })
+      const value: unknown = await response.json().catch(() => undefined)
+      if (!response.ok) {
+        const message = typeof value === 'object' && value !== null && 'error' in value
+          ? String((value as Record<string, unknown>)['error'])
+          : `HTTP ${response.status}`
+        throw new Error(message)
+      }
+      await refresh()
+    } catch (error: unknown) {
+      if (mounted.current) {
+        setStatus(previous => ({ status: 'error', message: error instanceof Error ? error.message : t('requestFailed') }))
+      }
+    } finally {
+      if (mounted.current) setBusy(false)
+    }
+  }, [refresh, status, t, variant.probePath])
+
+  /**
+   * Start a detection. Confirmation happens inline in the section, so this is
+   * only ever called after the user has already agreed.
+   */
+  const confirmDetect = useCallback((modelId: string): void => {
+    void control({ action: 'probe', model: modelId })
+  }, [control])
+
+  const title = t(variant.titleKey)
   const label = status.status === 'signed-in'
-    ? status.nickname === undefined ? t('signedInAs', { nickname: '' }).replace(/[:：]\s*$/, '') : t('signedInAs', { nickname: status.nickname })
+    ? status.nickname === undefined ? t('signedInAs', { nickname: '' }).trimEnd().replace(/[:：]$/, '') : t('signedInAs', { nickname: status.nickname })
     : status.status === 'error'
       ? t('requestFailed')
       : t('signedOut')
@@ -231,7 +638,7 @@ export function WorkBuddyPluginCard({ t }: WorkBuddyPluginCardProps) {
       >
         <span style={headTextStyle}>
           <span style={nameStyle}>{title}</span>
-          <span style={descriptionStyle}>{t('intro')}</span>
+          <span style={descriptionStyle}>{t(variant.introKey)}</span>
         </span>
         <span aria-hidden="true" style={{ ...chevronStyle, transform: open ? 'rotate(180deg)' : 'none' }}>⌄</span>
       </button>
@@ -251,36 +658,129 @@ export function WorkBuddyPluginCard({ t }: WorkBuddyPluginCardProps) {
               ? <>
                   {status.expiresAt === undefined ? null
                     : <p style={bodyStyle}>{t('accessTokenExpires', { time: formatTime(status.expiresAt) })}</p>}
-                  {status.credits === undefined ? null : (
-                    <div style={quotaListStyle}>
-                      <div style={rowStyle}>
-                        <h3 style={quotaTitleStyle}>{t('creditsHeading')}</h3>
-                        <span style={bodyStyle}>{t('creditsTotal', { total: formatNumber(status.credits.total) })}</span>
-                      </div>
-                      {status.credits.accounts
-                        .filter(account => account.remain > 0)
-                        .map((account, index) => (
-                        <CreditBar
-                          key={`${account.packageName}-${String(index)}`}
-                          label={account.packageName}
-                          remain={account.remain}
-                          size={account.size}
+                  {/*
+                    * Catalog provenance. Without it a stale list is
+                    * indistinguishable from a fresh one, and a user cannot tell
+                    * whether what they see still matches the upstream. The
+                    * refresh action sits here because this is the line that says
+                    * whether the list needs refreshing.
+                    */}
+                  {status.catalog === undefined
+                    ? null
+                    : <div style={rowStyle}>
+                        <span style={bodyStyle}>
+                          {status.catalog.source === 'live' && status.catalog.fetchedAt !== undefined
+                            ? t('catalogLive', { time: formatTime(status.catalog.fetchedAt) })
+                            : status.catalog.source === 'saved' && status.catalog.fetchedAt !== undefined
+                              ? t('catalogSaved', { time: formatTime(status.catalog.fetchedAt) })
+                              : t('catalogFallback')}
+                          {status.catalog.appVersion === undefined
+                            ? ''
+                            : ` · ${t('catalogAppVersion', { version: status.catalog.appVersion })}`}
+                        </span>
+                        <button type="button" style={buttonStyle} disabled={busy} onClick={() => { void refreshModels() }}>
+                          {busy ? t('refreshingModels') : t('refreshModels')}
+                        </button>
+                      </div>}
+                  {status.catalog?.error === undefined
+                    ? null
+                    : <p style={errorStyle}>{t('catalogError', { message: status.catalog.error })}</p>}
+                  {/*
+                    * Three tabs, split by what the reader came for.
+                    *
+                    * 1. Status — the live facts and the one action the card
+                    *    carries: account, total credit, and reasoning-level
+                    *    detection. Detection belongs beside the status because
+                    *    it is something you *do* to the model in front of you,
+                    *    not reference material you go looking for.
+                    * 2. Context — every model's capacity, listed in full.
+                    * 3. Details — the rate reference: per-package credit and
+                    *    the per-model discount list.
+                    *
+                    * Previously this was one column, which buried the context
+                    * window below several rows of per-model discounts: the
+                    * least time-sensitive content sat above the most
+                    * decision-relevant.
+                    */}
+                  <div role="tablist" style={tabBarStyle}>
+                    {(['status', 'context', 'details'] as const).map(id => (
+                      <button
+                        key={id}
+                        type="button"
+                        role="tab"
+                        aria-selected={tab === id}
+                        onClick={() => { setTab(id) }}
+                        style={{ ...tabStyle, ...(tab === id ? tabActiveStyle : {}) }}
+                      >
+                        {t(id === 'status' ? 'tabStatus' : id === 'context' ? 'tabContext' : 'tabDetails')}
+                      </button>
+                    ))}
+                  </div>
+
+                  {tab === 'status' ? (
+                    <div style={tabPanelStyle}>
+                      {status.credits === undefined ? null : (
+                        <div style={quotaListStyle}>
+                          <div style={rowStyle}>
+                            <h3 style={quotaTitleStyle}>{t('creditsHeading')}</h3>
+                            <span style={bodyStyle}>{t('creditsTotal', { total: formatNumber(status.credits.total) })}</span>
+                          </div>
+                        </div>
+                      )}
+                      {status.creditsError === undefined ? null
+                        : <p style={errorStyle}>{t('creditsError', { message: status.creditsError })}</p>}
+                      {status.probe === undefined ? null : (
+                        <ProbeSection
+                          probe={status.probe}
                           t={t}
+                          busy={busy}
+                          onDetect={confirmDetect}
+                          onClear={() => { void control({ action: 'clear' }) }}
                         />
-                      ))}
+                      )}
                     </div>
-                  )}
-                  {status.creditsError === undefined ? null
-                    : <p style={errorStyle}>{t('creditsError', { message: status.creditsError })}</p>}
-                  {status.models === undefined || status.models.length === 0 ? null : (
-                    <div style={quotaListStyle}>
-                      <h3 style={quotaTitleStyle}>{t('modelsHeading')}</h3>
-                      {status.models.map(model => <ModelOfferRow key={model.id} model={model} t={t} />)}
+                  ) : tab === 'context' ? (
+                    <div style={tabPanelStyle}>
+                      <ContextTable models={status.models} t={t} />
+                    </div>
+                  ) : (
+                    <div style={tabPanelStyle}>
+                      {status.credits === undefined ? null : (
+                        <div style={quotaListStyle}>
+                          <h3 style={quotaTitleStyle}>{t('creditsDetailHeading')}</h3>
+                          {status.credits.accounts
+                            .filter(account => account.remain > 0)
+                            .map((account, index) => (
+                            <CreditBar
+                              key={`${account.packageName}-${String(index)}`}
+                              label={account.packageName}
+                              remain={account.remain}
+                              size={account.size}
+                              t={t}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      {status.models === undefined || status.models.length === 0 ? null : (
+                        <div style={quotaListStyle}>
+                          <h3 style={quotaTitleStyle}>{t('modelsHeading')}</h3>
+                          {status.models
+                            .filter(model => model.free === true || (model.badges?.length ?? 0) > 0)
+                            .map(model => <ModelOfferRow key={model.id} model={model} t={t} />)}
+                        </div>
+                      )}
                     </div>
                   )}
                 </>
               : null}
-            {status.status === 'signed-out' ? <p style={bodyStyle}>{t('signedOutHint')}</p> : null}
+            {status.status === 'signed-out'
+              // A mismatch explanation replaces the generic hint: telling a user
+              // to "sign in" is wrong advice when a credential was found and
+              // rejected for belonging to the other product.
+              ? <p style={status.reason === undefined ? bodyStyle : errorStyle}>
+                  {status.reason ?? t(variant.signedOutKey)}
+                </p>
+              : null}
             {status.status === 'error' ? <p style={errorStyle}>{status.message}</p> : null}
           </div>
         : null}

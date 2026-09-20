@@ -1,0 +1,60 @@
+diff --git a/lib/index.js b/lib/index.js
+index 789ee88..3c8e2eb 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -21,7 +21,7 @@ import { encodeSessionReferenceUri, parseSessionReferenceText } from "@deepseek-
+ /** Stable Cordis plugin name (also the package id the client half rides on). */
+ const name = "dsh-session-link";
+ /** Services this host row needs before it activates. */
+-const inject = ["sessionReferenceResolver"];
++const inject = ["sessionReferenceResolver", "webServer"];
+ 
+ /**
+  * `dsh://` deep links copied by the header button: `dsh://session/<sessionId>`.
+@@ -82,6 +82,46 @@ function normalizeReferences(content) {
+  * @param ctx - plugin context carrying the `sessionReferenceResolver` service.
+  */
+ function apply(ctx) {
++// DSH 0.1.5-rc.2：frontend-static 仍只在 "/" 提供 SPA index，裸
++	// /s/<sessionId> 启动会落到 404。本补丁自持一条 prefix 路由，把请求按
++	// "/" 回放（转发调用方的 Host 与 Cookie，使鉴权结论与直连一致）并转出
++	// 渲染后的 index，让应用在深链路径上启动，浏览器端
++	// openDeepLinkedSession()（匹配 window.location.pathname）随后选中目标
++	// 会话。上游若原生提供深链启动页，本段可直接退役。
++	ctx.effect(() => ctx.webServer.register({
++		kind: "prefix",
++		path: "/s",
++		handler: async (req, res) => {
++			if (req.method !== "GET" && req.method !== "HEAD") {
++				res.writeHead(405);
++				res.end();
++				return;
++			}
++			const rawPath = new URL(req.url ?? "/", "http://x").pathname;
++			if (!/^\/s\/[^/]+$/u.test(rawPath)) {
++				res.writeHead(404);
++				res.end();
++				return;
++			}
++			const headers = {};
++			if (typeof req.headers.host === "string") headers.host = req.headers.host;
++			if (typeof req.headers.cookie === "string") headers.cookie = req.headers.cookie;
++			let upstream;
++			try {
++				upstream = await fetch(`http://127.0.0.1:${String(ctx.webServer.port)}/`, { headers, redirect: "manual" });
++			} catch {
++				res.writeHead(502, { "cache-control": "no-store", "content-type": "text/plain; charset=utf-8" });
++				res.end(req.method === "HEAD" ? void 0 : "dsh-session-link: deep-link index unavailable.\n");
++				return;
++			}
++			const responseHeaders = { "cache-control": "no-store" };
++			const contentType = upstream.headers.get("content-type");
++			if (contentType !== null) responseHeaders["content-type"] = contentType;
++			const body = req.method === "GET" ? await upstream.text() : void 0;
++			res.writeHead(upstream.status, responseHeaders);
++			res.end(body);
++		},
++	}), "dsh-session-link: /s deep-link route");
+ 	ctx.on("agent/pre-step", async ({ agent, turn, step, signal }, next) => {
+ 		const decision = await next();
+ 		if (decision.kind === "reject" || signal?.aborted === true) return decision;

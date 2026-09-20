@@ -24,7 +24,7 @@
 # dsh plugin 命令的 reconcile 会按依赖声明自动维护，此处不再手工 insert（同 id 双插会启动失败）。
 
 # 统一订阅登录插件（Settings → Subscriptions 页，ChatGPT/Claude/Grok OAuth）。
-# 走 bundle 层自激活；本地 0.5.2 版本补丁提供 Host-only subscriptionSessions，
+# 走 bundle 层自激活；本地 0.9.2 补丁提供 Host-only subscriptionSessions，
 # 并允许关闭上游 image_generate。该名称继续由 mathmodel-tools 独占；上游
 # x_search、video_generate 与 Codex/Claude/Grok 对话路由保持启用。
 - id: llm-subscriptions
@@ -90,38 +90,18 @@
     authorization:
       allowedGlobalWriters: []
 
-# Antigravity 回退模型目录补充（2026-09-03）：Gemini 3.8 Flash 已在官方上线
-# （ai.google.dev/gemini-api/docs/models/gemini-3.8-flash，stable，thinking 支持
-# low/medium/high；antigravity.google/docs/models 已列出），但上游 v0.4.24 的
-# DEFAULT_FALLBACK_MODELS 只收录到 gemini-3.7-flash。登录后目录改由 `agy models`
-# 实时发现，此覆盖仅服务未登录/离线时的 /model 选择器；上游收录后应删除本条。
-# fallbackModels 是整体替换语义，必须写全量清单。
-- id: agy-link
+# Qoder provider 的 bundle 默认把全局搜索改为 qoder，并以整行 config
+# 覆盖掉 fetchProvider。保留本项目既有免费搜索与 HTTP 抓取；Qoder 模型
+# 仍由插件自身的透明路由在会话内按需使用 Qoder 搜索。
+- id: web
   config:
-    fallbackModels:
-      - id: gemini-3.8-flash
-        name: Gemini 3.8 Flash
-        efforts: [low, medium, high]
-      - id: gemini-3.7-flash
-        name: Gemini 3.7 Flash
-        efforts: [low, medium, high]
-      - id: gemini-3.6-flash
-        name: Gemini 3.6 Flash
-        efforts: [low, medium, high]
-      - id: gemini-3.5-flash
-        name: Gemini 3.5 Flash
-        efforts: [low, medium, high]
-      - id: gemini-3.1-pro
-        name: Gemini 3.1 Pro
-        efforts: [low, high]
-      - id: claude-sonnet-4-6
-        name: Claude Sonnet 4.6 (Thinking)
-      - id: claude-opus-4-6-thinking
-        name: Claude Opus 4.6 (Thinking)
-      - id: gpt-oss-120b-medium
-        name: GPT-OSS 120B (Medium)
+    searchProvider: ddg
+    fetchProvider: http
 
-# WorkBuddy 桌面 App 模型接入（GOAL-74 引入，上游 v0.2.6，固定 commit fab6bf646aa3，
+# Antigravity v0.4.27 已正式收录 Gemini 3.8 Flash，删除本地目录覆盖，
+# 以后跟随插件官方目录，避免新模型被旧的整体替换清单遮蔽。
+
+# WorkBuddy 桌面 App 模型接入（GOAL-74 引入，现升级至上游 v0.5.1，
 # MIT；仅供个人学习研究——复用本机 WorkBuddy App 登录态，非官方接口，上游更新可能
 # 需要跟随调整）。bundle 自激活（自带 cordis.patch.yml insert llm-workbuddy），主
 # patch 零改动：本机 App 凭据文件名为 workbuddy-desktop-ai.info（带 -ai 后缀），

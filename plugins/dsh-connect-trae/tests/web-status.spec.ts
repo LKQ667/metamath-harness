@@ -39,9 +39,38 @@ describe('traeWebUsage', () => {
     deps.store = {
       async accounts() { return [] },
       async status() { return { state: 'signed-out' } },
+      async diagnose() { return { tried: [], failures: [] } },
     } as unknown as TraeUsageRouteOptions['store']
     const result = await traeWebUsage(deps)
-    expect(result).toEqual({ status: 'signed-out', accounts: [] })
+    expect(result).toEqual({ status: 'signed-out', accounts: [], searched: [] })
+  })
+
+  it('explains which paths were probed when a machine has no recognizable sign-in', async () => {
+    // Issue #5: a CLI-only or wrong-layout machine used to show a bare
+    // "not signed in" with no way to tell why. The card must list the probed
+    // paths and their failure reasons so the user can report the real layout.
+    const deps = makeRoute()
+    deps.store = {
+      async accounts() { return [] },
+      async status() { return { state: 'signed-out' } },
+      async diagnose() {
+        return {
+          tried: [],
+          failures: [
+            { path: '/home/u/.config/Trae CN/User/globalStorage/storage.json', edition: 'cn' as const, source: 'desktop' as const, reason: 'missing' as const },
+            { path: '/home/u/.trae-cn/trae-jwt-token', edition: 'cn' as const, source: 'cli' as const, reason: 'invalid' as const, message: 'Trae CLI token is not a three-part JWT' },
+          ],
+        }
+      },
+    } as unknown as TraeUsageRouteOptions['store']
+    const result = await traeWebUsage(deps)
+    expect(result).toMatchObject({
+      status: 'signed-out',
+      searched: [
+        { path: '/home/u/.config/Trae CN/User/globalStorage/storage.json', source: 'desktop', reason: 'missing' },
+        { path: '/home/u/.trae-cn/trae-jwt-token', source: 'cli', reason: 'invalid' },
+      ],
+    })
   })
 
   it('maps a signed-in view to the compact card document', async () => {

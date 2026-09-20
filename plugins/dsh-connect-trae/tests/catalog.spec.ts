@@ -10,6 +10,7 @@ import {
   sanitizeCatalog,
   TraeCatalog,
   traeInputModalities,
+  traeModelDisplayName,
 } from '../src/catalog.ts'
 
 const RAW = discoveredCatalog([{
@@ -83,6 +84,18 @@ describe('Trae catalog', () => {
     ]
     expect(sanitizeCatalog(legacy).map(model => model.id)).toEqual(['qwen3.8-max'])
     expect(() => new TraeCatalog().set([])).toThrow(/cannot be empty/)
+  })
+})
+
+describe('traeModelDisplayName', () => {
+  it('embeds the credit multiplier into the DSH-facing name like Trae own model picker', () => {
+    expect(traeModelDisplayName({ name: 'GLM-5.3', creditMultiplier: 0.79 })).toBe('GLM-5.3 · x0.79')
+    expect(traeModelDisplayName({ name: 'Hy4 preview', creditMultiplier: 0 })).toBe('Hy4 preview · x0.00')
+    expect(traeModelDisplayName({ name: 'Seed-Evolving', creditMultiplier: 0.77 })).toBe('Seed-Evolving · x0.77')
+  })
+
+  it('keeps the pure name when Trae advertises no multiplier', () => {
+    expect(traeModelDisplayName({ name: 'GLM-5.3' })).toBe('GLM-5.3')
   })
 })
 

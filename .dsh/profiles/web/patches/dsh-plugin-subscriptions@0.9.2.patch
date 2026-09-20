@@ -1,0 +1,135 @@
+diff --git a/lib/index.d.ts b/lib/index.d.ts
+index 44ba81e..16f0fbf 100644
+--- a/lib/index.d.ts
++++ b/lib/index.d.ts
+@@ -17,6 +17,19 @@ export type { ModelEntry, ProviderUsage, UsageWindow } from './providers/common.
+ export type { RateLimitConfig, RateLimitWait } from './providers/rate-limit.js';
+ export type { ProviderStatus } from './auth/rpc.js';
+ export type { AntigravitySession, ClaudeSession, CodexSession, CopilotSession, GrokSession, ProviderId } from './auth/store.js';
++export interface SubscriptionSessionSnapshot {
++    accessToken: string;
++    accountId?: string;
++}
++export interface SubscriptionSessions {
++    describe(provider: 'codex' | 'grok'): Promise<{ configured: boolean }>;
++    resolve(provider: 'codex' | 'grok', options?: { force?: boolean; signal?: AbortSignal }): Promise<SubscriptionSessionSnapshot>;
++}
++declare module '@deepseek-ai/cordis' {
++    interface Context {
++        subscriptionSessions: SubscriptionSessions;
++    }
++}
+ export declare const name = "dsh-plugin-subscriptions";
+ export declare const inject: string[];
+ /** Default maximum provider idle time while one stream read is outstanding. */
+@@ -32,6 +45,8 @@ export interface Config {
+     providers?: ProviderId[];
+     /** Maximum provider idle time while one stream read is outstanding (default five minutes). */
+     streamIdleTimeoutMs?: number;
++    /** Register the package image_generate tool; defaults to true. */
++    registerImageTool?: boolean;
+     /** Whether and how long a route waits out a closed rate-limit window. */
+     rateLimit?: RateLimitConfig;
+     /** Advisory model catalogs overriding the built-in defaults, per provider. */
+diff --git a/lib/index.js b/lib/index.js
+index bd5def7..a18e0da 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -9477,6 +9477,7 @@ const Config = z.object({
+ 	]),
+ 	codexClientVersion: z.string(),
+ 	streamIdleTimeoutMs: z.number().min(1).default(DEFAULT_STREAM_IDLE_TIMEOUT_MS),
++	registerImageTool: z.boolean().default(true),
+ 	rateLimit: z.object({
+ 		wait: z.boolean().default(true),
+ 		maxWaitMs: z.number().min(1).default(DEFAULT_RATE_LIMIT_MAX_WAIT_MS)
+@@ -9871,6 +9872,7 @@ function apply(ctx, config) {
+ 	const handles = /* @__PURE__ */ new Map();
+ 	const adapters = /* @__PURE__ */ new Map();
+ 	const accountTokens = /* @__PURE__ */ new Map();
++	const subscriptionTokenManagers = /* @__PURE__ */ new Map();
+ 	let poolHealth;
+ 	let poolUsage;
+ 	let poolAdapter;
+@@ -9911,6 +9913,7 @@ function apply(ctx, config) {
+ 			});
+ 			codexTokens = tokens;
+ 			accountTokens.set("codex", tokens);
++			subscriptionTokenManagers.set("codex", tokens);
+ 			usageFetchers.codex = async (account, signal) => fetchCodexUsage(await tokens.session(account), proxiedFetch, signal);
+ 			let adapter;
+ 			adapter = new CodexAdapter({
+@@ -9981,6 +9984,7 @@ function apply(ctx, config) {
+ 			});
+ 			grokTokens = tokens;
+ 			accountTokens.set("grok", tokens);
++			subscriptionTokenManagers.set("grok", tokens);
+ 			usageFetchers.grok = async (account, signal) => fetchGrokUsage(await tokens.session(account), proxiedFetch, signal);
+ 			const adapter = new GrokAdapter({
+ 				models: catalog.grok,
+@@ -10061,6 +10065,24 @@ function apply(ctx, config) {
+ 			break;
+ 		}
+ 	}
++	const subscriptionSessions = Object.freeze({
++		async describe(provider) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			const tokens = subscriptionTokenManagers.get(provider);
++			return Object.freeze({ configured: tokens !== void 0 && await tokens.defaultAccount() !== void 0 });
++		},
++		async resolve(provider, options = {}) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			const tokens = subscriptionTokenManagers.get(provider);
++			if (tokens === void 0) throw new Error(`dsh-plugin-subscriptions: provider ${provider} is not enabled`);
++			const session = await tokens.session(void 0, options.force === true);
++			return Object.freeze({
++				accessToken: session.accessToken,
++				...provider === "codex" ? { accountId: session.accountId } : {}
++			});
++		}
++	});
++	ctx.effect(() => ctx.reflect.provide("subscriptionSessions", subscriptionSessions), "dsh-plugin-subscriptions: subscription session service");
+ 	const poolConfig = config.pool;
+ 	const autoAccounts = poolConfig?.autoAccounts ?? poolConfig?.autoFamilies ?? true;
+ 	if (poolConfig?.enabled !== false && adapters.size >= 1) {
+@@ -10293,7 +10315,7 @@ function apply(ctx, config) {
+ 			const result = registerWithAlias(toolsCtx.tools, definition);
+ 			if (result !== void 0) registeredNames.set(definition.name, result.name);
+ 		}
+-		if (codexTokens !== void 0 || grokTokens !== void 0) {
++		if (config.registerImageTool !== false && (codexTokens !== void 0 || grokTokens !== void 0)) {
+ 			const result = registerWithAlias(toolsCtx.tools, createImageGenerateTool({
+ 				imagePool,
+ 				...codexTokens === void 0 ? {} : { codexTokens },
+@@ -10321,4 +10343,4 @@ function apply(ctx, config) {
+ }
+ 
+ //#endregion
+-export { Config, DEFAULT_STREAM_IDLE_TIMEOUT_MS, POOL_USAGE_TIMEOUT_MS, SubscriptionsAuthController, apply, inject, name, withTimeout };
+\ No newline at end of file
++export { Config, DEFAULT_STREAM_IDLE_TIMEOUT_MS, POOL_USAGE_TIMEOUT_MS, SubscriptionsAuthController, apply, inject, name, withTimeout };
+diff --git a/lib/client.js b/lib/client.js
+index f9fad47..63ea5d0 100644
+--- a/lib/client.js
++++ b/lib/client.js
+@@ -3470,13 +3470,6 @@ function apply(ctx) {
+ 		label: () => t("nav"),
+ 		inject: injected
+ 	}, SubscriptionsSection));
+-	const toolviewInjected = () => ({ load: createImageLoader(connection.rpc) });
+-	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+-		name: "tool.call.toolview",
+-		key: "image_generate",
+-		locale: NS,
+-		inject: toolviewInjected
+-	}, ImageGenerateToolview));
+ 	const videoToolviewInjected = () => ({ loadVideo: createVideoLoader(connection.rpc) });
+ 	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+ 		name: "tool.call.toolview",
+@@ -3541,4 +3534,4 @@ function apply(ctx) {
+ exports.apply = apply;
+ exports.inject = inject;
+ return module.exports; } });
+-//# sourceMappingURL=client.js.map
+\ No newline at end of file
++//# sourceMappingURL=client.js.map

@@ -68,7 +68,14 @@ export function resolveAgyBin(cfg: PluginConfig): string | null {
     const local = process.env.LOCALAPPDATA ?? ''
     const appData = process.env.APPDATA ?? ''
     if (local !== '') {
+      // Official Google installer default (irm .../install.ps1 | iex) — GH #7
+      candidates.push(join(local, 'agy', 'bin', 'agy.exe'))
+      candidates.push(join(local, 'agy', 'bin', 'agy.cmd'))
+      candidates.push(join(local, 'agy', 'bin', 'agy.bat'))
+      candidates.push(join(local, 'agy', 'agy.exe'))
       candidates.push(join(local, 'Programs', 'agy', 'agy.exe'))
+      candidates.push(join(local, 'Programs', 'agy', 'bin', 'agy.exe'))
+      candidates.push(join(local, 'Microsoft', 'WinGet', 'Links', 'agy.exe'))
       candidates.push(join(local, 'pnpm', 'agy.cmd'))
       candidates.push(join(local, 'pnpm', 'agy.exe'))
     }
@@ -87,7 +94,7 @@ export function resolveAgyBin(cfg: PluginConfig): string | null {
     candidates.push('/usr/local/bin/agy')
     candidates.push('/opt/homebrew/bin/agy')
     candidates.push('/opt/homebrew/sbin/agy')
-    candidates.push('/home/linuxbrew/.linuxbrew/bin/agy')
+    candidates.push(join('', 'home', 'linuxbrew', '.linuxbrew', 'bin', 'agy'))
     candidates.push(join(home, '.bun', 'bin', 'agy'))
     candidates.push(join(home, '.cargo', 'bin', 'agy'))
     candidates.push(join(home, '.local', 'share', 'pnpm', 'agy'))
@@ -202,6 +209,7 @@ function killTree(child: ChildProcess): void {
 export function startAgyProcess(opts: RunOptions): RunningProcess {
   const started = Date.now();
   const viaCmd = IS_WIN && isCmdShim(opts.bin)
+  const viaNode = IS_WIN && /\.[cm]?js$/iu.test(opts.bin)
   const env = opts.env ?? process.env
   const child = viaCmd
     ? spawn(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', [opts.bin, ...opts.args].map(windowsQuote).join(' ')], {
@@ -211,7 +219,7 @@ export function startAgyProcess(opts: RunOptions): RunningProcess {
         windowsVerbatimArguments: true,
         windowsHide: true,
       })
-    : spawn(opts.bin, opts.args, {
+    : spawn(viaNode ? process.execPath : opts.bin, viaNode ? [opts.bin, ...opts.args] : opts.args, {
         cwd: opts.cwd,
         env,
         detached: !IS_WIN,
@@ -293,7 +301,9 @@ export function startAgyProcess(opts: RunOptions): RunningProcess {
         durationMs: Date.now() - started,
       });
     };
-    child.on('exit', (code, signal) => finish(code, signal));
+    // `close` fires after stdio and the Windows process handle are released;
+    // resolving on `exit` leaves the caller's cwd temporarily locked.
+    child.on('close', (code, signal) => finish(code, signal));
     child.on('error', (err) => {
       stderr = (stderr + String(err)).slice(-4096);
       finish(null, null);

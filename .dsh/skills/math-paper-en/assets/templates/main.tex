@@ -1,0 +1,214 @@
+% ============================================================
+% math-paper-en  MCM/ICM (COMAP) English paper template
+% Compile with XeLaTeX.  Deliverable language: English only.
+% Project layout, labels and gate contract follow the math-paper-en skill;
+% see references/comap-format.md for the summary sheet, section whitelist,
+% page contract and appendix structure.  Do not rename the style commands
+% or the section titles of this template.
+% ============================================================
+\documentclass[12pt,letterpaper]{article}
+
+% ---------- fonts: English only ----------
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}\setsansfont{Arial}}
+  {\setmainfont{texgyretermes-regular.otf}[BoldFont=texgyretermes-bold.otf,ItalicFont=texgyretermes-italic.otf,BoldItalicFont=texgyretermes-bolditalic.otf]%
+   \setsansfont{texgyreheros-regular.otf}[BoldFont=texgyreheros-bold.otf]}
+\IfFontExistsTF{Cambria Math}{\usepackage{unicode-math}\setmathfont{Cambria Math}}{\usepackage{amsmath,amssymb,bm,mathrsfs}}
+
+% ---------- page & spacing ----------
+\usepackage[top=2.4cm, bottom=2.4cm, left=2.2cm, right=2.2cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{2em}
+
+% ---------- header / footer ----------
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\fancyfoot[C]{{\fontsize{9pt}{11pt}\selectfont Page \thepage\ of \pageref{LastPage}}}
+\renewcommand{\headrulewidth}{0pt}
+
+% ---------- figures / tables / algorithms ----------
+\usepackage{graphicx}
+\graphicspath{{./}{./figures/}{./images/}}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% ---------- references / links / code ----------
+\usepackage[hidelinks]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black}
+\usepackage{listings}
+\lstset{
+    basicstyle=\footnotesize\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true,
+    language=Python,
+    commentstyle=\color{gray}
+}
+
+% ---------- misc ----------
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{makecell}
+\usepackage{titlesec}
+\usepackage{appendix}
+
+% ---------- style commands reused by the gate checks ----------
+\newcommand{\titlefont}{\fontsize{16pt}{20pt}\selectfont\bfseries}
+\newcommand{\sectiontitlefont}{\fontsize{13.5pt}{17pt}\selectfont\bfseries}
+\newcommand{\levelonefont}{\fontsize{13.5pt}{17pt}\selectfont\bfseries}
+\newcommand{\leveltwofont}{\fontsize{12.5pt}{16pt}\selectfont\bfseries}
+\newcommand{\levelthreefont}{\fontsize{12pt}{16pt}\selectfont\bfseries}
+\newcommand{\bodyfont}{\fontsize{12pt}{16pt}\selectfont}
+\newcommand{\keywordfont}{\fontsize{12pt}{16pt}\selectfont\bfseries}
+\newcommand{\paperstrong}[1]{\textbf{#1}}
+\newcommand{\appendixtitlefont}{\fontsize{13.5pt}{17pt}\selectfont\bfseries}
+\newcommand{\stepfont}[1]{{\fontsize{12pt}{16pt}\selectfont\bfseries Step~#1}}
+\newcommand{\bibfont}{\fontsize{10.5pt}{14pt}\selectfont}
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\titleformat{\section}{\levelonefont}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\leveltwofont}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\levelthreefont}{\thesubsubsection}{0.6em}{}
+\setcounter{tocdepth}{2}
+
+% ============================================================
+\begin{document}
+\label{body:start}
+
+% ---------- PAGE 1: SUMMARY SHEET (no author, no affiliation) ----------
+\begin{center}
+\vspace*{0.6cm}
+{\titlefont [Paper title: replace with the competition problem title]\par}
+\vspace{0.35cm}
+\end{center}
+
+\begin{center}
+{\sectiontitlefont Summary}
+\end{center}
+
+\vspace{0.25cm}
+\bodyfont
+
+\indent Replace this paragraph with the restatement of what the problem asks and what the paper delivers. The summary sheet is the single most important page: the judges read it first, so it must be self-contained, quantitative and free of formulas.
+
+\indent \paperstrong{For Problem 1}, we build \paperstrong{[named model]} and obtain \paperstrong{[key quantitative result]}. State the model, the data, the decision criterion and the number that follows from it.
+
+\indent \paperstrong{For Problem 2}, we extend the model with \paperstrong{[technique]} and report \paperstrong{[key quantitative result]}.
+
+\indent \paperstrong{For Problem 3}, we formulate \paperstrong{[optimization or learning formulation]} and solve it with \paperstrong{[algorithm]}; the solution achieves \paperstrong{[key quantitative result]}.
+
+\indent \paperstrong{For Problem 4}, we validate the model on \paperstrong{[validation data]} and quantify the uncertainty with \paperstrong{[sensitivity or error analysis]}.
+
+\indent In summary, the paper links \paperstrong{[model family]} to the decision the problem asks for, and every claim is supported by a reproducible figure, table or numerical experiment. Replace the bracketed text; keep the page free of equations.
+
+\indent {\keywordfont \paperstrong{Keywords:}} \paperstrong{[keyword 1]}; \paperstrong{[keyword 2]}; \paperstrong{[keyword 3]}; \paperstrong{[keyword 4]}; \paperstrong{[keyword 5]}\label{abstract:end}
+
+\newpage
+
+% ---------- PAGE 2: TABLE OF CONTENTS (allowed by COMAP) ----------
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Restate the problem in your own words: background, what must be decided, inputs, outputs, constraints and the questions asked. Finish with one short paragraph that states the contribution of this paper and how the sections are organised.
+
+\section{Assumptions and Justifications}
+\begin{enumerate}
+    \item State each assumption and justify it with data, physics, regulation or the problem statement.
+    \item Every assumption must be used later; assumptions never used in the model are deleted.
+\end{enumerate}
+
+\section{Notations}
+\begin{table}[H]
+\centering
+\begin{tabular}{cl}
+\toprule
+Symbol & Meaning \\
+\midrule
+$D$ & water depth or other primary state variable \\
+$\theta$ & opening angle or other decision parameter \\
+\bottomrule
+\end{tabular}
+\caption{Main notations used in this paper.}
+\end{table}
+
+\section{Model Design and Solution}
+\subsection{Model for Problem 1}
+Give the derivation chain before the result: define the variables, state the governing relation, derive the working formula, then solve and report the number. Insert the figure of the first question with \verb|\includegraphics| and explain it in the following paragraph.
+
+\subsection{Model for Problem 2}
+Add only what the new question changes; state explicitly which part of the previous model is reused and which is modified.
+
+\subsection{Model for Problem 3}
+Present the optimisation or learning formulation, the algorithm, the stopping criterion and the achieved objective value.
+
+\subsection{Model for Problem 4}
+Present the extended model, the validation protocol and the error or uncertainty statement.
+
+\section{Sensitivity Analysis}
+Vary the dominant parameters over defensible ranges, report how the conclusion moves, and say which conclusion is robust and which is conditional.
+
+\section{Model Evaluation}
+Write the strengths and the weaknesses of the model in two clearly separated paragraphs; a weakness statement must name the regime in which the model fails.
+
+\section{Conclusions}
+Answer each question in one sentence with its key number, then state the limits of applicability.
+
+\begin{thebibliography}{99}
+\bibfont
+\bibitem{ref1} Author, A. Title of the paper or data source. Journal or Institution, Year. URL or DOI.
+\bibitem{ref2} Author, B. Title of the second source. Publisher, Year.
+\end{thebibliography}
+\label{body:end}
+
+\newpage
+\label{appendix:start}
+\begin{appendices}
+
+\section{Supporting Material Catalog}
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+File & Role \\
+\midrule
+code\_q1.py & Cleaning and first-question computation \\
+code\_q4.py & Sensitivity experiment \\
+results\_q1.xlsx & Numeric results of the first question \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Code}
+\begin{lstlisting}
+# full reproducible code, no comments, one file per question
+import numpy as np
+
+def main():
+    pass
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\end{appendices}
+\label{paper:end}
+
+\end{document}

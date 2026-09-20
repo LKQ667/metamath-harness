@@ -842,13 +842,49 @@ def render_preview(manifest, manifest_path, out_path):
         fill = preview_color(item.get("fill"))
         outline = preview_color(item.get("stroke", "#000000"))
         width = max(1, int(float(item.get("stroke_width", 1))))
+        if item.get("bezier"):
+            pts = item["bezier"]
+            if len(pts) == 4:
+                curve_pts = []
+                for i in range(31):
+                    t = i / 30.0
+                    x = ((1 - t) ** 3 * pts[0][0] + 3 * (1 - t) ** 2 * t * pts[1][0] + 3 * (1 - t) * t ** 2 * pts[2][0] + t ** 3 * pts[3][0]) * scale
+                    y = ((1 - t) ** 3 * pts[0][1] + 3 * (1 - t) ** 2 * t * pts[1][1] + 3 * (1 - t) * t ** 2 * pts[2][1] + t ** 3 * pts[3][1]) * scale
+                    curve_pts.append((x, y))
+                draw.line(curve_pts, fill=outline, width=width)
+                if item.get("end_arrow"):
+                    p_last, p_prev = curve_pts[-1], curve_pts[-2]
+                    dx, dy = p_last[0] - p_prev[0], p_last[1] - p_prev[1]
+                    l = max(1e-4, (dx*dx + dy*dy)**0.5)
+                    ux, uy = dx/l, dy/l
+                    vx, vy = -uy, ux
+                    al, aw = max(10, width * 3), max(5, width * 1.8)
+                    draw.polygon([p_last, (p_last[0] - ux*al + vx*aw, p_last[1] - uy*al + vy*aw), (p_last[0] - ux*al - vx*aw, p_last[1] - uy*al - vy*aw)], fill=outline)
+                return
         if item.get("polygon"):
             points = [(point[0] * scale, point[1] * scale) for point in item["polygon"]]
             draw.polygon(points, fill=None if fill in (None, "none") else fill, outline=None if outline == "none" else outline)
         elif item.get("type") == "line":
             if "points" in item:
                 points = [value * scale for value in item["points"]]
-                draw.line(points, fill=outline, width=width)
+                if item.get("dash"):
+                    draw_dashed_line(draw, [points[0], points[1], points[2], points[3]], outline, width)
+                else:
+                    draw.line(points, fill=outline, width=width)
+                if item.get("end_arrow"):
+                    dx, dy = points[2] - points[0], points[3] - points[1]
+                    l = max(1e-4, (dx*dx + dy*dy)**0.5)
+                    ux, uy = dx/l, dy/l
+                    vx, vy = -uy, ux
+                    al, aw = max(10, width * 3), max(5, width * 1.8)
+                    draw.polygon([(points[2], points[3]), (points[2] - ux*al + vx*aw, points[3] - uy*al + vy*aw), (points[2] - ux*al - vx*aw, points[3] - uy*al - vy*aw)], fill=outline)
+                if item.get("start_arrow"):
+                    dx, dy = points[0] - points[2], points[1] - points[3]
+                    l = max(1e-4, (dx*dx + dy*dy)**0.5)
+                    ux, uy = dx/l, dy/l
+                    vx, vy = -uy, ux
+                    al, aw = max(10, width * 3), max(5, width * 1.8)
+                    draw.polygon([(points[0], points[1]), (points[0] - ux*al + vx*aw, points[1] - uy*al + vy*aw), (points[0] - ux*al - vx*aw, points[1] - uy*al - vy*aw)], fill=outline)
                 return
             if item.get("dash"):
                 draw_dashed_line(draw, box, outline, width)
@@ -947,6 +983,9 @@ def render_preview(manifest, manifest_path, out_path):
 def choose_preview_font(preferred):
     candidates = [
         preferred,
+        "C:/Windows/Fonts/msyh.ttc",
+        "C:/Windows/Fonts/simsun.ttc",
+        "C:/Windows/Fonts/simhei.ttf",
         "/System/Library/Fonts/STHeiti Medium.ttc",
         "/System/Library/Fonts/STHeiti Light.ttc",
         "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",

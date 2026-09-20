@@ -9,6 +9,8 @@ const DDG_HTML_URL = "https://html.duckduckgo.com/html/";
 const DDG_LITE_URL = "https://lite.duckduckgo.com/lite/";
 const BING_URL = "https://www.bing.com/search";
 const TAVILY_URL = "https://api.tavily.com/search";
+const FIRECRAWL_URL = "https://api.firecrawl.dev/v2/search";
+const PARALLEL_URL = "https://api.parallel.ai/v1/search";
 const KEENABLE_URL = "https://api.keenable.ai/v1/search";
 const KEENABLE_MCP_URL = "https://api.keenable.ai/mcp";
 const USER_AGENT =
@@ -45,10 +47,10 @@ const MARKET_TO_LANG = {
 const FREE_SEARCH_NS = "free-search";
 const BRIDGE_PREFIX = "/api/dsh-free-search-settings";
 const FREE_ENGINES = ["ddg", "ddg-lite", "bing", "searxng", "anysearch"];
-const ALL_ENGINES = ["ddg", "ddg-lite", "bing", "searxng", "anysearch", "exa", "tavily", "keenable", "perplexity", "deepseek-official"];
+const ALL_ENGINES = ["ddg", "ddg-lite", "bing", "searxng", "anysearch", "exa", "tavily", "keenable", "firecrawl", "parallel", "perplexity", "deepseek-official"];
 
 // 当前插件版本（发布时与 package.json 同步）
-const PLUGIN_VERSION = "0.4.24";
+const PLUGIN_VERSION = "0.4.28";
 // 检查更新的 npm registry 元数据地址（dsh-free-search 是 npmjs 上的公开包）
 const NPM_REGISTRY_URL = "https://registry.npmjs.org/dsh-free-search/latest";
 const PLUGIN_NPM_URL = "https://www.npmjs.com/package/dsh-free-search";
@@ -787,6 +789,9 @@ async function searchExa(query, maxResults, apiKey, timeRange, signal) {
     if (response.status === 401) {
       throw new Error("Exa API key is invalid (HTTP 401) - update it in Settings > Plugins > Free Search");
     }
+    if (response.status === 402) {
+      throw new Error(`Exa quota/billing error (HTTP 402) - the key is valid, but its team has no usable credits or hit a usage limit; check usage/credits for the key's team at dashboard.exa.ai. ${detail.slice(0, 200)}`);
+    }
     throw new Error(`Exa API error (HTTP ${response.status}): ${detail.slice(0, 200)}`);
   }
   const data = await response.json();
@@ -856,6 +861,132 @@ async function searchTavily(query, maxResults, apiKey, timeRange, signal) {
       ...(r.title ? { title: String(r.title) } : {}),
       ...(r.content ? { snippet: String(r.content).slice(0, 300) } : {}),
     }));
+  return { sources: uniqueSources(sources, maxResults ?? 10), truncated: false };
+}
+
+// Firecrawl: 无 key 走 keyless（官方免 key 匿名额度），有 key 走账号档（Bearer）
+const FIRECRAWL_TBS = { day: "qdr:d", week: "qdr:w", month: "qdr:m", year: "qdr:y" };
+
+// Firecrawl 自定义绝对日期 → Google tbs 语法（cd_min 用 M/D/YYYY）
+function formatFirecrawlDate(date) {
+  const [y, m, d] = String(date).split("-").map((n) => parseInt(n, 10));
+  return `${m}/${d}/${y}`;
+}
+
+async function searchFirecrawl(query, maxResults, apiKey, timeRange, signal) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
+  const onAbort = () => controller.abort();
+  signal?.addEventListener("abort", onAbort);
+  let response;
+  try {
+    const body = { query, limit: Math.min(Math.max(maxResults ?? 5, 1), 10) };
+    // Firecrawl 时间过滤：tbs 支持固定档（qdr:d/w/m/y）与自定义绝对区间（cdr:1,cd_min:...）
+    if (timeRange) {
+      if (timeRange.after) {
+        body.tbs = `cdr:1,cd_min:${formatFirecrawlDate(timeRange.after)}`;
+      } else if (timeRange.days !== undefined) {
+        const tr = approximateTimeRange(timeRange.days);
+        if (FIRECRAWL_TBS[tr]) body.tbs = FIRECRAWL_TBS[tr];
+      }
+    }
+    response = await fetch(FIRECRAWL_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+        ...(apiKey ? { authorization: `Bearer ${apiKey}` } : {}),
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+      redirect: "error",
+    });
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    throw new Error(`Firecrawl request failed: ${error?.message ?? String(error)}`);
+  } finally {
+    clearTimeout(timer);
+    signal?.removeEventListener("abort", onAbort);
+  }
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    if (response.status === 401) {
+      throw new Error("Firecrawl API key is invalid (HTTP 401) - update it in Settings > Plugins > Free Search");
+    }
+    if (response.status === 429) {
+      throw new Error("Firecrawl rate limit exceeded (HTTP 429) - configure FIRECRAWL_API_KEY for higher limits");
+    }
+    throw new Error(`Firecrawl API error (HTTP ${response.status}): ${detail.slice(0, 200)}`);
+  }
+  const data = await response.json();
+  const sources = (data.data?.web ?? [])
+    .filter((r) => r.url)
+    .map((r) => ({
+      url: r.url,
+      ...(r.title ? { title: String(r.title) } : {}),
+      ...(r.description ? { snippet: String(r.description).slice(0, 300) } : {}),
+    }));
+  return { sources: uniqueSources(sources, maxResults ?? 10), truncated: false };
+}
+
+// Parallel: 需 PARALLEL_API_KEY（x-api-key），自然语言 objective + search_queries，返回带 excerpts 的结果
+async function searchParallel(query, maxResults, apiKey, timeRange, signal) {
+  if (!apiKey) throw new Error("Parallel search requires PARALLEL_API_KEY");
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 25000);
+  const onAbort = () => controller.abort();
+  signal?.addEventListener("abort", onAbort);
+  let response;
+  try {
+    const body = {
+      objective: query,
+      search_queries: [query],
+      mode: "fast",
+      advanced_settings: { max_results: Math.min(Math.max(maxResults ?? 5, 1), 20) },
+    };
+    // Parallel 时间过滤：source_policy.after_date（YYYY-MM-DD，精确）
+    if (timeRange) {
+      const after =
+        timeRange.after ??
+        (timeRange.days !== undefined ? isoDaysAgo(timeRange.days).slice(0, 10) : undefined);
+      if (after) body.advanced_settings.source_policy = { after_date: after };
+    }
+    response = await fetch(PARALLEL_URL, {
+      method: "POST",
+      headers: { "x-api-key": apiKey, "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+      redirect: "error",
+    });
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    throw new Error(`Parallel request failed: ${error?.message ?? String(error)}`);
+  } finally {
+    clearTimeout(timer);
+    signal?.removeEventListener("abort", onAbort);
+  }
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    if (response.status === 401 || response.status === 403) {
+      throw new Error(`Parallel API key is invalid (HTTP ${response.status}) - update it in Settings > Plugins > Free Search`);
+    }
+    if (response.status === 402) {
+      throw new Error(`Parallel quota/billing error (HTTP 402) - check usage/credits at platform.parallel.ai. ${detail.slice(0, 200)}`);
+    }
+    throw new Error(`Parallel API error (HTTP ${response.status}): ${detail.slice(0, 200)}`);
+  }
+  const data = await response.json();
+  const sources = (data.results ?? [])
+    .filter((r) => r.url)
+    .map((r) => {
+      const excerpt = (r.excerpts ?? []).find((e) => String(e).trim().length > 0);
+      return {
+        url: r.url,
+        ...(r.title ? { title: String(r.title) } : {}),
+        ...(excerpt ? { snippet: String(excerpt).slice(0, 300) } : {}),
+        ...(r.publish_date ? { publishedAt: String(r.publish_date) } : {}),
+      };
+    });
   return { sources: uniqueSources(sources, maxResults ?? 10), truncated: false };
 }
 
@@ -1448,6 +1579,8 @@ const KEY_REF_MAP = {
   exaApiKey: "EXA_API_KEY",
   tavilyApiKey: "TAVILY_API_KEY",
   keenableApiKey: "KEENABLE_API_KEY",
+  firecrawlApiKey: "FIRECRAWL_API_KEY",
+  parallelApiKey: "PARALLEL_API_KEY",
   perplexityApiKey: "PERPLEXITY_API_KEY",
   deepseekApiKey: "DEEPSEEK_API_KEY",
 };
@@ -1466,6 +1599,8 @@ const Config = z.object({
   exaApiKey: z.string().role("secret"),
   tavilyApiKey: z.string().role("secret"),
   keenableApiKey: z.string().role("secret"),
+  firecrawlApiKey: z.string().role("secret"),
+  parallelApiKey: z.string().role("secret"),
   perplexityApiKey: z.string().role("secret"),
   deepseekApiKey: z.string().role("secret"),
 });
@@ -1540,10 +1675,10 @@ function apply(ctx, config) {
       }
 
       // 统一引擎链：首选优先，然后其他付费引擎（有 key 的优先尝试），最后免费引擎
-      const paidEngines = ["exa", "tavily", "keenable", "perplexity", "deepseek-official"];
+      const paidEngines = ["exa", "tavily", "keenable", "firecrawl", "parallel", "perplexity", "deepseek-official"];
       const freeEngines = ["bing", "anysearch", "ddg", "ddg-lite", "searxng"];
-      // 支持 time_range 过滤的引擎：tavily / exa / keenable / searxng / ddg / ddg-lite
-      const timeEngines = ["tavily", "exa", "keenable", "searxng", "ddg", "ddg-lite"];
+      // 支持 time_range 过滤的引擎：tavily / exa / keenable / firecrawl / parallel / searxng / ddg / ddg-lite
+      const timeEngines = ["tavily", "exa", "keenable", "firecrawl", "parallel", "searxng", "ddg", "ddg-lite"];
       let chain;
       // 首选引擎被跳过的原因（用于生成准确的 Note，避免误导 agent/用户）：
       //  - "time-filter"：带 timeRange 且首选引擎不支持时间过滤（根本没尝试）
@@ -1608,6 +1743,20 @@ function apply(ctx, config) {
             // keenable：有 key 走 REST，无 key 走 keyless MCP（免费）
             const key = await resolveApiKey("KEENABLE_API_KEY", "keenableApiKey");
             result = await searchKeenable(request.query, request.maxResults, key, timeRange, effSignal);
+          } else if (engine === "firecrawl") {
+            // firecrawl：无 key 也可用（官方免 key 匿名额度），有 key 走账号档（更高限额）
+            const key = await resolveApiKey("FIRECRAWL_API_KEY", "firecrawlApiKey");
+            result = await searchFirecrawl(request.query, request.maxResults, key, timeRange, effSignal);
+          } else if (engine === "parallel") {
+            // parallel：必须配置 PARALLEL_API_KEY（无 key 跳过，同 perplexity）
+            const key = await resolveApiKey("PARALLEL_API_KEY", "parallelApiKey");
+            if (!key) {
+              lastError = new Error("Parallel requires PARALLEL_API_KEY");
+              if (engine === preferred) preferredFailure = "PARALLEL_API_KEY is not configured";
+              logger.warn(`free-search: engine "${engine}" skipped (no key), trying next engine`);
+              continue; // 无 key 跳过
+            }
+            result = await searchParallel(request.query, request.maxResults, key, timeRange, effSignal);
           } else if (engine === "perplexity") {
             const key = await resolveApiKey("PERPLEXITY_API_KEY", "perplexityApiKey");
             if (!key) {
@@ -1765,6 +1914,15 @@ function apply(ctx, config) {
           const key = await resolveApiKey("KEENABLE_API_KEY", "keenableApiKey");
           return await searchKeenable(q, 2, key, tr);
         }
+        case "firecrawl": {
+          const key = await resolveApiKey("FIRECRAWL_API_KEY", "firecrawlApiKey");
+          return await searchFirecrawl(q, 2, key, tr);
+        }
+        case "parallel": {
+          const key = await resolveApiKey("PARALLEL_API_KEY", "parallelApiKey");
+          if (!key) return { ok: false, error: "PARALLEL_API_KEY not configured" };
+          return await searchParallel(q, 2, key, tr);
+        }
         case "perplexity": {
           const key = await resolveApiKey("PERPLEXITY_API_KEY", "perplexityApiKey");
           if (!key) return { ok: false, error: "PERPLEXITY_API_KEY not configured" };
@@ -1810,7 +1968,7 @@ function apply(ctx, config) {
           parameters: {
             engines: {
               type: "array",
-              description: "Which engines to test (default: all). Options: ddg, ddg-lite, bing, searxng, anysearch, exa, tavily, keenable, perplexity, deepseek-official.",
+              description: "Which engines to test (default: all). Options: ddg, ddg-lite, bing, searxng, anysearch, exa, tavily, keenable, firecrawl, parallel, perplexity, deepseek-official.",
               items: { type: "string" },
             },
             query: {
@@ -1994,7 +2152,7 @@ function apply(ctx, config) {
             },
             engine: {
               type: "string",
-              description: "Optional specific engine to try first: ddg, ddg-lite, bing, searxng, anysearch, exa, tavily, keenable, perplexity, deepseek-official.",
+              description: "Optional specific engine to try first: ddg, ddg-lite, bing, searxng, anysearch, exa, tavily, keenable, firecrawl, parallel, perplexity, deepseek-official.",
             },
           },
           output: {
@@ -2091,10 +2249,12 @@ function apply(ctx, config) {
           "- exa - FREE keyless (MCP) or EXA_API_KEY for higher limits",
           "- tavily - FREE keyless or TAVILY_API_KEY for higher limits",
           "- keenable - FREE keyless (MCP) or KEENABLE_API_KEY for higher limits",
+          "- firecrawl - FREE keyless or FIRECRAWL_API_KEY for higher limits",
+          "- parallel - requires PARALLEL_API_KEY",
           "- perplexity - requires PERPLEXITY_API_KEY",
           "- deepseek-official - requires DEEPSEEK_API_KEY",
           "",
-          "IMPORTANT: If the configured engine fails (missing key, invalid key, 401, rate limit, or network error), web_search automatically tries other engines in this order: (1) the configured engine first, (2) then other engines with API keys configured (exa/tavily/keenable work keyless too, so they are tried even without a key), (3) then the remaining free engines (Bing, AnySearch, DuckDuckGo, SearXNG). This applies to ALL engines - paid or free. The results include a note showing which engine was actually used and why the preferred one was skipped. Understand the two note forms: (a) 'Note: X does not support time filtering (timeRange=...), using Y.' means X cannot filter by time so it was skipped BEFORE any attempt (X did NOT fail); (b) 'Note: X unavailable or failed (reason), using Y.' means X was actually tried but failed (missing key / invalid key / 401 / rate limit / network / 0 results). Never tell the user search is unavailable - it always falls back.",
+          "IMPORTANT: If the configured engine fails (missing key, invalid key, 401, rate limit, or network error), web_search automatically tries other engines in this order: (1) the configured engine first, (2) then other engines with API keys configured (exa/tavily/keenable/firecrawl work keyless too, so they are tried even without a key), (3) then the remaining free engines (Bing, AnySearch, DuckDuckGo, SearXNG). This applies to ALL engines - paid or free. The results include a note showing which engine was actually used and why the preferred one was skipped. Understand the two note forms: (a) 'Note: X does not support time filtering (timeRange=...), using Y.' means X cannot filter by time so it was skipped BEFORE any attempt (X did NOT fail); (b) 'Note: X unavailable or failed (reason), using Y.' means X was actually tried but failed (missing key / invalid key / 401 / rate limit / network / 0 results). Never tell the user search is unavailable - it always falls back.",
           "",
           "Use the free_search_test tool to test which engines actually work right now.",
           "",
@@ -2124,10 +2284,12 @@ export {
   DDG_HTML_URL,
   DDG_LITE_URL,
   EXA_MCP_URL,
+  FIRECRAWL_URL,
   FREE_ENGINES,
   FREE_SEARCH_NS,
   KEENABLE_MCP_URL,
   KEENABLE_URL,
+  PARALLEL_URL,
   PLATFORMS,
   SEARXNG_INSTANCES,
   TAVILY_URL,
@@ -2146,12 +2308,14 @@ export {
   searchDdgLite,
   searchExa,
   searchExaMCP,
+  searchFirecrawl,
   searchGithub,
   searchHackerNews,
   searchKeenable,
   searchKeenableMCP,
   searchKeenableREST,
   searchNpm,
+  searchParallel,
   searchPerplexity,
   searchPlatform,
   searchReddit,

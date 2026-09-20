@@ -7,7 +7,7 @@ GOAL-53 语义的"识图（图片输入）"复选框（0.1.2-rc.1 压缩产物�
     python scripts/patch-settings-models-vision.py --check    # 只检查状态不改文件
 
 行为：
-    - 幂等：文件已含 modelVision 时报告"已打过"并退出 0
+    - 幂等：已含 modelVision 时完整自校验，残缺状态非零退出
     - 锚点：语义稳定的 JSX/locale 结构（非行号）；任一锚点失配 → 非零退出
     - 自校验：写回后重读，断言注入计数；备份 client.js.bak-hotfix-vision
     - 目标文件可用环境变量 DSH_SETTINGS_MODELS_CLIENT 覆盖（测试用）
@@ -27,22 +27,33 @@ from pathlib import Path
 
 
 def _default_client() -> Path:
-    """按 npm 全局安装约定（%APPDATA%\\npm）定位官方 client.js。"""
+    """按 npm 全局安装约定（%APPDATA%\\npm）定位官方 client.js。
+
+    支持两种布局：
+    - DSH <= 0.1.2：包内嵌在 dsh 包下（dsh/node_modules/@deepseek-ai/...）
+    - DSH >= 0.1.5：包被提升到顶层（node_modules/@deepseek-ai/...）
+    优先返回真实存在的那一份；都不存在时返回 0.1.5 布局以便报错信息指向当前结构。
+    """
     appdata = os.environ.get("APPDATA")
     if not appdata:
         raise SystemExit("无法定位 npm 全局目录：环境变量 APPDATA 未设置；"
                          "请用 DSH_SETTINGS_MODELS_CLIENT 显式指定目标文件。")
-    return (Path(appdata) / "npm" / "node_modules" / "@deepseek-ai" / "dsh"
-            / "node_modules" / "@deepseek-ai" / "dsh-client-ui-settings-models"
-            / "lib" / "client.js")
+    npm_root = Path(appdata) / "npm" / "node_modules"
+    tail = Path("@deepseek-ai") / "dsh-client-ui-settings-models" / "lib" / "client.js"
+    candidates = [
+        npm_root / "@deepseek-ai" / "dsh" / "node_modules" / tail,   # 0.1.2-rc.1 内嵌布局
+        npm_root / tail,                                             # 0.1.5+ 提升布局
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return candidates[1]
 
 
-DEFAULT_CLIENT = Path(
-    os.environ.get(
-        "DSH_SETTINGS_MODELS_CLIENT",
-        str(_default_client()),
-    )
-)
+def default_client() -> Path:
+    """显式覆盖无需依赖 APPDATA；延迟解析以支持位置参数和离线测试。"""
+    override = os.environ.get("DSH_SETTINGS_MODELS_CLIENT")
+    return Path(override) if override else _default_client()
 BACKUP_SUFFIX = ".bak-hotfix-vision"
 
 # ---- 注入内容（缩进为 tab，与官方压缩产物一致） ----
@@ -131,6 +142,10 @@ def verify(source: str) -> None:
         "en 文案 modelVision": source.count('modelVision: "Vision (image input)"') == 1,
         "复选框判定逻辑": source.count('model.input.includes("image")') == 1,
         "勾选写入 input": source.count('{ input: ["text", "image"] }') == 1,
+        "取消恢复继承": source.count('event.target.checked ? { input: ["text", "image"] } : { input: void 0 }') == 1,
+        "完整复选框 JSX": source.count(VISION_LABEL_JSX) == 1,
+        "zh 提示文案": source.count('modelVisionHint: "勾选后该模型接受图片输入"') == 1,
+        "en 提示文案": source.count('modelVisionHint: "When checked, this model accepts image input"') == 1,
         "t() 调用计数": source.count('t("modelVision")') == 2
         and source.count('t("modelVisionHint")') == 1,
     }
@@ -142,21 +157,28 @@ def verify(source: str) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="识图开关热补丁（幂等重放）")
     parser.add_argument("--check", action="store_true", help="只检查状态，不修改文件")
-    parser.add_argument("target", nargs="?", default=str(DEFAULT_CLIENT), help="client.js 路径")
+    parser.add_argument("target", nargs="?", help="client.js 路径")
     args = parser.parse_args()
 
-    target = Path(args.target)
+    target = Path(args.target) if args.target else default_client()
     if not target.is_file():
         fail(f"目标文件不存在：{target}")
     source = target.read_text(encoding="utf-8")
 
     if "modelVision" in source:
-        print("[OK] 识图开关补丁已在位（modelVision 存在），无需重打")
+        verify(source)
+        print("[OK] 识图开关完整补丁已在位，自校验通过，无需重打")
         return 0
 
     if args.check:
         print("[MISSING] 识图开关补丁未打（modelVision 不存在）")
         return 1
+
+    # 先生成并校验，锚点失配或残缺候选不得修改目标/备份。
+    patched = patch_jsx(source)
+    patched = patch_locale(patched, ANCHOR_ZH, ZH_LOCALE_ADD, "zh")
+    patched = patch_locale(patched, ANCHOR_EN, EN_LOCALE_ADD, "en")
+    verify(patched)
 
     backup = target.with_name(target.name + BACKUP_SUFFIX)
     if not backup.exists():
@@ -164,10 +186,6 @@ def main() -> int:
         print(f"[BACKUP] {backup}")
     else:
         print(f"[BACKUP] 已存在备份，保留最早版本：{backup}")
-
-    patched = patch_jsx(source)
-    patched = patch_locale(patched, ANCHOR_ZH, ZH_LOCALE_ADD, "zh")
-    patched = patch_locale(patched, ANCHOR_EN, EN_LOCALE_ADD, "en")
 
     target.write_text(patched, encoding="utf-8", newline="")
     verify(target.read_text(encoding="utf-8"))

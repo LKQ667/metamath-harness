@@ -3,8 +3,8 @@ import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import { withFileLock, writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
 import { resolveDshHome } from '@deepseek-ai/dsh-home-paths'
-import { parseTraeStorageDocument } from './decrypt.ts'
-import { traeStorageCandidates, type TraeEdition, type TraeStorageCandidate } from './paths.ts'
+import { parseTraeCliToken, parseTraeStorageDocument } from './decrypt.ts'
+import { traeStorageCandidates, type TraeCredentialSource, type TraeEdition, type TraeStorageCandidate } from './paths.ts'
 
 export interface TraeCredential {
   accessToken: string
@@ -15,7 +15,7 @@ export interface TraeCredential {
   expiresAtMs: number
   refreshExpiresAtMs?: number
   edition: TraeEdition
-  source: 'desktop' | 'dsh'
+  source: 'desktop' | 'dsh' | 'cli'
 }
 
 export interface TraeRefreshOutcome {
@@ -39,10 +39,25 @@ export interface TraeAccountChoice {
   id: string
   accountName: string
   edition: TraeEdition
-  source: 'desktop' | 'dsh'
+  source: 'desktop' | 'dsh' | 'cli'
   tokenExpiresAtMs: number
   selected: boolean
 }
+
+/**
+ * Why one candidate path did not yield an account. These are safe to surface:
+ * they carry paths and error text, never token material.
+ */
+export interface TraeCandidateFailure {
+  path: string
+  edition: TraeEdition
+  source: TraeCredentialSource
+  reason: 'missing' | 'unreadable' | 'invalid'
+  message?: string
+}
+
+/** Host used for CLI tokens, which carry no host claim of their own. */
+const CLI_DEFAULT_HOST = 'https://api.trae.cn'
 
 const OWN_VERSION = 1
 export const TRAE_AUTH_FILENAME = '.trae-auth.json'
@@ -142,7 +157,13 @@ export class TraeCredentialStore {
   candidates(): TraeStorageCandidate[] {
     if (this.storagePathOverride !== undefined) {
       const edition = this.edition === 'auto' ? 'cn' : this.edition
-      return [{ edition, path: this.storagePathOverride }]
+      // An explicit override points at a user-supplied file whose shape is not
+      // known ahead of time, so it is probed as both a desktop storage document
+      // and a CLI token file.
+      return [
+        { edition, path: this.storagePathOverride, source: 'desktop' },
+        { edition, path: this.storagePathOverride, source: 'cli' },
+      ]
     }
     const all = traeStorageCandidates()
     // This connector targets the CN service and Work-credit contracts only.
@@ -196,7 +217,7 @@ export class TraeCredentialStore {
     return this.inflight
   }
 
-  async status(): Promise<{ state: 'signed-in' | 'signed-out'; edition?: TraeEdition; expiresAtMs?: number; source?: 'desktop' | 'dsh' }> {
+  async status(): Promise<{ state: 'signed-in' | 'signed-out'; edition?: TraeEdition; expiresAtMs?: number; source?: TraeCredential['source'] }> {
     try {
       const value = await this.current()
       return value === undefined ? { state: 'signed-out' } : { state: 'signed-in', edition: value.edition, expiresAtMs: value.expiresAtMs, source: value.source }
@@ -216,27 +237,104 @@ export class TraeCredentialStore {
   }
 
   private async readAll(): Promise<TraeCredential[]> {
-    const desktop = await this.readDesktopAll()
+    const { credentials: desktop } = await this.readDesktopAll()
     const own = await this.readOwn()
     const cnOwn = own?.edition === 'cn' || own?.edition === 'solo' ? own : undefined
     if (cnOwn === undefined || desktop.some(credential => traeAccountId(credential) === traeAccountId(cnOwn))) return desktop
     return [...desktop, cnOwn]
   }
 
-  private async readDesktopAll(): Promise<TraeCredential[]> {
+  /**
+   * Which paths were tried and why each one failed. Read-only and token-free:
+   * it exists so a signed-out card can explain itself instead of showing a bare
+   * "not signed in", which is undiagnosable on a machine whose layout differs
+   * from the ones the plugin was written against.
+   */
+  async diagnose(): Promise<{ tried: TraeStorageCandidate[]; failures: TraeCandidateFailure[] }> {
+    const tried = this.candidates()
+    const failures: TraeCandidateFailure[] = []
+    for (const candidate of tried) {
+      const raw = await readFile(candidate.path, 'utf8').then(
+        text => ({ text }),
+        (error: unknown) => ({ error }),
+      )
+      if ('error' in raw) {
+        const code = typeof raw.error === 'object' && raw.error !== null && 'code' in raw.error
+          ? (raw.error as { code?: unknown }).code
+          : undefined
+        failures.push({
+          path: candidate.path,
+          edition: candidate.edition,
+          source: candidate.source,
+          reason: code === 'ENOENT' ? 'missing' : 'unreadable',
+          ...code === 'ENOENT' ? {} : { message: String(raw.error) },
+        })
+        continue
+      }
+      try {
+        this.credentialFrom(candidate, raw.text)
+      } catch (error: unknown) {
+        failures.push({
+          path: candidate.path,
+          edition: candidate.edition,
+          source: candidate.source,
+          reason: 'invalid',
+          message: error instanceof Error ? error.message : String(error),
+        })
+      }
+    }
+    return { tried, failures }
+  }
+
+  /** Parse one candidate file's text into a credential, or throw. */
+  private credentialFrom(candidate: TraeStorageCandidate, text: string): TraeCredential {
+    let credential: TraeCredential | undefined
+    if (candidate.source === 'cli') {
+      const claims = parseTraeCliToken(text)
+      // The CLI token carries no host claim, so the CN host is used rather than
+      // an empty string, which would otherwise become an unusable base URL. Its
+      // edition is likewise CN-only: `.trae-cn` is the CN CLI home and the bare
+      // `.trae` fallback is treated as CN too, since the store already filters
+      // international installs out of the desktop path.
+      credential = normalizeTraeCredential({
+        token: claims.accessToken,
+        userId: claims.userId,
+        host: CLI_DEFAULT_HOST,
+        expiredAt: claims.expiresAtMs,
+      }, candidate.edition === 'sg' ? 'cn' : candidate.edition, 'cli')
+    } else {
+      credential = normalizeTraeCredential(parseTraeStorageDocument(text), candidate.edition, 'desktop')
+    }
+    if (credential === undefined) throw new Error(`${candidate.source} candidate could not be normalized into a credential`)
+    return credential
+  }
+
+  private async readDesktopAll(): Promise<{ credentials: TraeCredential[]; failures: TraeCandidateFailure[] }> {
     const credentials: TraeCredential[] = []
+    const failures: TraeCandidateFailure[] = []
     for (const candidate of this.candidates()) {
       try {
-        const raw = parseTraeStorageDocument(await readFile(candidate.path, 'utf8'))
-        const credential = normalizeTraeCredential(raw, candidate.edition, 'desktop')
-        if (credential !== undefined && !credentials.some(existing => traeAccountId(existing) === traeAccountId(credential))) credentials.push(credential)
-      } catch {
-        // One stale, partially written, unsupported, or signed-out Trae edition
-        // must not hide valid accounts from the other local installations.
+        const credential = this.credentialFrom(candidate, await readFile(candidate.path, 'utf8'))
+        if (!credentials.some(existing => traeAccountId(existing) === traeAccountId(credential))) credentials.push(credential)
+      } catch (error: unknown) {
+        // One stale, partially written, unsupported, or signed-out Trae
+        // installation must not hide valid accounts from the others. The
+        // failure is recorded rather than dropped so `diagnose()` can explain
+        // an otherwise silent "not signed in".
+        const code = typeof error === 'object' && error !== null && 'code' in error
+          ? (error as { code?: unknown }).code
+          : undefined
+        failures.push({
+          path: candidate.path,
+          edition: candidate.edition,
+          source: candidate.source,
+          reason: code === 'ENOENT' ? 'missing' : code === undefined ? 'invalid' : 'unreadable',
+          ...code === 'ENOENT' || (code === undefined && !(error instanceof Error)) ? {} : { message: error instanceof Error ? error.message : String(error) },
+        })
         continue
       }
     }
-    return credentials
+    return { credentials, failures }
   }
 
   private async readOwn(): Promise<TraeCredential | undefined> {

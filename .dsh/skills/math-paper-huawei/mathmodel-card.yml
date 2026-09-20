@@ -28,7 +28,8 @@ fields:
     label: 非数据图绘制方式
     type: select
     default: Draw.io成图+AI概念提示词
-    options: [Draw.io成图+AI概念提示词, Draw.io成图, AI全自动绘图]
+    options: [Draw.io成图+AI概念提示词, Draw.io成图, HTML矢量成图, AI全自动绘图]
+    description: 流程图/技术路线图三类引擎任选其一；HTML矢量成图经内置 HTML+Electron 链路出矢量 PDF，Electron 不可用时自动退回 Draw.io。
   - id: bar_policy
     label: 柱状图策略
     type: select
@@ -39,6 +40,18 @@ fields:
     type: select
     default: 适合时建议
     options: [适合时建议, 优先考虑, 不主动使用]
+  - id: subplot_policy
+    label: 子图策略
+    type: select
+    default: 默认（模型自行判断）
+    options: [默认（模型自行判断）, 少用子图, 禁用子图]
+    description: 控制 Python 入文图的语义面板数（色条、图例不计）。默认由模型判断；少用子图最多 4 张多面板图；禁用子图则每张图只保留 1 个面板，多视图拆成独立编号图。
+  - id: python_chart_repeat_policy
+    label: Python图型重复策略
+    type: select
+    default: 默认（少重复）
+    options: [默认（少重复）, 模型自行分析, 禁止重复]
+    description: 默认最多允许两类图型在不同入文图中重复；模型自行分析时按论证需要选图；禁止重复时同类图型只能出现在一张入文图中。换颜色、标题或模板不算新类型。
   - id: figure_total
     label: 全文图片总数
     type: number
@@ -47,10 +60,10 @@ fields:
     max: 40
     description: 全文最终入文图片的目标总数，可按赛事要求自定义。
   - id: reference_excellent_papers
-    label: 参考往届优秀论文完成度
+    label: 参考往届优秀论文（视觉校准）
     type: boolean
     default: false
-    description: 开启后从随程序分发的华为杯论文库中按当前题号最多选取两篇，只校准完成度，缺样本不阻断。
+    description: 开启后按当前题号最多取两篇同题优秀论文，截取代表页到项目根“截图/”，用于校准排版、图表密度、解释位置与文风；只借鉴规律，禁止复制原文、公式、数据与结论。缺样本不阻断。
   - id: run_to_pdf
     label: 全自动持续到最终 PDF
     type: boolean
@@ -58,9 +71,10 @@ fields:
   - id: ai_image_limit
     label: AI 自动成图总上限
     type: number
-    default: 0
+    default: 4
     min: 0
     max: 20
+    description: 选择 AI 全自动绘图时自动勾选“已确认允许付费生图调用”并把上限默认置为 4 张（原理图 1、流程图/技术路线图 2、示意图 1）。
   - id: confirm_paid_calls
     label: 已确认允许付费生图调用
     type: boolean
@@ -77,11 +91,13 @@ prompt:
     - 所有入文图片按所选语言达到顶刊一区 Top 1 的信息密度、排版、配色与可读性标准
     - 全文图片总数以 figure_total 为统一目标，不再按每问平均分配；按各问信息量动态配置且禁止重复凑图
     - 默认持续自主推进到可验收 PDF
-    - 严格避免死循环：同一失败最多连续重试三次后必须切换策略，禁止无状态变化的重复执行
+    - 严格避免死循环：按“硬缺陷驱动、合格即冻结”执行，硬 QA 全通过且无事实错误即冻结；每次重画必须对应一个具体缺陷，同一失败最多连续重试三次后必须切换策略，禁止无状态变化的重复执行，禁止以“再高级一点”为唯一理由重画
+    - 已合格图不得被硬 QA 未通过的新候选覆盖；AI 付费生图在已合格时不得重复调用
+    - 选择 AI 全自动绘图时按已确认付费处理，AI 成图总上限按 4 张执行（原理图 1、流程图或技术路线图 2、示意图 1），不得超出该上限重复付费生成
     - 未授权付费调用时只生成 AI 绘图提示词
 help:
   purpose: 面向华为杯（中国研究生数学建模竞赛）的一键论文交付。
   inputs: [赛题与数据, 输出目录, 篇幅和绘图策略]
   outputs: [华为杯模板论文, 可复现代码与图表, 最终PDF]
   limits: [不编造数据, 不绕过官方模板, 不自动产生未授权费用]
-  dependencies: [Python科学计算包, XeLaTeX与latexmk, Draw.io, Poppler]
+  dependencies: [Python科学计算包, XeLaTeX与latexmk, Draw.io, Poppler, Node.js与Electron（HTML矢量成图，缺省退回Draw.io）]

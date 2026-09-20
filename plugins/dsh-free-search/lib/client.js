@@ -62,6 +62,10 @@ window.__ModuleLoader__.load({
       ".dshfs-update{color:var(--dsw-alias-state-warn-primary);flex:none;font-size:11px;white-space:nowrap;border:1px solid rgba(240,170,80,.3);background:rgba(240,170,80,.12);border-radius:999px;padding:1px 6px}",
       ".dshfs-updateOk{color:#7ddb9c;flex:none;font-size:11px;white-space:nowrap;border:1px solid rgba(80,200,120,.3);background:rgba(80,200,120,.12);border-radius:999px;padding:1px 6px}",
       ".dshfs-updateLine{display:flex;align-items:center;gap:8px;flex-wrap:wrap}",
+      ".dshfs-updatePill{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(76,110,245,.35);background:rgba(76,110,245,.10);color:var(--dsw-alias-state-business-primary);font:inherit;font-size:12px;font-weight:600;line-height:1;cursor:pointer;padding:4px 10px;border-radius:999px;text-decoration:none;white-space:nowrap;transition:background-color .13s,border-color .13s}",
+      ".dshfs-updatePill:hover:not(:disabled){background:rgba(76,110,245,.20);border-color:rgba(76,110,245,.55)}",
+      ".dshfs-updatePill:disabled{opacity:.6;cursor:default}",
+      ".dshfs-updateIcon{flex:none;display:block}",
       ".dshfs-version{color:var(--dsw-alias-label-tertiary);font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap}",
     ].join("");
     const tagId = "dsh-free-search/card.css";
@@ -78,7 +82,7 @@ window.__ModuleLoader__.load({
     const NS = "free-search";
     const I18N = {
       zh: {
-        description: "免费搜索 —— 无需 API key（Bing / DuckDuckGo / AnySearch / Exa / Tavily / Keenable）",
+        description: "免费搜索 —— 无需 API key（Bing / DuckDuckGo / AnySearch / Exa / Tavily / Keenable / Firecrawl）",
         unsaved: "未保存",
         searchEngine: "搜索引擎",
         visit: "访问官网 →",
@@ -88,13 +92,15 @@ window.__ModuleLoader__.load({
         exaPh: (c) => c ? "Exa API 密钥（已配置）" : "Exa API 密钥（可选，不填也可免费使用）",
         tavilyPh: (c) => c ? "Tavily API 密钥（已配置）" : "Tavily API 密钥（可选，不填也可免费使用）",
         keenablePh: (c) => c ? "Keenable API 密钥（已配置）" : "Keenable API 密钥（可选，不填也可免费使用）",
+        firecrawlPh: (c) => c ? "Firecrawl API 密钥（已配置）" : "Firecrawl API 密钥（可选，不填也可免费使用）",
+        parallelPh: (c) => c ? "Parallel API 密钥（已配置）" : "Parallel API 密钥（必填，platform.parallel.ai）",
         perplexityPh: (c) => c ? "Perplexity API 密钥（已配置）" : "Perplexity API 密钥（pplx-...）",
         deepseekPh: (c) => c ? "DeepSeek API 密钥（已配置）" : "DeepSeek API 密钥（sk-...）",
         keysHint: "密钥读取优先级：.credentials.yaml 凭据中心 > 这里 > 环境变量。推荐把 key 写进凭据中心（与官方 LLM 一致，一处管理）。",
         keyStorage: "Key 存储位置",
         keyStorageCred: "凭据中心（推荐）",
         keyStorageSettings: "设置页（兼容）",
-        keyStorageCredHint: (c) => `保存后写入 ~/.dsh/.credentials.yaml（最高优先级）。当前已配置：${["exa", "tavily", "keenable", "perplexity", "deepseek"].filter((k) => c[k]).map((k) => k.toUpperCase()).join(", ") || "无"}`,
+        keyStorageCredHint: (c) => `保存后写入 ~/.dsh/.credentials.yaml（最高优先级）。当前已配置：${["exa", "tavily", "keenable", "firecrawl", "parallel", "perplexity", "deepseek"].filter((k) => c[k]).map((k) => k.toUpperCase()).join(", ") || "无"}`,
         keyStorageSettingsHint: "保存后写入 settings.yaml（向后兼容路径，优先级低于凭据中心）。",
         platformSearch: "平台搜索（platform_search 工具）",
         platformHint: "为 agent 的 platform_search 工具启用平台。禁用的平台会被跳过。",
@@ -117,6 +123,7 @@ window.__ModuleLoader__.load({
         updateLatest: (c) => `已是最新版本 v${c}`,
         updateCheckFailed: "检查更新失败（无法访问 npm registry）",
         updateView: "查看 →",
+        hasUpdate: "有更新",
         upgrade: "升级",
         upgrading: "升级中…",
         upgradeLinkMode: "（本地开发模式，升级请用 git pull）",
@@ -141,7 +148,7 @@ window.__ModuleLoader__.load({
         marketKoKR: "ko-KR —— 韩国",
       },
       en: {
-        description: "Free web search — no API key needed (Bing / DuckDuckGo / AnySearch / Exa / Tavily / Keenable)",
+        description: "Free web search — no API key needed (Bing / DuckDuckGo / AnySearch / Exa / Tavily / Keenable / Firecrawl)",
         unsaved: "unsaved",
         searchEngine: "Search engine",
         visit: "Visit website →",
@@ -151,13 +158,15 @@ window.__ModuleLoader__.load({
         exaPh: (c) => c ? "Exa API key (configured)" : "Exa API key (optional, free without)",
         tavilyPh: (c) => c ? "Tavily API key (configured)" : "Tavily API key (optional, free without)",
         keenablePh: (c) => c ? "Keenable API key (configured)" : "Keenable API key (optional, free without)",
+        firecrawlPh: (c) => c ? "Firecrawl API key (configured)" : "Firecrawl API key (optional, free without)",
+        parallelPh: (c) => c ? "Parallel API key (configured)" : "Parallel API key (required, platform.parallel.ai)",
         perplexityPh: (c) => c ? "Perplexity API key (configured)" : "Perplexity API key (pplx-...)",
         deepseekPh: (c) => c ? "DeepSeek API key (configured)" : "DeepSeek API key (sk-...)",
         keysHint: "Key resolution: .credentials.yaml credential center > here > environment variables. Recommended: store keys in the credential center (same as official LLM providers, one place for all).",
         keyStorage: "Key storage",
         keyStorageCred: "Credential center (recommended)",
         keyStorageSettings: "Settings page (legacy)",
-        keyStorageCredHint: (c) => `Saved to ~/.dsh/.credentials.yaml (highest priority). Currently configured: ${["exa", "tavily", "keenable", "perplexity", "deepseek"].filter((k) => c[k]).map((k) => k.toUpperCase()).join(", ") || "none"}`,
+        keyStorageCredHint: (c) => `Saved to ~/.dsh/.credentials.yaml (highest priority). Currently configured: ${["exa", "tavily", "keenable", "firecrawl", "parallel", "perplexity", "deepseek"].filter((k) => c[k]).map((k) => k.toUpperCase()).join(", ") || "none"}`,
         keyStorageSettingsHint: "Saved to settings.yaml (backward-compatible path; lower priority than the credential center).",
         platformSearch: "Platform search (platform_search tool)",
         platformHint: "Enable platforms for the agent's platform_search tool. Disabled platforms are skipped.",
@@ -180,6 +189,7 @@ window.__ModuleLoader__.load({
         updateLatest: (c) => `You're on the latest version v${c}`,
         updateCheckFailed: "Update check failed (cannot reach npm registry)",
         updateView: "View →",
+        hasUpdate: "Update available",
         upgrade: "Upgrade",
         upgrading: "Upgrading…",
         upgradeLinkMode: "(local dev install - use git pull to update)",
@@ -206,7 +216,7 @@ window.__ModuleLoader__.load({
     };
     const tt = (lang) => I18N[lang === "en" ? "en" : "zh"];
     // 当前插件版本（与 lib/index.js 的 PLUGIN_VERSION 保持一致）
-    const PLUGIN_VERSION = "0.4.24";
+    const PLUGIN_VERSION = "0.4.28";
     const ENGINES = [
       { id: "ddg", label: "DuckDuckGo · HTML", badge: "FREE", link: "https://duckduckgo.com" },
       { id: "ddg-lite", label: "DuckDuckGo · Lite", badge: "FREE", link: "https://duckduckgo.com" },
@@ -216,6 +226,8 @@ window.__ModuleLoader__.load({
       { id: "exa", label: "Exa", badge: "FREE", link: "https://dashboard.exa.ai/api-keys" },
       { id: "tavily", label: "Tavily", badge: "FREE", link: "https://app.tavily.com/home" },
       { id: "keenable", label: "Keenable", badge: "FREE", link: "https://keenable.ai/login" },
+      { id: "firecrawl", label: "Firecrawl", badge: "FREE", link: "https://www.firecrawl.dev" },
+      { id: "parallel", label: "Parallel", badge: "API KEY", link: "https://platform.parallel.ai" },
       { id: "perplexity", label: "Perplexity", badge: "API KEY", link: "https://www.perplexity.ai/settings/api" },
       { id: "deepseek-official", label: "DeepSeek Official", badge: "API KEY", link: "https://platform.deepseek.com/api_keys" },
     ];
@@ -312,6 +324,8 @@ window.__ModuleLoader__.load({
       const [exaKey, setExaKey] = react.useState("");
       const [tavilyKey, setTavilyKey] = react.useState("");
       const [keenableKey, setKeenableKey] = react.useState("");
+      const [firecrawlKey, setFirecrawlKey] = react.useState("");
+      const [parallelKey, setParallelKey] = react.useState("");
       const [perplexityKey, setPerplexityKey] = react.useState("");
       const [deepseekKey, setDeepseekKey] = react.useState("");
       const [platforms, setPlatforms] = react.useState(["github", "v2ex", "bilibili", "reddit", "hn", "stackoverflow", "wikipedia", "npm"]);
@@ -345,6 +359,8 @@ window.__ModuleLoader__.load({
               setExaKey(v.exaApiKey ?? "");
               setTavilyKey(v.tavilyApiKey ?? "");
               setKeenableKey(v.keenableApiKey ?? "");
+              setFirecrawlKey(v.firecrawlApiKey ?? "");
+              setParallelKey(v.parallelApiKey ?? "");
               setPerplexityKey(v.perplexityApiKey ?? "");
               setDeepseekKey(v.deepseekApiKey ?? "");
               setPlatforms(Array.isArray(v.platforms) && v.platforms.length > 0 ? v.platforms : ["github", "v2ex", "bilibili", "reddit", "hn", "stackoverflow", "wikipedia", "npm"]);
@@ -357,6 +373,8 @@ window.__ModuleLoader__.load({
                   if (path === "exaApiKey") configured.exa = true;
                   if (path === "tavilyApiKey") configured.tavily = true;
                   if (path === "keenableApiKey") configured.keenable = true;
+                  if (path === "firecrawlApiKey") configured.firecrawl = true;
+                  if (path === "parallelApiKey") configured.parallel = true;
                   if (path === "perplexityApiKey") configured.perplexity = true;
                   if (path === "deepseekApiKey") configured.deepseek = true;
                 }
@@ -370,7 +388,7 @@ window.__ModuleLoader__.load({
                 const cred = await bridgeCredentialsStatus();
                 if (cred.ok) {
                   const cc = {};
-                  const map = { exaApiKey: "exa", tavilyApiKey: "tavily", keenableApiKey: "keenable", perplexityApiKey: "perplexity", deepseekApiKey: "deepseek" };
+                  const map = { exaApiKey: "exa", tavilyApiKey: "tavily", keenableApiKey: "keenable", firecrawlApiKey: "firecrawl", parallelApiKey: "parallel", perplexityApiKey: "perplexity", deepseekApiKey: "deepseek" };
                   for (const [k, v] of Object.entries(cred.value.configured ?? {})) {
                     if (map[k]) cc[map[k]] = v;
                   }
@@ -407,6 +425,8 @@ window.__ModuleLoader__.load({
             ["exaApiKey", exaKey],
             ["tavilyApiKey", tavilyKey],
             ["keenableApiKey", keenableKey],
+            ["firecrawlApiKey", firecrawlKey],
+            ["parallelApiKey", parallelKey],
             ["perplexityApiKey", perplexityKey],
             ["deepseekApiKey", deepseekKey],
           ];
@@ -713,6 +733,30 @@ react_jsx_runtime.jsx("div", {
                       react_jsx_runtime.jsx("input", {
                         className: "dshfs-input",
                         type: "password",
+                        placeholder: t.firecrawlPh(keysConfigured.firecrawl),
+                        value: firecrawlKey,
+                        disabled: !ready || saving,
+                        onChange: (e) => {
+                          setFirecrawlKey(e.target.value);
+                          setDirty(true);
+                          setFailed(false);
+                        },
+                      }),
+                      react_jsx_runtime.jsx("input", {
+                        className: "dshfs-input",
+                        type: "password",
+                        placeholder: t.parallelPh(keysConfigured.parallel),
+                        value: parallelKey,
+                        disabled: !ready || saving,
+                        onChange: (e) => {
+                          setParallelKey(e.target.value);
+                          setDirty(true);
+                          setFailed(false);
+                        },
+                      }),
+                      react_jsx_runtime.jsx("input", {
+                        className: "dshfs-input",
+                        type: "password",
                         placeholder: t.perplexityPh(keysConfigured.perplexity),
                         value: perplexityKey,
                         disabled: !ready || saving,
@@ -861,13 +905,63 @@ react_jsx_runtime.jsx("div", {
                         className: "dshfs-footerLeft",
                         children: [
                           react_jsx_runtime.jsx("span", { className: "dshfs-version", children: "v" + PLUGIN_VERSION }),
-                          react_jsx_runtime.jsx("button", {
-                            className: "dshfs-btn",
-                            type: "button",
-                            onClick: runCheckUpdate,
-                            disabled: checkingUpdate || saving || !ready,
-                            children: checkingUpdate ? t.checkingUpdate : t.checkUpdate,
-                          }),
+                          updateInfo && updateInfo.ok && updateInfo.hasUpdate && !updateInfo.installable
+                            ? react_jsx_runtime.jsx("a", {
+                                className: "dshfs-updatePill",
+                                href: updateInfo.updateUrl,
+                                target: "_blank",
+                                rel: "noopener noreferrer",
+                                title: t.updateAvailable(updateInfo.current, updateInfo.latest),
+                                children: [
+                                  react_jsx_runtime.jsx("svg", {
+                                    className: "dshfs-updateIcon",
+                                    viewBox: "0 0 16 16",
+                                    width: 14,
+                                    height: 14,
+                                    "aria-hidden": "true",
+                                    children: react_jsx_runtime.jsx("path", {
+                                      d: "M8 2.2v6.4M5.2 6.4 8 9.2l2.8-2.8M3 10.8v1.4c0 .9.7 1.6 1.6 1.6h6.8c.9 0 1.6-.7 1.6-1.6v-1.4",
+                                      fill: "none",
+                                      stroke: "currentColor",
+                                      strokeWidth: 1.6,
+                                      strokeLinecap: "round",
+                                      strokeLinejoin: "round",
+                                    }),
+                                  }),
+                                  t.hasUpdate,
+                                ],
+                              })
+                            : react_jsx_runtime.jsx("button", {
+                                className: "dshfs-updatePill",
+                                type: "button",
+                                title: updateInfo && updateInfo.ok && updateInfo.hasUpdate ? t.updateAvailable(updateInfo.current, updateInfo.latest) : undefined,
+                                onClick: updateInfo && updateInfo.ok && updateInfo.hasUpdate ? runUpdate : runCheckUpdate,
+                                disabled: upgrading || checkingUpdate || saving || !ready,
+                                children: [
+                                  react_jsx_runtime.jsx("svg", {
+                                    className: "dshfs-updateIcon",
+                                    viewBox: "0 0 16 16",
+                                    width: 14,
+                                    height: 14,
+                                    "aria-hidden": "true",
+                                    children: react_jsx_runtime.jsx("path", {
+                                      d: "M8 2.2v6.4M5.2 6.4 8 9.2l2.8-2.8M3 10.8v1.4c0 .9.7 1.6 1.6 1.6h6.8c.9 0 1.6-.7 1.6-1.6v-1.4",
+                                      fill: "none",
+                                      stroke: "currentColor",
+                                      strokeWidth: 1.6,
+                                      strokeLinecap: "round",
+                                      strokeLinejoin: "round",
+                                    }),
+                                  }),
+                                  upgrading
+                                    ? t.upgrading
+                                    : checkingUpdate
+                                      ? t.checkingUpdate
+                                      : updateInfo && updateInfo.ok && updateInfo.hasUpdate
+                                        ? t.hasUpdate
+                                        : t.checkUpdate,
+                                ],
+                              }),
                           updateInfo && updateInfo.ok
                             ? updateInfo.upgraded
                               ? react_jsx_runtime.jsx("span", {
@@ -875,29 +969,12 @@ react_jsx_runtime.jsx("div", {
                                   children: t.upgradeDone(updateInfo.latest),
                                 })
                               : updateInfo.hasUpdate
-                                ? react_jsx_runtime.jsx("span", {
-                                    className: "dshfs-update",
-                                    children: [
-                                      t.updateAvailable(updateInfo.current, updateInfo.latest),
-                                      " ",
-                                      updateInfo.installable
-                                        ? react_jsx_runtime.jsx("button", {
-                                            className: "dshfs-btn dshfs-upgrade",
-                                            type: "button",
-                                            onClick: runUpdate,
-                                            disabled: upgrading || saving || !ready,
-                                            children: upgrading ? t.upgrading : t.upgrade,
-                                          })
-                                        : react_jsx_runtime.jsx("a", {
-                                            className: "dshfs-link",
-                                            href: updateInfo.updateUrl,
-                                            target: "_blank",
-                                            rel: "noopener noreferrer",
-                                            children: t.updateView,
-                                          }),
-                                      updateInfo.installable ? null : " " + t.upgradeLinkMode,
-                                    ],
-                                  })
+                                ? updateInfo.installable
+                                  ? null
+                                  : react_jsx_runtime.jsx("span", {
+                                      className: "dshfs-version",
+                                      children: t.upgradeLinkMode,
+                                    })
                                 : react_jsx_runtime.jsx("span", {
                                     className: "dshfs-updateOk",
                                     children: t.updateLatest(updateInfo.current),
@@ -975,12 +1052,15 @@ react_jsx_runtime.jsx("div", {
       );
       // /free-search-engine 弹出式命令：输入 "/" 选中后弹出引擎列表，点选即切换。
       // 等效于设置页切换引擎+保存；命令只改 provider 配置，搜索仍走回退链。
+      // description 必须传函数：ui-commands 读回的是 contribution.description()，
+      // 传字符串会抛 TypeError: contribution.description is not a function；该异常
+      // 会让整份 "/" 候选列表一起失败，菜单空白、其他命令也一起点不到。
       ctx.inject(["commandUi"], (sctx) => {
         const command = sctx.get("commandUi");
         sctx.effect(() => {
           const dispose = command.register({
             name: "free-search-engine",
-            description: "切换搜索引擎 / Switch web search engine",
+            description: () => "切换搜索引擎 / Switch web search engine",
             available: () => true,
             ui: {
               kind: "popupSelect",

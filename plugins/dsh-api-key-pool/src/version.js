@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module';
 
 /** 已通过本项目兼容验证的官方 Harness 版本（失败关闭白名单）。 */
-export const SUPPORTED_DSH_VERSIONS = ['0.1.1-rc.2', '0.1.2-rc.1'];
+export const SUPPORTED_DSH_VERSIONS = ['0.1.1-rc.2', '0.1.2-rc.1', '0.1.5-rc.2'];
 
 /**
  * 从插件所在的 Node 解析链读取官方 Harness 版本。

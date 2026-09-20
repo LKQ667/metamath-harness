@@ -73,8 +73,20 @@
 
 ### 9. 多面板论文图
 
-- 默认：`hero panel + supporting panels`
-- 原则：主结论占更大版面，支撑图减少视觉噪声
+- 默认：单图；只有多个视图共同回答同一研究问题、需要共享坐标或共享图例、或必须直接并列比较时，才用 `hero panel + supporting panels`。
+- 原则：主结论占更大版面，支撑图减少视觉噪声；互相独立的结论拆为多张单图，不用 hero/support 强行合并。
+
+## 子图策略（`subplot_policy`）
+
+“子图”按语义面板计数：`panel_count=1` 表示一张成图只有一个独立数据视图，colorbar、legend 不计入；双 Y 轴若仍表达同一坐标域中的一个联合视图可保持 `panel_count=1`；`panel_count>1` 表示 (a)(b)(c)、hero/support、并排、网格面板或 inset 等两个以上独立数据视图。
+
+- `默认（模型自行判断）`：单图优先，不为了“高级感”拼多面板；多面板必须写明语义理由，互相独立的结论拆图。
+- `少用子图`：最终入文多面板 Python 图最多 4 张，其余必须单 panel；原模板天然多面板时优先换等价单图，没有等价单图就拆为多张顺序编号的独立图，不允许为了 `figure_total` 硬拼。只有 `项目状态.json` 同时存在 `subplot_sparse_max`（非负整数）与 `subplot_sparse_override_request`（用户原话）两字段时才按该整数放宽；自然语言子串（含否定句“不允许放宽”）不构成授权，`user_notes` 不再被检查器推断。
+- `禁用子图`
+- 图型重复策略按 `python_chart_repeat_policy` 执行：先依据数据与问题语义选图，再考虑已用图型，不得画完后大批无理由重画。归并口径：折线族（multi_line/line_band/收敛折线/带点折线+置信带）= `line_2d`；一行列与矩阵热图同族 = `heatmap_2d`；棒棒糖/tornado 长度编码 = `bar_2d`；区间点图带误差线 = `scatter_2d`；CCDF/分布曲线 = `distribution_2d`；等值线填充 = `contour_2d`；quiver/streamplot = `vector_2d`；网络结构 = `network_2d`。manifest 图项用 `panel_chart_types` 二维数组登记（外层=panel_count，图例/装饰轴为空列表），未改绘模板可用注册表默认推导；同图多格式导出与重复引用只算一张；同 source 多图分别计数；流程图与非数据图不参与统计。换颜色、标题或模板名不算新类型。
+：所有最终入文 Python 图 `panel_count=1`；禁止 hero/support、多行多列 panel、inset 与 `compose_multi_panel`；需要展示多种结果时拆为 `图N`、`图N+1` 独立输出；colorbar 与 legend 保留。
+
+拆分多面板时不得改变数据、结论与同一方法的颜色语义；manifest 条目必须记录真实 `panel_count`。
 
 ## 快速否决规则
 

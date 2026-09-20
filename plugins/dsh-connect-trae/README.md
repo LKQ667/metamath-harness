@@ -28,6 +28,7 @@
 ## 功能特性
 
 - **Trae 模型接入** —— 把本机登录的 Trae 模型注册为 DSH 的 `trae` provider，模型选择器出现 `DeepSeek-V4-Flash`、`DeepSeek-V4-Pro` 等。
+- **倍率内嵌模型名** —— 模型名称按 Trae 自身菜单的格式显示积分倍率（如 `GLM-5.2 · x0.79`），倍率随目录刷新更新。
 - **DSH 本地工具循环** —— 通过 Trae `llm_utils_chat` 获取待执行的结构化 `tool_calls`，交由 DSH 自带的本地工具执行，再将工具结果回传模型。
 - **中国区多账号切换** —— 自动发现 Trae CN 与 TRAE SOLO CN 本地登录账号，支持重新读取 Token 列表并选择账号；Token 不写入 DSH 设置。
 - **只读积分与模型管理** —— 插件设置面板可分别查看 Work 积分与 DSH 可使用的通用积分，并刷新/启用 Trae 模型；只读查询不消耗积分。

@@ -64,7 +64,7 @@ def main() -> int:
     if not roadmap_items:
         errors.append("`figures/manifest.json` 缺少技术路线图或问题分析流程图条目。")
     else:
-        if not any(str(item.get("source", "")).replace("\\", "/").startswith("手绘图/") and str(item.get("generator", "")).lower() in {"drawio", "imagegen", "image gen", "openai-imagegen"} for item in roadmap_items):
+        if not any(str(item.get("source", "")).replace("\\", "/").startswith("手绘图/") and str(item.get("generator", "")).lower() in {"drawio", "html", "imagegen", "image gen", "openai-imagegen"} for item in roadmap_items):
             errors.append("技术路线图 source 必须位于 `手绘图/` 且 generator 与锁定模式一致。")
         if not any(any(normalized(exp).startswith("手绘图/") and Path(exp).suffix.lower() in EXPORT_SUFFIXES for exp in item_exports(item)) for item in roadmap_items):
             errors.append("技术路线图 manifest 条目必须记录 `手绘图/` 下的 PNG/SVG/PDF 导出图。")

@@ -38,6 +38,20 @@ export function traeInputModalities(model: Pick<TraeModelInfo, 'input'>): TraeIn
   return [...(model.input ?? ['text'])]
 }
 
+/**
+ * Compose the DSH-facing model name: Trae's own model picker renders each
+ * entry as `Name · x<rate>`, so the credit multiplier is shown inside the
+ * name. `TraeModelInfo.name` keeps the pure Trae display name — every join
+ * (wire resolution, callable-key filtering) must keep matching the
+ * undecorated name; only the model rows handed to DSH (adapter catalog and
+ * model discovery) use this decorated name.
+ */
+export function traeModelDisplayName(model: Pick<TraeModelInfo, 'name' | 'creditMultiplier'>): string {
+  return model.creditMultiplier === undefined
+    ? model.name
+    : `${model.name} · x${model.creditMultiplier.toFixed(2)}`
+}
+
 /** Apply the user's explicit image opt-ins; upstream and saved row hints are ignored. */
 export function applyImageSelection(
   models: readonly TraeModelInfo[],

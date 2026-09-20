@@ -1,6 +1,6 @@
 import { createCipheriv, createHash, randomBytes } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { parseTraeAuthValue, parseTraeStorageDocument, TRAE_AUTH_STORAGE_KEY } from '../src/decrypt.ts'
+import { parseTraeAuthValue, parseTraeCliToken, parseTraeStorageDocument, TRAE_AUTH_STORAGE_KEY } from '../src/decrypt.ts'
 
 const A = [82,9,106,213,48,54,165,56,191,64,163,158,129,243,215,251,124,227,57,130,155,47,255,135,52,142,67,68,196,222,233,203,84,123,148,50,166,194,35,61,238,76,149,11,66,250,195,78,8,46,161,102,40,217,36,178,118,91,162,73,109,139,209,37]
 const B = [31,221,168,51,136,7,199,49,177,18,16,89,39,128,236,95,96,81,127,169,25,181,74,13,45,229,122,159,147,201,156,239,160,224,59,77,174,42,245,176,200,235,187,60,131,83,153,97,23,43,4,126,186,119,214,38,225,105,20,99,85,33,12,125]
@@ -33,5 +33,44 @@ describe('Trae auth decryption', () => {
   it('reads the expected storage key and rejects a missing key', () => {
     expect(parseTraeStorageDocument(JSON.stringify({ [TRAE_AUTH_STORAGE_KEY]: '{"token":"at"}' }))).toEqual({ token: 'at' })
     expect(() => parseTraeStorageDocument('{}')).toThrow(/has no/)
+  })
+})
+
+describe('Trae CLI token parsing', () => {
+  // Shaped exactly like the token a real `traecli` login writes: a bare,
+  // unencrypted three-part JWT with identity under `data.user_id`.
+  const jwt = (payload: Record<string, unknown>): string =>
+    `${Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')}.${Buffer.from(JSON.stringify(payload)).toString('base64url')}.signature`
+
+  it('reads the bare JWT a CLI login writes', () => {
+    const token = jwt({ data: { user_id: '4162118908394475', type: 'user' }, iss: 'trae', exp: 1789864873 })
+    expect(parseTraeCliToken(token)).toEqual({ accessToken: token, userId: '4162118908394475', expiresAtMs: 1789864873000 })
+  })
+
+  it('accepts a JSON envelope in case a future CLI wraps the token', () => {
+    const token = jwt({ data: { user_id: 'u1' }, exp: 1800000000 })
+    expect(parseTraeCliToken(JSON.stringify({ token }))).toMatchObject({ accessToken: token, userId: 'u1' })
+    expect(parseTraeCliToken(JSON.stringify({ accessToken: token }))).toMatchObject({ userId: 'u1' })
+  })
+
+  it('omits the expiry rather than inventing one when `exp` is absent', () => {
+    const claims = parseTraeCliToken(jwt({ data: { user_id: 'u1' } }))
+    expect(claims.userId).toBe('u1')
+    expect(claims.expiresAtMs).toBeUndefined()
+  })
+
+  it('rejects malformed input instead of yielding a half-built credential', () => {
+    expect(() => parseTraeCliToken('')).toThrow(/empty/)
+    expect(() => parseTraeCliToken('not-a-jwt')).toThrow(/three-part/)
+    expect(() => parseTraeCliToken('a.b.c')).toThrow(/not decodable JSON/)
+    expect(() => parseTraeCliToken(jwt({ data: {} }))).toThrow(/user_id/)
+    expect(() => parseTraeCliToken(JSON.stringify({ token: '' }))).toThrow(/no token field/)
+  })
+
+  it('does not treat an encrypted desktop value as a CLI token', () => {
+    // The AES desktop payload is base64 that could survive a JWT split check by
+    // accident; it must be rejected rather than produce a bogus userId.
+    const encoded = encryptFixture(JSON.stringify({ token: 'secret', userId: 'u' }))
+    expect(() => parseTraeCliToken(encoded)).toThrow()
   })
 })

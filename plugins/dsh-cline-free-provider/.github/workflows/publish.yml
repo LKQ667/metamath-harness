@@ -1,0 +1,37 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - '[0-9]*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # npm Trusted Publishing / OIDC
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Typecheck, build and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run typecheck --if-present && npm run build --if-present
+          if output="$(npm publish --provenance --access public 2>&1)"; then
+            echo "published"
+          elif grep -Eq 'EPUBLISHCONFLICT|cannot publish over the previously published versions' <<<"$output"; then
+            echo "skip: version already exists"
+          else
+            echo "publish failed:"
+            echo "$output"
+            exit 1
+          fi

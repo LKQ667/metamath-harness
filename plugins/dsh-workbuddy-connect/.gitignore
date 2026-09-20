@@ -3,3 +3,5 @@ coverage/
 *.log
 .DS_Store
 AGENTS.md
+.mimosa/
+.zcode/

@@ -6,7 +6,7 @@ import { parseDocument } from 'yaml';
 import { CardRegistry } from '../lib/cards/registry.js';
 
 const names = [
-  'math-paper-cn', 'math-paper-huashu', 'math-paper-huawei', 'grill-with-docs', 'ai-draw-skills', 'py-nature',
+  'math-paper-cn', 'math-paper-en', 'math-paper-huashu', 'math-paper-huawei', 'grill-with-docs', 'ai-draw-skills',
   'grill-ai-review', 'humanizer', 'research-writing-skill', 'claude-vision-skill', 'anti-autoresearch',
   'imagegen',
 ];

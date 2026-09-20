@@ -62,14 +62,23 @@ export interface TraeWebAccount {
   id: string
   accountName: string
   edition: 'cn' | 'sg' | 'solo' | 'solo-sg'
-  source: 'desktop' | 'dsh'
+  source: 'desktop' | 'dsh' | 'cli'
   tokenExpiresAtMs: number
   selected: boolean
 }
 
+/** One probed candidate path and why it did not yield an account. */
+export interface TraeWebSearchPath {
+  path: string
+  edition: 'cn' | 'sg' | 'solo' | 'solo-sg'
+  source: 'desktop' | 'cli'
+  reason: 'missing' | 'unreadable' | 'invalid'
+  message?: string
+}
+
 /** The JSON document the plugin card renders. */
 export type TraeWebUsage =
-  | { status: 'signed-out'; accounts: readonly TraeWebAccount[]; message?: string }
+  | { status: 'signed-out'; accounts: readonly TraeWebAccount[]; message?: string; searched?: readonly TraeWebSearchPath[] }
   | {
     status: 'signed-in'
     accountId: string

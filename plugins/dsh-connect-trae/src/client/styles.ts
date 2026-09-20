@@ -84,5 +84,12 @@ export const TRAE_CARD_CSS = `
 .dsm-trae-usage-cheer{display:inline-flex;align-items:center;gap:4px;flex:none;text-decoration:underline;text-underline-offset:2px;color:var(--dsw-alias-label-tertiary,#999);font-size:13px;line-height:1.5;transition:color .16s}
 .dsm-trae-usage-cheer-star{font-size:12px;line-height:1;display:inline-flex}
 .dsm-trae-usage-cheer:hover{color:var(--dsw-alias-label-primary,#e6e6e6)}
+.dsm-trae-searched{margin-top:8px;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#999)}
+.dsm-trae-searched>summary{cursor:pointer;color:var(--dsw-alias-label-secondary,#b8b8b8);user-select:none}
+.dsm-trae-searched-hint{margin:6px 0 4px;color:var(--dsw-alias-label-tertiary,#999)}
+.dsm-trae-searched-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+.dsm-trae-searched-list li{display:flex;flex-direction:column;gap:1px;min-width:0}
+.dsm-trae-searched-list code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary,#b8b8b8);word-break:break-all}
+.dsm-trae-searched-reason{color:var(--dsw-alias-label-tertiary,#999);font-size:11px}
 .dsm-trae-usage-cheer:focus-visible{outline:2px solid var(--dsw-alias-brand-primary,#5686fe);outline-offset:2px}
 `

@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { parseAndValidateCard, renderCardPrompt } from '../lib/index.js';
 
 const names = [
-  'math-paper-cn', 'math-paper-huashu', 'math-paper-huawei', 'grill-with-docs', 'ai-draw-skills', 'py-nature',
+  'math-paper-cn', 'math-paper-huashu', 'math-paper-huawei', 'grill-with-docs', 'ai-draw-skills',
   'grill-ai-review', 'humanizer', 'research-writing-skill', 'claude-vision-skill', 'anti-autoresearch',
   'imagegen',
 ];
@@ -27,7 +27,7 @@ function requiredFixture(card) {
   ]));
 }
 
-test('十二张手动卡片全部通过严格 schema 且目录同名', async () => {
+test('十一张手动卡片全部通过严格 schema 且目录同名', async () => {
   const cards = await loadCards();
   assert.deepEqual(cards.map((card) => card.skill), names);
   assert.ok(cards.every((card) => card.schema === 'dsh.mathmodel.card/v1'));
@@ -69,7 +69,7 @@ test('所有必填字段均由渲染器执行失败关闭', async () => {
   }
 });
 
-test('十二张默认 Prompt 快照稳定', async () => {
+test('十一张默认 Prompt 快照稳定', async () => {
   for (const card of await loadCards()) {
     const prompt = renderCardPrompt(card, requiredFixture(card));
     const digest = createHash('sha256').update(prompt).digest('hex');
@@ -77,6 +77,17 @@ test('十二张默认 Prompt 快照稳定', async () => {
     assert.match(prompt, new RegExp(`^/${card.skill}`));
     assert.match(prompt, /dsh\.mathmodel\.request\/v1/);
   }
+});
+
+test('华为杯卡片承载 Python 图型重复策略三选项且默认值写入请求（GOAL-84/M11）', async () => {
+  const cards = new Map((await loadCards()).map((card) => [card.skill, card]));
+  const field = cards.get('math-paper-huawei').fields.find((f) => f.id === 'python_chart_repeat_policy');
+  assert.ok(field, '华为杯卡片必须有 python_chart_repeat_policy 字段');
+  assert.equal(field.default, '默认（少重复）');
+  assert.deepEqual(field.options, ['默认（少重复）', '模型自行分析', '禁止重复']);
+  const prompt = renderCardPrompt(cards.get('math-paper-huawei'), requiredFixture(cards.get('math-paper-huawei')));
+  assert.match(prompt, /"python_chart_repeat_policy": "默认（少重复）"/);
+  // 其他卡片的默认 Prompt 未受影响：其余卡片快照逐项独立校验由上一测试覆盖。
 });
 
 test('run_to_pdf 卡片把 Goal 激活指令置于执行要求首条', async () => {
@@ -92,6 +103,6 @@ test('run_to_pdf 卡片把 Goal 激活指令置于执行要求首条', async () 
   const off = renderCardPrompt(cards.get('math-paper-cn'), { ...requiredFixture(cards.get('math-paper-cn')), run_to_pdf: false });
   assert.ok(!off.includes('get_goal'));
   // 无该字段的卡片不受影响
-  const plain = renderCardPrompt(cards.get('py-nature'), requiredFixture(cards.get('py-nature')));
+  const plain = renderCardPrompt(cards.get('ai-draw-skills'), requiredFixture(cards.get('ai-draw-skills')));
   assert.ok(!plain.includes('get_goal'));
 });
