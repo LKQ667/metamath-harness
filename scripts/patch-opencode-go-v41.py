@@ -29,7 +29,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 
-VERIFIED_PI_AI_VERSION = "0.84.4"
+VERIFIED_PI_AI_VERSION = "0.85.1"
 MODEL_ID = "deepseek-flash"
 BACKUP_SUFFIX = ".bak-before-deepseek-v41"
 

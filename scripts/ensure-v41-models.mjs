@@ -51,7 +51,7 @@ function ensureOpenCodeGo() {
   }
 
   const version = readJson(path.join(piRoot, 'package.json')).version
-  if (version !== '0.84.4') fail(`pi-ai ${version} 未经验证，拒绝写入临时目录补丁`)
+  if (version !== '0.85.1') fail(`pi-ai ${version} 未经验证，拒绝写入临时目录补丁`)
   if (!models['deepseek-v4-flash'] || models['deepseek-v4-flash'].provider !== 'opencode-go') {
     fail('OpenCode Go 旧目录语义锚点失配')
   }

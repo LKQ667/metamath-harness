@@ -14,7 +14,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Repo = $PSScriptRoot
-$DshVersion = '0.1.2-rc.1'
+$DshVersion = '0.1.5-rc.2'
 $EditPptBin = Join-Path $Repo '.dsh\runtime\bin'
 $env:PATH = "$EditPptBin;$env:PATH"
 
