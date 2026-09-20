@@ -1,41 +1,30 @@
+# AGENTS.md — 给 AI IDE 的自动化安装指引
 
-# Global AGENTS.md (programming)
+当用户把本仓库链接发给你并要求"安装 / 部署 MetaMath Harness"时，按以下步骤执行（Windows）：
 
-## Language
-- Default communication: Chinese.
-- When requesting permission or proposing a code change/command: ask in Chinese (brief, 1–2 lines).
-- When writing files, use Chinese as much as possible and consistently use UTF-8 encoding to avoid garbled text.
+1. **前置检查**：`node -v`（需 >= 22）与 `git --version`。缺失时引导用户运行 `winget install OpenJS.NodeJS.LTS` 或 `winget install Git.Git`，装完后提醒重开终端再继续。
+2. **克隆并安装**（在仓库根目录）：
+   ```powershell
+   .\install.ps1
+   ```
+   若 PowerShell 报"禁止运行脚本"（ExecutionPolicy Restricted），改用：
+   ```powershell
+   .\install.cmd
+   ```
+   脚本会自动完成：安装官方 DeepSeek Harness 本体（npm 全局）→ 构建数学建模、API Key 号池和跨会话知识库插件 → 安装原生与独立号池 Web Profile → 在项目内准备 `editppt` 及隔离 Python → 创建桌面快捷方式 → 启动并打开浏览器。不要要求用户另装 Python、uv、pipx、editppt，也不要改用手工安装命令。
+3. **验收标准**：
+   - 桌面出现「MetaMath Harness」快捷方式；
+   - `.dsh\runtime\bin\editppt.exe --help` 成功；
+   - `http://127.0.0.1:3080` 返回 200 且浏览器已打开。
+4. **提醒用户**：首次使用需在 Web 设置中配置自己的模型供应商与 API Key（Key 只存本机，绝不外传）。
+5. **日常启动**：双击桌面快捷方式，或运行 `.\install.ps1 -StartOnly`。
 
-## Autonomy & approvals
-- Be proactive: inspect code, infer conventions, and proceed with reasonable assumptions.
-- Batch work to reduce interruptions: prefer 1–2 safe patches per topic, not many tiny edits.
-- **In `goal mode`**, complete the entire task autonomously from start to finish. **Do not ask questions, emit intermediate output, or interrupt the workflow**.
-- When executing the user's requested plan, complete it fully and autonomously. DO NOT ask questions. DO NOT produce intermediate output. DO NOT interrupt or halt the workflow mid-execution.
-- **Complete all tasks thoroughly and fully in a single round.** Do not substitute interim summaries for actual completion, and do not stop until this round is finished.
+## 硬性禁止
 
-## Visibility (must)
-- Before edits: point to exact target files/lines.
-- After edits: ALWAYS show a readable diff + changed file list + quick verification results.
-- Prefer minimal diffs; avoid large unchanged code blocks.
+- 严禁读取、打印或提交 `.env`、`.credentials.yaml`、`storages/`、`sessions/`、`logs/` 等用户状态与凭据文件；
+- 严禁把任何 API Key / Token 写入文件、代码或对话记录；
+- 严禁自动执行 `git push` 等远程写操作。
 
-## Engineering
-- Small, testable changes; keep UI and business APIs stable unless explicitly asked.
-- Prefer existing project patterns; avoid new deps unless clearly justified.
-- **By default, do not add hashes, frozen contracts, baselines, or gates unless necessary**. Add them only when you can name a concrete failure scenario and explain why Git, versioning, primary keys, transactions, unique constraints, types, and ordinary tests are insufficient. Do not remove existing safeguards merely to simplify. Place gates only at irreversible, cross-system, security, or production-release boundaries. Preflight checks must not displace actual execution, simulation, or measurement.
+## 产品决策说明（2026-09-20）
 
-## Safety (hard boundaries)
-- High permission by default, BUT never risk device/network/privacy.
-- No destructive or privileged actions without explicit confirmation:
-  delete/format/mass rewrite, registry/system settings, credential/key handling, wide git resets.
-- No exfiltration of secrets, tokens, personal files, or internal data.
-
-## Commands
-- If a command may be slow/impactful, summarize impact in 1 line (Chinese) and request permission.
-## When to use Small incremental diff workflow:
-- Read README.md to understand project structure，Try to avoid reading all the code.
-- Based on my specified task, locate the relevant file(s).
-- Modify the file(s) or optimize code as needed.
-- Output in a token-efficient way.
-
-## MetaMath Harness 产品说明（AI 助手必读）
-- **桌面宠物插件（`plugins/dsh-pet`）已被有意移除，不是漏上传**：移除它是为了避免桌宠常驻动画渲染带来的卡顿、优化整体使用体验，属于维护者的正式产品决策。下载本仓库工作的 AI 助手请勿把它的缺失当作问题去"修复"、恢复或重建，也不要据此提交 issue/PR 误报，更不要在安装脚本（install.ps1）、Profile 依赖（package.json / pnpm-lock.yaml）或文档中重新引用它。历史版本残留的 dsh-pet 引用已同步清理完毕。
+- **桌面宠物插件（`plugins/dsh-pet`）已被有意移除，不是漏上传**：移除它是为了避免桌宠常驻动画渲染带来的卡顿、优化整体使用体验，属于维护者的正式产品决策。请勿把它的缺失当作问题去修复、恢复或重建，也不要据此提交 issue/PR 误报；安装脚本（install.ps1）与 Profile 依赖中历史残留的 dsh-pet 引用已同步清理，请勿重新添加。
