@@ -14,7 +14,6 @@
     "dsh-free-search": "file:../../../plugins/dsh-free-search",
     "dsh-knowledge-sqlite": "file:../../../plugins/dsh-knowledge-sqlite",
     "dsh-opencode-session": "file:../../../plugins/dsh-opencode-session",
-    "dsh-pet": "file:../../../plugins/dsh-pet/dsh-pet",
     "dsh-plugin-subscriptions": "0.9.2",
     "dsh-session-link": "0.2.1",
     "dsh-workbuddy-connect": "file:../../../plugins/dsh-workbuddy-connect"
@@ -30,7 +29,6 @@
         "@deepseek-harness/dsh-api-key-pool",
         "dsh-knowledge-sqlite",
         "dsh-better-sidebar",
-        "dsh-pet",
         "dsh-session-link",
         "dsh-agy-link",
         "dsh-workbuddy-connect",
