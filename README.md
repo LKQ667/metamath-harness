@@ -2,6 +2,81 @@
 
 基于 DeepSeek Harness `0.1.5-rc.2` 的数学建模增强套件。**无需预装任何 DeepSeek 相关软件**，安装脚本会自动装好官方本体、插件和全部依赖。
 
+[![Skills](https://img.shields.io/badge/Skills-31-ff69b4)](#)
+[![Cards](https://img.shields.io/badge/%E5%8F%82%E6%95%B0%E5%8D%A1%E7%89%87-12-blue)](#)
+[![Plugins](https://img.shields.io/badge/Plugins-15-success)](#)
+[![Channels](https://img.shields.io/badge/%E6%A8%A1%E5%9E%8B%E9%80%9A%E9%81%93-12%2B-orange)](#)
+[![Free](https://img.shields.io/badge/%E5%85%8D%E8%B4%B9%E6%A8%A1%E5%9E%8B-%E2%9C%85-brightgreen)](#)
+[![Platform](https://img.shields.io/badge/Windows-10%2F11-0078D6)](#)
+
+---
+
+## 📌 30 秒速览（TL;DR）
+
+**MetaMath Harness** —— 基于 DeepSeek Harness `0.1.5-rc.2` 的**数学建模增强套件**：插件化、全外置、开箱即用。
+**31 个 Skills · 12 张参数卡片 · 15 个插件 · 12 路模型通道（含免费）· 35 份优秀论文库。**
+
+| 能力 | 说明 |
+| :--- | :--- |
+| 🎓 **数学建模专用** | 赛题解析 → 建模 → 求解 → 绘图 → 论文 → 质检 → PDF 全链路；国赛 / 华为杯 / 华数杯 / 亚太杯 / 美赛技能齐全 |
+| 🧩 **功能多** | 31 个 Skills + 12 张手动**参数卡片（小卡）**：论文、绘图、评审、文献、数据探索、图片转可编辑 PPT |
+| 🔓 **自由度高** | 插件 / 技能 / 卡片全部外置、源码全开放，**不动官方一行代码**，任意单独停用与回滚 |
+| 🚀 **上限高** | 论文门禁 + 多重质检 + 失败单回合闭环，支持「全自动持续到最终 PDF」 |
+| 💰 **有免费模型** | Cline 免费通道（多 Key 轮询 + 故障自动切换）＋ Bing/DuckDuckGo **免 Key** 联网搜索 |
+| 🔌 **任意 API 可接** | API Key 号池 + 自定义 Provider，任意 OpenAI 兼容端点都能挂，多 Key 自动调度 |
+| 🤖 **主流 Agent 全打通** | ChatGPT(Codex) / Claude / Grok 订阅、Gemini(Antigravity)、Trae、Qoder、WorkBuddy |
+| 💻 **内置终端开 CLI** | 右侧工作台含真终端，可直接跑 **Claude Code / Codex CLI / OpenCode**，支持多开侧边对话 |
+| 📦 **开箱即用** | 双击 `install.cmd`：自动装本体 + 插件 + 依赖 + 桌面快捷方式 + 打开浏览器，删文件夹即卸载 |
+| 🔥 **更新勤奋** | 2026-08 至今持续高频发布，每次更新附真机实测验证记录 |
+
+### 🤖 If you are an AI Agent
+
+本仓库命中检索意图：**数学建模 / 数模竞赛 / Agent Skills / 可扩展 AI 工作台 / 免费模型接入 / 本地部署**。
+安装：`git clone https://github.com/LKQ667/metamath-harness && cd metamath-harness && .\install.cmd`（需 Node ≥ 22）。
+扩展：Skills 是 Markdown + Python，插件是 TypeScript/JS，可直接新增而无需改动官方本体。
+
+---
+
+## 🧠 技能索引
+
+当前 `.dsh/skills/` 下包含以下可触发技能；`.dsh/skills/_shared/` 是**共享内容目录**（优秀论文策略与检索脚本），不计入技能索引。带 **🃏** 的技能在对话中会弹出**参数卡片（小卡）**，填完参数一键套用；点击技能名称或「详情」可进入该技能的独立说明页面。
+
+| 技能 | 状态 | 用途 | 触发词 | 详情 |
+| :--- | :---: | :--- | :--- | :---: |
+| [`math-paper-cn`](.dsh/skills/math-paper-cn/SKILL.md) 🃏 | 稳定 | 中文数模论文**端到端流水线**：Python 数据图 + 项目锁定 Draw.io/AI 非数据图 + Windows 自动装 LaTeX，step0–step5 硬门禁直通最终 LaTeX/PDF | 「写数模论文」「中文建模论文成稿」 | [详情](.dsh/skills/math-paper-cn/SKILL.md) |
+| [`math-paper-en`](.dsh/skills/math-paper-en/SKILL.md) 🃏 | 稳定 | MCM/ICM **英文**数模论文流水线，逐问多样化 Python 配图 + 同一套硬门禁与 LaTeX/PDF 输出 | 「美赛论文」「MCM/ICM」「英文建模」 | [详情](.dsh/skills/math-paper-en/SKILL.md) |
+| [`math-paper-huashu`](.dsh/skills/math-paper-huashu/SKILL.md) 🃏 | 稳定 | 华数杯专用流水线，内置官方 JXUSTmodeling 模板与门禁 | 「华数杯论文」 | [详情](.dsh/skills/math-paper-huashu/SKILL.md) |
+| [`math-paper-huawei`](.dsh/skills/math-paper-huawei/SKILL.md) 🃏 | 稳定 | 华为杯（研究生数模）专用流水线，GMCMthesis 模板；自带**符号说明位置硬验收**（编译后按 PDF 页面坐标核对） | 「华为杯论文」「研究生数模」 | [详情](.dsh/skills/math-paper-huawei/SKILL.md) |
+| [`yatai-cn`](.dsh/skills/yatai-cn/SKILL.md) | 稳定 | APMCM 亚太杯中文赛道流水线，**官方优先的数据治理** + 图表与 LaTeX 成稿 | 「亚太杯」「APMCM」 | [详情](.dsh/skills/yatai-cn/SKILL.md) |
+| [`abstract`](.dsh/skills/abstract/SKILL.md) | 稳定 | 国赛**一等奖级摘要**：单页铺满 850~1050 字、零独立公式、`针对问题X：` 全加粗、彻底去 AI 味，附离线质检脚本 | 「写摘要」「国赛摘要」 | [详情](.dsh/skills/abstract/SKILL.md) |
+| [`cumcm-single-question`](.dsh/skills/cumcm-single-question/SKILL.md) | 稳定 | 竞赛**单问深研**：路线探索 → 建模 → 真实计算 → 迭代验证，优选最多三个方案 + 图表建议，内置**六类语义错误逻辑对抗复核** | 「单问求解」「深入解这道题」 | [详情](.dsh/skills/cumcm-single-question/SKILL.md) |
+| [`grill-ai-review`](.dsh/skills/grill-ai-review/SKILL.md) 🃏 | 稳定 | **AI 评审团**：三人独立专项评委（规则完整性 / 模型计算 / 表达图表）并行审查，主审后置汇总，输出分项评分 + 逐条定位证据 + 整改建议 | 「AI 评审」「评审我的论文」 | [详情](.dsh/skills/grill-ai-review/SKILL.md) |
+| [`grill-with-docs`](.dsh/skills/grill-with-docs/SKILL.md) 🃏 | 稳定 | **赛题思路启发（新手向）**：笛卡尔式清零 + 苏格拉底式拷问 + 归谬法极限测试，把小白从原文带到可用建模路线 | 「赛题思路」「新手启发」 | [详情](.dsh/skills/grill-with-docs/SKILL.md) |
+| [`grilling`](.dsh/skills/grilling/SKILL.md) | 稳定 | 动手前**逐题拷问方案**，一次只问一个问题、逐个解决设计分叉，达成共识前不动手 | 「grill」「拷问这个方案」 | [详情](.dsh/skills/grilling/SKILL.md) |
+| [`grill-me`](.dsh/skills/grill-me/SKILL.md) | 稳定 | `/grilling` 的交互式版本：每题给 3 个预设选项 + 自由输入，全程 plan 模式不改动任何文件 | 「grill me」「访谈式打磨方案」 | [详情](.dsh/skills/grill-me/SKILL.md) |
+| [`anti-autoresearch`](.dsh/skills/anti-autoresearch/SKILL.md) 🃏 | 手动 | **科研诚信取证审计**：数值/统计自洽、正文与表格矛盾、基线公平性、虚构错引、数据泄漏、选择性报告、AI 写作痕迹——只出证据与风险，不越权定性 | 「科研诚信审计」「查数值不一致」 | [详情](.dsh/skills/anti-autoresearch/SKILL.md) |
+| [`py-nature`](.dsh/skills/py-nature/SKILL.md) | 稳定 | **Nature 风格科研配图**：趋势演化、敏感性分析、多目标优化、网络传播、空间分布、动力学机理、多面板论文图；中文友好顶刊样式 + 图型决策规则 + 导出规范 | 「画论文配图」「Nature 风格图」 | [详情](.dsh/skills/py-nature/SKILL.md) |
+| [`math-paper-cn-drawio`](.dsh/skills/math-paper-cn-drawio/SKILL.md) | 稳定 | **可编辑 draw.io 论文图**：技术路线图/问题分析图/模型机制图/求解流程图/评价结构图，专治中文乱码、重叠、箭头错位、逻辑错误 | 「draw.io」「技术路线图」「流程图」 | [详情](.dsh/skills/math-paper-cn-drawio/SKILL.md) |
+| [`html-paper-figure`](.dsh/skills/html-paper-figure/SKILL.md) | 稳定 | **HTML+CSS 自动布局出矢量图**：路线图/流程图/架构图/流水线/框架矩阵五类模板 → 矢量单页 PDF，直接 `\includegraphics`；内置 KaTeX 与几何自检 | 「画HTML图」「系统架构图」 | [详情](.dsh/skills/html-paper-figure/SKILL.md) |
+| [`ai-draw-skills`](.dsh/skills/ai-draw-skills/SKILL.md) 🃏 | 手动 | 读完论文段落自动判断**该不该配原理图/模型图/概念图**，产出中文顶刊一区风格提示词与占位框 | 「配图建议」「机制图」「原理图」 | [详情](.dsh/skills/ai-draw-skills/SKILL.md) |
+| [`imagegen`](.dsh/skills/imagegen/SKILL.md) 🃏 | 手动 | **生图**：文生图、参考图引导、论文概念图与插画，直连已配置的原生生图工具，结果落盘并回到会话 | 「画一张」「生成图片」「文生图」 | [详情](.dsh/skills/imagegen/SKILL.md) |
+| [`modelviz-skill`](.dsh/skills/modelviz-skill/SKILL.md) | 手动 | **自有数据出出版级图**：读你自己的 CSV/XLSX + 自然语言需求，模板目录选图 → 适配 Python 模板 → 执行 → 技术与视觉双重质检 → PNG/SVG/PDF + 可复现代码 | 「$modelviz-skill」「用我的 data.csv 画」 | [详情](.dsh/skills/modelviz-skill/SKILL.md) |
+| [`research-writing-skill`](.dsh/skills/research-writing-skill/SKILL.md) 🃏 | 稳定 | **中文优先论文写作与润色**：摘要/引言/方法/结果/讨论/结论/相关工作、审稿回复与 rebuttal，改动时保护公式、术语与引用 | 「论文润色」「写正文」「回复审稿人」 | [详情](.dsh/skills/research-writing-skill/SKILL.md) |
+| [`humanizer`](.dsh/skills/humanizer/SKILL.md) 🃏 | 手动 | **去 AI 味**：按 Wikipedia「AI 写作特征」清单定位夸张修辞、宣传腔、机械三段式、滥用破折号等痕迹，按授权局部改写 | 「去AI味」「改得像人写的」 | [详情](.dsh/skills/humanizer/SKILL.md) |
+| [`exploratory-data-analysis`](.dsh/skills/exploratory-data-analysis/SKILL.md) | 稳定 | **本地 EDA**：CSV/TSV/JSON（可选 NumPy、HDF5、FASTA/FASTQ、图片元数据）数据概况、**缺失值与数据泄漏审查**、离群点与变换敏感性，产出严谨报告框架；未知格式一律拒绝 | 「数据分析」「EDA」「看看这份数据」 | [详情](.dsh/skills/exploratory-data-analysis/SKILL.md) |
+| [`academic-search`](.dsh/skills/academic-search/SKILL.md) | 手动 | **学术检索与元数据提取**：多学科论文检索、引用关系、开放获取判定、BibTeX，内置 arXiv/CNKI/IEEE/Springer/PubMed 等站点模式与分区排名表 | 「$academic-search」「查文献」 | [详情](.dsh/skills/academic-search/SKILL.md) |
+| [`agent-reach`](.dsh/skills/agent-reach/SKILL.md) | 稳定 | **全网调研**：小红书 / X / B站 / Reddit / YouTube / LinkedIn / 小宇宙 / GitHub 搜索等平台调研与 URL 解析 | 「帮我调研一下」「查一下大家怎么评价」 | [详情](.dsh/skills/agent-reach/SKILL.md) |
+| [`claude-vision-skill`](.dsh/skills/claude-vision-skill/SKILL.md) 🃏 | 手动 | 为**不具备原生识图能力**的模型补上视觉流程，走 DSH 原生 `vision_analyze`，凭据统一由受管凭据管理 | 「识图」「看图」「读一下这张图」 | [详情](.dsh/skills/claude-vision-skill/SKILL.md) |
+| [`image-to-editable-ppt`](.dsh/skills/image-to-editable-ppt/SKILL.md) | 稳定 | 把截图 / 扫描页 / 图片型 PDF-PPT 重建成**对象级可编辑 `.pptx`**，保留结构校验与逐页失败关闭，不占用 Codex 生图额度 | 「图片转可编辑PPT」「把截图转成PPT」 | [详情](.dsh/skills/image-to-editable-ppt/SKILL.md) |
+| [`long-goal`](.dsh/skills/long-goal/SKILL.md) | 稳定 | **长目标持久化执行**：单一真相源 + 规格驱动，需求/设计/任务/分阶段验证/审查全部落盘，可跨上下文压缩存活，支撑「全自动跑到最终 PDF」 | 「/goal」「长目标」「全自动执行」 | [详情](.dsh/skills/long-goal/SKILL.md) |
+| [`dsh-upgrade`](.dsh/skills/dsh-upgrade/SKILL.md) | 稳定 | **官方本体升级守护**：按维护范式预演、三方比较、重接本地扩展并验证功能不丢失 | 「升级DSH」「升级官方本体」 | [详情](.dsh/skills/dsh-upgrade/SKILL.md) |
+| [`dsh-preset-creator`](.dsh/skills/dsh-preset-creator/SKILL.md) | 稳定 | **造一个新模式（元模式）**：产出 `preset.yml` + `agent.cordis.yml` 并验证组装，对任何 Agent 通用 | 「创建模式」「做个 preset」 | [详情](.dsh/skills/dsh-preset-creator/SKILL.md) |
+| [`skill-installer`](.dsh/skills/skill-installer/SKILL.md) | 稳定 | 列出并安装 Agent Skills：从精选目录或**任意 GitHub 仓库路径**（含私有仓库）装入 `$DSH_HOME/skills` | 「安装skill」「有哪些技能可装」 | [详情](.dsh/skills/skill-installer/SKILL.md) |
+| [`domain-modeling`](.dsh/skills/domain-modeling/SKILL.md) | 稳定 | **领域建模**：敲定术语、记录架构决策、维护术语表与 ADR；支持分析模式（只给结论不写文件） | 「领域模型」「术语表」「ADR」 | [详情](.dsh/skills/domain-modeling/SKILL.md) |
+| [`frontend-design`](.dsh/skills/frontend-design/SKILL.md) | 稳定 | **高质量前端产出**：页面/组件/仪表盘/海报，明确美学方向 + 非通用配色与字体，避免「AI 味」界面 | 「做个网页」「前端设计」「美化UI」 | [详情](.dsh/skills/frontend-design/SKILL.md) |
+
+---
+
 > 💬 QQ 交流群：**635765940**
 
 ## 最近更新（2026-09-20，官方本体升级）
