@@ -1,0 +1,6 @@
+{
+  "check": "check_readme_agent_status",
+  "ok": true,
+  "errors": [],
+  "issues": []
+}

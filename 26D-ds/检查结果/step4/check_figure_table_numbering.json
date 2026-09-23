@@ -1,0 +1,13 @@
+{
+  "check": "check_figure_table_numbering",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "counterwithout": [
+      "figure",
+      "table"
+    ],
+    "review_required": []
+  }
+}

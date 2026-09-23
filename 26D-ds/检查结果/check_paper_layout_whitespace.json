@@ -1,0 +1,6 @@
+{
+  "check": "check_paper_layout_whitespace",
+  "ok": true,
+  "errors": [],
+  "issues": []
+}

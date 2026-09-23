@@ -1,0 +1,527 @@
+{
+  "schema": "mathmodel.figures/v1",
+  "project": "2026 华为杯 D 题 山区洪涝灾害下无人机运输与通信协同优化",
+  "drawing_mode": "html",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "drawing_mode_source": "card",
+  "subplot_policy": "禁用子图",
+  "python_chart_repeat_policy": "默认（少重复）",
+  "bar_policy": "少用",
+  "three_d_preference": "适合时建议",
+  "figure_total": 17,
+  "figure_total_note": "全文最终入文 17 张：5 张 HTML 矢量流程类图 + 12 张 Python 数据图。Python 图型分布为 line_2d×3、contour_2d×2，其余七类各 1 张，重复图型类别数 G=2。",
+  "chart_repeat_reasons": {
+    "line_2d": "用于三类互不相同的论证：① 最大安全载荷随返航安全余量的单调响应（问题一）；② 架次数—能耗—作业时间的三指标权衡前沿（问题一）；③ 逐服务区送达时刻相对首批截止档位的时序分布（问题二）。三者横轴语义、数据来源与结论均不同，不构成同数据换色重复。",
+    "contour_2d": "用于两类互不相同的论证：① 30 米 DEM 高程场与调度节点分布（数据预处理）；② 返航安全余量与需求规模对总运输能耗的三维响应面（灵敏度分析）。前者是观测地形场，后者是模型响应曲面。"
+  },
+  "template_adaptation_note": "Python 图的 template_id 记录所依托的内置单面板基座模板；panel_chart_types 显式登记该图实际的视觉编码类型（改绘后必须显式给出）。内置注册表中不含单面板的箱线、分布、网络与向量场专用模板，故这些图以语义最近的单面板模板为基座并显式改写图型元数据。",
+  "items": [
+    {
+      "id": "fig01_roadmap",
+      "generator": "html",
+      "template_id": "skeleton_spine",
+      "chart_family": "flowchart",
+      "source": "手绘图/技术路线图.html",
+      "exports": [
+        "手绘图/技术路线图.pdf",
+        "手绘图/技术路线图.png"
+      ],
+      "prompt_source": "手绘图/图稿摘要/技术路线图.md",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "section": "问题重述",
+      "usage": "给出四问协同的整体技术路线与结论回流关系",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig02_problem_analysis",
+      "generator": "html",
+      "template_id": "skeleton_layered",
+      "chart_family": "flowchart",
+      "source": "手绘图/问题分析流程图.html",
+      "exports": [
+        "手绘图/问题分析流程图.pdf",
+        "手绘图/问题分析流程图.png"
+      ],
+      "prompt_source": "手绘图/图稿摘要/问题分析流程图.md",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "section": "问题重述",
+      "usage": "给出四问的问题分解、约束识别与耦合继承关系",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig03_framework",
+      "generator": "html",
+      "template_id": "skeleton_layered",
+      "chart_family": "flowchart",
+      "source": "手绘图/运输中继协同调度框架图.html",
+      "exports": [
+        "手绘图/运输中继协同调度框架图.pdf",
+        "手绘图/运输中继协同调度框架图.png"
+      ],
+      "prompt_source": "手绘图/图稿摘要/运输中继协同调度框架图.md",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "section": "问题三模型建立与求解",
+      "usage": "给出运输层、通信层、资源层的三层协同框架与层间信息流",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig04_q1_flow",
+      "generator": "html",
+      "template_id": "skeleton_twocolumn",
+      "chart_family": "flowchart",
+      "source": "手绘图/组批求解流程图.html",
+      "exports": [
+        "手绘图/组批求解流程图.pdf",
+        "手绘图/组批求解流程图.png"
+      ],
+      "prompt_source": "手绘图/图稿摘要/组批求解流程图.md",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "section": "问题一模型建立与求解",
+      "usage": "给出单点往返能力求解与组批精确动态规划的完整流程",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig05_q4_flow",
+      "generator": "html",
+      "template_id": "skeleton_swimlane",
+      "chart_family": "flowchart",
+      "source": "手绘图/任务分区评估流程图.html",
+      "exports": [
+        "手绘图/任务分区评估流程图.pdf",
+        "手绘图/任务分区评估流程图.png"
+      ],
+      "prompt_source": "手绘图/图稿摘要/任务分区评估流程图.md",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "section": "问题四模型建立与求解",
+      "usage": "给出任务分区、逐组独立资源核算与冗余缺口评估的判定流程",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig06_eda_dem",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "source": "数据预处理/eda.py",
+      "exports": [
+        "数据预处理/figures/fig_eda_dem_nodes.svg",
+        "数据预处理/figures/fig_eda_dem_nodes.pdf",
+        "数据预处理/figures/fig_eda_dem_nodes.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "contour_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题重述",
+      "usage": "30 米 DEM 高程场与 16 个调度节点的空间关系，支撑地形净空与视线遮挡的必要性说明",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig07_eda_demand",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "scatter",
+      "source": "数据预处理/eda.py",
+      "exports": [
+        "数据预处理/figures/fig_eda_demand_structure.svg",
+        "数据预处理/figures/fig_eda_demand_structure.pdf",
+        "数据预处理/figures/fig_eda_demand_structure.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "scatter_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题重述",
+      "usage": "服务区需求规模、保障人口与空间距离的关系，支撑需求不均衡与差异化组批的结论",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig08_q1_payload",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "source": "Q1/plot_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_payload_rho.svg",
+        "Q1/figures/fig_q1_payload_rho.pdf",
+        "Q1/figures/fig_q1_payload_rho.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题一模型建立与求解",
+      "usage": "三机型最大安全载荷随返航安全余量的响应，含最重单箱参考线与临界余量",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig09_q1_batching",
+      "generator": "python",
+      "template_id": "sensitivity_tornado_template",
+      "chart_family": "length_encoded_lollipop",
+      "source": "Q1/plot_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_batching.svg",
+        "Q1/figures/fig_q1_batching.pdf",
+        "Q1/figures/fig_q1_batching.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "bar_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题一模型建立与求解",
+      "usage": "15 个服务区组批方案的机型构成、分区能耗与架次数；以长度编码与端点标记绘制，未使用柱形 API",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig10_q1_tradeoff",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "source": "Q1/plot_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_tradeoff.svg",
+        "Q1/figures/fig_q1_tradeoff.pdf",
+        "Q1/figures/fig_q1_tradeoff.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题一模型建立与求解",
+      "usage": "架次数—总运输能耗—累计作业时间的三指标权衡前沿与真实 Pareto 最优解",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig11_q2_plan_metrics",
+      "generator": "python",
+      "template_id": "sensitivity_sobol_heatmap_template",
+      "chart_family": "heatmap",
+      "source": "Q2/plot_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_plan_metrics.svg",
+        "Q2/figures/fig_q2_plan_metrics.pdf",
+        "Q2/figures/fig_q2_plan_metrics.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "heatmap_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题二模型建立与求解",
+      "usage": "四套权重方案在四项指标上的归一化表现矩阵，支撑四指标权衡与非受支配结论",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig12_q2_delivery",
+      "generator": "python",
+      "template_id": "optimization_convergence_template",
+      "chart_family": "timeline_interval",
+      "source": "Q2/plot_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_delivery_timeline.svg",
+        "Q2/figures/fig_q2_delivery_timeline.pdf",
+        "Q2/figures/fig_q2_delivery_timeline.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题二模型建立与求解",
+      "usage": "逐服务区送达时刻相对首批截止档位的分布，支撑首批截止时间全部满足的结论",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig13_q2_load",
+      "generator": "python",
+      "template_id": "sensitivity_tornado_template",
+      "chart_family": "box_distribution",
+      "source": "Q2/plot_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_load_utilization.svg",
+        "Q2/figures/fig_q2_load_utilization.pdf",
+        "Q2/figures/fig_q2_load_utilization.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "box_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题二模型建立与求解",
+      "usage": "各机型架次载荷利用率的分布，支撑机型负载与容量瓶颈分析",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig14_q3_relay_layout",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "spatial_field",
+      "source": "Q3/plot_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_relay_layout.svg",
+        "Q3/figures/fig_q3_relay_layout.pdf",
+        "Q3/figures/fig_q3_relay_layout.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "vector_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题三模型建立与求解",
+      "usage": "运输航迹、四个中继悬停位置及其到网关的回传链路，支撑中继布点方案",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig15_q3_link_margin",
+      "generator": "python",
+      "template_id": "optimization_convergence_template",
+      "chart_family": "distribution_curve",
+      "source": "Q3/plot_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_link_margin.svg",
+        "Q3/figures/fig_q3_link_margin.pdf",
+        "Q3/figures/fig_q3_link_margin.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "distribution_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题三模型建立与求解",
+      "usage": "直连与中继接入链路的余量分布，支撑直连仅少数服务区可用、中继不可或缺的结论",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig16_q4_partition",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "network_structure",
+      "source": "Q4/plot_q4.py",
+      "exports": [
+        "Q4/figures/fig_q4_partition.svg",
+        "Q4/figures/fig_q4_partition.pdf",
+        "Q4/figures/fig_q4_partition.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "network_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题四模型建立与求解",
+      "usage": "同架次必须同组关系、2 组与 3 组分区归属及资源配置对比",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true
+      }
+    },
+    {
+      "id": "fig17_sensitivity_surface",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "response_surface_3d",
+      "source": "灵敏度分析/sensitivity.py",
+      "exports": [
+        "灵敏度分析/figures/fig_sens_surface.svg",
+        "灵敏度分析/figures/fig_sens_surface.pdf",
+        "灵敏度分析/figures/fig_sens_surface.png"
+      ],
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "contour_2d"
+        ]
+      ],
+      "paper_ready": true,
+      "section": "问题一模型建立与求解",
+      "usage": "返航安全余量与需求规模对总运输能耗的三维响应面，含不可行边界",
+      "qa": {
+        "profile": "competition_cn",
+        "export_ok": true,
+        "editable_text_ok": true,
+        "font_profile_ok": true,
+        "cn_text_ok": true,
+        "svg_color_count_reasonable": true,
+        "export_preflight_complete": true,
+        "top_journal_cn_3d_recommended": true
+      }
+    }
+  ]
+}

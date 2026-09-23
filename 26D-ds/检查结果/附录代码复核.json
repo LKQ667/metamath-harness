@@ -1,0 +1,330 @@
+{
+  "note": "附录 Python 代码等价净化副本的回归配置。",
+  "tolerance": {
+    "abs": 1e-09,
+    "rel": 1e-09
+  },
+  "files": [
+    {
+      "source": "scripts/common_d.py",
+      "appendix": "论文/附录代码/common_d.py"
+    },
+    {
+      "source": "数据预处理/eda.py",
+      "appendix": "论文/附录代码/eda.py"
+    },
+    {
+      "source": "Q1/solve_q1.py",
+      "appendix": "论文/附录代码/solve_q1.py"
+    },
+    {
+      "source": "Q2/solve_q2.py",
+      "appendix": "论文/附录代码/solve_q2.py"
+    },
+    {
+      "source": "Q3/solve_q3.py",
+      "appendix": "论文/附录代码/solve_q3.py"
+    },
+    {
+      "source": "Q4/solve_q4.py",
+      "appendix": "论文/附录代码/solve_q4.py"
+    },
+    {
+      "source": "灵敏度分析/sensitivity.py",
+      "appendix": "论文/附录代码/sensitivity.py"
+    }
+  ],
+  "runs": [
+    {
+      "name": "equivalence-common_d",
+      "command": [
+        "python",
+        "scripts/verify_equivalence.py",
+        "--module",
+        "common_d",
+        "--out",
+        "检查结果/equivalence/common_d.json"
+      ],
+      "cwd": ".",
+      "files": [
+        "论文/附录代码/common_d.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/equivalence/common_d.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 1800
+    },
+    {
+      "name": "equivalence-eda",
+      "command": [
+        "python",
+        "scripts/verify_equivalence.py",
+        "--module",
+        "eda",
+        "--out",
+        "检查结果/equivalence/eda.json"
+      ],
+      "cwd": ".",
+      "files": [
+        "论文/附录代码/eda.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/equivalence/eda.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 1800
+    },
+    {
+      "name": "equivalence-solve_q1",
+      "command": [
+        "python",
+        "scripts/verify_equivalence.py",
+        "--module",
+        "solve_q1",
+        "--out",
+        "检查结果/equivalence/solve_q1.json"
+      ],
+      "cwd": ".",
+      "files": [
+        "论文/附录代码/solve_q1.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/equivalence/solve_q1.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 1800
+    },
+    {
+      "name": "equivalence-solve_q2",
+      "command": [
+        "python",
+        "scripts/verify_equivalence.py",
+        "--module",
+        "solve_q2",
+        "--out",
+        "检查结果/equivalence/solve_q2.json"
+      ],
+      "cwd": ".",
+      "files": [
+        "论文/附录代码/solve_q2.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/equivalence/solve_q2.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 1800
+    },
+    {
+      "name": "equivalence-solve_q3",
+      "command": [
+        "python",
+        "scripts/verify_equivalence.py",
+        "--module",
+        "solve_q3",
+        "--out",
+        "检查结果/equivalence/solve_q3.json"
+      ],
+      "cwd": ".",
+      "files": [
+        "论文/附录代码/solve_q3.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/equivalence/solve_q3.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 1800
+    },
+    {
+      "name": "equivalence-solve_q4",
+      "command": [
+        "python",
+        "scripts/verify_equivalence.py",
+        "--module",
+        "solve_q4",
+        "--out",
+        "检查结果/equivalence/solve_q4.json"
+      ],
+      "cwd": ".",
+      "files": [
+        "论文/附录代码/solve_q4.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/equivalence/solve_q4.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 1800
+    },
+    {
+      "name": "equivalence-sensitivity",
+      "command": [
+        "python",
+        "scripts/verify_equivalence.py",
+        "--module",
+        "sensitivity",
+        "--out",
+        "检查结果/equivalence/sensitivity.json"
+      ],
+      "cwd": ".",
+      "files": [
+        "论文/附录代码/sensitivity.py"
+      ],
+      "outputs": [
+        {
+          "path": "检查结果/equivalence/sensitivity.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 1800
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "tolerance": {
+      "abs": 1e-09,
+      "rel": 1e-09
+    },
+    "files": [
+      {
+        "source": "scripts/common_d.py",
+        "appendix": "论文/附录代码/common_d.py",
+        "source_sha256": "ad341fb42809f1d9b0f411ccf16b39418348b5e28fed5462525b27d4846f7cef",
+        "appendix_sha256": "2a7fe799a4a527e9b0024ce899b38d63813683ed52a10df38869aaa79bad63c1"
+      },
+      {
+        "source": "数据预处理/eda.py",
+        "appendix": "论文/附录代码/eda.py",
+        "source_sha256": "08247980bc644ac4520ff9804410a39e36885e7ecafeaef7c30e7dff2f501754",
+        "appendix_sha256": "5639e3c59dd100e3763c1530b5644b5f853bccb3a0b25c0ab3c9800b1fb1b219"
+      },
+      {
+        "source": "Q1/solve_q1.py",
+        "appendix": "论文/附录代码/solve_q1.py",
+        "source_sha256": "edb52e84a3abdbaf19d2622a98d3390dc122dbbd781597df2ec63cfb7ae58b15",
+        "appendix_sha256": "097544e229b2ae166a5faa0a55f1b8ae31add630a909970fe38cdbab4493e7ae"
+      },
+      {
+        "source": "Q2/solve_q2.py",
+        "appendix": "论文/附录代码/solve_q2.py",
+        "source_sha256": "d65ee84799af1735512bd28836d8e121ae06ab9b8f71e11ee70346a422a9715c",
+        "appendix_sha256": "f3ceba0496d9fac3144628a62bc14f2b7b5800e598eb4e0636059117b55accc3"
+      },
+      {
+        "source": "Q3/solve_q3.py",
+        "appendix": "论文/附录代码/solve_q3.py",
+        "source_sha256": "33ea73958c4c4deadcb849a50835d51cc13a19a36bc78ef54879c58abbd6b233",
+        "appendix_sha256": "ee6b2722571944bd3a981c9b4ecf763b860174481dad8fcee189f35991df02ae"
+      },
+      {
+        "source": "Q4/solve_q4.py",
+        "appendix": "论文/附录代码/solve_q4.py",
+        "source_sha256": "aa87c6a59d2a3f040872e9780a1ae0d3157505f1ce9481752279a4f71142d123",
+        "appendix_sha256": "601ed9ad248198ab4b7b8dbbcb5a2f1c71e45fcb2faf64272c49f3dfbec8fe6a"
+      },
+      {
+        "source": "灵敏度分析/sensitivity.py",
+        "appendix": "论文/附录代码/sensitivity.py",
+        "source_sha256": "5d892a34b28414b5e1af82bdbedb63a13dad30d095db15cd1ddc36b294fd01bb",
+        "appendix_sha256": "90a3aea617aaa84424895749284746c400f03acafcc815569db8b3e9f2cfa566"
+      }
+    ],
+    "runs": [
+      {
+        "name": "equivalence-common_d",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/equivalence/common_d.json",
+            "type": "json",
+            "original_sha256": "6da72fd82c75c8b941b3cd9d2fca0e3e999f5fb211bfd2701b8b008e5f316cc3",
+            "sanitized_sha256": "6da72fd82c75c8b941b3cd9d2fca0e3e999f5fb211bfd2701b8b008e5f316cc3"
+          }
+        ]
+      },
+      {
+        "name": "equivalence-eda",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/equivalence/eda.json",
+            "type": "json",
+            "original_sha256": "46ae155bf70b4181dabf0c8315c3276044bb075bc7ed3d07a87e9441a7cb9b61",
+            "sanitized_sha256": "46ae155bf70b4181dabf0c8315c3276044bb075bc7ed3d07a87e9441a7cb9b61"
+          }
+        ]
+      },
+      {
+        "name": "equivalence-solve_q1",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/equivalence/solve_q1.json",
+            "type": "json",
+            "original_sha256": "9bb1e797891cd4adfaf6202512b9132eb8383bc9e9ad7d4a46c5bc1a382747ba",
+            "sanitized_sha256": "9bb1e797891cd4adfaf6202512b9132eb8383bc9e9ad7d4a46c5bc1a382747ba"
+          }
+        ]
+      },
+      {
+        "name": "equivalence-solve_q2",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/equivalence/solve_q2.json",
+            "type": "json",
+            "original_sha256": "2aea85c60b4bcf462a8f175c0bb5851b88d9a315ca26eed81bb4f41c2bd55c0b",
+            "sanitized_sha256": "2aea85c60b4bcf462a8f175c0bb5851b88d9a315ca26eed81bb4f41c2bd55c0b"
+          }
+        ]
+      },
+      {
+        "name": "equivalence-solve_q3",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/equivalence/solve_q3.json",
+            "type": "json",
+            "original_sha256": "194a334949d45b45b5bdad3d3f55697fa72fd074aee290638bc2d88b049a10ea",
+            "sanitized_sha256": "194a334949d45b45b5bdad3d3f55697fa72fd074aee290638bc2d88b049a10ea"
+          }
+        ]
+      },
+      {
+        "name": "equivalence-solve_q4",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/equivalence/solve_q4.json",
+            "type": "json",
+            "original_sha256": "a2c4e6ae74a6724653962d15bf99c235d26b13fb8f7f05cbe47c1e6bb5715510",
+            "sanitized_sha256": "a2c4e6ae74a6724653962d15bf99c235d26b13fb8f7f05cbe47c1e6bb5715510"
+          }
+        ]
+      },
+      {
+        "name": "equivalence-sensitivity",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/equivalence/sensitivity.json",
+            "type": "json",
+            "original_sha256": "089d907437c1d781d2f89c3501dc5a7bbd842469a66606ea23b0ef45aa5612e4",
+            "sanitized_sha256": "089d907437c1d781d2f89c3501dc5a7bbd842469a66606ea23b0ef45aa5612e4"
+          }
+        ]
+      }
+    ]
+  }
+}

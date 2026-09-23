@@ -1,0 +1,15 @@
+{
+  "check": "check_python_subplot_policy",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "policy": "禁用子图",
+    "stage": "step5",
+    "stage_source": "explicit",
+    "sparse_limit": 4,
+    "python_figures": 12,
+    "multi_panel": [],
+    "review_items": []
+  }
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="theme-slate">
+<head>
+<meta charset="utf-8">
+<title>运输中继协同调度框架图</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#fff}
+  body{font-family:"Microsoft YaHei","SimHei",sans-serif;color:#26303b}
+  .fig{width:1720px;padding:24px 28px 20px;background:#fff}
+  .grid{display:grid;grid-template-columns:70px repeat(4,1fr);gap:12px 14px}
+  .lay{display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;
+       text-orientation:upright;letter-spacing:4px;font-size:22px;font-weight:700;
+       color:#3f5d7d;border:2px solid #3a4550;background:#dbe4ee;border-radius:4px;padding:8px 0}
+  .cell{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:12px 11px;
+        display:flex;flex-direction:column;justify-content:center;gap:6px;
+        text-align:center;min-height:92px}
+  .cell h3{font-size:20px;font-weight:700;line-height:1.3}
+  .cell p{font-size:15px;color:#6b7683;line-height:1.4}
+  .bus{grid-column:2 / span 4;display:grid;grid-template-columns:1fr 1fr;gap:8px;
+       align-items:center;padding:1px 0}
+  .bus .l{font-size:17px;font-weight:700;color:#3f5d7d;text-align:right}
+  .bus .r{font-size:17px;font-weight:700;color:#3f5d7d;text-align:left}
+  .couple{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+  .cp{border:2px dashed #6b7683;border-radius:4px;background:#fbfcfd;padding:11px 12px;
+      display:flex;flex-direction:column;gap:5px;text-align:center}
+  .cp h4{font-size:17px;font-weight:700;color:#3f5d7d}
+  .cp p{font-size:14.5px;color:#4a5560;line-height:1.45}
+  .concl{display:grid;grid-template-columns:1fr 1.05fr 1fr;gap:14px;margin-top:16px}
+  .cc{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:11px 12px;
+      text-align:center;display:flex;flex-direction:column;gap:6px}
+  .cc.key{border-top:7px solid #5b7fa6}
+  .cc h4{font-size:19px;font-weight:700}
+  .cc p{font-size:15px;color:#4a5560;line-height:1.45}
+</style>
+</head>
+<body>
+<div class="fig">
+  <div class="grid">
+    <div class="lay">运输层</div>
+    <div class="cell"><h3>架次构造与合并</h3><p>独立装箱 + 同型节约合并</p></div>
+    <div class="cell"><h3>货箱邻域搜索</h3><p>2-opt · 迁移 · 交换</p></div>
+    <div class="cell"><h3>机型替换与拆分</h3><p>载质量与体积双维可行</p></div>
+    <div class="cell"><h3>紧急度排序排程</h3><p>首批截止优先</p></div>
+
+    <div class="bus"><div class="l">架次剖面产生通信缺口 ↓</div><div class="r">↑ 链路可用窗口约束架次时段</div></div>
+
+    <div class="lay">通信层</div>
+    <div class="cell"><h3>轨迹 5 s 采样</h3><p>爬升—巡航—下降—悬停</p></div>
+    <div class="cell"><h3>链路三态判定</h3><p>直连 · 中继 · 中断</p></div>
+    <div class="cell"><h3>遮挡与链路预算</h3><p>30 m DEM · 取门限较小值</p></div>
+    <div class="cell"><h3>中继布点与时隙</h3><p>贪心集合覆盖全部缺口</p></div>
+
+    <div class="bus"><div class="l">能耗与末端 SOC 回写 ↓</div><div class="r">↑ 电池与组件就绪时刻</div></div>
+
+    <div class="lay">资源层</div>
+    <div class="cell"><h3>8 架实体运输机</h3><p>A 型 4 · B 型 2 · C 型 2</p></div>
+    <div class="cell"><h3>共享电池 6/4/4 组</h3><p>同型可调度 · 异型不混用</p></div>
+    <div class="cell"><h3>中继机与能源组件</h3><p>R01 · R02 · 组件 6 组</p></div>
+    <div class="cell"><h3>两阶段等效充电</h3><p>SOC 90% 为分界</p></div>
+  </div>
+
+  <div class="couple">
+    <div class="cp"><h4>运输 ⇄ 通信</h4>
+      <p>架次路线与载荷剖面产生缺口采样集合；含缺口的架次须等待中继进入服务时段方可执行</p></div>
+    <div class="cp"><h4>运输 ⇄ 资源</h4>
+      <p>架次开始时刻取无人机空闲时刻与电池就绪时刻的较大者；能耗回写 SOC 触发充电周转</p></div>
+    <div class="cp"><h4>通信 ⇄ 资源</h4>
+      <p>中继能源组件与运输共享电池独立周转；悬停服务时长受返航电量上限截断</p></div>
+  </div>
+
+  <div class="concl">
+    <div class="cc"><h4>直连可用性判据</h4><p>15 个服务区在投送作业高度上仅 3 个（S001、S006、S011）可直连 G01，其余 12 个须中继保障</p></div>
+    <div class="cc key"><h4>中继布点结论</h4><p>4 个悬停位置即可覆盖全部通信缺口，未覆盖抽样点为 0</p></div>
+    <div class="cc"><h4>机队规模结论</h4><p>2 架中继无法同时满足首批截止时间，需 5 架才完全可行</p></div>
+  </div>
+</div>
+</body>
+</html>

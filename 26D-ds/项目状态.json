@@ -1,0 +1,139 @@
+{
+  "gate_contract": {
+    "version": 3,
+    "runner_sha256": "d9c01b50b63eeafed93c99fcf89dd863700132b86a2d6284371f4ed0238b7b04",
+    "registry_sha256": "48bce1d4fa2e9a0903d906367a86cbeb6cba51dede3fa0dbffd73ab2dc64bd35",
+    "launchers": {
+      "scripts/checks/run_stage_gate.py": "cc2bbc20a6fe8a27f7bc7462703e826edb68b6692db971ae552d985e3e4c26d8",
+      "scripts/checks/run_all_checks.py": "35f9504e01acf5d4aa00ba178aff40fbcbaaab322339b8d3a97ce8378bfee0bc",
+      "scripts/checks/verify_delivery.py": "7905b8d64ef1c75bdb1840c0d0a8ef9324119666c5f452af8679c45104e1e881"
+    },
+    "initialized_at": "2026-09-23T03:10:32.613091+00:00"
+  },
+  "status": "completed",
+  "workflow_version": 3,
+  "skill": "math-paper-huawei",
+  "competition": "华为杯",
+  "competition_full_name": "中国研究生数学建模竞赛",
+  "problem_id": "D",
+  "problem_title": "山区洪涝灾害下无人机运输与通信协同优化",
+  "competition_language": "中文",
+  "question_count": 4,
+  "body_pages": 29,
+  "body_pages_min": 26,
+  "body_pages_target": 29,
+  "data_mode": "data",
+  "drawing_mode": "html",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "drawing_mode_source": "card",
+  "drawing_mode_note": "卡片锁定 HTML矢量成图；Electron 已探测可用（npx），未回退 drawio。",
+  "subplot_policy": "禁用子图",
+  "subplot_policy_source": "card",
+  "python_chart_repeat_policy": "默认（少重复）",
+  "python_chart_repeat_policy_source": "card",
+  "python_chart_repeat_limit_G": 2,
+  "bar_policy": "少用",
+  "bar_policy_source": "card",
+  "three_d_preference": "适合时建议",
+  "three_d_preference_source": "card",
+  "figure_total": 17,
+  "figure_total_source": "card",
+  "ai_image_limit": 4,
+  "ai_image_limit_used": 0,
+  "confirm_paid_calls": false,
+  "run_to_pdf": true,
+  "reference_excellent_papers": true,
+  "reference_excellent_papers_status": "pending",
+  "reference_excellent_papers_note": "待运行 discover_excellent_papers.py --competition 华为杯 --problem D 后回填。",
+  "locked_options_note": "全部绘图与页数选项来自 dsh.mathmodel.request/v1 卡片，运行期内不重复询问。",
+  "user_notes": [
+    "国一",
+    "html绘图简洁明了即可，中间的字大一点",
+    "最后对论文排版截图自查，不要出现一张流程图占用一整页的情况",
+    "全自动运行到最后，中途禁止询问我，禁止暂停"
+  ],
+  "gate_notes": {
+    "subplot_disabled": "禁用子图：全部入文 Python 数据图 panel_count=1，禁止 hero/support、多行多列 panel 与 inset。",
+    "figure_total": "全文最终入文图片目标 17 张，按各问信息量动态配置，禁止重复凑图。",
+    "bar_policy_sparse": "少用柱状图：仅在类别很少、必须零基线、核心任务为绝对高度比较且 manifest 同源条目写明完整 bar_exception 时允许。",
+    "ai_image_limit": "AI 付费生图上限 4 张（原理图1、流程图或技术路线图2、示意图1）；未授权时不调用生成接口，只保留提示词。"
+  },
+  "stage_status": {
+    "step0": "in_progress",
+    "step1": "pending",
+    "step2": "pending",
+    "step3": "pending",
+    "step4": "pending",
+    "step5": "pending"
+  },
+  "stages": {
+    "step0": {
+      "status": "passed",
+      "input_fingerprint": "03b4fbc7764541251cac3655adce1ad0d045131c5e4fe241ac705e6cb78a8ee8",
+      "report": "检查结果/step0/step0_gate.json",
+      "report_sha256": "cc3553b733f50a3b8f8d300f016a41e473a9ea6170cd37ea56dbe782095e1449",
+      "checked_at": "2026-09-23T05:41:14.864264+00:00",
+      "completed_at": "2026-09-23T05:41:14.864264+00:00",
+      "stale_at": "2026-09-23T05:41:13.343710+00:00"
+    },
+    "step1": {
+      "status": "passed",
+      "input_fingerprint": "533822a1e063266ccfbc0a6e5684c33a6d204d13854280602939939c8c8bf00f",
+      "report": "检查结果/step1/step1_gate.json",
+      "report_sha256": "eee961162ae9814b141bd4f04d358e30057c09b9e19f93af6caf20cf8459d4d3",
+      "checked_at": "2026-09-23T05:41:15.322197+00:00",
+      "completed_at": "2026-09-23T05:41:15.322197+00:00",
+      "stale_at": "2026-09-23T05:41:13.343710+00:00"
+    },
+    "step2": {
+      "status": "passed",
+      "input_fingerprint": "a7514875650b80632861d554980a3a8933be29a6d584bb7f28b20a09d3958e94",
+      "report": "检查结果/step2/step2_gate.json",
+      "report_sha256": "7b6d1f9d5273df08343ae622b485f5d7144f3da40e8613ac656634d719530ed3",
+      "checked_at": "2026-09-23T05:41:15.781846+00:00",
+      "completed_at": "2026-09-23T05:41:15.781846+00:00",
+      "stale_at": "2026-09-23T05:41:13.343710+00:00"
+    },
+    "step3": {
+      "status": "passed",
+      "input_fingerprint": "3368e73ddffad2733fa07c382c8f1811988a27931f533298c0bb52aa9e23da76",
+      "report": "检查结果/step3/step3_gate.json",
+      "report_sha256": "c2d32064dbdee710b92ce4a83f44116f90144eb7426d6c6ab12ff8874a2ed8e6",
+      "checked_at": "2026-09-23T05:41:17.197315+00:00",
+      "completed_at": "2026-09-23T05:41:17.197315+00:00",
+      "stale_at": "2026-09-23T05:41:13.343710+00:00"
+    },
+    "step4": {
+      "status": "passed",
+      "input_fingerprint": "79ae78167b04131afef037c78b7a776d194be5d9a8a04744a3ca22a34c326e3c",
+      "report": "检查结果/step4/step4_gate.json",
+      "report_sha256": "19bea3d52857a09d9903c9370484efa2e4ddbbada6d6270067ef716dd59fed05",
+      "checked_at": "2026-09-23T06:52:43.504921+00:00",
+      "completed_at": "2026-09-23T06:52:43.504921+00:00",
+      "stale_at": "2026-09-23T06:48:36.118074+00:00"
+    },
+    "step5": {
+      "status": "passed",
+      "input_fingerprint": "269bd695199e55d1f5ad06fdd6cc1844440cb800f73f92b6709387b2ea674571",
+      "report": "检查结果/check_report.json",
+      "report_sha256": "083cf6d6f32b28a2089ef55c80e074a08b7595e992d1fe02f777e16ac9a22f97",
+      "checked_at": "2026-09-23T06:53:37.866038+00:00",
+      "completed_at": "2026-09-23T06:53:37.866038+00:00",
+      "stale_at": "2026-09-23T06:48:36.118074+00:00"
+    }
+  },
+  "latex_backend": {
+    "source": "host",
+    "version": "XeTeX 3.141592653-2.6-0.999997 (TeX Live 2025)",
+    "managed": false,
+    "fonts": [
+      "SimSun",
+      "SimHei",
+      "Times New Roman",
+      "Cambria Math"
+    ],
+    "smoke_test": {}
+  },
+  "completed_at": "2026-09-23T06:53:37.867040+00:00"
+}

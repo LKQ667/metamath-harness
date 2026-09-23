@@ -1,0 +1,56 @@
+{
+  "contract_version": 3,
+  "project": "F:\\26华为杯\\26D-ds",
+  "runner_sha256": "d9c01b50b63eeafed93c99fcf89dd863700132b86a2d6284371f4ed0238b7b04",
+  "registry_sha256": "48bce1d4fa2e9a0903d906367a86cbeb6cba51dede3fa0dbffd73ab2dc64bd35",
+  "gate_contract": {
+    "version": 3,
+    "runner_sha256": "d9c01b50b63eeafed93c99fcf89dd863700132b86a2d6284371f4ed0238b7b04",
+    "registry_sha256": "48bce1d4fa2e9a0903d906367a86cbeb6cba51dede3fa0dbffd73ab2dc64bd35",
+    "launchers": {
+      "scripts/checks/run_stage_gate.py": "cc2bbc20a6fe8a27f7bc7462703e826edb68b6692db971ae552d985e3e4c26d8",
+      "scripts/checks/run_all_checks.py": "35f9504e01acf5d4aa00ba178aff40fbcbaaab322339b8d3a97ce8378bfee0bc",
+      "scripts/checks/verify_delivery.py": "7905b8d64ef1c75bdb1840c0d0a8ef9324119666c5f452af8679c45104e1e881"
+    },
+    "initialized_at": "2026-09-23T03:10:32.613091+00:00"
+  },
+  "stages": {
+    "step0": {
+      "status": "passed",
+      "input_fingerprint": "03b4fbc7764541251cac3655adce1ad0d045131c5e4fe241ac705e6cb78a8ee8",
+      "report": "检查结果/step0/step0_gate.json",
+      "report_sha256": "cc3553b733f50a3b8f8d300f016a41e473a9ea6170cd37ea56dbe782095e1449"
+    },
+    "step1": {
+      "status": "passed",
+      "input_fingerprint": "533822a1e063266ccfbc0a6e5684c33a6d204d13854280602939939c8c8bf00f",
+      "report": "检查结果/step1/step1_gate.json",
+      "report_sha256": "eee961162ae9814b141bd4f04d358e30057c09b9e19f93af6caf20cf8459d4d3"
+    },
+    "step2": {
+      "status": "passed",
+      "input_fingerprint": "a7514875650b80632861d554980a3a8933be29a6d584bb7f28b20a09d3958e94",
+      "report": "检查结果/step2/step2_gate.json",
+      "report_sha256": "7b6d1f9d5273df08343ae622b485f5d7144f3da40e8613ac656634d719530ed3"
+    },
+    "step3": {
+      "status": "passed",
+      "input_fingerprint": "3368e73ddffad2733fa07c382c8f1811988a27931f533298c0bb52aa9e23da76",
+      "report": "检查结果/step3/step3_gate.json",
+      "report_sha256": "c2d32064dbdee710b92ce4a83f44116f90144eb7426d6c6ab12ff8874a2ed8e6"
+    },
+    "step4": {
+      "status": "passed",
+      "input_fingerprint": "79ae78167b04131afef037c78b7a776d194be5d9a8a04744a3ca22a34c326e3c",
+      "report": "检查结果/step4/step4_gate.json",
+      "report_sha256": "19bea3d52857a09d9903c9370484efa2e4ddbbada6d6270067ef716dd59fed05"
+    },
+    "step5": {
+      "status": "passed",
+      "input_fingerprint": "269bd695199e55d1f5ad06fdd6cc1844440cb800f73f92b6709387b2ea674571",
+      "report": "检查结果/check_report.json",
+      "report_sha256": "083cf6d6f32b28a2089ef55c80e074a08b7595e992d1fe02f777e16ac9a22f97"
+    }
+  },
+  "attestation_sha256": "e71a3841bf78a34d35bc9a74899098023217e6c5ccffa765c878bf494408a4de"
+}

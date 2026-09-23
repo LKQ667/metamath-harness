@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="theme-slate">
+<head>
+<meta charset="utf-8">
+<title>技术路线图</title>
+<style>
+  :root{
+    --c-primary:#5b7fa6; --c-primary-d:#3f5d7d; --c-secondary:#dbe4ee;
+    --c-accent:#c58a5a; --c-border:#9db0c4; --c-bg:#f7f9fc;
+    --c-node-bg:#ffffff; --c-text:#26303b; --c-text-inv:#ffffff; --c-muted:#6b7683;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#fff}
+  body{font-family:"Microsoft YaHei","SimHei",sans-serif;color:var(--c-text)}
+  .fig{width:1560px;padding:26px 30px 22px;background:#fff}
+  .row{display:grid;grid-template-columns:74px repeat(4,1fr);gap:14px 16px;align-items:stretch}
+  .stage{display:flex;align-items:center;justify-content:center;
+         writing-mode:vertical-rl;text-orientation:upright;letter-spacing:3px;
+         font-size:23px;font-weight:700;color:var(--c-primary-d);
+         border-left:5px solid var(--c-primary);background:var(--c-secondary);
+         border-radius:5px;padding:10px 0}
+  .cell{border:2px solid #3a4550;border-radius:4px;background:var(--c-node-bg);
+        padding:13px 12px;display:flex;flex-direction:column;justify-content:center;
+        gap:7px;min-height:98px}
+  .cell.hero{border-top:7px solid var(--c-primary)}
+  .cell h3{font-size:22px;font-weight:700;text-align:center;line-height:1.28}
+  .cell p{font-size:16px;color:var(--c-muted);text-align:center;line-height:1.4}
+  .gap{grid-column:2 / span 4;height:30px;display:flex;align-items:center;
+       justify-content:center;position:relative}
+  .gap::before{content:"";position:absolute;left:50%;top:0;bottom:9px;
+               border-left:2.5px solid #4a5560}
+  .gap::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+              border-left:9px solid transparent;border-right:9px solid transparent;
+              border-top:11px solid #4a5560}
+  .reflow{margin-top:20px;border-top:2.5px dashed #4a5560;padding-top:15px;
+          display:flex;align-items:center;justify-content:center;gap:16px}
+  .reflow .lbl{font-size:22px;font-weight:700;color:var(--c-accent);white-space:nowrap}
+  .reflow .txt{font-size:18px;color:var(--c-text)}
+</style>
+</head>
+<body>
+<div class="fig">
+  <div class="row">
+    <div class="stage">数据底座</div>
+    <div class="cell hero"><h3>30 米 DEM 地形</h3><p>地面高程 · 视线遮挡判据</p></div>
+    <div class="cell hero"><h3>240 条有向航段</h3><p>水平距离 · 计划巡航海拔</p></div>
+    <div class="cell hero"><h3>80 个不可拆货箱</h3><p>质量 · 体积 · 首批属性</p></div>
+    <div class="cell hero"><h3>机型与链路参数</h3><p>A/B/C 三型 · 双向链路预算</p></div>
+
+    <div class="gap"></div>
+
+    <div class="stage">问题一</div>
+    <div class="cell"><h3>等效航程与能耗口径</h3><p>附录 2 水平巡航 + 爬升附加</p></div>
+    <div class="cell"><h3>单点往返最大安全载荷</h3><p>二分法求根 · 容差 10⁻⁵ kg</p></div>
+    <div class="cell"><h3>货箱组批精确动态规划</h3><p>剩余数量向量为状态</p></div>
+    <div class="cell"><h3>三指标权衡与灵敏度</h3><p>架次 → 能耗 → 作业时间</p></div>
+
+    <div class="gap"></div>
+
+    <div class="stage">问题二三</div>
+    <div class="cell"><h3>异构多点多架次调度</h3><p>构造 + 局部搜索改进</p></div>
+    <div class="cell"><h3>连续通信链路判定</h3><p>附录 3 遮挡 · 双向链路预算</p></div>
+    <div class="cell"><h3>中继悬停布点</h3><p>贪心集合覆盖全部缺口</p></div>
+    <div class="cell"><h3>运输与中继联合调度</h3><p>迭代收敛 · 双能源独立周转</p></div>
+
+    <div class="gap"></div>
+
+    <div class="stage">问题四</div>
+    <div class="cell"><h3>2 组与 3 组任务分区</h3><p>架次归属不可拆分</p></div>
+    <div class="cell"><h3>分区独立资源核算</h3><p>无人机 · 电池 · 组件</p></div>
+    <div class="cell hero"><h3>资源冗余与缺口评估</h3><p>对照库存 · 定位瓶颈</p></div>
+    <div class="cell"><h3>分区方案比较结论</h3><p>规模 · 均衡 · 缺口</p></div>
+  </div>
+  <div class="reflow">
+    <div class="lbl">↑ 结论回流</div>
+    <div class="txt">问题四的分区资源缺口结论回流至问题二三的机型构成与中继机队规模配置</div>
+  </div>
+</div>
+</body>
+</html>

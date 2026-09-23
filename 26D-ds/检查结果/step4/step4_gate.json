@@ -1,0 +1,326 @@
+{
+  "stage": "step4",
+  "ok": true,
+  "checks": [
+    {
+      "check": "compile_paper",
+      "ok": true,
+      "errors": [],
+      "details": {
+        "ok": true,
+        "backend": "host",
+        "pdf": "F:\\26华为杯\\26D-ds\\论文\\main.pdf",
+        "log": "F:\\26华为杯\\26D-ds\\论文\\main.log",
+        "aux": "F:\\26华为杯\\26D-ds\\论文\\main.aux",
+        "attempts": [
+          {
+            "attempt": 1,
+            "returncode": 0,
+            "tail": "Initial Win CP for (console input, console output, system): (CP936, CP65001, CP936)\nI changed them all to CP936\nRc files read:\n  NONE\nLatexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.\nLatexmk: Nothing to do for 'main.tex'.\nLatexmk: All targets (main.xdv main.pdf) are up-to-date\n\nReverting Windows console CPs to (in,out) = (936,65001)\n"
+          }
+        ]
+      }
+    },
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_ranges",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_code_distribution",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figures_manifest",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_contract",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "mode": "默认（少重复）",
+        "policy_source": "explicit_state",
+        "stage": "step4",
+        "stage_source": "explicit",
+        "scope": "最终入文（step4/5 按实际引用核对）",
+        "n_by_type": {
+          "bar_2d": 1,
+          "box_2d": 1,
+          "contour_2d": 2,
+          "distribution_2d": 1,
+          "heatmap_2d": 1,
+          "line_2d": 3,
+          "network_2d": 1,
+          "scatter_2d": 1,
+          "vector_2d": 1
+        },
+        "per_type_items": {
+          "bar_2d": [
+            "Q1/plot_q1.py"
+          ],
+          "box_2d": [
+            "Q2/plot_q2.py"
+          ],
+          "contour_2d": [
+            "数据预处理/eda.py",
+            "灵敏度分析/sensitivity.py"
+          ],
+          "distribution_2d": [
+            "Q3/plot_q3.py"
+          ],
+          "heatmap_2d": [
+            "Q2/plot_q2.py"
+          ],
+          "line_2d": [
+            "Q1/plot_q1.py",
+            "Q2/plot_q2.py"
+          ],
+          "network_2d": [
+            "Q4/plot_q4.py"
+          ],
+          "scatter_2d": [
+            "数据预处理/eda.py"
+          ],
+          "vector_2d": [
+            "Q3/plot_q3.py"
+          ]
+        },
+        "repeat_types": [
+          "contour_2d",
+          "line_2d"
+        ],
+        "G": 2,
+        "unknown_types_items": [],
+        "counted_figures": 12
+      }
+    },
+    {
+      "check": "check_python_figure_quality",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_bar_chart_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "少用",
+        "bar_calls": []
+      }
+    },
+    {
+      "check": "check_python_subplot_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "禁用子图",
+        "stage": "step4",
+        "stage_source": "explicit",
+        "sparse_limit": 4,
+        "python_figures": 12,
+        "multi_panel": [],
+        "review_items": []
+      }
+    },
+    {
+      "check": "check_flowchart_required",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_question_assets",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_consistency",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_abstract_no_formula",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "profile": "huawei",
+        "note": "华为杯不启用国赛摘要禁公式硬门，摘要允许必要符号。"
+      }
+    },
+    {
+      "check": "check_abstract_one_page",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "effective_chars": 835,
+        "minimum_chars": 800,
+        "target_chars": [
+          850,
+          1050
+        ],
+        "start_page": "1",
+        "end_page": "2"
+      }
+    },
+    {
+      "check": "check_paper_emphasis",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_latex_log",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_drawing_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_in_paper",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_excellent_paper_visual_reference",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "enabled": true,
+        "status": "matched",
+        "papers": 2,
+        "shots": 10
+      }
+    },
+    {
+      "check": "check_ai_prompt_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_template_adherence",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_section_whitelist",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_model_building_rigor",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_layout_whitespace",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_internal_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_body_forbidden_symbols",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figure_table_numbering",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "counterwithout": [
+          "figure",
+          "table"
+        ],
+        "review_required": []
+      }
+    },
+    {
+      "check": "check_paper_prose_style",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "soft_word_counts": {
+          "验证": 0,
+          "检验": 0,
+          "核对": 2
+        },
+        "suggestions": []
+      }
+    },
+    {
+      "check": "check_bibliography_sources",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "rejected": [],
+        "bibitem_count": 10,
+        "note": "来源信号与相关性支撑为两道独立核对：程序核对信号存在性，相关性支撑以 source_map 登记与人工复核为准。"
+      }
+    }
+  ]
+}

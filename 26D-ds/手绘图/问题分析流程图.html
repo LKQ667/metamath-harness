@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="theme-slate">
+<head>
+<meta charset="utf-8">
+<title>问题分析流程图</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#fff}
+  body{font-family:"Microsoft YaHei","SimHei",sans-serif;color:#26303b}
+  .fig{width:1580px;padding:26px 30px 22px;background:#fff}
+  .banner{border:2px solid #3a4550;border-radius:4px;padding:13px 16px;
+          display:flex;flex-direction:column;gap:6px;align-items:center}
+  .banner h2{font-size:25px;font-weight:700}
+  .banner p{font-size:16px;color:#6b7683}
+  .arrow{display:flex;flex-direction:column;align-items:center;height:44px;justify-content:center}
+  .arrow .lbl{font-size:19px;font-weight:700;color:#3f5d7d;margin-bottom:3px}
+  .arrow .line{width:0;height:16px;border-left:2.5px solid #4a5560;position:relative}
+  .arrow .line::after{content:"";position:absolute;left:-8px;bottom:-2px;
+    border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #4a5560}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .card{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:13px 14px;
+        display:flex;flex-direction:column;gap:9px}
+  .card h3{font-size:21px;font-weight:700;text-align:center;padding-bottom:8px;
+           border-bottom:1.5px solid #c8d2dc}
+  .card h4{font-size:16px;font-weight:700;color:#3f5d7d;margin-top:2px}
+  .card p{font-size:15px;line-height:1.5;color:#33404c}
+  .row3{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:4px}
+  .mini{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:11px 12px;
+        display:flex;flex-direction:column;gap:6px;text-align:center}
+  .mini h4{font-size:18px;font-weight:700}
+  .mini p{font-size:15px;color:#4a5560;line-height:1.45}
+  .shared{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:4px}
+  .dash{border:2px dashed #6b7683;border-radius:4px;background:#fbfcfd;padding:12px;
+        display:flex;flex-direction:column;gap:6px;text-align:center}
+  .dash h4{font-size:19px;font-weight:700}
+  .dash p{font-size:15px;color:#4a5560;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="fig">
+  <div class="banner">
+    <h2>总问题：运输能力 · 调度 · 通信保障 · 资源配置 四问协同</h2>
+    <p>O01 临时调度中心 · 15 个服务区 · 80 个不可拆货箱 · A/B/C 三型共 8 架 · 中继机 R01/R02</p>
+  </div>
+
+  <div class="arrow"><div class="lbl">四问分解与约束识别</div><div class="line"></div></div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>问题一<br>单点往返能力与货箱组批</h3>
+      <h4>核心决策</h4>
+      <p>最大安全载荷 q*；货箱组批划分与机型指派</p>
+      <h4>约束识别</h4>
+      <p>货箱不可拆、每箱一次、不跨区组批；载质量 ≤ q*；装载体积 ≤ V<sub>g</sub>；往返能耗 ≤ (1−ρ)E<sup>use</sup></p>
+      <h4>求解方法</h4>
+      <p>单调方程二分求根；剩余数量向量精确动态规划；字典序 N→E→T</p>
+    </div>
+    <div class="card">
+      <h3>问题二<br>异构多点多架次调度</h3>
+      <h4>核心决策</h4>
+      <p>访问顺序、机型、执行无人机、共享电池与架次开始时刻</p>
+      <h4>约束识别</h4>
+      <p>8 架实体机上限；共享电池 A/B/C 各 6/4/4 组且用后充至 100%；首批截止与期望送达；返航安全余量</p>
+      <h4>求解方法</h4>
+      <p>构造（独立装箱 + 同型节约合并）+ 局部搜索（迁移/交换/2-opt/机型替换/架次拆分）</p>
+    </div>
+    <div class="card">
+      <h3>问题三<br>通信约束下运输与中继联合调度</h3>
+      <h4>核心决策</h4>
+      <p>中继悬停位置、飞行海拔、服务时段与能源组件分配</p>
+      <h4>约束识别</h4>
+      <p>全程连续通信；直连不可用须"运输—中继—G01"两段同时可用；悬停离地 ≤ 300 m 且位于 DEM 覆盖内；能源组件 6 组</p>
+      <h4>求解方法</h4>
+      <p>轨迹 5 s 步长采样 → 附录 3 遮挡与双向预算判定 → 贪心集合覆盖布点 → 运输与中继迭代收敛</p>
+    </div>
+    <div class="card">
+      <h3>问题四<br>救援任务分区与资源配置</h3>
+      <h4>核心决策</h4>
+      <p>2 组与 3 组任务分区；各组独立执行的资源需求</p>
+      <h4>约束识别</h4>
+      <p>每区必属且仅属一组；同架次多区须同组；资源不得跨组调配；组内独立核算无人机、电池、中继与能源组件</p>
+      <h4>求解方法</h4>
+      <p>以问题三联合方案为基准分区 → 逐组独立资源核算 → 规模/冗余/均衡/缺口四维比较</p>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="lbl">耦合关系与数据继承</div><div class="line"></div></div>
+
+  <div class="row3">
+    <div class="mini"><h4>问题一 → 问题二</h4><p>提供 q*、航段能耗与时间口径，构成问题二能量与时间约束的直接输入</p></div>
+    <div class="mini"><h4>问题二 → 问题三</h4><p>架次路线与载荷剖面决定通信缺口的采样集合与分布</p></div>
+    <div class="mini"><h4>问题三 → 问题四</h4><p>联合调度方案是任务分区与独立资源核算的基准</p></div>
+    <div class="mini"><h4>问题四 → 问题二三</h4><p>资源缺口结论回流，约束机型构成与中继机队规模</p></div>
+  </div>
+
+  <div class="arrow"><div class="lbl">四问共用的公共物理口径</div><div class="line"></div></div>
+
+  <div class="shared">
+    <div class="dash"><h4>附录 2 航段与能耗</h4><p>等效航程 L(q) 随载荷 3/2 次幂衰减；爬升附加能耗按总质量与爬升效率计</p></div>
+    <div class="dash"><h4>附录 3 链路判定</h4><p>30 m DEM 视线遮挡判定；双向链路预算取两方向门限的较小值</p></div>
+    <div class="dash"><h4>两阶段等效充电</h4><p>SOC 90% 为分界，快充段占等效完全充电时间的 65%，慢充段占 35%</p></div>
+  </div>
+</div>
+</body>
+</html>

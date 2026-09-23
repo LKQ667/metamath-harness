@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="theme-slate">
+<head>
+<meta charset="utf-8">
+<title>任务分区评估流程图</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#fff}
+  body{font-family:"Microsoft YaHei","SimHei",sans-serif;color:#26303b}
+  .fig{width:1580px;padding:24px 28px 20px;background:#fff}
+  .base{border:2px dashed #6b7683;border-radius:4px;background:#fbfcfd;
+        padding:12px 16px;text-align:center;display:flex;flex-direction:column;gap:6px}
+  .base h3{font-size:19px;font-weight:700}
+  .base p{font-size:15px;color:#4a5560;line-height:1.5}
+  .arrow{display:flex;flex-direction:column;align-items:center;height:50px;justify-content:center}
+  .arrow .lbl{font-size:19px;font-weight:700;color:#3f5d7d;margin-bottom:4px}
+  .arrow .line{width:0;height:15px;border-left:2.5px solid #4a5560;position:relative}
+  .arrow .line::after{content:"";position:absolute;left:-8px;bottom:-2px;
+    border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #4a5560}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+  .card{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:13px 14px;
+        display:flex;flex-direction:column;gap:9px}
+  .card .st{font-size:16px;color:#6b7683;text-align:center}
+  .card h3{font-size:20px;font-weight:700;text-align:center;line-height:1.3;
+           padding-bottom:8px;border-bottom:1.5px solid #c8d2dc}
+  .card h4{font-size:15px;font-weight:700;color:#3f5d7d}
+  .card p{font-size:14.5px;line-height:1.5;color:#33404c}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:2px 0}
+  .two div{border:1.5px solid #3a4550;border-radius:3px;background:#fff;
+           padding:7px 6px;text-align:center;font-size:15px;font-weight:700}
+  .quad{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:2px}
+  .quad div{border:1.5px solid #3a4550;border-radius:3px;background:#fff;
+            padding:8px 6px;text-align:center;font-size:14.5px;font-weight:700}
+  .decide{margin:16px auto 0;width:56%;border:2px solid #3a4550;border-radius:4px;
+          background:#fff;padding:11px 14px;text-align:center;font-size:19px;font-weight:700}
+  .branch{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:14px}
+  .br{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .br .cond{font-size:17px;font-weight:700;color:#3f5d7d}
+  .br .box{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:11px 12px;
+           text-align:center;display:flex;flex-direction:column;gap:6px;width:100%}
+  .br .box h4{font-size:18px;font-weight:700}
+  .br .box p{font-size:14.5px;color:#4a5560;line-height:1.45}
+  .out{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:16px}
+  .oc{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:11px 12px;
+      text-align:center;display:flex;flex-direction:column;gap:6px}
+  .oc.key{border-top:7px solid #5b7fa6}
+  .oc h4{font-size:18px;font-weight:700}
+  .oc p{font-size:14.5px;color:#4a5560;line-height:1.45}
+</style>
+</head>
+<body>
+<div class="fig">
+  <div class="base">
+    <h3>基准</h3>
+    <p>问题三联合调度方案：货箱组批 · 服务区访问顺序 · 运输与中继任务安排 · 通信保障关系 ｜ 现有库存：8 架运输机 · 共享电池 6/4/4 组 · 2 架中继机 · 6 组能源组件</p>
+  </div>
+
+  <div class="arrow"><div class="lbl">任务分区 → 独立资源核算 → 冗余与缺口评估 → 四维比较</div><div class="line"></div></div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="st">阶段一</div>
+      <h3>任务分区<br>构建与关联约束</h3>
+      <h4>分区规则</h4>
+      <p>15 个服务区每个必属且仅属一个任务组，每组至少含一个服务区</p>
+      <h4>架次关联约束</h4>
+      <p>同一运输架次涉及多个服务区时，这些服务区必须划入同一任务组</p>
+      <h4>关系冻结</h4>
+      <p>分区过程保持问题三已确定的组批、访问顺序、运输与中继安排及通信保障关系不变</p>
+    </div>
+    <div class="card">
+      <div class="st">阶段二</div>
+      <h3>两种分区<br>方案生成</h3>
+      <h4>划分粒度</h4>
+      <p>分别给出划分为 2 个与 3 个任务组的方案</p>
+      <div class="two"><div>2 组方案</div><div>3 组方案</div></div>
+      <h4>组内任务集</h4>
+      <p>各组仅承担本组服务区对应的运输任务与通信保障任务</p>
+    </div>
+    <div class="card">
+      <div class="st">阶段三</div>
+      <h3>逐组独立<br>资源核算</h3>
+      <h4>核算前提</h4>
+      <p>任务执行期间各类资源不得跨组调配，各组按自身任务集独立周转</p>
+      <div class="quad"><div>运输无人机</div><div>共享电池</div>
+        <div>中继无人机</div><div>中继能源组件</div></div>
+      <h4>周转口径</h4>
+      <p>沿用两阶段等效充电与返航电量下限，逐组重算资源占用峰值</p>
+    </div>
+    <div class="card">
+      <div class="st">阶段四</div>
+      <h3>冗余与<br>缺口评估</h3>
+      <h4>冗余核算</h4>
+      <p>各组需求加总后与现有库存逐类比对，差值即为资源冗余量</p>
+      <h4>缺口核算</h4>
+      <p>需求超过库存的类别计为资源缺口，并定位瓶颈资源</p>
+      <h4>均衡度量</h4>
+      <p>比较各组间工作量与资源占用的离散程度</p>
+    </div>
+  </div>
+
+  <div class="decide">判定：某分区方案的资源需求是否超过现有库存？</div>
+
+  <div class="branch">
+    <div class="br">
+      <div class="cond">是 · 需求超过库存 ↓</div>
+      <div class="box"><h4>给出资源缺口与原因</h4>
+        <p>逐类列出缺口数量，并说明缺口成因：组内任务量集中、独立周转丧失跨组复用，或中继服务时段重叠导致机队需求抬升</p></div>
+    </div>
+    <div class="br">
+      <div class="cond">否 · 需求不超库存 ↓</div>
+      <div class="box"><h4>给出资源冗余量</h4>
+        <p>逐类给出剩余可用资源数量，作为该分区方案的抗扰余量与后续扩容依据</p></div>
+    </div>
+  </div>
+
+  <div class="out">
+    <div class="oc"><h4>资源配置规模</h4><p>2 组与 3 组方案各自的资源需求总量</p></div>
+    <div class="oc"><h4>资源冗余</h4><p>逐类资源相对现有库存的剩余量</p></div>
+    <div class="oc"><h4>组间工作量均衡</h4><p>各组任务量与资源占用的均衡程度</p></div>
+    <div class="oc key"><h4>资源缺口</h4><p>超出库存的类别、数量与成因</p></div>
+  </div>
+</div>
+</body>
+</html>

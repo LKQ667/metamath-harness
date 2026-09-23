@@ -1,0 +1,155 @@
+{
+  "ok": true,
+  "status": "matched",
+  "problem_match": true,
+  "papers": 2,
+  "shots": 10,
+  "record": "截图/优秀论文参考记录.md",
+  "selected_papers": [
+    {
+      "relativePath": "华为杯/2023/D题/D23100060041.pdf",
+      "sha256": "b4e6c7b24c303140b0913928cf352162a050f41c693ec31c014ac1e4cd278ccf",
+      "folder": "截图/优秀论文1",
+      "page_count": 99,
+      "shots": [
+        {
+          "page": 2,
+          "label": "摘要",
+          "relative": "截图/优秀论文1/p002_摘要.png"
+        },
+        {
+          "page": 3,
+          "label": "模型建立",
+          "relative": "截图/优秀论文1/p003_模型建立.png"
+        },
+        {
+          "page": 4,
+          "label": "整体版式",
+          "relative": "截图/优秀论文1/p004_整体版式.png"
+        },
+        {
+          "page": 33,
+          "label": "图表组织",
+          "relative": "截图/优秀论文1/p033_图表组织.png"
+        },
+        {
+          "page": 34,
+          "label": "求解",
+          "relative": "截图/优秀论文1/p034_求解.png"
+        }
+      ]
+    },
+    {
+      "relativePath": "华为杯/2023/D题/D23102690008.pdf",
+      "sha256": "062fc33a37d6403de410f195362cb031bb301f82875d2b87d64703b6a09c01cc",
+      "folder": "截图/优秀论文2",
+      "page_count": 63,
+      "shots": [
+        {
+          "page": 2,
+          "label": "整体版式",
+          "relative": "截图/优秀论文2/p002_整体版式.png"
+        },
+        {
+          "page": 3,
+          "label": "摘要",
+          "relative": "截图/优秀论文2/p003_摘要.png"
+        },
+        {
+          "page": 4,
+          "label": "模型建立",
+          "relative": "截图/优秀论文2/p004_模型建立.png"
+        },
+        {
+          "page": 9,
+          "label": "图表组织",
+          "relative": "截图/优秀论文2/p009_图表组织.png"
+        },
+        {
+          "page": 25,
+          "label": "求解",
+          "relative": "截图/优秀论文2/p025_求解.png"
+        }
+      ]
+    }
+  ],
+  "render_failures": [],
+  "details": [
+    {
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "D",
+      "pdf": "华为杯/2023/D题/D23100060041.pdf",
+      "relativePath": "华为杯/2023/D题/D23100060041.pdf",
+      "sha256": "b4e6c7b24c303140b0913928cf352162a050f41c693ec31c014ac1e4cd278ccf",
+      "page_count": 99,
+      "folder": "截图/优秀论文1",
+      "shots": [
+        {
+          "label": "摘要",
+          "page": 2,
+          "relative": "截图/优秀论文1/p002_摘要.png"
+        },
+        {
+          "label": "模型建立",
+          "page": 3,
+          "relative": "截图/优秀论文1/p003_模型建立.png"
+        },
+        {
+          "label": "整体版式",
+          "page": 4,
+          "relative": "截图/优秀论文1/p004_整体版式.png"
+        },
+        {
+          "label": "图表组织",
+          "page": 33,
+          "relative": "截图/优秀论文1/p033_图表组织.png"
+        },
+        {
+          "label": "求解",
+          "page": 34,
+          "relative": "截图/优秀论文1/p034_求解.png"
+        }
+      ],
+      "reused_pages": []
+    },
+    {
+      "competition": "华为杯",
+      "year": 2023,
+      "problem": "D",
+      "pdf": "华为杯/2023/D题/D23102690008.pdf",
+      "relativePath": "华为杯/2023/D题/D23102690008.pdf",
+      "sha256": "062fc33a37d6403de410f195362cb031bb301f82875d2b87d64703b6a09c01cc",
+      "page_count": 63,
+      "folder": "截图/优秀论文2",
+      "shots": [
+        {
+          "label": "整体版式",
+          "page": 2,
+          "relative": "截图/优秀论文2/p002_整体版式.png"
+        },
+        {
+          "label": "摘要",
+          "page": 3,
+          "relative": "截图/优秀论文2/p003_摘要.png"
+        },
+        {
+          "label": "模型建立",
+          "page": 4,
+          "relative": "截图/优秀论文2/p004_模型建立.png"
+        },
+        {
+          "label": "图表组织",
+          "page": 9,
+          "relative": "截图/优秀论文2/p009_图表组织.png"
+        },
+        {
+          "label": "求解",
+          "page": 25,
+          "relative": "截图/优秀论文2/p025_求解.png"
+        }
+      ],
+      "reused_pages": []
+    }
+  ]
+}

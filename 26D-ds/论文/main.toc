@@ -1,0 +1,52 @@
+\contentsline {section}{\numberline {1}问题重述}{5}{section.1}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题背景}{5}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 2}问题提出}{5}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 3}问题分析}{6}{subsection.1.3}%
+\contentsline {section}{\numberline {2}模型假设与符号说明}{8}{section.2}%
+\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型假设}{8}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 2}符号说明}{10}{subsection.2.2}%
+\contentsline {section}{\numberline {3}问题一模型建立与求解}{11}{section.3}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与模型建立}{11}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 1}航段几何与能耗口径}{11}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 2}最大安全载荷}{12}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 3}货箱组批的精确动态规划}{13}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 4}三指标与字典序目标}{13}{subsubsection.3.1.4}%
+\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 5}返航安全余量灵敏度与临界值}{13}{subsubsection.3.1.5}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2}求解结果与分析}{14}{subsection.3.2}%
+\contentsline {section}{\numberline {4}问题二模型建立与求解}{18}{section.4}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与模型建立}{18}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 1}多点多架次架次模型}{18}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 2}机队、电池与充电周转}{18}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 3}时限约束与四项指标}{19}{subsubsection.4.1.3}%
+\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 4}分层构造与局部搜索}{19}{subsubsection.4.1.4}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2}求解结果与分析}{20}{subsection.4.2}%
+\contentsline {section}{\numberline {5}问题三模型建立与求解}{23}{section.5}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与模型建立}{23}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 1}运输轨迹采样}{23}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 2}通信链路状态判断}{24}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 3}中继悬停位置与架次模型}{24}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 4}中继布点与联合调度}{25}{subsubsection.5.1.4}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2}求解结果与分析}{25}{subsection.5.2}%
+\contentsline {section}{\numberline {6}问题四模型建立与求解}{28}{section.6}%
+\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与模型建立}{28}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 1}同架次必须同组的关系图}{29}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 2}任务分区构造}{29}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 3}组内独立资源核算}{29}{subsubsection.6.1.3}%
+\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 2}求解结果与分析}{30}{subsection.6.2}%
+\contentsline {section}{\numberline {7}模型总结与评价}{32}{section.7}%
+\contentsline {subsection}{\numberline {7\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型优点}{32}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7\hskip 0.05em\relax .\hskip 0.05em\relax 2}模型局限与改进}{32}{subsection.7.2}%
+\contentsline {section}{参考文献}{33}{section*.27}%
+\contentsline {section}{附录 \numberline {A}问题一附录}{34}{appendix.1.A}%
+\contentsline {section}{附录 \numberline {B}问题二附录}{35}{appendix.1.B}%
+\contentsline {section}{附录 \numberline {C}问题三附录}{37}{appendix.1.C}%
+\contentsline {section}{附录 \numberline {D}问题四附录}{37}{appendix.1.D}%
+\contentsline {section}{附录 \numberline {E}附录代码文件}{39}{appendix.1.E}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1}common\_d.py}{39}{subsection.1.E.1}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2}eda.py}{49}{subsection.1.E.2}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 3}solve\_q1.py}{57}{subsection.1.E.3}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 4}solve\_q2.py}{64}{subsection.1.E.4}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 5}solve\_q3.py}{83}{subsection.1.E.5}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 6}solve\_q4.py}{97}{subsection.1.E.6}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 7}sensitivity.py}{107}{subsection.1.E.7}%
+\contentsfinish 

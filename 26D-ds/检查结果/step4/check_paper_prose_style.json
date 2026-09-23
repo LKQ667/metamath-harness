@@ -1,0 +1,14 @@
+{
+  "check": "check_paper_prose_style",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "soft_word_counts": {
+      "验证": 0,
+      "检验": 0,
+      "核对": 2
+    },
+    "suggestions": []
+  }
+}

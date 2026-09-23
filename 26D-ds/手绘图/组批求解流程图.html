@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="theme-slate">
+<head>
+<meta charset="utf-8">
+<title>组批求解流程图</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#fff}
+  body{font-family:"Microsoft YaHei","SimHei",sans-serif;color:#26303b}
+  .fig{width:1580px;padding:24px 28px 20px;background:#fff}
+  .input{border:2px dashed #6b7683;border-radius:4px;background:#fbfcfd;
+         padding:12px 16px;text-align:center;display:flex;flex-direction:column;gap:6px}
+  .input h3{font-size:20px;font-weight:700}
+  .input p{font-size:15px;color:#4a5560;line-height:1.5}
+  .arrow{display:flex;flex-direction:column;align-items:center;height:52px;justify-content:center}
+  .arrow .lbl{font-size:19px;font-weight:700;color:#3f5d7d;margin-bottom:4px}
+  .arrow .line{width:0;height:16px;border-left:2.5px solid #4a5560;position:relative}
+  .arrow .line::after{content:"";position:absolute;left:-8px;bottom:-2px;
+    border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #4a5560}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+  .card{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:13px 14px;
+        display:flex;flex-direction:column;gap:9px}
+  .card .st{font-size:16px;color:#6b7683;text-align:center}
+  .card h3{font-size:20px;font-weight:700;text-align:center;line-height:1.3;
+           padding-bottom:8px;border-bottom:1.5px solid #c8d2dc}
+  .card h4{font-size:15px;font-weight:700;color:#3f5d7d}
+  .card p{font-size:14.5px;line-height:1.5;color:#33404c}
+  .loop{border:1.5px dashed #6b7683;border-radius:4px;background:#fbfcfd;
+        padding:9px 10px;text-align:center;display:flex;flex-direction:column;gap:5px}
+  .loop h4{font-size:15px;font-weight:700}
+  .loop p{font-size:14px;color:#4a5560;line-height:1.45}
+  .out{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:16px}
+  .oc{border:2px solid #3a4550;border-radius:4px;background:#fff;padding:11px 12px;
+      text-align:center;display:flex;flex-direction:column;gap:6px}
+  .oc h4{font-size:18px;font-weight:700}
+  .oc p{font-size:14.5px;color:#4a5560;line-height:1.45}
+</style>
+</head>
+<body>
+<div class="fig">
+  <div class="input">
+    <h3>输入</h3>
+    <p>A/B/C 三型空载与满载标准航程、可用能量、返航余量 ρ ｜ 15 个服务区节点坐标与地面海拔 ｜ 80 个不可拆货箱的质量与体积 ｜ 240 条有向航段的距离与爬升高度</p>
+  </div>
+
+  <div class="arrow"><div class="lbl">单点往返能力求解 → 组批精确动态规划 → 权衡前沿 → 灵敏度</div><div class="line"></div></div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="st">阶段一</div>
+      <h3>最大安全载荷<br>二分求解</h3>
+      <h4>单调性判定</h4>
+      <p>等效航程随载荷递减、爬升能耗随质量递增，往返能耗关于载荷严格单调</p>
+      <h4>求根设定</h4>
+      <p>二分区间 [0, Q<sub>g</sub>]，收敛容差 10⁻⁵ kg</p>
+      <div class="loop"><h4>↻ 二分迭代回环</h4><p>未收敛则收缩区间继续二分，收敛后得 q*</p></div>
+    </div>
+    <div class="card">
+      <div class="st">阶段二</div>
+      <h3>货箱组批<br>精确动态规划</h3>
+      <h4>状态定义</h4>
+      <p>同类物品可互换，状态取各类物品剩余数量向量</p>
+      <h4>动作与转移</h4>
+      <p>动作为一次架次取走的机型与各类物品数量，逐层递推最优值</p>
+      <div class="loop"><h4>↻ 状态压缩递推</h4><p>以最低未覆盖物品为规范元，状态空间覆盖全部可达剩余向量，故为精确最优</p></div>
+    </div>
+    <div class="card">
+      <div class="st">阶段三</div>
+      <h3>三指标<br>字典序与前沿</h3>
+      <h4>字典序求解</h4>
+      <p>分别按 N→E→T、E→N→T、T→N→E 三种优先序求解</p>
+      <h4>逐层最小能耗</h4>
+      <p>在恰好使用 N 个架次的约束下求最小能耗</p>
+      <h4>支配筛选</h4>
+      <p>按支配关系提取真实 Pareto 架次数集合</p>
+    </div>
+    <div class="card">
+      <div class="st">阶段四</div>
+      <h3>返航余量<br>灵敏度与临界值</h3>
+      <h4>参数扫描</h4>
+      <p>ρ 在 0.10 至 0.40 内以 0.01 步长扫描组批结果</p>
+      <h4>可行性二分</h4>
+      <p>对"全部货箱可投递"作二分，求临界返航安全余量 ρ<sub>c</sub></p>
+      <h4>受限归因</h4>
+      <p>逐区核对不可投递是否源于最重货箱超出全部机型安全载荷</p>
+    </div>
+  </div>
+
+  <div class="out">
+    <div class="oc"><h4>最大安全载荷 q*</h4><p>3 机型 × 15 服务区共 45 个组合的可行上界</p></div>
+    <div class="oc"><h4>各服务区组批方案</h4><p>架次划分与机型指派，满足载质量、体积与能量约束</p></div>
+    <div class="oc"><h4>三指标权衡前沿</h4><p>架次数—总能耗—累计作业时间的 Pareto 集</p></div>
+    <div class="oc"><h4>临界返航安全余量</h4><p>全部货箱可投递的余量上限与受限服务区</p></div>
+  </div>
+</div>
+</body>
+</html>
