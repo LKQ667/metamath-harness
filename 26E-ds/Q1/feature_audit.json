@@ -1,0 +1,29 @@
+{
+  "samples": 100,
+  "expected_samples": 100,
+  "coverage_complete": true,
+  "text_shape": [
+    100,
+    50,
+    768
+  ],
+  "audio_shape": [
+    100,
+    50,
+    74
+  ],
+  "vision_shape": [
+    100,
+    50,
+    35
+  ],
+  "nan_count": 0,
+  "inf_count": 0,
+  "text_valid_mean": 50.0,
+  "audio_valid_mean": 49.689998626708984,
+  "vision_valid_mean": 33.970001220703125,
+  "duration_min": 2.257,
+  "duration_max": 29.288021,
+  "duration_field_ok": true,
+  "grid_monotonic": true
+}

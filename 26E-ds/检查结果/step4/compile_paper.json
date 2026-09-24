@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "backend": "host",
+  "pdf": "F:\\26华为杯\\26E-ds\\论文\\main.pdf",
+  "log": "F:\\26华为杯\\26E-ds\\论文\\main.log",
+  "aux": "F:\\26华为杯\\26E-ds\\论文\\main.aux",
+  "attempts": [
+    {
+      "attempt": 1,
+      "returncode": 0,
+      "tail": "Initial Win CP for (console input, console output, system): (CP936, CP65001, CP936)\nI changed them all to CP936\nRc files read:\n  NONE\nLatexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.\nLatexmk: Nothing to do for 'main.tex'.\nLatexmk: All targets (main.xdv main.pdf) are up-to-date\n\nReverting Windows console CPs to (in,out) = (936,65001)\n"
+    }
+  ]
+}

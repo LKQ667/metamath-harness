@@ -1,0 +1,528 @@
+{
+  "count": 18,
+  "all_qa_passed": true,
+  "figures": [
+    {
+      "name": "fig01_data_overview",
+      "files": [
+        "figures/fig01_data_overview.svg",
+        "figures/fig01_data_overview.pdf",
+        "figures/fig01_data_overview.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig02_modality_correlation",
+      "files": [
+        "figures/fig02_modality_correlation.svg",
+        "figures/fig02_modality_correlation.pdf",
+        "figures/fig02_modality_correlation.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q1_01_alignment",
+      "files": [
+        "Q1/figures/fig_q1_01_alignment.svg",
+        "Q1/figures/fig_q1_01_alignment.pdf",
+        "Q1/figures/fig_q1_01_alignment.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q1_03_vision_space",
+      "files": [
+        "Q1/figures/fig_q1_03_vision_space.svg",
+        "Q1/figures/fig_q1_03_vision_space.pdf",
+        "Q1/figures/fig_q1_03_vision_space.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q1_04_vision_coverage",
+      "files": [
+        "Q1/figures/fig_q1_04_vision_coverage.svg",
+        "Q1/figures/fig_q1_04_vision_coverage.pdf",
+        "Q1/figures/fig_q1_04_vision_coverage.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_01_missing_pattern",
+      "files": [
+        "Q2/figures/fig_q2_01_missing_pattern.svg",
+        "Q2/figures/fig_q2_01_missing_pattern.pdf",
+        "Q2/figures/fig_q2_01_missing_pattern.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_02_rate_curves",
+      "files": [
+        "Q2/figures/fig_q2_02_rate_curves.svg",
+        "Q2/figures/fig_q2_02_rate_curves.pdf",
+        "Q2/figures/fig_q2_02_rate_curves.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_03_response_surface",
+      "files": [
+        "Q2/figures/fig_q2_03_response_surface.svg",
+        "Q2/figures/fig_q2_03_response_surface.pdf",
+        "Q2/figures/fig_q2_03_response_surface.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_05_duration_error",
+      "files": [
+        "Q2/figures/fig_q2_05_duration_error.svg",
+        "Q2/figures/fig_q2_05_duration_error.pdf",
+        "Q2/figures/fig_q2_05_duration_error.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_06_ablation",
+      "files": [
+        "Q2/figures/fig_q2_06_ablation.svg",
+        "Q2/figures/fig_q2_06_ablation.pdf",
+        "Q2/figures/fig_q2_06_ablation.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_01_modality_heatmap",
+      "files": [
+        "Q3/figures/fig_q3_01_modality_heatmap.svg",
+        "Q3/figures/fig_q3_01_modality_heatmap.pdf",
+        "Q3/figures/fig_q3_01_modality_heatmap.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_02_modality_space",
+      "files": [
+        "Q3/figures/fig_q3_02_modality_space.svg",
+        "Q3/figures/fig_q3_02_modality_space.pdf",
+        "Q3/figures/fig_q3_02_modality_space.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_03_temporal_evidence",
+      "files": [
+        "Q3/figures/fig_q3_03_temporal_evidence.svg",
+        "Q3/figures/fig_q3_03_temporal_evidence.pdf",
+        "Q3/figures/fig_q3_03_temporal_evidence.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_04_evidence_network",
+      "files": [
+        "Q3/figures/fig_q3_04_evidence_network.svg",
+        "Q3/figures/fig_q3_04_evidence_network.pdf",
+        "Q3/figures/fig_q3_04_evidence_network.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_05_sample_card",
+      "files": [
+        "Q3/figures/fig_q3_05_sample_card.svg",
+        "Q3/figures/fig_q3_05_sample_card.pdf",
+        "Q3/figures/fig_q3_05_sample_card.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_sens_01_local_tornado",
+      "files": [
+        "灵敏度分析/figures/fig_sens_01_local_tornado.svg",
+        "灵敏度分析/figures/fig_sens_01_local_tornado.pdf",
+        "灵敏度分析/figures/fig_sens_01_local_tornado.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_sens_02_sobol_heatmap",
+      "files": [
+        "灵敏度分析/figures/fig_sens_02_sobol_heatmap.svg",
+        "灵敏度分析/figures/fig_sens_02_sobol_heatmap.pdf",
+        "灵敏度分析/figures/fig_sens_02_sobol_heatmap.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    },
+    {
+      "name": "fig_sens_03_joint_surface",
+      "files": [
+        "灵敏度分析/figures/fig_sens_03_joint_surface.svg",
+        "灵敏度分析/figures/fig_sens_03_joint_surface.pdf",
+        "灵敏度分析/figures/fig_sens_03_joint_surface.png"
+      ],
+      "qa_passed": true,
+      "qa_checks": {
+        "svg_exists": true,
+        "pdf_exists": true,
+        "png_exists": true,
+        "svg_parse_ok": true,
+        "svg_has_text_nodes": true,
+        "editable_text_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "cn_font_configured": true,
+        "profile": "competition_cn",
+        "export_ok": true,
+        "export_preflight_complete": true,
+        "font_profile_ok": true,
+        "canvas_size_ok": true,
+        "research_font_size_ok": true,
+        "research_preflight_ok": false,
+        "cn_text_ok": true
+      }
+    }
+  ]
+}

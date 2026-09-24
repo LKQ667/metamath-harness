@@ -1,0 +1,14 @@
+{
+  "text": {
+    "cumulative_variance": 8.26529600073197,
+    "separation": 0.37118196273487986
+  },
+  "audio": {
+    "cumulative_variance": 90.30787967223922,
+    "separation": 0.41461103088455237
+  },
+  "vision": {
+    "cumulative_variance": 51.94925692246322,
+    "separation": 0.40792372018019096
+  }
+}

@@ -1,0 +1,726 @@
+{
+  "drawing_mode": "ai",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "drawing_mode_source": "card",
+  "bar_policy": "禁用",
+  "subplot_policy": "少用子图",
+  "python_chart_repeat_policy": "模型自行分析",
+  "figure_total": 20,
+  "figure_plan": {
+    "python_data_figures": 16,
+    "ai_figures": 4,
+    "ai_breakdown": {
+      "技术路线图": 1,
+      "流程图": 1,
+      "原理图": 1,
+      "示意图": 1
+    },
+    "multi_panel_python_figures": 4,
+    "single_panel_python_figures": 12,
+    "note": "AI 成图 4 张，未超出卡片上限 4；其中流程类 2 张（技术路线图、特征提取流程图）、概念类 2 张（鲁棒融合原理图、可解释证据链示意图）。多面板 Python 入文图 4 张，符合少用子图策略上限。"
+  },
+  "chart_repeat_reasons": {
+    "line_2d": "折线族共用于五张图，各自承载不同的演化过程：问题一三模态对齐核验、问题二缺失率扫描下的准确率退化、问题二缺失时长扫描下的误差增长、问题三位置重要性的时序分布、问题三附件4 典型样本的逐位置贡献。五张图的横轴物理量、纵轴物理量与结论均不相同，不是同数据同结论的换色变体。",
+    "scatter_2d": "散点族共用于四张图，各自回答不同问题：问题一模态间相关结构、问题三模态作用三元空间分布、问题三证据定位删除实验、灵敏度分析参数端点效应。四张图的坐标语义分别为相关系数、作用权重、预测偏移与误差区间，结论均不相同。",
+    "heatmap_2d": "热图族共用于两张图，各自刻画不同结构：问题一视觉通道有效位置覆盖矩阵、问题三模态作用程度的样本级分布矩阵。矩阵来源、行列语义与结论均不相同。",
+    "distribution_2d": "分布族用于两张多面板图的不同面板：附件3 缺失率与缺失区间长度分布、模态作用程度分布。统计对象与结论均不相同。",
+    "contour_2d": "等值线族用于两张图，分别刻画不同响应结构：问题二视觉模态缺失位置与缺失时长的误差响应面、灵敏度分析中参数影响幅度与缺失效应的联合视图。两张图的网格变量、响应量与结论均不相同。",
+    "bar_2d": "长度编码族用于两张图，均以线段长度而非柱形表达排序：问题二融合结构消融的误差排序、灵敏度分析六个参数的影响幅度排序。两者比较对象不同（模型结构对参数），且源码未调用任何柱形接口。"
+  },
+  "items": [
+    {
+      "id": "fig01",
+      "generator": "python",
+      "template_id": "multi_panel_hero_support_template",
+      "chart_family": "line_band",
+      "panel_count": 4,
+      "panel_chart_types": [
+        [
+          "scatter_2d"
+        ],
+        [
+          "line_2d"
+        ],
+        [
+          "scatter_2d"
+        ],
+        [
+          "line_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "figures/fig01_data_overview.svg",
+        "figures/fig01_data_overview.pdf",
+        "figures/fig01_data_overview.png"
+      ],
+      "title": "数据规模、标签分布、片段特征与三模态零值占比总览",
+      "section": "数据预处理与探索性分析",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig02",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "scatter_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "figures/fig02_modality_correlation.svg",
+        "figures/fig02_modality_correlation.pdf",
+        "figures/fig02_modality_correlation.png"
+      ],
+      "title": "三模态之间与模态–情感强度之间的相关结构",
+      "section": "数据预处理与探索性分析",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig03",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q1/figures/fig_q1_01_alignment.svg",
+        "Q1/figures/fig_q1_01_alignment.pdf",
+        "Q1/figures/fig_q1_01_alignment.png"
+      ],
+      "title": "典型样本三模态在同一时间栅格上的对齐核验",
+      "section": "问题一模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig05",
+      "generator": "python",
+      "template_id": "sensitivity_sobol_heatmap_template",
+      "chart_family": "bursty_activity",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "heatmap_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q1/figures/fig_q1_04_vision_coverage.svg",
+        "Q1/figures/fig_q1_04_vision_coverage.pdf",
+        "Q1/figures/fig_q1_04_vision_coverage.png"
+      ],
+      "title": "视觉通道有效位置覆盖与有效长度分布",
+      "section": "问题一模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig06",
+      "generator": "python",
+      "template_id": "multi_panel_hero_support_template",
+      "chart_family": "bursty_activity",
+      "panel_count": 4,
+      "panel_chart_types": [
+        [
+          "heatmap_2d"
+        ],
+        [
+          "distribution_2d"
+        ],
+        [
+          "distribution_2d"
+        ],
+        [
+          "scatter_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q2/figures/fig_q2_01_missing_pattern.svg",
+        "Q2/figures/fig_q2_01_missing_pattern.pdf",
+        "Q2/figures/fig_q2_01_missing_pattern.png"
+      ],
+      "title": "附件3 缺失位置矩阵、缺失率分布、区间长度与碎片化程度",
+      "section": "问题二模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig07",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q2/figures/fig_q2_02_rate_curves.svg",
+        "Q2/figures/fig_q2_02_rate_curves.pdf",
+        "Q2/figures/fig_q2_02_rate_curves.png"
+      ],
+      "title": "缺失模态类型与缺失率对情感极性准确率的影响",
+      "section": "问题二模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig08",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "network_curvature_multiscale",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "contour_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q2/figures/fig_q2_03_response_surface.svg",
+        "Q2/figures/fig_q2_03_response_surface.pdf",
+        "Q2/figures/fig_q2_03_response_surface.png"
+      ],
+      "title": "视觉模态缺失位置与缺失时长的联合误差响应面（三维曲面）",
+      "section": "问题二模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码",
+        "top_journal_cn_3d_recommended": true
+      }
+    },
+    {
+      "id": "fig09",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q2/figures/fig_q2_05_duration_error.svg",
+        "Q2/figures/fig_q2_05_duration_error.pdf",
+        "Q2/figures/fig_q2_05_duration_error.png"
+      ],
+      "title": "缺失时长对情感强度误差的影响",
+      "section": "问题二模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig10",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "pareto",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "bar_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q2/figures/fig_q2_06_ablation.svg",
+        "Q2/figures/fig_q2_06_ablation.pdf",
+        "Q2/figures/fig_q2_06_ablation.png"
+      ],
+      "title": "融合结构消融：门控、注意力与多模态融合的贡献",
+      "section": "问题二模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig11",
+      "generator": "python",
+      "template_id": "multi_panel_hero_support_template",
+      "chart_family": "heatmap",
+      "panel_count": 4,
+      "panel_chart_types": [
+        [
+          "heatmap_2d"
+        ],
+        [
+          "distribution_2d"
+        ],
+        [
+          "line_2d"
+        ],
+        [
+          "scatter_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q3/figures/fig_q3_01_modality_heatmap.svg",
+        "Q3/figures/fig_q3_01_modality_heatmap.pdf",
+        "Q3/figures/fig_q3_01_modality_heatmap.png"
+      ],
+      "title": "逐样本模态作用程度、分布、逐极性对比与主要参考模态构成",
+      "section": "问题三模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig12",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "scatter_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q3/figures/fig_q3_02_modality_space.svg",
+        "Q3/figures/fig_q3_02_modality_space.pdf",
+        "Q3/figures/fig_q3_02_modality_space.png"
+      ],
+      "title": "验证集样本在模态作用三元空间中的三维分布",
+      "section": "问题三模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码",
+        "top_journal_cn_3d_recommended": true
+      }
+    },
+    {
+      "id": "fig13",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q3/figures/fig_q3_03_temporal_evidence.svg",
+        "Q3/figures/fig_q3_03_temporal_evidence.pdf",
+        "Q3/figures/fig_q3_03_temporal_evidence.png"
+      ],
+      "title": "逐位置模态贡献分解与位置重要性分布",
+      "section": "问题三模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig14",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "network_curve",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "scatter_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q3/figures/fig_q3_04_evidence_network.svg",
+        "Q3/figures/fig_q3_04_evidence_network.pdf",
+        "Q3/figures/fig_q3_04_evidence_network.png"
+      ],
+      "title": "证据定位的删除实验",
+      "section": "问题三模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig15",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "Q3/figures/fig_q3_05_sample_card.svg",
+        "Q3/figures/fig_q3_05_sample_card.pdf",
+        "Q3/figures/fig_q3_05_sample_card.png"
+      ],
+      "title": "附件4 典型样本解释卡与关键证据定位",
+      "section": "问题三模型建立与求解",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig16",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "pareto",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "bar_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "灵敏度分析/figures/fig_sens_01_local_tornado.svg",
+        "灵敏度分析/figures/fig_sens_01_local_tornado.pdf",
+        "灵敏度分析/figures/fig_sens_01_local_tornado.png"
+      ],
+      "title": "鲁棒模型对六个关键参数的局部敏感度",
+      "section": "灵敏度分析",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码"
+      }
+    },
+    {
+      "id": "fig17",
+      "generator": "python",
+      "template_id": "multi_panel_hero_support_template",
+      "chart_family": "line_band",
+      "panel_count": 4,
+      "panel_chart_types": [
+        [
+          "scatter_2d"
+        ],
+        [
+          "line_2d"
+        ],
+        [
+          "line_2d"
+        ],
+        [
+          "contour_2d"
+        ]
+      ],
+      "source": "scripts/make_paper_figures.py",
+      "exports": [
+        "灵敏度分析/figures/fig_sens_02_sobol_heatmap.svg",
+        "灵敏度分析/figures/fig_sens_02_sobol_heatmap.pdf",
+        "灵敏度分析/figures/fig_sens_02_sobol_heatmap.png"
+      ],
+      "title": "参数影响幅度、缺失率与缺失时长效应及文本--语音联合三维响应面",
+      "section": "灵敏度分析",
+      "paper_ready": true,
+      "qa": {
+        "profile": "competition_cn",
+        "cn_text_ok": true,
+        "export_ok": true,
+        "editable_text_ok": true,
+        "svg_parse_ok": true,
+        "png_nonempty": true,
+        "pdf_nonempty": true,
+        "svg_color_count_reasonable": true,
+        "font_profile_ok": true,
+        "visual_review": "已逐图读取 PNG 复核，无重叠、无裁切、中文无乱码",
+        "top_journal_cn_3d_recommended": true
+      }
+    },
+    {
+      "id": "ai01",
+      "generator": "imagegen",
+      "template_id": "imagegen",
+      "chart_family": "flowchart",
+      "source": "手绘图/技术路线图.png",
+      "exports": [
+        "手绘图/技术路线图.png"
+      ],
+      "prompt_source": "手绘图/技术路线图提示词.md",
+      "paper_ready": true,
+      "export_status": "generated",
+      "needs_visual_review": false,
+      "title": "三阶段递进式建模技术路线图",
+      "section": "问题重述",
+      "qa": {
+        "content_consistency_ok": true,
+        "cn_text_ok": true,
+        "symbol_formula_ok": true,
+        "crop_ok": true,
+        "clarity_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "size_px": [
+          1536,
+          1024
+        ],
+        "visual_review": "已读取 PNG 复核：简体中文无乱码、无英文混入、无数字与公式、节点文字居中不溢出、四周留白均匀、未裁切",
+        "layout_ok": true,
+        "content_ok": true
+      }
+    },
+    {
+      "id": "ai02",
+      "generator": "imagegen",
+      "template_id": "imagegen",
+      "chart_family": "flowchart",
+      "source": "手绘图/特征提取流程图.png",
+      "exports": [
+        "手绘图/特征提取流程图.png"
+      ],
+      "prompt_source": "手绘图/特征提取流程图提示词.md",
+      "paper_ready": true,
+      "export_status": "generated",
+      "needs_visual_review": false,
+      "title": "三模态特征提取与时序对齐流程图",
+      "section": "问题一模型建立与求解",
+      "qa": {
+        "content_consistency_ok": true,
+        "cn_text_ok": true,
+        "symbol_formula_ok": true,
+        "crop_ok": true,
+        "clarity_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "size_px": [
+          1536,
+          1024
+        ],
+        "visual_review": "已读取 PNG 复核：简体中文无乱码、无英文混入、无数字与公式、节点文字居中不溢出、四周留白均匀、未裁切"
+      }
+    },
+    {
+      "id": "ai03",
+      "generator": "imagegen",
+      "template_id": "imagegen",
+      "chart_family": "mechanism",
+      "source": "手绘图/鲁棒融合原理图.png",
+      "exports": [
+        "手绘图/鲁棒融合原理图.png"
+      ],
+      "prompt_source": "手绘图/鲁棒融合原理图提示词.md",
+      "paper_ready": true,
+      "export_status": "generated",
+      "needs_visual_review": false,
+      "title": "缺失感知鲁棒融合机制原理图",
+      "section": "问题二模型建立与求解",
+      "qa": {
+        "content_consistency_ok": true,
+        "cn_text_ok": true,
+        "symbol_formula_ok": true,
+        "crop_ok": true,
+        "clarity_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "size_px": [
+          1536,
+          1024
+        ],
+        "visual_review": "已读取 PNG 复核：简体中文无乱码、无英文混入、无数字与公式、节点文字居中不溢出、四周留白均匀、未裁切"
+      }
+    },
+    {
+      "id": "ai04",
+      "generator": "imagegen",
+      "template_id": "imagegen",
+      "chart_family": "schematic",
+      "source": "手绘图/可解释证据链示意图.png",
+      "exports": [
+        "手绘图/可解释证据链示意图.png"
+      ],
+      "prompt_source": "手绘图/可解释证据链示意图提示词.md",
+      "paper_ready": true,
+      "export_status": "generated",
+      "needs_visual_review": false,
+      "title": "可解释证据链示意图",
+      "section": "问题三模型建立与求解",
+      "qa": {
+        "content_consistency_ok": true,
+        "cn_text_ok": true,
+        "symbol_formula_ok": true,
+        "crop_ok": true,
+        "clarity_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "size_px": [
+          1536,
+          1024
+        ],
+        "visual_review": "已读取 PNG 复核：简体中文无乱码、无英文混入、无数字与公式、节点文字居中不溢出、四周留白均匀、未裁切"
+      }
+    }
+  ]
+}

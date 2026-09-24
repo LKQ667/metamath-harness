@@ -1,0 +1,11 @@
+{
+  "check": "check_bibliography_sources",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "rejected": [],
+    "bibitem_count": 26,
+    "note": "来源信号与相关性支撑为两道独立核对：程序核对信号存在性，相关性支撑以 source_map 登记与人工复核为准。"
+  }
+}

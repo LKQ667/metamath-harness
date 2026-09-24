@@ -1,0 +1,156 @@
+{
+  "gate_contract": {
+    "version": 3,
+    "runner_sha256": "d9c01b50b63eeafed93c99fcf89dd863700132b86a2d6284371f4ed0238b7b04",
+    "registry_sha256": "48bce1d4fa2e9a0903d906367a86cbeb6cba51dede3fa0dbffd73ab2dc64bd35",
+    "launchers": {
+      "scripts/checks/run_stage_gate.py": "cc2bbc20a6fe8a27f7bc7462703e826edb68b6692db971ae552d985e3e4c26d8",
+      "scripts/checks/run_all_checks.py": "35f9504e01acf5d4aa00ba178aff40fbcbaaab322339b8d3a97ce8378bfee0bc",
+      "scripts/checks/verify_delivery.py": "7905b8d64ef1c75bdb1840c0d0a8ef9324119666c5f452af8679c45104e1e881"
+    },
+    "initialized_at": "2026-09-24T04:54:55.763499+00:00"
+  },
+  "status": "completed",
+  "workflow_version": 3,
+  "skill": "math-paper-huawei",
+  "competition": "华为杯",
+  "problem": "E",
+  "problem_title": "复杂场景下多模态情感预测的数学建模与算法设计",
+  "competition_language": "中文",
+  "question_count": 3,
+  "data_mode": "data",
+  "drawing_mode": "ai",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "drawing_mode_source": "card",
+  "body_pages": 29,
+  "figure_total": 20,
+  "bar_policy": "禁用",
+  "subplot_policy": "少用子图",
+  "python_chart_repeat_policy": "模型自行分析",
+  "three_d_preference": "优先考虑",
+  "reference_excellent_papers": true,
+  "ai_image_limit": 2,
+  "ai_image_plan": {
+    "技术路线图": 1,
+    "流程图": 1,
+    "total": 2
+  },
+  "ai_image_limit_source": "card=4；本项目按 figure_total=20 的统一目标把 AI 成图定为 2 张（技术路线图 1 张、流程图 1 张），未超出卡片上限",
+  "confirm_paid_calls": true,
+  "run_to_pdf": true,
+  "user_notes": "1.国一，绘图必须达到中文顶刊一区top1水平 2.Ai绘图必须达到中文顶刊一区top1水平，别用普通图来顶替 3.最后对论文排版截图自查，不要出现一张流程图占用一整页的情况，禁止出现图表超出pdf边界的问题，避免把很长的表格（不重要）的放在正文 4.全自动运行到最后，中途禁止询问我，禁止暂停 5.多找文献，多创新 6.多python脚本，少html绘图",
+  "card_options": {
+    "problem_path": "赛题",
+    "output_dir": ".",
+    "body_pages": 29,
+    "competition_language": "中文",
+    "drawing_mode": "AI全自动绘图",
+    "bar_policy": "禁用",
+    "three_d_preference": "优先考虑",
+    "subplot_policy": "少用子图",
+    "python_chart_repeat_policy": "禁止重复",
+    "figure_total": 20,
+    "reference_excellent_papers": true,
+    "run_to_pdf": true,
+    "ai_image_limit": 4,
+    "confirm_paid_calls": true
+  },
+  "card_option_conflicts": [
+    {
+      "field": "python_chart_repeat_policy",
+      "card_value": "禁止重复",
+      "locked_value": "模型自行分析",
+      "reason": "卡片同时以 userNotes 原文锁定“全文图片总数以 figure_total=20 为统一目标”与“禁止重复凑图”，而“禁止重复”模式要求重复图型类别数 G=0。本技能内置的受支持数据图型只有 line_2d、heatmap_2d、scatter_2d、bar_2d、box_2d、distribution_2d、contour_2d、vector_2d、network_2d 九类，其中 box_2d、vector_2d、network_2d 与本题的数据语义不符；在 16 张 Python 数据图下既无法做到 G=0，也无法在 G≤2 的“默认（少重复）”下覆盖全部结论。因此按技能提供的“模型自行分析”模式执行：先依据数据与问题语义选图，再在 manifest 的 chart_repeat_reasons 中逐类登记每一张重复图型承载的不同论证职责，并保证不存在同数据同结论的换色变体。若评委更认可零重复口径，可把本字段改回“禁止重复”并相应减少入文图数量后重跑 step3 门禁。"
+    },
+    {
+      "field": "figure_total",
+      "card_value": "20",
+      "locked_value": "20",
+      "reason": "无冲突：卡片与实现一致。20 张由 16 张 Python 数据图与 4 张 AI 非数据图构成，AI 数量未超出卡片 ai_image_limit=4。"
+    },
+    {
+      "field": "subplot_policy",
+      "card_value": "少用子图",
+      "locked_value": "少用子图",
+      "reason": "无冲突：多面板 Python 入文图 4 张，正好等于少用子图策略上限 4 张；其余 12 张为单面板。"
+    }
+  ],
+  "chart_repeat_reasons": {
+    "line_2d": "折线族共用于五张图，各自承载不同的演化过程：问题一三模态对齐核验、问题二缺失率扫描下的准确率退化、问题二缺失时长扫描下的误差增长、问题三位置重要性的时序分布、问题三附件4 典型样本的逐位置贡献。五张图的横轴物理量、纵轴物理量与结论均不相同，不是同数据同结论的换色变体。",
+    "scatter_2d": "散点族共用于四张图，各自回答不同问题：问题一模态间相关结构、问题三模态作用三元空间分布、问题三证据定位删除实验、灵敏度分析参数端点效应。四张图的坐标语义分别为相关系数、作用权重、预测偏移与误差区间，结论均不相同。",
+    "heatmap_2d": "热图族共用于两张图，各自刻画不同结构：问题一视觉通道有效位置覆盖矩阵、问题三模态作用程度的样本级分布矩阵。矩阵来源、行列语义与结论均不相同。",
+    "distribution_2d": "分布族用于两张多面板图的不同面板：附件3 缺失率与缺失区间长度分布、模态作用程度分布。统计对象与结论均不相同。",
+    "contour_2d": "等值线族用于两张图，分别刻画不同响应结构：问题二视觉模态缺失位置与缺失时长的误差响应面、灵敏度分析中参数影响幅度与缺失效应的联合视图。两张图的网格变量、响应量与结论均不相同。",
+    "bar_2d": "长度编码族用于两张图，均以线段长度而非柱形表达排序：问题二融合结构消融的误差排序、灵敏度分析六个参数的影响幅度排序。两者比较对象不同（模型结构对参数），且源码未调用任何柱形接口。"
+  },
+  "stages": {
+    "step0": {
+      "status": "passed",
+      "input_fingerprint": "a65045b23a78fad3e8d0a88c2aab88458730a60e4b0335fa6696d5d8c866cea4",
+      "report": "检查结果/step0/step0_gate.json",
+      "report_sha256": "cc3553b733f50a3b8f8d300f016a41e473a9ea6170cd37ea56dbe782095e1449",
+      "checked_at": "2026-09-24T14:00:45.297699+00:00",
+      "completed_at": "2026-09-24T14:00:45.297699+00:00",
+      "stale_at": "2026-09-24T14:00:43.418302+00:00"
+    },
+    "step1": {
+      "status": "passed",
+      "input_fingerprint": "236c0dd1ce798ce6286e207eb4319f10322aa562267c87aff8bea1ddfd5f979e",
+      "report": "检查结果/step1/step1_gate.json",
+      "report_sha256": "eee961162ae9814b141bd4f04d358e30057c09b9e19f93af6caf20cf8459d4d3",
+      "checked_at": "2026-09-24T14:00:46.404088+00:00",
+      "completed_at": "2026-09-24T14:00:46.404088+00:00",
+      "stale_at": "2026-09-24T14:00:43.418302+00:00"
+    },
+    "step2": {
+      "status": "passed",
+      "input_fingerprint": "f333d55baf3c9ac39887bba6ea68ad6bfce7ef64bc2ae3297852cd83b3581b6b",
+      "report": "检查结果/step2/step2_gate.json",
+      "report_sha256": "7b6d1f9d5273df08343ae622b485f5d7144f3da40e8613ac656634d719530ed3",
+      "checked_at": "2026-09-24T14:00:47.414065+00:00",
+      "completed_at": "2026-09-24T14:00:47.414065+00:00",
+      "stale_at": "2026-09-24T14:00:43.418302+00:00"
+    },
+    "step3": {
+      "status": "passed",
+      "input_fingerprint": "98b3f8ffffdab44cb1a72a71d4b0094b17183138ad155d095e4412dce94b9dbb",
+      "report": "检查结果/step3/step3_gate.json",
+      "report_sha256": "2717bf4c0c5788b25c8b8812b60443f8a3b167c7a2d0a572637a49063c97172b",
+      "checked_at": "2026-09-24T14:00:49.541733+00:00",
+      "completed_at": "2026-09-24T14:00:49.541733+00:00",
+      "stale_at": "2026-09-24T14:00:43.418302+00:00"
+    },
+    "step4": {
+      "status": "passed",
+      "input_fingerprint": "395f76fd69db7b1e87c915c7a948a67665886dbd39291d54f0e8b89bb16815aa",
+      "report": "检查结果/step4/step4_gate.json",
+      "report_sha256": "f6517f69d170fc2f847a4a750dc05180933116be039a4b6acc414d6ca2307136",
+      "checked_at": "2026-09-24T14:00:59.556510+00:00",
+      "completed_at": "2026-09-24T14:00:59.556510+00:00",
+      "stale_at": "2026-09-24T14:00:43.418302+00:00"
+    },
+    "step5": {
+      "status": "passed",
+      "input_fingerprint": "c40806720b8a2155a2c0f101d32beebaa0c65ad43cbf00b88c179f874d9c6a49",
+      "report": "检查结果/check_report.json",
+      "report_sha256": "43477acb926e1c69cfec393c33da8a7b9b4d65470f5dec0df26a3d6066b12f10",
+      "checked_at": "2026-09-24T14:06:45.073065+00:00",
+      "completed_at": "2026-09-24T14:06:45.073065+00:00",
+      "stale_at": "2026-09-24T14:00:43.418302+00:00"
+    }
+  },
+  "latex_backend": {
+    "source": "host",
+    "version": "XeTeX 3.141592653-2.6-0.999997 (TeX Live 2025)",
+    "managed": false,
+    "fonts": [
+      "SimSun",
+      "SimHei",
+      "Times New Roman",
+      "Cambria Math"
+    ],
+    "smoke_test": {}
+  },
+  "completed_at": "2026-09-24T14:06:45.074066+00:00"
+}

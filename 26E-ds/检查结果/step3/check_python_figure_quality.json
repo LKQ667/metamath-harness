@@ -1,0 +1,6 @@
+{
+  "check": "check_python_figure_quality",
+  "ok": true,
+  "errors": [],
+  "issues": []
+}

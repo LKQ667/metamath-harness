@@ -1,0 +1,36 @@
+{
+  "check": "check_python_subplot_policy",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "policy": "少用子图",
+    "stage": "step5",
+    "stage_source": "explicit",
+    "sparse_limit": 4,
+    "python_figures": 16,
+    "multi_panel": [
+      {
+        "source": "scripts/make_paper_figures.py",
+        "template_id": "multi_panel_hero_support_template",
+        "panel_count": 4
+      },
+      {
+        "source": "scripts/make_paper_figures.py",
+        "template_id": "multi_panel_hero_support_template",
+        "panel_count": 4
+      },
+      {
+        "source": "scripts/make_paper_figures.py",
+        "template_id": "multi_panel_hero_support_template",
+        "panel_count": 4
+      },
+      {
+        "source": "scripts/make_paper_figures.py",
+        "template_id": "multi_panel_hero_support_template",
+        "panel_count": 4
+      }
+    ],
+    "review_items": []
+  }
+}

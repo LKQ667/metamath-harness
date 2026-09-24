@@ -1,0 +1,41 @@
+\contentsline {section}{\numberline {1}问题重述}{5}{section.1}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题背景}{5}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 2}问题提出}{5}{subsection.1.2}%
+\contentsline {section}{\numberline {2}模型假设与符号说明}{7}{section.2}%
+\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型假设}{7}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 2}符号说明}{8}{subsection.2.2}%
+\contentsline {section}{\numberline {3}问题一模型建立与求解}{9}{section.3}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1}数据预处理与探索性分析}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2}三模态特征定义与提取}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 3}跨模态时序对齐模型}{11}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 4}全量结果与典型样本核验}{12}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 5}可复现性说明}{14}{subsection.3.5}%
+\contentsline {section}{\numberline {4}问题二模型建立与求解}{14}{section.4}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与缺失结构刻画}{14}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2}鲁棒融合模型}{15}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 3}训练方案与消融实验}{17}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 4}缺失类型、位置与时长的规律分析}{19}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 5}参数敏感度分析}{21}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 6}附件3 测试集推理与结果汇总}{22}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 7}结果解释与错误归因}{22}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 8}模型局限}{23}{subsection.4.8}%
+\contentsline {section}{\numberline {5}问题三模型建立与求解}{24}{section.5}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与可解释性定义}{24}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2}三层可解释融合模型}{24}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 3}解释结果的统计特征}{25}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 4}证据定位的有效性核对}{26}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 5}附件4 测试集推理与解释产出}{28}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 6}验证集基础性能与错误归因}{29}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 7}模型局限}{30}{subsection.5.7}%
+\contentsline {section}{\numberline {6}模型总结与评价}{30}{section.6}%
+\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型优点}{30}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 2}模型局限与改进}{30}{subsection.6.2}%
+\contentsline {section}{参考文献}{31}{section*.28}%
+\contentsline {section}{附录 \numberline {A}问题二附录}{34}{appendix.1.A}%
+\contentsline {section}{附录 \numberline {B}问题三附录}{34}{appendix.1.B}%
+\contentsline {section}{附录 \numberline {C}附录代码文件}{35}{appendix.1.C}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1}extract\_features.py}{35}{subsection.1.C.1}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2}mm\_data.py}{45}{subsection.1.C.2}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 3}model.py}{50}{subsection.1.C.3}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 4}model\_q3.py}{59}{subsection.1.C.4}%
+\contentsfinish 

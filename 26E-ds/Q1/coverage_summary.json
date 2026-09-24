@@ -1,0 +1,17 @@
+{
+  "text": {
+    "mean_valid": 50.0,
+    "min_valid": 50,
+    "max_valid": 50
+  },
+  "audio": {
+    "mean_valid": 49.69,
+    "min_valid": 47,
+    "max_valid": 50
+  },
+  "vision": {
+    "mean_valid": 33.97,
+    "min_valid": 11,
+    "max_valid": 50
+  }
+}

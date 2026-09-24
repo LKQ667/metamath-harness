@@ -1,0 +1,10 @@
+{
+  "check": "check_abstract_no_formula",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "profile": "huawei",
+    "note": "华为杯不启用国赛摘要禁公式硬门，摘要允许必要符号。"
+  }
+}

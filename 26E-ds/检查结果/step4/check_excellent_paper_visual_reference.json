@@ -1,0 +1,12 @@
+{
+  "check": "check_excellent_paper_visual_reference",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "enabled": true,
+    "status": "matched",
+    "papers": 2,
+    "shots": 10
+  }
+}

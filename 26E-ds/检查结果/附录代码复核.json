@@ -1,0 +1,198 @@
+{
+  "note": "附录净化代码复核配置。files 登记真实源文件与附录净化副本；runs 为原版与净化版的隔离回归用例，逐项比对结构化输出。",
+  "tolerance": {
+    "abs": 1e-06,
+    "rel": 1e-06
+  },
+  "files": [
+    {
+      "source": "Q1/extract_features.py",
+      "appendix": "论文/附录代码/extract_features.py"
+    },
+    {
+      "source": "scripts/mm_data.py",
+      "appendix": "论文/附录代码/mm_data.py"
+    },
+    {
+      "source": "Q2/model.py",
+      "appendix": "论文/附录代码/model.py"
+    },
+    {
+      "source": "Q3/model_q3.py",
+      "appendix": "论文/附录代码/model_q3.py"
+    }
+  ],
+  "runs": [
+    {
+      "name": "extract_features",
+      "files": [
+        "论文/附录代码/extract_features.py"
+      ],
+      "command": [
+        "python",
+        "scripts/appendix_smoke.py",
+        "--module",
+        "extract_features",
+        "--out",
+        "检查结果/appendix_smoke_extract_features.json"
+      ],
+      "cwd": ".",
+      "outputs": [
+        {
+          "path": "检查结果/appendix_smoke_extract_features.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 300
+    },
+    {
+      "name": "mm_data",
+      "files": [
+        "论文/附录代码/mm_data.py"
+      ],
+      "command": [
+        "python",
+        "scripts/appendix_smoke.py",
+        "--module",
+        "mm_data",
+        "--out",
+        "检查结果/appendix_smoke_mm_data.json"
+      ],
+      "cwd": ".",
+      "outputs": [
+        {
+          "path": "检查结果/appendix_smoke_mm_data.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 300
+    },
+    {
+      "name": "model",
+      "files": [
+        "论文/附录代码/model.py"
+      ],
+      "command": [
+        "python",
+        "scripts/appendix_smoke.py",
+        "--module",
+        "model",
+        "--out",
+        "检查结果/appendix_smoke_model.json"
+      ],
+      "cwd": ".",
+      "outputs": [
+        {
+          "path": "检查结果/appendix_smoke_model.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 600
+    },
+    {
+      "name": "model_q3",
+      "files": [
+        "论文/附录代码/model_q3.py"
+      ],
+      "command": [
+        "python",
+        "scripts/appendix_smoke.py",
+        "--module",
+        "model_q3",
+        "--out",
+        "检查结果/appendix_smoke_model_q3.json"
+      ],
+      "cwd": ".",
+      "outputs": [
+        {
+          "path": "检查结果/appendix_smoke_model_q3.json",
+          "type": "json"
+        }
+      ],
+      "timeout": 600
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "tolerance": {
+      "abs": 1e-06,
+      "rel": 1e-06
+    },
+    "files": [
+      {
+        "source": "Q1/extract_features.py",
+        "appendix": "论文/附录代码/extract_features.py",
+        "source_sha256": "2b2cbc14c6c9bc61913f98663422f8bf16641510656fef5292e2b9ae86f16956",
+        "appendix_sha256": "e92dc6bcdd95b74ec3b641346090d1a6e9549781d16ea7d729c0fc06572971b0"
+      },
+      {
+        "source": "scripts/mm_data.py",
+        "appendix": "论文/附录代码/mm_data.py",
+        "source_sha256": "5030c2d8e6c896fde275f43b086ee421fec2cfe7c4bbf59e3c39b6bf6fffb050",
+        "appendix_sha256": "358eabe40a57992c0d8ba2a2407de64e3d03cec181033c4c4a9d45a1498b8a14"
+      },
+      {
+        "source": "Q2/model.py",
+        "appendix": "论文/附录代码/model.py",
+        "source_sha256": "f5dfca956310ea83a0d2a94cfa92ebf1709793ed823f5d405100cb26edcdc7f0",
+        "appendix_sha256": "c5f671ee5975f3c31c0da58853108af22fc51b7252a410e560af0a4a21b496d8"
+      },
+      {
+        "source": "Q3/model_q3.py",
+        "appendix": "论文/附录代码/model_q3.py",
+        "source_sha256": "4123a4790be4991bbb62c59b26caada4e46180d9b7a44e15bd2acd96be8eca38",
+        "appendix_sha256": "eb2dd089db47c03137041f1fb2294e41701ec727247f22ebcb18663c50020f7b"
+      }
+    ],
+    "runs": [
+      {
+        "name": "extract_features",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/appendix_smoke_extract_features.json",
+            "type": "json",
+            "original_sha256": "9c5b77a15d64b67d432093261580b4fc18e4ce834ab9ae46c51d3f657c8693e3",
+            "sanitized_sha256": "9c5b77a15d64b67d432093261580b4fc18e4ce834ab9ae46c51d3f657c8693e3"
+          }
+        ]
+      },
+      {
+        "name": "mm_data",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/appendix_smoke_mm_data.json",
+            "type": "json",
+            "original_sha256": "f48d5306c66a38a5a4dde9820b82196b877b5b4b1791cac77d0759858e6ad0a9",
+            "sanitized_sha256": "f48d5306c66a38a5a4dde9820b82196b877b5b4b1791cac77d0759858e6ad0a9"
+          }
+        ]
+      },
+      {
+        "name": "model",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/appendix_smoke_model.json",
+            "type": "json",
+            "original_sha256": "9a384b12a37d441f814eb6b25c8544ed69b57819280b4f8339742650624d8b1b",
+            "sanitized_sha256": "9a384b12a37d441f814eb6b25c8544ed69b57819280b4f8339742650624d8b1b"
+          }
+        ]
+      },
+      {
+        "name": "model_q3",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "检查结果/appendix_smoke_model_q3.json",
+            "type": "json",
+            "original_sha256": "eaa83cdaf2f83f1dc6eef862ed9a5aa78fe6c082527c3e8407b17a009dc750e6",
+            "sanitized_sha256": "eaa83cdaf2f83f1dc6eef862ed9a5aa78fe6c082527c3e8407b17a009dc750e6"
+          }
+        ]
+      }
+    ]
+  }
+}

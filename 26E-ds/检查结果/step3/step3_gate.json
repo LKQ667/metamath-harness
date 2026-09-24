@@ -1,0 +1,170 @@
+{
+  "stage": "step3",
+  "ok": true,
+  "checks": [
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_ranges",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_code_distribution",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figures_manifest",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_contract",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "mode": "模型自行分析",
+        "policy_source": "explicit_state",
+        "stage": "step3",
+        "stage_source": "explicit",
+        "scope": "拟入文（step3 预排版统计）",
+        "n_by_type": {
+          "bar_2d": 2,
+          "contour_2d": 2,
+          "distribution_2d": 2,
+          "heatmap_2d": 3,
+          "line_2d": 8,
+          "scatter_2d": 7
+        },
+        "per_type_items": {
+          "bar_2d": [
+            "scripts/make_paper_figures.py"
+          ],
+          "contour_2d": [
+            "scripts/make_paper_figures.py"
+          ],
+          "distribution_2d": [
+            "scripts/make_paper_figures.py"
+          ],
+          "heatmap_2d": [
+            "scripts/make_paper_figures.py"
+          ],
+          "line_2d": [
+            "scripts/make_paper_figures.py"
+          ],
+          "scatter_2d": [
+            "scripts/make_paper_figures.py"
+          ]
+        },
+        "repeat_types": [
+          "bar_2d",
+          "contour_2d",
+          "distribution_2d",
+          "heatmap_2d",
+          "line_2d",
+          "scatter_2d"
+        ],
+        "G": 6,
+        "unknown_types_items": [],
+        "counted_figures": 16
+      }
+    },
+    {
+      "check": "check_python_figure_quality",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_bar_chart_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "禁用",
+        "bar_calls": []
+      }
+    },
+    {
+      "check": "check_python_subplot_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "少用子图",
+        "stage": "step3",
+        "stage_source": "explicit",
+        "sparse_limit": 4,
+        "python_figures": 16,
+        "multi_panel": [
+          {
+            "source": "scripts/make_paper_figures.py",
+            "template_id": "multi_panel_hero_support_template",
+            "panel_count": 4
+          },
+          {
+            "source": "scripts/make_paper_figures.py",
+            "template_id": "multi_panel_hero_support_template",
+            "panel_count": 4
+          },
+          {
+            "source": "scripts/make_paper_figures.py",
+            "template_id": "multi_panel_hero_support_template",
+            "panel_count": 4
+          },
+          {
+            "source": "scripts/make_paper_figures.py",
+            "template_id": "multi_panel_hero_support_template",
+            "panel_count": 4
+          }
+        ],
+        "review_items": []
+      }
+    },
+    {
+      "check": "check_flowchart_required",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_question_assets",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    }
+  ]
+}

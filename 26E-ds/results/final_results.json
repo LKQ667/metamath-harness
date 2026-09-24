@@ -1,0 +1,569 @@
+{
+  "schema": "mathmodel.final_results/v1",
+  "project": "2026 华为杯 E 题：复杂场景下多模态情感预测的数学建模与算法设计",
+  "language": "中文",
+  "ranges": {
+    "fusion_valid_accuracy": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "fusion_valid_macro_f1": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "fusion_valid_pearson": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "fusion_valid_mae": {
+      "min": 0.0,
+      "max": 3.0
+    },
+    "fusion_valid_rmse": {
+      "min": 0.0,
+      "max": 4.0
+    },
+    "encoder_valid_accuracy": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "ablation_valid_accuracy": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "ablation_valid_macro_f1": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "ablation_valid_mae": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "accuracy_mean": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "mae_mean": {
+      "min": 0.0,
+      "max": 3.0
+    },
+    "pearson_mean": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "text_valid_position_mean": {
+      "min": 0.0,
+      "max": 50.0
+    },
+    "audio_valid_position_mean": {
+      "min": 0.0,
+      "max": 50.0
+    },
+    "vision_valid_position_mean": {
+      "min": 0.0,
+      "max": 50.0
+    },
+    "q3.valid_accuracy": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "q3.valid_macro_f1": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "q3.valid_mae": {
+      "min": 0.0,
+      "max": 3.0
+    },
+    "q3.valid_pearson": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "q3.test_accuracy": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "q3.test_macro_f1": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "q3.test_mae": {
+      "min": 0.0,
+      "max": 3.0
+    },
+    "q3.test_pearson": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "modality_alpha_mean": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "deletion_value_gain": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "clean_baseline.accuracy": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "clean_baseline.mae": {
+      "min": 0.0,
+      "max": 3.0
+    },
+    "parameter_span": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "duration_mean_sec": {
+      "min": 0.0,
+      "max": 60.0
+    },
+    "neutral_ratio_train": {
+      "min": 0.0,
+      "max": 1.0
+    }
+  },
+  "results": {
+    "q1": {
+      "sample_count": 100,
+      "expected_sample_count": 100,
+      "coverage_complete": true,
+      "text_dim": 768,
+      "audio_dim": 74,
+      "vision_dim": 35,
+      "sequence_length": 50,
+      "nan_count": 0,
+      "inf_count": 0,
+      "duration_min_sec": 2.257,
+      "duration_max_sec": 29.288021,
+      "duration_mean_sec": 7.875,
+      "duration_median_sec": 6.7225,
+      "text_valid_position_mean": 50.0,
+      "audio_valid_position_mean": 49.69,
+      "vision_valid_position_mean": 33.97,
+      "vision_valid_position_min": 11,
+      "vision_valid_position_max": 50,
+      "grid_granularity_min_sec": 0.04514,
+      "grid_granularity_max_sec": 0.58576,
+      "a1_video_folder_count": 37,
+      "a1_text_words_mean": 19.32,
+      "a1_annotation_counts": {
+        "Positive": 57,
+        "Neutral": 25,
+        "Negative": 18
+      }
+    },
+    "q2": {
+      "train_samples": 3395,
+      "valid_samples": 728,
+      "test_samples": 727,
+      "encoder_valid_accuracy": {
+        "text": 0.590659,
+        "audio": 0.39011,
+        "vision": 0.413462
+      },
+      "best_strategy": "curriculum",
+      "fusion_valid_accuracy": 0.563187,
+      "fusion_valid_macro_f1": 0.52711,
+      "fusion_valid_mae": 0.641798,
+      "fusion_valid_pearson": 0.585156,
+      "fusion_valid_rmse": 0.858671,
+      "ablation_valid_mae": {
+        "robust_full": 0.641798,
+        "robust_no_gate": 0.648043,
+        "robust_no_attention": 0.644835,
+        "mean_fusion": 0.661535,
+        "tensor_fusion": 0.664876,
+        "lowrank_fusion": 0.654313,
+        "single_text": 0.661557,
+        "single_audio": 0.947897,
+        "single_vision": 0.916786
+      },
+      "ablation_valid_accuracy": {
+        "robust_full": 0.563187,
+        "robust_no_gate": 0.585165,
+        "robust_no_attention": 0.571429,
+        "mean_fusion": 0.590659,
+        "tensor_fusion": 0.578297,
+        "lowrank_fusion": 0.572802,
+        "single_text": 0.581044,
+        "single_audio": 0.387363,
+        "single_vision": 0.427198
+      },
+      "ablation_valid_macro_f1": {
+        "robust_full": 0.52711,
+        "robust_no_gate": 0.557106,
+        "robust_no_attention": 0.541557,
+        "mean_fusion": 0.556535,
+        "tensor_fusion": 0.545201,
+        "lowrank_fusion": 0.537585,
+        "single_text": 0.54769,
+        "single_audio": 0.362061,
+        "single_vision": 0.40092
+      },
+      "missing_rate_all": [
+        {
+          "missing_ratio": 0.0,
+          "accuracy_mean": 0.563187,
+          "accuracy_std": 0.0,
+          "macro_f1_mean": 0.52711,
+          "mae_mean": 0.641798,
+          "pearson_mean": 0.585156
+        },
+        {
+          "missing_ratio": 0.1,
+          "accuracy_mean": 0.563645,
+          "accuracy_std": 0.003605,
+          "macro_f1_mean": 0.523159,
+          "mae_mean": 0.64453,
+          "pearson_mean": 0.579246
+        },
+        {
+          "missing_ratio": 0.2,
+          "accuracy_mean": 0.565476,
+          "accuracy_std": 0.00967,
+          "macro_f1_mean": 0.527487,
+          "mae_mean": 0.643223,
+          "pearson_mean": 0.583227
+        },
+        {
+          "missing_ratio": 0.3,
+          "accuracy_mean": 0.562271,
+          "accuracy_std": 0.007634,
+          "macro_f1_mean": 0.525227,
+          "mae_mean": 0.656858,
+          "pearson_mean": 0.562255
+        },
+        {
+          "missing_ratio": 0.4,
+          "accuracy_mean": 0.570513,
+          "accuracy_std": 0.005533,
+          "macro_f1_mean": 0.53247,
+          "mae_mean": 0.651126,
+          "pearson_mean": 0.562482
+        },
+        {
+          "missing_ratio": 0.5,
+          "accuracy_mean": 0.550366,
+          "accuracy_std": 0.007878,
+          "macro_f1_mean": 0.513237,
+          "mae_mean": 0.659303,
+          "pearson_mean": 0.548841
+        },
+        {
+          "missing_ratio": 0.6,
+          "accuracy_mean": 0.562271,
+          "accuracy_std": 0.007634,
+          "macro_f1_mean": 0.524185,
+          "mae_mean": 0.657334,
+          "pearson_mean": 0.549996
+        },
+        {
+          "missing_ratio": 0.7,
+          "accuracy_mean": 0.556319,
+          "accuracy_std": 0.012934,
+          "macro_f1_mean": 0.521543,
+          "mae_mean": 0.667409,
+          "pearson_mean": 0.529909
+        }
+      ],
+      "missing_rate_single_text": [
+        {
+          "missing_ratio": 0.0,
+          "accuracy_mean": 0.563187,
+          "mae_mean": 0.641798
+        },
+        {
+          "missing_ratio": 0.1,
+          "accuracy_mean": 0.560897,
+          "mae_mean": 0.643663
+        },
+        {
+          "missing_ratio": 0.2,
+          "accuracy_mean": 0.563645,
+          "mae_mean": 0.642022
+        },
+        {
+          "missing_ratio": 0.3,
+          "accuracy_mean": 0.560897,
+          "mae_mean": 0.649391
+        },
+        {
+          "missing_ratio": 0.4,
+          "accuracy_mean": 0.559982,
+          "mae_mean": 0.651241
+        },
+        {
+          "missing_ratio": 0.5,
+          "accuracy_mean": 0.551282,
+          "mae_mean": 0.657697
+        },
+        {
+          "missing_ratio": 0.6,
+          "accuracy_mean": 0.549451,
+          "mae_mean": 0.660073
+        },
+        {
+          "missing_ratio": 0.7,
+          "accuracy_mean": 0.551282,
+          "mae_mean": 0.664877
+        }
+      ],
+      "missing_rate_single_audio": [
+        {
+          "missing_ratio": 0.0,
+          "accuracy_mean": 0.563187,
+          "mae_mean": 0.641798
+        },
+        {
+          "missing_ratio": 0.1,
+          "accuracy_mean": 0.564103,
+          "mae_mean": 0.641831
+        },
+        {
+          "missing_ratio": 0.2,
+          "accuracy_mean": 0.563645,
+          "mae_mean": 0.640666
+        },
+        {
+          "missing_ratio": 0.3,
+          "accuracy_mean": 0.562271,
+          "mae_mean": 0.643786
+        },
+        {
+          "missing_ratio": 0.4,
+          "accuracy_mean": 0.565476,
+          "mae_mean": 0.641584
+        },
+        {
+          "missing_ratio": 0.5,
+          "accuracy_mean": 0.562729,
+          "mae_mean": 0.63991
+        },
+        {
+          "missing_ratio": 0.6,
+          "accuracy_mean": 0.564103,
+          "mae_mean": 0.639373
+        },
+        {
+          "missing_ratio": 0.7,
+          "accuracy_mean": 0.562729,
+          "mae_mean": 0.642535
+        }
+      ],
+      "missing_rate_single_vision": [
+        {
+          "missing_ratio": 0.0,
+          "accuracy_mean": 0.563187,
+          "mae_mean": 0.641798
+        },
+        {
+          "missing_ratio": 0.1,
+          "accuracy_mean": 0.564103,
+          "mae_mean": 0.642364
+        },
+        {
+          "missing_ratio": 0.2,
+          "accuracy_mean": 0.564103,
+          "mae_mean": 0.642883
+        },
+        {
+          "missing_ratio": 0.3,
+          "accuracy_mean": 0.564103,
+          "mae_mean": 0.642116
+        },
+        {
+          "missing_ratio": 0.4,
+          "accuracy_mean": 0.567766,
+          "mae_mean": 0.641708
+        },
+        {
+          "missing_ratio": 0.5,
+          "accuracy_mean": 0.568223,
+          "mae_mean": 0.642423
+        },
+        {
+          "missing_ratio": 0.6,
+          "accuracy_mean": 0.566392,
+          "mae_mean": 0.643566
+        },
+        {
+          "missing_ratio": 0.7,
+          "accuracy_mean": 0.56685,
+          "mae_mean": 0.644015
+        }
+      ],
+      "text_missing_50_accuracy_mean": 0.551282,
+      "text_missing_50_mae_mean": 0.657697,
+      "audio_missing_50_accuracy_mean": 0.562729,
+      "audio_missing_50_mae_mean": 0.63991,
+      "vision_missing_50_accuracy_mean": 0.568223,
+      "vision_missing_50_mae_mean": 0.642423,
+      "vision_missing_25_front_mae": 0.645123,
+      "vision_missing_25_middle_mae": 0.644174,
+      "vision_missing_25_back_mae": 0.642174,
+      "text_missing_25_front_mae": 0.672433,
+      "text_missing_25_middle_mae": 0.652193,
+      "text_missing_25_back_mae": 0.658624,
+      "audio_missing_25_front_mae": 0.641238,
+      "audio_missing_25_middle_mae": 0.639586,
+      "audio_missing_25_back_mae": 0.63977,
+      "a3_sample_count": 30,
+      "a3_polarity_counts": {
+        "Negative": 1,
+        "Neutral": 9,
+        "Positive": 20
+      },
+      "a3_regression_mean": 0.329282,
+      "a3_regression_std": 0.195108,
+      "a3_modality_mass_mean": [
+        0.222039,
+        0.472475,
+        0.305486
+      ],
+      "a3_text_exact_match": 0,
+      "a3_text_match_similarity_mean": 0.5,
+      "a3_missing_ratio_mean": {
+        "text": 0.556667,
+        "audio": 0.667333,
+        "vision": 0.67
+      }
+    },
+    "q3": {
+      "valid_accuracy": 0.592033,
+      "valid_macro_f1": 0.55038,
+      "valid_mae": 0.654147,
+      "valid_pearson": 0.582383,
+      "test_accuracy": 0.642366,
+      "test_macro_f1": 0.575039,
+      "test_mae": 0.704182,
+      "test_pearson": 0.608496,
+      "modality_alpha_mean": [
+        0.381956,
+        0.314245,
+        0.303799
+      ],
+      "deletion_value_shift_top": {
+        "1": 0.005558,
+        "3": 0.021132,
+        "5": 0.037954,
+        "10": 0.09086
+      },
+      "deletion_value_shift_random": {
+        "1": 0.003887,
+        "3": 0.008504,
+        "5": 0.013811,
+        "10": 0.020555
+      },
+      "deletion_value_gain": {
+        "1": 0.001671,
+        "3": 0.012628,
+        "5": 0.024143,
+        "10": 0.070305
+      },
+      "deletion_confidence_base": 0.957427,
+      "a4_sample_count": 20,
+      "a4_polarity_counts": {
+        "Negative": 2,
+        "Neutral": 4,
+        "Positive": 14
+      },
+      "a4_regression_mean": 0.503128,
+      "a4_regression_std": 0.48032,
+      "a4_modality_alpha_mean": [
+        0.435803,
+        0.300189,
+        0.264008
+      ],
+      "a4_dominant_modality_counts": {
+        "text": 19,
+        "audio": 1,
+        "vision": 0
+      },
+      "a4_text_token_hit_rate": 0.979,
+      "a4_duration_min_sec": 3.114,
+      "a4_duration_max_sec": 21.348
+    },
+    "sensitivity": {
+      "clean_baseline": {
+        "accuracy": 0.563187,
+        "macro_f1": 0.52711,
+        "mae": 0.641797,
+        "robust_score": 0.947823
+      },
+      "missing_baseline": {
+        "accuracy": 0.570055,
+        "macro_f1": 0.53881,
+        "mae": 0.640481,
+        "robust_score": 0.936575
+      },
+      "parameter_span": {
+        "文本缺失率": {
+          "min": 0.6424061059951782,
+          "max": 0.6505071520805359,
+          "span": 0.008101046085357666
+        },
+        "语音缺失率": {
+          "min": 0.6383029222488403,
+          "max": 0.6489115953445435,
+          "span": 0.010608673095703125
+        },
+        "视觉缺失率": {
+          "min": 0.6375756859779358,
+          "max": 0.6408541202545166,
+          "span": 0.0032784342765808105
+        },
+        "单区间最大长度": {
+          "min": 0.6396089196205139,
+          "max": 0.6436408162117004,
+          "span": 0.0040318965911865234
+        },
+        "缺失区间数上限": {
+          "min": 0.6400641798973083,
+          "max": 0.6405678391456604,
+          "span": 0.0005036592483520508
+        },
+        "可信度门控阈值": {
+          "min": 0.6404805183410645,
+          "max": 0.6404805183410645,
+          "span": 0.0
+        }
+      },
+      "joint_surface_text_ratio_min": 0.0,
+      "joint_surface_text_ratio_max": 0.7,
+      "joint_surface_robust_score_min": 0.933578,
+      "joint_surface_robust_score_max": 0.948175
+    },
+    "eda": {
+      "a2_train_reg_mean": 0.165832,
+      "a2_train_reg_std": 1.114963,
+      "a2_train_cls_counts": {
+        "negative": 967,
+        "neutral": 758,
+        "positive": 1670
+      },
+      "neutral_ratio_train": 0.22327,
+      "text_audio_correlation": -0.68202,
+      "text_vision_correlation": 0.556935,
+      "audio_vision_correlation": -0.607926,
+      "text_reg_correlation": -0.013396,
+      "audio_reg_correlation": 0.101546,
+      "vision_reg_correlation": -0.05404,
+      "a3_audio_vision_mask_identical": false,
+      "duration_text_word_correlation": 0.888293
+    }
+  },
+  "sources": {
+    "eda": "data/processed/eda_summary.json",
+    "q1": "Q1/feature_audit.json、Q1/feature_config.json、Q1/features_a1_100.npz",
+    "q2": "Q2/results/q2_report.json",
+    "q3": "Q3/results/q3_training_report.json、Q3/results/a4_summary.json",
+    "sensitivity": "灵敏度分析/local_sensitivity.json、灵敏度分析/joint_surface.json"
+  },
+  "notes": [
+    "本文件是全文唯一最终数值结果源；论文正文、摘要、各问 result.md 与 README 只能引用本文件中的数值。",
+    "问题二与问题三的模型参数只在附件2 训练集上学习，结构、超参数与决策阈值在验证集上选择；附件3、附件4 只用于最终推理。",
+    "缺失施加的随机过程使用固定随机种子 20260924，重复运行应得到相同数值。"
+  ]
+}
