@@ -1,0 +1,30 @@
+{
+  "target": "F:\\26华为杯\\26A-ds\\Q3\\figures\\fig_q3_traffic",
+  "passed": true,
+  "checks": {
+    "svg_exists": true,
+    "pdf_exists": true,
+    "png_exists": true,
+    "svg_parse_ok": true,
+    "svg_has_text_nodes": true,
+    "editable_text_ok": true,
+    "png_nonempty": true,
+    "pdf_nonempty": true,
+    "svg_color_count_reasonable": true,
+    "cn_font_configured": true,
+    "profile": "competition_cn",
+    "export_ok": true,
+    "export_preflight_complete": true,
+    "font_profile_ok": true,
+    "canvas_size_ok": true,
+    "research_font_size_ok": true,
+    "research_preflight_ok": false,
+    "issues": [],
+    "cn_text_ok": true
+  },
+  "exports": [
+    "F:\\26华为杯\\26A-ds\\Q3\\figures\\fig_q3_traffic.svg",
+    "F:\\26华为杯\\26A-ds\\Q3\\figures\\fig_q3_traffic.pdf",
+    "F:\\26华为杯\\26A-ds\\Q3\\figures\\fig_q3_traffic.png"
+  ]
+}

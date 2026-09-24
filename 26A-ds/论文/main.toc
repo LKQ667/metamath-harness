@@ -1,0 +1,38 @@
+\contentsline {section}{\numberline {1}问题重述}{5}{section.1}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题背景}{5}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 2}问题提出}{5}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 3}整体求解路线}{6}{subsection.1.3}%
+\contentsline {section}{\numberline {2}模型假设与符号说明}{7}{section.2}%
+\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型假设}{7}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 2}符号说明}{8}{subsection.2.2}%
+\contentsline {section}{\numberline {3}问题一模型建立与求解}{9}{section.3}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与建模思路}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2}计算图预处理与结构画像}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 3}无环切分模型}{11}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 4}子图分核模型}{12}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 5}求解算法}{13}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 6}求解结果与分析}{14}{subsection.3.6}%
+\contentsline {section}{\numberline {4}问题二模型建立与求解}{18}{section.4}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与建模差异}{18}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2}容量约束与缓存换出换入}{19}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 3}求解算法}{19}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 4}求解结果与分析}{20}{subsection.4.4}%
+\contentsline {section}{\numberline {5}问题三模型建立与求解}{22}{section.5}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与建模思路}{22}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2}命中率模型}{23}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 3}求解算法}{23}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 4}求解结果与分析}{24}{subsection.5.4}%
+\contentsline {section}{\numberline {6}模型总结与评价}{26}{section.6}%
+\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型优点}{26}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 2}参数敏感度与稳健性分析}{27}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 3}模型局限与改进}{28}{subsection.6.3}%
+\contentsline {section}{参考文献}{28}{section*.23}%
+\contentsline {section}{附录 \numberline {A}问题一逐用例结果}{30}{appendix.1.A}%
+\contentsline {section}{附录 \numberline {B}问题二逐用例结果}{33}{appendix.1.B}%
+\contentsline {section}{附录 \numberline {C}问题三逐用例结果}{37}{appendix.1.C}%
+\contentsline {section}{附录 \numberline {D}附录代码文件}{53}{appendix.1.D}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1}graph\_utils.py}{53}{subsection.1.D.1}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2}partition.py}{56}{subsection.1.D.2}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 3}eval\_runner.py}{79}{subsection.1.D.3}%
+\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 4}aggregate\_results.py}{82}{subsection.1.D.4}%
+\contentsfinish 

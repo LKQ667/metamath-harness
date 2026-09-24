@@ -1,0 +1,21 @@
+{
+  "check": "check_python_bar_chart_policy",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "policy": "少用",
+    "bar_calls": [
+      {
+        "source": "Q1/solve_q1.py",
+        "line": 162,
+        "call": "bar"
+      },
+      {
+        "source": "Q1/solve_q1.py",
+        "line": 163,
+        "call": "bar"
+      }
+    ]
+  }
+}

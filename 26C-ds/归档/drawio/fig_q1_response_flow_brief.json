@@ -1,0 +1,40 @@
+{
+  "name": "fig_q1_response_flow",
+  "kind": "flowchart",
+  "object": "去噪后的分段脑电",
+  "action": "先做逐点显著性检验与错误发现率控制，再提取峰值潜伏期并拟合三高斯分量",
+  "product": "响应提取与曲线拟合流程及偏侧指数导出图",
+  "criteria": "检验、控制、提取、拟合、导出五步齐全且顺序正确",
+  "nodes": [
+    "逐点单样本 t 检验",
+    "BH 错误发现率控制",
+    "P300 与早期窗峰潜伏期",
+    "三高斯分量最小二乘拟合",
+    "偏侧指数"
+  ],
+  "edges": [
+    "检验→控制",
+    "控制→峰值潜伏期",
+    "潜伏期→三高斯拟合",
+    "拟合→偏侧指数"
+  ],
+  "main_path": [
+    "逐点单样本 t 检验",
+    "BH 错误发现率控制",
+    "三高斯分量最小二乘拟合",
+    "偏侧指数"
+  ],
+  "unverified": [
+    "各窗峰值与潜伏期的具体数值由问题一结果文件给出，图内不重复"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 1,
+  "support_blocks": 0,
+  "stages": 5,
+  "direction": "horizontal"
+}

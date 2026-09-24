@@ -1,0 +1,15 @@
+{
+  "n1": "<font style=\"font-size:17px;\">LGN—皮层视觉通路</font>",
+  "n2": "<font style=\"font-size:17px;\">海马—前额记忆通路</font>",
+  "n3": "<font style=\"font-size:17px;\">延迟耦合与前额整合</font>",
+  "n4": "<font style=\"font-size:17px;\">头皮导联观测</font>",
+  "s1": "<font style=\"font-size:17px;\">延迟 τ_H</font>",
+  "s2": "<font style=\"font-size:17px;\">增益 g_H</font>",
+  "s3": "<font style=\"font-size:17px;\">窗口终点：应答前 100 ms</font>",
+  "e1": "<font style=\"font-size:12px;\">双源并列</font>",
+  "e2": "<font style=\"font-size:12px;\">延迟耦合</font>",
+  "e3": "<font style=\"font-size:12px;\">前向观测</font>",
+  "e4": "<font style=\"font-size:12px;\">延迟</font>",
+  "e5": "<font style=\"font-size:12px;\">增益</font>",
+  "e6": "<font style=\"font-size:12px;\">窗口</font>"
+}

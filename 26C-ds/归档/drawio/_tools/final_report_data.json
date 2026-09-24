@@ -1,0 +1,154 @@
+{
+  "checks": [
+    {
+      "check": "check_figures_manifest",
+      "exit": 0,
+      "ok": true,
+      "error_count": 0,
+      "errors": []
+    },
+    {
+      "check": "check_flowchart_required",
+      "exit": 0,
+      "ok": true,
+      "error_count": 0,
+      "errors": []
+    },
+    {
+      "check": "check_drawing_contract",
+      "exit": 0,
+      "ok": true,
+      "error_count": 0,
+      "errors": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "exit": 0,
+      "ok": true,
+      "error_count": 0,
+      "errors": []
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "fig_roadmap",
+      "template_id": "dual-panel-bilevel",
+      "drawio": 35728,
+      "svg": 867048,
+      "pdf": 171981,
+      "png": 617897,
+      "png_wh": "1846x1312",
+      "ratio": 1.407
+    },
+    {
+      "name": "fig_problem_analysis",
+      "template_id": "main-chain-support",
+      "drawio": 6228,
+      "svg": 170575,
+      "pdf": 29934,
+      "png": 108692,
+      "png_wh": "1866x636",
+      "ratio": 2.934
+    },
+    {
+      "name": "fig_experiment_design",
+      "template_id": "dual-swimlane",
+      "drawio": 6637,
+      "svg": 223095,
+      "pdf": 37287,
+      "png": 148774,
+      "png_wh": "1886x696",
+      "ratio": 2.71
+    },
+    {
+      "name": "fig_artifact_sources",
+      "template_id": "main-chain-support",
+      "drawio": 6425,
+      "svg": 199961,
+      "pdf": 36874,
+      "png": 121791,
+      "png_wh": "1866x636",
+      "ratio": 2.934
+    },
+    {
+      "name": "fig_q1_denoise_flow",
+      "template_id": "branch-decision",
+      "drawio": 5028,
+      "svg": 168095,
+      "pdf": 33362,
+      "png": 127860,
+      "png_wh": "1966x686",
+      "ratio": 2.866
+    },
+    {
+      "name": "fig_q1_response_flow",
+      "template_id": "horizontal-stage-chain",
+      "drawio": 4335,
+      "svg": 137026,
+      "pdf": 29992,
+      "png": 88337,
+      "png_wh": "2006x146",
+      "ratio": 13.74
+    },
+    {
+      "name": "fig_q2_multiscale_model",
+      "template_id": "dual-swimlane",
+      "drawio": 6715,
+      "svg": 341419,
+      "pdf": 39733,
+      "png": 202211,
+      "png_wh": "1886x696",
+      "ratio": 2.71
+    },
+    {
+      "name": "fig_q2_laterality_mechanism",
+      "template_id": "main-chain-support",
+      "drawio": 6206,
+      "svg": 169865,
+      "pdf": 32316,
+      "png": 114271,
+      "png_wh": "1866x636",
+      "ratio": 2.934
+    },
+    {
+      "name": "fig_q2_feature_flow",
+      "template_id": "horizontal-stage-chain",
+      "drawio": 4339,
+      "svg": 125420,
+      "pdf": 23823,
+      "png": 81940,
+      "png_wh": "2006x146",
+      "ratio": 13.74
+    },
+    {
+      "name": "fig_q3_model_framework",
+      "template_id": "main-chain-support",
+      "drawio": 6426,
+      "svg": 202016,
+      "pdf": 33940,
+      "png": 135270,
+      "png_wh": "1866x636",
+      "ratio": 2.934
+    },
+    {
+      "name": "fig_q3_estimation_flow",
+      "template_id": "horizontal-stage-chain",
+      "drawio": 4339,
+      "svg": 145050,
+      "pdf": 29217,
+      "png": 90168,
+      "png_wh": "2006x146",
+      "ratio": 13.74
+    },
+    {
+      "name": "fig_q3_application",
+      "template_id": "main-chain-support",
+      "drawio": 6399,
+      "svg": 180007,
+      "pdf": 33003,
+      "png": 122968,
+      "png_wh": "1866x636",
+      "ratio": 2.934
+    }
+  ]
+}

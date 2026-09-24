@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+html,body{margin:0;padding:0;width:fit-content;height:fit-content;background:transparent}
+.fig,.fig *{font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif;
+  -webkit-font-smoothing:antialiased;box-sizing:border-box}
+.fig{width:fit-content;height:fit-content;padding:22px 24px;background:transparent;
+  --edge:#1a1a1a; --txt:#111; --line:#333;
+  display:flex;flex-direction:column;gap:0}
+.n{border:1px solid var(--edge);background:#fff;color:var(--txt);
+  padding:10px 15px;font-size:15px;font-weight:600;text-align:center;border-radius:0;
+  line-height:1.5;white-space:nowrap;min-width:250px;
+  display:flex;align-items:center;justify-content:center}
+.n.head{border-top:3px solid var(--edge)}
+.n.dec{border:1.8px solid var(--edge);font-weight:800}
+.bandtitle{font-size:15px;font-weight:800;letter-spacing:1px;color:var(--txt);
+  border-bottom:1.2px solid var(--edge);padding-bottom:4px;white-space:nowrap}
+.rowgrid{display:grid;grid-auto-flow:column;grid-auto-columns:max-content;gap:16px;
+  justify-content:start;align-items:stretch}
+.colgrid{display:grid;grid-auto-flow:row;gap:12px;justify-items:stretch}
+.harrow{display:flex;align-items:center;justify-content:center}
+.harrow .ln{width:22px;height:1px;background:var(--line)}
+.harrow .tp{width:0;height:0;border-left:8px solid var(--line);
+  border-top:5px solid transparent;border-bottom:5px solid transparent}
+.dn{display:flex;flex-direction:column;align-items:center}
+.dn .ln{width:1px;height:15px;background:var(--line)}
+.dn .tp{width:0;height:0;border-top:7px solid var(--line);
+  border-left:5px solid transparent;border-right:5px solid transparent}
+.split{display:grid;grid-template-columns:max-content max-content;gap:34px;
+  justify-content:center;align-items:start}
+.path{display:flex;flex-direction:column;align-items:center}
+.lbl{font-size:14px;font-weight:800;white-space:nowrap;padding:4px 0}
+.note{font-size:13px;color:#444;white-space:nowrap;padding:2px 0}
+.gap{height:13px}
+</style>
+</head>
+<body>
+<div class="fig">
+
+  <div class="bandtitle">问题三（共享只读 L2）求解流程</div>
+  <div class="gap"></div>
+
+  <div class="rowgrid">
+    <div class="n head" data-mh-row="1">读取只读 L2 配置<br>容量 1 MB、带宽 250 B/cycle</div>
+    <div class="harrow" data-mh-row="1"><div class="ln"></div><div class="tp"></div></div>
+    <div class="n head" data-mh-row="1">复用问题二的 Task 结构<br>同核合并、跨核 COPY 与同步延迟</div>
+    <div class="harrow" data-mh-row="1"><div class="ln"></div><div class="tp"></div></div>
+    <div class="n head" data-mh-row="1">修正读入边界的有效带宽<br>重复读取由 L2 承担</div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div class="split">
+    <div class="path">
+      <div class="lbl">候选路线一　L2 感知切分</div>
+      <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+      <div class="colgrid">
+        <div class="n" data-mh-col="1">读入边界按 250 B/cycle 计入子图时长</div>
+        <div class="note">共享输入摊到多核的代价下降</div>
+        <div class="n" data-mh-col="1">切点按新代价函数重新下降搜索</div>
+        <div class="note">负载均衡与 L2 复用可同时改善</div>
+      </div>
+    </div>
+    <div class="path">
+      <div class="lbl">候选路线二　DDR 口径切分</div>
+      <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+      <div class="colgrid">
+        <div class="n" data-mh-col="2">读入边界仍按 60 B/cycle 计入</div>
+        <div class="note">与问题二保持完全一致的保守切分</div>
+        <div class="n" data-mh-col="2">直接沿用问题二方案不作改动</div>
+        <div class="note">用于隔离 L2 本身的贡献</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="n dec">两条路线的方案分别送入官方评估程序实测 Makespan</div>
+    <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+    <div class="rowgrid">
+      <div class="n" data-mh-row="2">逐用例取更优者作为最终方案</div>
+      <div class="harrow" data-mh-row="2"><div class="ln"></div><div class="tp"></div></div>
+      <div class="n" data-mh-row="2">输出 Makespan、额外搬运量、Cache 命中率</div>
+      <div class="harrow" data-mh-row="2"><div class="ln"></div><div class="tp"></div></div>
+      <div class="n" data-mh-row="2">与无 L2 基线同核数配对求加速比</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

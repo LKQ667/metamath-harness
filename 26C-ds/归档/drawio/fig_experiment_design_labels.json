@@ -1,0 +1,12 @@
+{
+  "h1": "<font style=\"font-size:17px;\">采集与通道结构</font>",
+  "h2": "<font style=\"font-size:17px;\">项目一与项目二对照</font>",
+  "a1": "<font style=\"font-size:17px;\">F3/Fz/F4 三导采集</font>",
+  "a2": "<font style=\"font-size:17px;\">10 通道语义分组</font>",
+  "a3": "<font style=\"font-size:17px;\">原始信号、设备滤波、心电、事件、时间戳</font>",
+  "b1": "<font style=\"font-size:17px;\">项目一：位置已知</font>",
+  "b2": "<font style=\"font-size:17px;\">项目二：仅知形状</font>",
+  "b3": "<font style=\"font-size:17px;\">一致率约 1.00 与 0.48</font>",
+  "e5": "<font style=\"font-size:12px;\">同期采集</font>",
+  "e6": "<font style=\"font-size:12px;\">条件对照</font>"
+}

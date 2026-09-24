@@ -1,0 +1,137 @@
+{
+  "raw_input": "赛题/通用神经网络处理器下的多核调度问题  附件.zip 内的 data/case_001.json ～ case_100.json",
+  "case_count": 100,
+  "missing_values": 0,
+  "duplicate_cases": 0,
+  "processing_rules": [
+    "把 Op-Tensor 二部图收缩为操作级 DAG：张量中转边合并为操作间的直接依赖，COPY_IN/COPY_OUT 作为中转节点被跳过",
+    "操作权重取 op.cycles，按 pipe 字段分别累计 PIPE_M 与 PIPE_V 的工作量",
+    "关键路径按操作级 DAG 的最长加权路径计算，并行宽度定义为总工作量与关键路径之比",
+    "DDR/L1/UB 字节数按张量 pos 字段分组求和，张量规模取分组内最大值"
+  ],
+  "outliers": "未做剔除：所有用例均为赛题官方给定输入，规模差异属于题目设定而非异常值",
+  "outputs": [
+    "data/case_profile.csv"
+  ],
+  "summary": {
+    "tensors": {
+      "min": 816,
+      "median": 4590.5,
+      "mean": 7477.86,
+      "max": 40287
+    },
+    "ops_total": {
+      "min": 766,
+      "median": 4223.0,
+      "mean": 6991.18,
+      "max": 38666
+    },
+    "ops_copy": {
+      "min": 13,
+      "median": 315.0,
+      "mean": 646.12,
+      "max": 5385
+    },
+    "ops_core": {
+      "min": 552,
+      "median": 3720.5,
+      "mean": 6345.06,
+      "max": 35705
+    },
+    "dag_edges": {
+      "min": 400,
+      "median": 4017.0,
+      "mean": 7406.41,
+      "max": 38493
+    },
+    "cycles_m": {
+      "min": 0,
+      "median": 256920.0,
+      "mean": 2728477.23,
+      "max": 58915232
+    },
+    "cycles_v": {
+      "min": 9988,
+      "median": 144314.5,
+      "mean": 451264.61,
+      "max": 7714975
+    },
+    "cycles_total": {
+      "min": 23052,
+      "median": 509952.0,
+      "mean": 3179741.84,
+      "max": 61275840
+    },
+    "critical_path": {
+      "min": 400,
+      "median": 6140.0,
+      "mean": 39921.77,
+      "max": 863040
+    },
+    "parallel_width": {
+      "min": 3.418,
+      "median": 43.1255,
+      "mean": 416.223,
+      "max": 6258.78
+    },
+    "level_count": {
+      "min": 3,
+      "median": 47.5,
+      "mean": 131.31,
+      "max": 2440
+    },
+    "ddr_bytes": {
+      "min": 37414,
+      "median": 1387305.0,
+      "mean": 2407300.54,
+      "max": 13401600
+    },
+    "l1_bytes": {
+      "min": 0,
+      "median": 3684388.0,
+      "mean": 18471815.68,
+      "max": 235843584
+    },
+    "ub_bytes": {
+      "min": 0,
+      "median": 1920114.0,
+      "mean": 8496840.94,
+      "max": 359806670
+    },
+    "max_l1_tensor": {
+      "min": 0,
+      "median": 13056.0,
+      "mean": 30228.48,
+      "max": 294912
+    },
+    "max_ub_tensor": {
+      "min": 0,
+      "median": 4608.0,
+      "mean": 6315.52,
+      "max": 32768
+    },
+    "source_ops": {
+      "min": 8,
+      "median": 199.5,
+      "mean": 1392.1,
+      "max": 15921
+    },
+    "sink_ops": {
+      "min": 1,
+      "median": 62.0,
+      "mean": 159.44,
+      "max": 2666
+    },
+    "max_fanout": {
+      "min": 1,
+      "median": 5.5,
+      "mean": 5.61,
+      "max": 14
+    }
+  },
+  "conclusions": [
+    "100 个用例的核内操作规模跨越 552 至 35705，覆盖从中小图到超大规模图的全区间",
+    "并行宽度中位数为 43.13，说明多数用例存在充足的并行空间，但存在并行宽度接近 1 的本质串行用例",
+    "矩阵流水线工作量在多数用例中显著高于向量流水线，切图时必须以 PIPE_M 负载均衡为主"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "check": "check_python_figure_contract",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "mode": "禁止重复",
+    "policy_source": "explicit_state",
+    "stage": "step5",
+    "stage_source": "explicit",
+    "scope": "最终入文（step4/5 按实际引用核对）",
+    "n_by_type": {
+      "bar_2d": 1,
+      "contour_2d": 1,
+      "heatmap_2d": 1,
+      "line_2d": 1,
+      "scatter_2d": 1,
+      "vector_2d": 1
+    },
+    "per_type_items": {
+      "bar_2d": [
+        "Q1/solve_q1.py"
+      ],
+      "contour_2d": [
+        "Q3/solve_q3.py"
+      ],
+      "heatmap_2d": [
+        "Q2/solve_q2.py"
+      ],
+      "line_2d": [
+        "Q1/solve_q1.py"
+      ],
+      "scatter_2d": [
+        "Q1/solve_q1.py"
+      ],
+      "vector_2d": [
+        "Q2/solve_q2.py"
+      ]
+    },
+    "repeat_types": [],
+    "G": 0,
+    "unknown_types_items": [],
+    "counted_figures": 6
+  }
+}

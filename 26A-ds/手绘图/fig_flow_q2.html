@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+html,body{margin:0;padding:0;width:fit-content;height:fit-content;background:transparent}
+.fig,.fig *{font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif;
+  -webkit-font-smoothing:antialiased;box-sizing:border-box}
+.fig{width:fit-content;height:fit-content;padding:22px 24px;background:transparent;
+  --edge:#1a1a1a; --txt:#111; --line:#333;
+  display:flex;flex-direction:column;gap:0}
+.n{border:1px solid var(--edge);background:#fff;color:var(--txt);
+  padding:10px 15px;font-size:15px;font-weight:600;text-align:center;border-radius:0;
+  line-height:1.5;white-space:nowrap;min-width:250px;
+  display:flex;align-items:center;justify-content:center}
+.n.plain{border-top:3px solid var(--edge)}
+.n.dec{border:1.8px solid var(--edge);font-weight:800}
+.bandtitle{font-size:15px;font-weight:800;letter-spacing:1px;color:var(--txt);
+  border-bottom:1.2px solid var(--edge);padding-bottom:4px;white-space:nowrap}
+.rowgrid{display:grid;grid-auto-flow:column;grid-auto-columns:max-content;gap:16px;
+  justify-content:start;align-items:stretch}
+.lanes{display:flex;flex-direction:column;gap:12px}
+.lane{display:grid;grid-template-columns:max-content max-content;gap:14px;align-items:center}
+.lanelabel{border:1px solid var(--edge);background:#fff;color:var(--txt);
+  font-size:15px;font-weight:800;padding:10px 12px;white-space:nowrap;writing-mode:vertical-rl;
+  letter-spacing:3px;display:flex;align-items:center;justify-content:center}
+.harrow{display:flex;align-items:center;justify-content:center}
+.harrow .ln{width:22px;height:1px;background:var(--line)}
+.harrow .tp{width:0;height:0;border-left:8px solid var(--line);
+  border-top:5px solid transparent;border-bottom:5px solid transparent}
+.dn{display:flex;flex-direction:column;align-items:center}
+.dn .ln{width:1px;height:15px;background:var(--line)}
+.dn .tp{width:0;height:0;border-top:7px solid var(--line);
+  border-left:5px solid transparent;border-right:5px solid transparent}
+.branch{display:grid;grid-template-columns:max-content max-content;gap:30px;
+  justify-content:center;align-items:start}
+.path{display:flex;flex-direction:column;align-items:center}
+.lbl{font-size:13.5px;font-weight:700;white-space:nowrap;padding:3px 0}
+.gap{height:13px}
+.merge{display:grid;grid-template-columns:max-content max-content;gap:30px;justify-content:center}
+</style>
+</head>
+<body>
+<div class="fig">
+
+  <div class="bandtitle">问题二（场景 B）求解流程</div>
+  <div class="gap"></div>
+
+  <div class="lanes">
+    <div class="lane">
+      <div class="lanelabel">输入</div>
+      <div class="rowgrid">
+        <div class="n plain" data-mh-row="1">复用问题一的无环切分骨架</div>
+        <div class="harrow" data-mh-row="1"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="1">同核子图合并为单一 Task</div>
+        <div class="harrow" data-mh-row="1"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="1">识别跨核数据边</div>
+      </div>
+    </div>
+    <div class="lane">
+      <div class="lanelabel">处理</div>
+      <div class="rowgrid">
+        <div class="n plain" data-mh-row="2">源核插 COPY_OUT、目标核插 COPY_IN</div>
+        <div class="harrow" data-mh-row="2"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="2">叠加 500 周期跨核同步延迟</div>
+        <div class="harrow" data-mh-row="2"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="2">核内调度器按依赖与流水线排布</div>
+      </div>
+    </div>
+    <div class="lane">
+      <div class="lanelabel">输出</div>
+      <div class="rowgrid">
+        <div class="n plain" data-mh-row="3">输出方案并交官方评估程序</div>
+        <div class="harrow" data-mh-row="3"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="3">逐用例记录 Makespan 与额外搬运量</div>
+        <div class="harrow" data-mh-row="3"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="3">与场景 A 同核数结果对照</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div class="bandtitle">容量约束判定与缓存换出换入</div>
+  <div class="gap"></div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="n dec">合并后 Task 的 L1/UB 驻留峰值是否超出容量</div>
+    <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+    <div class="branch">
+      <div class="path">
+        <div class="lbl">否，容量满足</div>
+        <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n">直接生成确定性核内顺序</div>
+      </div>
+      <div class="path">
+        <div class="lbl">是，容量不足</div>
+        <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n">按最晚下次使用换出，插入换入后重排</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

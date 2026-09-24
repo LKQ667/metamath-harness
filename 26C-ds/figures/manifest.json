@@ -1,0 +1,723 @@
+{
+  "drawing_mode": "html",
+  "drawing_mode_locked": true,
+  "drawing_mode_confirmed": true,
+  "drawing_mode_source": "user_override",
+  "competition_language": "中文",
+  "figure_total": 18,
+  "bar_policy": "少用",
+  "subplot_policy": "禁用子图",
+  "python_chart_repeat_policy": "禁止重复",
+  "three_d_preference": "适合时建议",
+  "ai_image_limit": 4,
+  "confirm_paid_calls": false,
+  "notes": "条目在 step1 起逐张登记；每个条目必须记录 generator、template_id、source、exports、panel_count、panel_chart_types、qa、paper_ready。Python 数据图导出 svg+pdf+png；Draw.io 流程类图保留 .drawio 源、SVG、PDF 与 2× PNG；概念类图只保留 手绘图/*.md 提示词。",
+  "items": [
+    {
+      "name": "fig_roadmap",
+      "generator": "html",
+      "template_id": "skeleton_twocolumn",
+      "source": "手绘图/fig_roadmap.html",
+      "exports": [
+        "手绘图/fig_roadmap.pdf",
+        "手绘图/fig_roadmap.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_roadmap.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "全文技术路线总览：四份原始脑电记录到结论与临床指标的九级主线",
+      "section_cn": "一、问题重述",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_problem_analysis",
+      "generator": "html",
+      "template_id": "flow_horizontal_chain",
+      "source": "手绘图/fig_problem_analysis.html",
+      "exports": [
+        "手绘图/fig_problem_analysis.pdf",
+        "手绘图/fig_problem_analysis.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_problem_analysis.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "问题分析流程图：视觉通路环节与三问任务边界",
+      "section_cn": "一、问题重述",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_experiment_design",
+      "generator": "html",
+      "template_id": "framework_swimlane",
+      "source": "手绘图/fig_experiment_design.html",
+      "exports": [
+        "手绘图/fig_experiment_design.pdf",
+        "手绘图/fig_experiment_design.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_experiment_design.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "实验设计与数据结构图：通道语义分组与两项目时序对照",
+      "section_cn": "二、模型假设与符号说明",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_artifact_sources",
+      "generator": "html",
+      "template_id": "flow_branch_decision",
+      "source": "手绘图/fig_artifact_sources.html",
+      "exports": [
+        "手绘图/fig_artifact_sources.pdf",
+        "手绘图/fig_artifact_sources.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_artifact_sources.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "数据质量与伪迹来源分析图：四类来源及其幅值表现",
+      "section_cn": "问题一模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q1_denoise_flow",
+      "generator": "html",
+      "template_id": "flow_branch_decision",
+      "source": "手绘图/fig_q1_denoise_flow.html",
+      "exports": [
+        "手绘图/fig_q1_denoise_flow.pdf",
+        "手绘图/fig_q1_denoise_flow.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q1_denoise_flow.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "窄目标化去噪流程图：三重判定、模板扣除与稳健软截断",
+      "section_cn": "问题一模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q1_response_flow",
+      "generator": "html",
+      "template_id": "flow_horizontal_chain",
+      "source": "手绘图/fig_q1_response_flow.html",
+      "exports": [
+        "手绘图/fig_q1_response_flow.pdf",
+        "手绘图/fig_q1_response_flow.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q1_response_flow.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "有效视觉响应提取与曲线拟合流程图",
+      "section_cn": "问题一模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_multiscale_model",
+      "generator": "html",
+      "template_id": "framework_layered",
+      "source": "手绘图/fig_q2_multiscale_model.html",
+      "exports": [
+        "手绘图/fig_q2_multiscale_model.pdf",
+        "手绘图/fig_q2_multiscale_model.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q2_multiscale_model.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "多尺度脑电计算模型机理框图：五级串联与时间尺度",
+      "section_cn": "问题二模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_laterality_mechanism",
+      "generator": "html",
+      "template_id": "flow_branch_decision",
+      "source": "手绘图/fig_q2_laterality_mechanism.html",
+      "exports": [
+        "手绘图/fig_q2_laterality_mechanism.pdf",
+        "手绘图/fig_q2_laterality_mechanism.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q2_laterality_mechanism.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "左右三角刺激皮层响应镜像分布形成机制图",
+      "section_cn": "问题二模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q2_feature_flow",
+      "generator": "html",
+      "template_id": "flow_horizontal_chain",
+      "source": "手绘图/fig_q2_feature_flow.html",
+      "exports": [
+        "手绘图/fig_q2_feature_flow.pdf",
+        "手绘图/fig_q2_feature_flow.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q2_feature_flow.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "形状—空间联合特征表示与判别流程图",
+      "section_cn": "问题二模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_model_framework",
+      "generator": "html",
+      "template_id": "framework_layered",
+      "source": "手绘图/fig_q3_model_framework.html",
+      "exports": [
+        "手绘图/fig_q3_model_framework.pdf",
+        "手绘图/fig_q3_model_framework.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q3_model_framework.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "双源认知宏观模型框架图：延迟耦合、前额整合与头皮观测",
+      "section_cn": "问题三模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_estimation_flow",
+      "generator": "html",
+      "template_id": "flow_horizontal_chain",
+      "source": "手绘图/fig_q3_estimation_flow.html",
+      "exports": [
+        "手绘图/fig_q3_estimation_flow.pdf",
+        "手绘图/fig_q3_estimation_flow.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q3_estimation_flow.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "认知模型参数估计与验证流程图",
+      "section_cn": "问题三模型建立与求解",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig_q3_application",
+      "generator": "html",
+      "template_id": "flow_branch_decision",
+      "source": "手绘图/fig_q3_application.html",
+      "exports": [
+        "手绘图/fig_q3_application.pdf",
+        "手绘图/fig_q3_application.png"
+      ],
+      "export_scale": 2,
+      "prompt_source": "手绘图/fig_q3_application.html",
+      "paper_ready": true,
+      "export_status": "electron_printed",
+      "needs_visual_review": false,
+      "chart_family": "flowchart",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "flowchart"
+        ]
+      ],
+      "title_cn": "模型体系结构、评价与临床指标图",
+      "section_cn": "模型总结与评价",
+      "paper_insert_status": "inserted",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "name": "fig1_erp_curve",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "line_2d"
+        ]
+      ],
+      "source": "Q1/solve_q1.py",
+      "exports": [
+        "Q1/figures/fig1_erp_curve.svg",
+        "Q1/figures/fig1_erp_curve.pdf",
+        "Q1/figures/fig1_erp_curve.png"
+      ],
+      "prompt_source": "Q1/solve_q1.py",
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_ready": true,
+      "export_scale": 2,
+      "width_mm": 89.0,
+      "title_cn": "三导联去噪后事件相关电位曲线与三高斯分量拟合",
+      "section_cn": "问题一模型建立与求解",
+      "purpose_cn": "展示响应的时间结构与三高斯分量划分，服务式 (9) 的曲线拟合结果",
+      "qa": {
+        "font_ok": true,
+        "cn_text_ok": true,
+        "editable_text_ok": true,
+        "export_complete_ok": true,
+        "no_clip_ok": true,
+        "no_overlap_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "axis_label_ok": true,
+        "legend_ok": true,
+        "export_ok": true
+      }
+    },
+    {
+      "name": "fig2_artifact_interval",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "pareto",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "scatter_2d"
+        ]
+      ],
+      "source": "Q1/solve_q1.py",
+      "exports": [
+        "Q1/figures/fig2_artifact_interval.svg",
+        "Q1/figures/fig2_artifact_interval.pdf",
+        "Q1/figures/fig2_artifact_interval.png"
+      ],
+      "prompt_source": "Q1/solve_q1.py",
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_ready": true,
+      "export_scale": 2,
+      "width_mm": 89.0,
+      "title_cn": "四份记录单试次峰值幅值在去噪前后的区间点图",
+      "section_cn": "问题一模型建立与求解",
+      "purpose_cn": "量化软截断对单试次峰值分布的下移与收窄作用，服务式 (3)",
+      "qa": {
+        "font_ok": true,
+        "cn_text_ok": true,
+        "editable_text_ok": true,
+        "export_complete_ok": true,
+        "no_clip_ok": true,
+        "no_overlap_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "axis_label_ok": true,
+        "legend_ok": true,
+        "export_ok": true
+      }
+    },
+    {
+      "name": "fig3_artifact_count",
+      "generator": "python",
+      "template_id": "sensitivity_tornado_template",
+      "chart_family": "tornado",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "bar_2d"
+        ]
+      ],
+      "source": "Q1/solve_q1.py",
+      "exports": [
+        "Q1/figures/fig3_artifact_count.svg",
+        "Q1/figures/fig3_artifact_count.pdf",
+        "Q1/figures/fig3_artifact_count.png"
+      ],
+      "prompt_source": "Q1/solve_q1.py",
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_ready": true,
+      "export_scale": 2,
+      "width_mm": 89.0,
+      "title_cn": "四份记录的软截断采样点与设备饱和采样点计数",
+      "section_cn": "问题一模型建立与求解",
+      "purpose_cn": "以零基线绝对计数比较四份记录的伪迹处理量，服务数据质量结论",
+      "qa": {
+        "font_ok": true,
+        "cn_text_ok": true,
+        "editable_text_ok": true,
+        "export_complete_ok": true,
+        "no_clip_ok": true,
+        "no_overlap_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "axis_label_ok": true,
+        "legend_ok": true,
+        "export_ok": true
+      },
+      "bar_exception": {
+        "necessary": true,
+        "category_count_small": true,
+        "zero_baseline_required": true,
+        "absolute_height_comparison": true,
+        "reason": "本图只有四个类别，比较对象是采样点绝对计数，计数必须从零基线读取，核心任务正是绝对高度比较；改用折线或棒棒糖会因计数无自然顺序而误导，故按少用策略的例外条件使用柱形。"
+      }
+    },
+    {
+      "name": "fig4_response_heatmap",
+      "generator": "python",
+      "template_id": "sensitivity_sobol_heatmap_template",
+      "chart_family": "heatmap",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "heatmap_2d"
+        ]
+      ],
+      "source": "Q2/solve_q2.py",
+      "exports": [
+        "Q2/figures/fig4_response_heatmap.svg",
+        "Q2/figures/fig4_response_heatmap.pdf",
+        "Q2/figures/fig4_response_heatmap.png"
+      ],
+      "prompt_source": "Q2/solve_q2.py",
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_ready": true,
+      "export_scale": 2,
+      "width_mm": 89.0,
+      "title_cn": "三导联左右条件判别权重随时间的分布热图",
+      "section_cn": "问题二模型建立与求解",
+      "purpose_cn": "展示判别信息在导联与时间两个维度上的分布，服务式 (25) 与 (26) 的窗口设定",
+      "qa": {
+        "font_ok": true,
+        "cn_text_ok": true,
+        "editable_text_ok": true,
+        "export_complete_ok": true,
+        "no_clip_ok": true,
+        "no_overlap_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "axis_label_ok": true,
+        "legend_ok": true,
+        "export_ok": true
+      }
+    },
+    {
+      "name": "fig5_source_field",
+      "generator": "python",
+      "template_id": "dynamics_phase_portrait_template",
+      "chart_family": "phase_portrait",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "vector_2d"
+        ]
+      ],
+      "source": "Q2/solve_q2.py",
+      "exports": [
+        "Q2/figures/fig5_source_field.svg",
+        "Q2/figures/fig5_source_field.pdf",
+        "Q2/figures/fig5_source_field.png"
+      ],
+      "prompt_source": "Q2/solve_q2.py",
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_ready": true,
+      "export_scale": 2,
+      "width_mm": 89.0,
+      "title_cn": "左右刺激皮层响应分布的镜像差异场与梯度向量场",
+      "section_cn": "问题二模型建立与求解",
+      "purpose_cn": "可视化镜像差异的空间结构与三导联投影位置，服务式 (22) 的机制推导",
+      "qa": {
+        "font_ok": true,
+        "cn_text_ok": true,
+        "editable_text_ok": true,
+        "export_complete_ok": true,
+        "no_clip_ok": true,
+        "no_overlap_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "axis_label_ok": true,
+        "legend_ok": true,
+        "export_ok": true
+      }
+    },
+    {
+      "name": "fig6_parameter_contour",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "panel_count": 1,
+      "panel_chart_types": [
+        [
+          "contour_2d"
+        ]
+      ],
+      "source": "Q3/solve_q3.py",
+      "exports": [
+        "Q3/figures/fig6_parameter_contour.svg",
+        "Q3/figures/fig6_parameter_contour.pdf",
+        "Q3/figures/fig6_parameter_contour.png",
+        "灵敏度分析/figures/fig6_parameter_contour.svg",
+        "灵敏度分析/figures/fig6_parameter_contour.pdf",
+        "灵敏度分析/figures/fig6_parameter_contour.png"
+      ],
+      "prompt_source": "Q3/solve_q3.py",
+      "export_status": "exported",
+      "needs_visual_review": false,
+      "paper_ready": true,
+      "export_scale": 2,
+      "width_mm": 89.0,
+      "title_cn": "记忆通路延迟与增益构成的加权残差平方和等值线曲面",
+      "section_cn": "问题三模型建立与求解",
+      "purpose_cn": "展示参数辨识误差曲面与可辨识性，服务式 (33) 的参数辨识与敏感性分析",
+      "qa": {
+        "font_ok": true,
+        "cn_text_ok": true,
+        "editable_text_ok": true,
+        "export_complete_ok": true,
+        "no_clip_ok": true,
+        "no_overlap_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true,
+        "axis_label_ok": true,
+        "legend_ok": true,
+        "export_ok": true
+      }
+    }
+  ]
+}

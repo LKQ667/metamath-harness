@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" agent="math-paper-huawei" version="24.7.17">
+  <diagram id="horizontal-stage-chain" name="横向阶段链">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1160" pageHeight="420" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n1" value="&lt;font style=&quot;font-size:17px;&quot;&gt;认知窗口截取&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#E8F1F8;strokeColor=#527A95;fontColor=#20262D;fontFamily=Microsoft YaHei;fontSize=14;align=center;verticalAlign=middle;spacing=8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="60" y="150" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="&lt;font style=&quot;font-size:17px;&quot;&gt;参数初始化与区间约束&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#EDF4EA;strokeColor=#66865B;fontColor=#20262D;fontFamily=Microsoft YaHei;fontSize=14;align=center;verticalAlign=middle;spacing=8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="270" y="150" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="&lt;font style=&quot;font-size:17px;&quot;&gt;加权残差与正则化&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#F3ECF7;strokeColor=#80678F;fontColor=#20262D;fontFamily=Microsoft YaHei;fontSize=14;align=center;verticalAlign=middle;spacing=8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="480" y="150" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="&lt;font style=&quot;font-size:17px;&quot;&gt;扰动扫描与可辨识性&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#EDF4EA;strokeColor=#66865B;fontColor=#20262D;fontFamily=Microsoft YaHei;fontSize=14;align=center;verticalAlign=middle;spacing=8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="690" y="150" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="&lt;font style=&quot;font-size:17px;&quot;&gt;分层验证与设备对照&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#F9EFE3;strokeColor=#A57645;fontColor=#20262D;fontFamily=Microsoft YaHei;fontSize=14;align=center;verticalAlign=middle;spacing=8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="900" y="150" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#56616D;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Microsoft YaHei;fontSize=12;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n1" target="n2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#56616D;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Microsoft YaHei;fontSize=12;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n2" target="n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#56616D;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Microsoft YaHei;fontSize=12;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n3" target="n4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#56616D;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Microsoft YaHei;fontSize=12;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n4" target="n5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

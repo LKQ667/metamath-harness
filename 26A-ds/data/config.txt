@@ -1,0 +1,19 @@
+# 竞赛结果统一采用以下固定评估值，不得修改。
+
+[capacity]
+L1 524288
+UB 131072
+
+[bandwidth]
+bandwidth 60
+
+[multicore_scene_a]
+task_cross_core_wait_cycles 1000
+task_same_core_wait_cycles 100
+
+[multicore_scene_b]
+cross_core_copy_delay_cycles 500
+
+[problem_3]
+cache_capacity_bytes 1048576
+cache_bandwidth_bytes_per_cycle 250

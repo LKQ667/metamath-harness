@@ -1,0 +1,161 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand*\HyPL@Entry[1]{}
+\HyPL@Entry{0<</S/D>>}
+\newlabel{body:start}{{}{1}{}{Doc-Start}{}}
+\HyPL@Entry{1<</S/D>>}
+\newlabel{abstract:start}{{}{1}{}{Doc-Start}{}}
+\newlabel{abstract:end}{{}{2}{}{Doc-Start}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}问题重述}{6}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题背景}{6}{subsection.1.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 全文技术路线图。左侧为数据解析、去噪与响应提取，右侧为多尺度建模与认知分析。}}{7}{figure.caption.3}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:roadmap}{{1}{7}{全文技术路线图。左侧为数据解析、去噪与响应提取，右侧为多尺度建模与认知分析。}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 2}问题提出}{7}{subsection.1.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 实验设计与数据结构。上行为项目一与项目二的时序对比，下行为三导采集点位与十通道语义分组。}}{8}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:design}{{2}{8}{实验设计与数据结构。上行为项目一与项目二的时序对比，下行为三导采集点位与十通道语义分组。}{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 问题分析流程图。上半部分为视觉通路的前向链，下半部分为三项建模任务的任务边界。}}{8}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:problem}{{3}{8}{问题分析流程图。上半部分为视觉通路的前向链，下半部分为三项建模任务的任务边界。}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}模型假设与符号说明}{9}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型假设}{9}{subsection.2.1}\protected@file@percent }
+\gdef \LT@i {\LT@entry 
+    {1}{86.77731pt}\LT@entry 
+    {1}{345.13467pt}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 2}符号说明}{10}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}问题一模型建立与求解}{12}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与模型建立}{12}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 窄目标化去噪流程。条件不满足时保留原波形，只有三重条件同时成立才执行模板扣除。}}{12}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:q1flow}{{4}{12}{窄目标化去噪流程。条件不满足时保留原波形，只有三重条件同时成立才执行模板扣除。}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 1}数据条件与分段定义}{12}{subsubsection.3.1.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 数据质量与伪迹来源分析。四类来源按可识别性从高到低排列，右侧标注各自的处理方式。}}{13}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:artifactsrc}{{5}{13}{数据质量与伪迹来源分析。四类来源按可识别性从高到低排列，右侧标注各自的处理方式。}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 2}稳健尺度与软截断}{13}{subsubsection.3.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 3}心电伪迹的筛选条件}{13}{subsubsection.3.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 4}有效视觉响应与曲线拟合}{14}{subsubsection.3.1.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces 有效视觉响应提取与曲线拟合流程。显著性筛选在曲线拟合之前完成，拟合只作用于已确认存在响应的窗口。}}{14}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:q1resp}{{6}{14}{有效视觉响应提取与曲线拟合流程。显著性筛选在曲线拟合之前完成，拟合只作用于已确认存在响应的窗口。}{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 5}约束条件}{15}{subsubsection.3.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 6}候选方法比较与主方法锁定}{15}{subsubsection.3.1.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 去噪方案的双准则比较。可分性为四份记录重复交叉验证 AUC 的均值，抑制率为 $99$ 分位单试次峰值下降比例。}}{15}{table.caption.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2}求解结果与分析}{16}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 1}去噪强度的敏感性}{16}{subsubsection.3.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 软截断阈值的强度扫描。可分性为四份记录重复交叉验证 AUC 的均值。}}{16}{table.caption.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 2}主方法的统计证据}{16}{subsubsection.3.2.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 主方法与传统带通方案、原始信号的配对检验。配对观测为四份记录乘十种随机种子。}}{17}{table.caption.11}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 逐记录的左右可分性对照。}}{17}{table.caption.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 3}心电伪迹的核验结果}{17}{subsubsection.3.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 心电伪迹核验。最大相关度为各导联逐试次分段与心电中位模板相关系数的最大值。}}{17}{table.caption.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 4}有效视觉响应的提取结果}{17}{subsubsection.3.2.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces P300 时间窗内左靶与右靶的峰值幅值，单位 $\si {\micro \volt }$；末列为错误发现率控制后的显著时间点数。}}{18}{table.caption.14}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces 三高斯分量拟合的决定系数与软截断采样点计数。}}{18}{table.caption.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 5}行为学一致性}{18}{subsubsection.3.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 6}响应曲线与图形结果}{18}{subsubsection.3.2.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces 三导联去噪后事件相关电位曲线与三高斯分量拟合。实线为去噪后响应，虚线为三高斯分量拟合，阴影区为 P300 时间窗。}}{19}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:erp}{{7}{19}{三导联去噪后事件相关电位曲线与三高斯分量拟合。实线为去噪后响应，虚线为三高斯分量拟合，阴影区为 P300 时间窗。}{figure.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces 四份记录单试次峰值幅值在去噪前后的分布。圆点为中位数，横线为 $5$ 至 $95$ 分位区间。}}{20}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:interval}{{8}{20}{四份记录单试次峰值幅值在去噪前后的分布。圆点为中位数，横线为 $5$ 至 $95$ 分位区间。}{figure.caption.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces 四份记录的软截断采样点与设备饱和采样点计数。}}{21}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:count}{{9}{21}{四份记录的软截断采样点与设备饱和采样点计数。}{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 7}设备滤波对照与题面论断的定量证据}{21}{subsubsection.3.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}问题二模型建立与求解}{21}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与模型建立}{21}{subsection.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces 多尺度前向计算模型的五级结构。各级的时间尺度依次增大，从毫秒级到秒级。}}{22}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:multiscale}{{10}{22}{多尺度前向计算模型的五级结构。各级的时间尺度依次增大，从毫秒级到秒级。}{figure.caption.19}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 1}第一级：LGN 时空滤波}{22}{subsubsection.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 2}第二级：形状选择性响应与除法归一化}{22}{subsubsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 3}左右镜像的几何来源}{23}{subsubsection.4.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 4}第三级：介观集群动力学}{23}{subsubsection.4.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 5}第四级：宏观同步与序参数}{23}{subsubsection.4.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 6}第五级：头皮导联场观测}{24}{subsubsection.4.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 7}左右差异的形成机制}{24}{subsubsection.4.1.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces 左右三角刺激皮层响应镜像分布的形成机制。镜像源在中线相消、在偏侧导联互换权重，因此差分响应最强。}}{24}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:laterality}{{11}{24}{左右三角刺激皮层响应镜像分布的形成机制。镜像源在中线相消、在偏侧导联互换权重，因此差分响应最强。}{figure.caption.20}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 8}慢维持通路}{25}{subsubsection.4.1.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 9}区分特征表示}{25}{subsubsection.4.1.9}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces 形状与空间联合特征的构造与判别流程。两个特征来自不同时间窗与不同导联组合，经线性判别分析给出左右判据。}}{25}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:featflow}{{12}{25}{形状与空间联合特征的构造与判别流程。两个特征来自不同时间窗与不同导联组合，经线性判别分析给出左右判据。}{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 10}约束条件}{26}{subsubsection.4.1.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 11}候选方法比较与主方法锁定}{26}{subsubsection.4.1.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2}求解结果与分析}{26}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 1}镜像性检验}{26}{subsubsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 2}偏侧预测与机制推论对照}{26}{subsubsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 3}慢通路标定与时间窗对照}{26}{subsubsection.4.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces 模型预测与实测偏侧时程的对照。晚期与早期幅度比按 $250$ 至 $500$ ms 与 $80$ 至 $250$ ms 两个窗口计算。}}{27}{table.caption.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 4}左右区分特征的性能}{27}{subsubsection.4.2.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces 左右区分特征的交叉验证 AUC。每格为五种子分层五折的平均值。}}{27}{table.caption.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 5}图形结果}{27}{subsubsection.4.2.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces 三导联左右条件均值差的标准化判别权重随刺激后时间的分布。正值表示右靶条件幅值更高，虚线框为 P300 时间窗。}}{28}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:heatmap}{{13}{28}{三导联左右条件均值差的标准化判别权重随刺激后时间的分布。正值表示右靶条件幅值更高，虚线框为 P300 时间窗。}{figure.caption.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces 左右刺激皮层响应分布的镜像差异场与梯度向量场。橙色实线与蓝色虚线分别为差异为正与为负的等值线，倒三角为三导联在皮层上的等效投影位置。}}{29}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:field}{{14}{29}{左右刺激皮层响应分布的镜像差异场与梯度向量场。橙色实线与蓝色虚线分别为差异为正与为负的等值线，倒三角为三导联在皮层上的等效投影位置。}{figure.caption.25}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 6}项目间差异的解释}{29}{subsubsection.4.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}问题三模型建立与求解}{30}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1}问题分析与模型建立}{30}{subsection.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces 双源认知宏观模型框架。视觉通路与记忆通路并列输入，记忆通路经延迟与增益耦合，前额叶整合后由导联场投影到头皮。}}{30}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:q3framework}{{15}{30}{双源认知宏观模型框架。视觉通路与记忆通路并列输入，记忆通路经延迟与增益耦合，前额叶整合后由导联场投影到头皮。}{figure.caption.26}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 1}认知窗口的定义}{30}{subsubsection.5.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 2}双通路相位动力学}{30}{subsubsection.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 3}序参数与慢包络}{31}{subsubsection.5.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 4}前额叶认知整合}{31}{subsubsection.5.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 5}头皮观测}{31}{subsubsection.5.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 6}参数辨识}{32}{subsubsection.5.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 7}约束条件}{32}{subsubsection.5.1.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 1\hskip 0.05em\relax .\hskip 0.05em\relax 8}候选方法比较与主方法锁定}{32}{subsubsection.5.1.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2}求解结果与分析}{33}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 1}参数辨识结果}{33}{subsubsection.5.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces 认知宏观模型的参数辨识结果。目标函数为三导联加权残差平方和。}}{33}{table.caption.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 2}逐记录分析}{33}{subsubsection.5.2.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces 认知模型在四份记录上的分析结果。相关系数为三导联预测与实测归一化后的平均相关系数。}}{33}{table.caption.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 3}行为学分层分析}{34}{subsubsection.5.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 4}参数敏感性与可辨识性}{34}{subsubsection.5.2.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces 认知模型参数的局部敏感度。数值为加权残差平方和对该参数的变化率。}}{34}{table.caption.29}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces 记忆通路延迟与增益构成的加权残差平方和等值线曲面。星标为辨识最优参数。}}{35}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:contour}{{16}{35}{记忆通路延迟与增益构成的加权残差平方和等值线曲面。星标为辨识最优参数。}{figure.caption.30}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces 认知模型参数辨识与分析流程。辨识之后依次做可辨识性评估、行为学分层与对照分析。}}{35}{figure.caption.31}\protected@file@percent }
+\newlabel{fig:q3flow}{{17}{35}{认知模型参数辨识与分析流程。辨识之后依次做可辨识性评估、行为学分层与对照分析。}{figure.caption.31}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 5}设备滤波对照}{36}{subsubsection.5.2.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces 模型体系结构、评价与临床指标。左侧为三项任务的结论链条，右侧为模型导出的指标随病程变化的定性方向。}}{36}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:q3app}{{18}{36}{模型体系结构、评价与临床指标。左侧为三项任务的结论链条，右侧为模型导出的指标随病程变化的定性方向。}{figure.caption.32}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5\hskip 0.05em\relax .\hskip 0.05em\relax 2\hskip 0.05em\relax .\hskip 0.05em\relax 6}与题面应用的衔接}{36}{subsubsection.5.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}模型总结与评价}{36}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 1}模型优点}{36}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 2}模型局限与改进}{37}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6\hskip 0.05em\relax .\hskip 0.05em\relax 3}模型推广}{37}{subsection.6.3}\protected@file@percent }
+\bibcite{ref1}{{1}{}{{}}{{}}}
+\bibcite{ref2}{{2}{}{{}}{{}}}
+\bibcite{ref3}{{3}{}{{}}{{}}}
+\bibcite{ref4}{{4}{}{{}}{{}}}
+\bibcite{ref5}{{5}{}{{}}{{}}}
+\bibcite{ref6}{{6}{}{{}}{{}}}
+\bibcite{ref7}{{7}{}{{}}{{}}}
+\bibcite{ref8}{{8}{}{{}}{{}}}
+\bibcite{ref9}{{9}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {section}{参考文献}{38}{section*.33}\protected@file@percent }
+\bibcite{ref10}{{10}{}{{}}{{}}}
+\bibcite{ref11}{{11}{}{{}}{{}}}
+\bibcite{ref12}{{12}{}{{}}{{}}}
+\bibcite{ref13}{{13}{}{{}}{{}}}
+\bibcite{ref14}{{14}{}{{}}{{}}}
+\bibcite{ref15}{{15}{}{{}}{{}}}
+\bibcite{ref16}{{16}{}{{}}{{}}}
+\bibcite{ref17}{{17}{}{{}}{{}}}
+\bibcite{ref18}{{18}{}{{}}{{}}}
+\bibcite{ref19}{{19}{}{{}}{{}}}
+\bibcite{ref20}{{20}{}{{}}{{}}}
+\newlabel{body:end}{{6\hskip 0.05em\relax .\hskip 0.05em\relax 3}{39}{模型推广}{section*.34}{}}
+\newlabel{appendix:start}{{6\hskip 0.05em\relax .\hskip 0.05em\relax 3}{40}{模型推广}{section*.34}{}}
+\@writefile{toc}{\contentsline {section}{附录 \numberline {A}数据附录}{40}{appendix.1.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 1}有效视觉响应特征完整表}{40}{subsection.1.A.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces 四份记录三导联全部条件的 P300 峰值幅值与潜伏期。}}{40}{table.caption.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 2}参数辨识误差曲面数值}{40}{subsection.1.A.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1\hskip 0.05em\relax .\hskip 0.05em\relax 3}数据质量完整统计}{41}{subsection.1.A.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces 四份记录三导联的分布统计。}}{41}{table.caption.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{附录 \numberline {B}附录代码文件}{42}{appendix.1.B}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 1}eeg\_lib.py}{42}{subsection.1.B.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 2}preprocess\_eeg.py}{47}{subsection.1.B.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 3}solve\_q1.py}{54}{subsection.1.B.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 4}solve\_q2.py}{61}{subsection.1.B.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2\hskip 0.05em\relax .\hskip 0.05em\relax 5}solve\_q3.py}{73}{subsection.1.B.5}\protected@file@percent }
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\ttl@finishall
+\gdef \@abspage@last{81}

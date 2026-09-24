@@ -1,0 +1,96 @@
+{
+  "tolerance": {
+    "abs": 1e-06,
+    "rel": 1e-09
+  },
+  "files": [
+    {
+      "source": "scripts/graph_utils.py",
+      "appendix": "论文/附录代码/graph_utils.py"
+    },
+    {
+      "source": "scripts/partition.py",
+      "appendix": "论文/附录代码/partition.py"
+    },
+    {
+      "source": "scripts/eval_runner.py",
+      "appendix": "论文/附录代码/eval_runner.py"
+    },
+    {
+      "source": "scripts/aggregate_results.py",
+      "appendix": "论文/附录代码/aggregate_results.py"
+    }
+  ],
+  "runs": [
+    {
+      "name": "core-pipeline",
+      "command": [
+        "python",
+        "scripts/appendix_regression.py",
+        "--out",
+        "results/appendix_regression.json"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "files": [
+        "论文/附录代码/graph_utils.py",
+        "论文/附录代码/partition.py",
+        "论文/附录代码/eval_runner.py",
+        "论文/附录代码/aggregate_results.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/appendix_regression.json",
+          "type": "json"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "tolerance": {
+      "abs": 1e-06,
+      "rel": 1e-09
+    },
+    "files": [
+      {
+        "source": "scripts/graph_utils.py",
+        "appendix": "论文/附录代码/graph_utils.py",
+        "source_sha256": "7a507ffce7185c09bedd0a90c6c52dd09d7112b12cf70f37d019169851c05e78",
+        "appendix_sha256": "d7169f5ce12b8e7323d5cbda86ad1d46300a427ad8c2f83a1454354dd9f38fec"
+      },
+      {
+        "source": "scripts/partition.py",
+        "appendix": "论文/附录代码/partition.py",
+        "source_sha256": "8a05a720ffbbc91d3fd9ae22fe38faf5efa7329c6cfc0fd3cd402f7e579186ab",
+        "appendix_sha256": "acef7305d3c74cca79bf1dd5acc878a7bbcf64a4ca99b8b921d70c8f3c770412"
+      },
+      {
+        "source": "scripts/eval_runner.py",
+        "appendix": "论文/附录代码/eval_runner.py",
+        "source_sha256": "24f6d3d4529c7501431a079a7b62350fc1ff4fbd932a04b34e1a7b6f97807978",
+        "appendix_sha256": "57f9716fe8254a5a13fd8b3c2bedd5792e6f47393fb979f9a3b938d1fb842ae4"
+      },
+      {
+        "source": "scripts/aggregate_results.py",
+        "appendix": "论文/附录代码/aggregate_results.py",
+        "source_sha256": "0f2f5b4065e509b52ab3845f02d37353a9b5d23fa6cf363b6b1d3fd84a57a01c",
+        "appendix_sha256": "d5f8e0ae0a6da07931bd30151632610d2c7d40e1df1d12c53148120ab71f4e2f"
+      }
+    ],
+    "runs": [
+      {
+        "name": "core-pipeline",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/appendix_regression.json",
+            "type": "json",
+            "original_sha256": "858c7378937a1fef15bbb9526162e7164a407c0b0460aa6a2b3767a938edf59b",
+            "sanitized_sha256": "858c7378937a1fef15bbb9526162e7164a407c0b0460aa6a2b3767a938edf59b"
+          }
+        ]
+      }
+    ]
+  }
+}

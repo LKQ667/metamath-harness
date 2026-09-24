@@ -1,0 +1,42 @@
+{
+  "name": "fig_artifact_sources",
+  "kind": "flowchart",
+  "object": "四份原始脑电记录",
+  "action": "诊断并归类四类伪迹来源及其幅值表现",
+  "product": "伪迹来源与表现形式的对应关系图",
+  "criteria": "四类来源齐全、表现描述与来源一一对应",
+  "nodes": [
+    "四份脑电记录",
+    "设备量程饱和",
+    "运动与电极瞬变",
+    "心电与慢电位伪迹",
+    "幅值削顶与平台",
+    "尖峰瞬变与漂移",
+    "与心搏同步的波形"
+  ],
+  "edges": [
+    "诊断→量程饱和",
+    "量程饱和→运动瞬变",
+    "运动瞬变→心电慢电位",
+    "三类表现支撑来源"
+  ],
+  "main_path": [
+    "四份脑电记录",
+    "设备量程饱和",
+    "运动与电极瞬变",
+    "心电与慢电位伪迹"
+  ],
+  "unverified": [
+    "逐类伪迹的出现比例未在已完成结果中量化，图内只作定性表现描述，不标注比例数值"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 1,
+  "support_blocks": 3,
+  "stages": 4,
+  "direction": "horizontal"
+}

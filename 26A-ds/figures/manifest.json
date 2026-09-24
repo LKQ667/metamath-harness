@@ -1,0 +1,442 @@
+{
+  "drawing_mode": "html",
+  "drawing_mode_locked": true,
+  "drawing_mode_source": "卡片锁定 drawing_mode=HTML矢量成图",
+  "bar_policy": "禁用",
+  "subplot_policy": "默认（模型自行判断）",
+  "python_chart_repeat_policy": "默认（少重复）",
+  "figure_total": 20,
+  "competition_language": "中文",
+  "style_seed": {
+    "seed": 229715693,
+    "style_family": "C 纯黑白线稿",
+    "skeleton": "skeleton_twocolumn",
+    "radius": 0,
+    "arrow": "细实线 + 小实心箭头",
+    "node_acc": "顶横条",
+    "sect": "无框分组",
+    "layout": 5
+  },
+  "items": [
+    {
+      "id": "fig_roadmap",
+      "generator": "html",
+      "template_id": "skeleton_twocolumn",
+      "chart_family": "flowchart",
+      "title": "整体技术路线图",
+      "source": "手绘图/fig_roadmap.html",
+      "exports": ["手绘图/fig_roadmap.pdf", "手绘图/fig_roadmap.png"],
+      "prompt_source": "手绘图/fig_roadmap.html（技术路线图设计说明：三问目标与对应模型算法双栏对照，含输入基础与实验交付两段）",
+      "export_status": "electron_printed",
+      "export_scale": 2,
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题重述",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig_analysis",
+      "generator": "html",
+      "template_id": "skeleton_layered",
+      "chart_family": "flowchart",
+      "title": "问题分析流程图",
+      "source": "手绘图/fig_analysis.html",
+      "exports": ["手绘图/fig_analysis.pdf", "手绘图/fig_analysis.png"],
+      "prompt_source": "手绘图/fig_analysis.html（问题分析流程设计说明：耦合结构、硬约束、解耦思路与算法回环四段分层）",
+      "export_status": "electron_printed",
+      "export_scale": 2,
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题重述",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig_flow_q1",
+      "generator": "html",
+      "template_id": "skeleton_spine",
+      "chart_family": "flowchart",
+      "title": "问题一求解流程图",
+      "source": "手绘图/fig_flow_q1.html",
+      "exports": ["手绘图/fig_flow_q1.pdf", "手绘图/fig_flow_q1.png"],
+      "prompt_source": "手绘图/fig_flow_q1.html（问题一求解流程设计说明：横向流水线主干加切点回退虚线回环）",
+      "export_status": "electron_printed",
+      "export_scale": 2,
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig_flow_q2",
+      "generator": "html",
+      "template_id": "skeleton_swimlane",
+      "chart_family": "flowchart",
+      "title": "问题二求解流程图",
+      "source": "手绘图/fig_flow_q2.html",
+      "exports": ["手绘图/fig_flow_q2.pdf", "手绘图/fig_flow_q2.png"],
+      "prompt_source": "手绘图/fig_flow_q2.html（问题二求解流程设计说明：输入处理输出三泳道加容量判定分支）",
+      "export_status": "electron_printed",
+      "export_scale": 2,
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题二模型建立与求解",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig_flow_q3",
+      "generator": "html",
+      "template_id": "skeleton_twocolumn",
+      "chart_family": "flowchart",
+      "title": "问题三求解流程图",
+      "source": "手绘图/fig_flow_q3.html",
+      "exports": ["手绘图/fig_flow_q3.pdf", "手绘图/fig_flow_q3.png"],
+      "prompt_source": "手绘图/fig_flow_q3.html（问题三求解流程设计说明：两条候选路线并行比选后汇合）",
+      "export_status": "electron_printed",
+      "export_scale": 2,
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题三模型建立与求解",
+      "qa": {
+        "html_pdf_check_ok": true,
+        "geom_check_ok": true,
+        "content_ok": true,
+        "cn_text_ok": true,
+        "layout_ok": true,
+        "text_fit_ok": true,
+        "grayscale_ok": true,
+        "single_column_ok": true,
+        "double_column_ok": true,
+        "paper_insert_ok": true
+      }
+    },
+    {
+      "id": "fig_dataset_profile",
+      "generator": "python",
+      "template_id": "multi_panel_hero_support_template",
+      "chart_family": "hero_support",
+      "panel_count": 4,
+      "panel_chart_types": [["scatter_2d"], ["distribution_2d"], ["box_2d"], ["line_2d"]],
+      "title": "测试用例结构画像",
+      "source": "数据预处理/fig_profile.py",
+      "exports": [
+        "数据预处理/figures/fig_dataset_profile.svg",
+        "数据预处理/figures/fig_dataset_profile.pdf",
+        "数据预处理/figures/fig_dataset_profile.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_dag_layers",
+      "generator": "python",
+      "template_id": "sensitivity_sobol_heatmap_template",
+      "chart_family": "heatmap",
+      "panel_count": 1,
+      "panel_chart_types": [["heatmap_2d"]],
+      "title": "分层工作量占比分布",
+      "source": "数据预处理/fig_profile.py",
+      "exports": [
+        "数据预处理/figures/fig_dag_layers.svg",
+        "数据预处理/figures/fig_dag_layers.pdf",
+        "数据预处理/figures/fig_dag_layers.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q1_speedup",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [["line_2d"]],
+      "title": "平均加速比曲线",
+      "source": "Q1/figures_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_speedup.svg",
+        "Q1/figures/fig_q1_speedup.pdf",
+        "Q1/figures/fig_q1_speedup.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q1_case_scatter",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "panel_count": 1,
+      "panel_chart_types": [["scatter_2d", "line_2d"]],
+      "title": "加速比与并行宽度的关系",
+      "source": "Q1/figures_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_case_scatter.svg",
+        "Q1/figures/fig_q1_case_scatter.pdf",
+        "Q1/figures/fig_q1_case_scatter.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q1_pareto",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "pareto",
+      "panel_count": 1,
+      "panel_chart_types": [["scatter_2d", "line_2d"]],
+      "title": "加速比与额外搬运量的权衡",
+      "source": "Q1/figures_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_pareto.svg",
+        "Q1/figures/fig_q1_pareto.pdf",
+        "Q1/figures/fig_q1_pareto.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q1_timeline",
+      "generator": "python",
+      "template_id": "stats_interval_lollipop_template",
+      "chart_family": "interval_lollipop",
+      "panel_count": 4,
+      "panel_chart_types": [["scatter_2d"], ["scatter_2d"], ["scatter_2d"], ["scatter_2d"]],
+      "title": "代表性用例的四核时间线",
+      "source": "Q1/figures_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_timeline.svg",
+        "Q1/figures/fig_q1_timeline.pdf",
+        "Q1/figures/fig_q1_timeline.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q1_estimator",
+      "generator": "python",
+      "template_id": "optimization_convergence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [["scatter_2d", "line_2d"]],
+      "title": "估算完工时间与实测 Makespan 的一致性",
+      "source": "Q1/figures_q1.py",
+      "exports": [
+        "Q1/figures/fig_q1_estimator.svg",
+        "Q1/figures/fig_q1_estimator.pdf",
+        "Q1/figures/fig_q1_estimator.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题一模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q2_compare",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "panel_count": 1,
+      "panel_chart_types": [["line_2d"]],
+      "title": "两个场景的平均加速比对照",
+      "source": "Q2/figures_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_compare.svg",
+        "Q2/figures/fig_q2_compare.pdf",
+        "Q2/figures/fig_q2_compare.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题二模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q2_scatter",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "pareto",
+      "panel_count": 1,
+      "panel_chart_types": [["scatter_2d", "line_2d"]],
+      "title": "两场景 Makespan 比值与用例规模的关系",
+      "source": "Q2/figures_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_scatter.svg",
+        "Q2/figures/fig_q2_scatter.pdf",
+        "Q2/figures/fig_q2_scatter.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题二模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q2_capacity",
+      "generator": "python",
+      "template_id": "spatial_contour_flow_template",
+      "chart_family": "contour_quiver",
+      "panel_count": 1,
+      "panel_chart_types": [["contour_2d", "vector_2d"]],
+      "title": "额外搬运量占比的分布",
+      "source": "Q2/figures_q2.py",
+      "exports": [
+        "Q2/figures/fig_q2_capacity.svg",
+        "Q2/figures/fig_q2_capacity.pdf",
+        "Q2/figures/fig_q2_capacity.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题二模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q3_cache_gain",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [["line_2d"]],
+      "title": "只读 Cache 的加速比与命中率",
+      "source": "Q3/figures_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_cache_gain.svg",
+        "Q3/figures/fig_q3_cache_gain.pdf",
+        "Q3/figures/fig_q3_cache_gain.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题三模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q3_hit",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "pareto",
+      "panel_count": 1,
+      "panel_chart_types": [["scatter_2d", "line_2d"]],
+      "title": "命中率与加速比的关系",
+      "source": "Q3/figures_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_hit.svg",
+        "Q3/figures/fig_q3_hit.pdf",
+        "Q3/figures/fig_q3_hit.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题三模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_q3_traffic",
+      "generator": "python",
+      "template_id": "causal_effects_line_template",
+      "chart_family": "multi_line",
+      "panel_count": 1,
+      "panel_chart_types": [["line_2d"]],
+      "title": "两种配置的额外搬运量对照",
+      "source": "Q3/figures_q3.py",
+      "exports": [
+        "Q3/figures/fig_q3_traffic.svg",
+        "Q3/figures/fig_q3_traffic.pdf",
+        "Q3/figures/fig_q3_traffic.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "问题三模型建立与求解",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_sensitivity_parameters",
+      "generator": "python",
+      "template_id": "trend_confidence_template",
+      "chart_family": "line_band",
+      "panel_count": 1,
+      "panel_chart_types": [["line_2d"]],
+      "title": "算法参数的敏感度",
+      "source": "灵敏度分析/fig_sensitivity.py",
+      "exports": [
+        "灵敏度分析/figures/fig_sensitivity_parameters.svg",
+        "灵敏度分析/figures/fig_sensitivity_parameters.pdf",
+        "灵敏度分析/figures/fig_sensitivity_parameters.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "模型总结与评价",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    },
+    {
+      "id": "fig_sensitivity_response",
+      "generator": "python",
+      "template_id": "optimization_pareto_template",
+      "chart_family": "pareto",
+      "panel_count": 1,
+      "panel_chart_types": [["scatter_2d"]],
+      "title": "两参数的联合响应",
+      "source": "灵敏度分析/fig_sensitivity.py",
+      "exports": [
+        "灵敏度分析/figures/fig_sensitivity_response.svg",
+        "灵敏度分析/figures/fig_sensitivity_response.pdf",
+        "灵敏度分析/figures/fig_sensitivity_response.png"
+      ],
+      "paper_ready": true,
+      "needs_visual_review": false,
+      "paper_section": "模型总结与评价",
+      "qa": {"cn_text_ok": true, "export_ok": true, "editable_text_ok": true}
+    }
+  ]
+}

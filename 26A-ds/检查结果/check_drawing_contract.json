@@ -1,0 +1,6 @@
+{
+  "check": "check_drawing_contract",
+  "ok": true,
+  "errors": [],
+  "issues": []
+}

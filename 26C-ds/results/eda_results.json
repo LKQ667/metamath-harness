@@ -1,0 +1,314 @@
+{
+  "datasets": {
+    "A1": {
+      "file": "VisualCogA_Task-1.mat",
+      "sampling_rate_hz": 256,
+      "n_channels": 10,
+      "n_samples": 223845,
+      "duration_s": 874.391,
+      "labels": [
+        "Fz",
+        "F3",
+        "F4",
+        "FzDecon",
+        "F3Decon",
+        "F4Decon",
+        "ECG",
+        "VisCue:L-1/R+1",
+        "Action:L-1/R+1",
+        "TimeStamp"
+      ],
+      "missing_values": 0,
+      "duplicate_timestamps": 0,
+      "timestamp_step_s": 0.00390625,
+      "trials_cue": 100,
+      "trials_action": 100,
+      "cue_left": 54,
+      "cue_right": 46,
+      "channels": {
+        "Fz": {
+          "mean_uV": 16.511,
+          "std_uV": 53.159,
+          "robust_scale_uV": 27.917,
+          "min_uV": -295.8,
+          "max_uV": 300.83,
+          "p01_uV": -188.13,
+          "p99_uV": 140.59,
+          "kurtosis": 5.823,
+          "skewness": -1.328,
+          "saturation_count": 0
+        },
+        "F3": {
+          "mean_uV": 2.971,
+          "std_uV": 267.969,
+          "robust_scale_uV": 134.878,
+          "min_uV": -547.33,
+          "max_uV": 1000.0,
+          "p01_uV": -402.43,
+          "p99_uV": 1000.0,
+          "kurtosis": 4.125,
+          "skewness": 1.858,
+          "saturation_count": 4573
+        },
+        "F4": {
+          "mean_uV": 3.413,
+          "std_uV": 301.428,
+          "robust_scale_uV": 161.302,
+          "min_uV": -581.63,
+          "max_uV": 1000.0,
+          "p01_uV": -465.57,
+          "p99_uV": 1000.0,
+          "kurtosis": 3.008,
+          "skewness": 1.664,
+          "saturation_count": 6711
+        }
+      },
+      "ecg": {
+        "std_uV": 109.286,
+        "r_peaks": 1018,
+        "heart_rate_bpm": 69.85
+      },
+      "artifact_trial_fraction": {
+        "Fz": 0.33,
+        "F3": 0.27,
+        "F4": 0.28
+      },
+      "cue_action_agreement": 1.0
+    },
+    "A2": {
+      "file": "VisualCogA_Task-2.mat",
+      "sampling_rate_hz": 256,
+      "n_channels": 10,
+      "n_samples": 230157,
+      "duration_s": 899.047,
+      "labels": [
+        "Fz",
+        "F3",
+        "F4",
+        "FzDecon",
+        "F3Decon",
+        "F4Decon",
+        "ECG",
+        "VisCue:L-1/R+1",
+        "TgtAct:L-2/R+2",
+        "TimeStamp"
+      ],
+      "missing_values": 0,
+      "duplicate_timestamps": 0,
+      "timestamp_step_s": 0.00390625,
+      "trials_cue": 100,
+      "trials_action": 100,
+      "cue_left": 57,
+      "cue_right": 43,
+      "channels": {
+        "Fz": {
+          "mean_uV": 9.444,
+          "std_uV": 190.167,
+          "robust_scale_uV": 133.793,
+          "min_uV": -881.44,
+          "max_uV": 417.99,
+          "p01_uV": -648.71,
+          "p99_uV": 290.64,
+          "kurtosis": 2.454,
+          "skewness": -1.436,
+          "saturation_count": 0
+        },
+        "F3": {
+          "mean_uV": 18.575,
+          "std_uV": 290.649,
+          "robust_scale_uV": 178.269,
+          "min_uV": -1000.0,
+          "max_uV": 1000.0,
+          "p01_uV": -896.69,
+          "p99_uV": 1000.0,
+          "kurtosis": 2.458,
+          "skewness": -0.809,
+          "saturation_count": 3277
+        },
+        "F4": {
+          "mean_uV": 9.725,
+          "std_uV": 275.733,
+          "robust_scale_uV": 153.475,
+          "min_uV": -1000.0,
+          "max_uV": 1000.0,
+          "p01_uV": -909.51,
+          "p99_uV": 363.06,
+          "kurtosis": 2.403,
+          "skewness": -1.267,
+          "saturation_count": 1373
+        }
+      },
+      "ecg": {
+        "std_uV": 101.855,
+        "r_peaks": 1076,
+        "heart_rate_bpm": 71.81
+      },
+      "artifact_trial_fraction": {
+        "Fz": 0.19,
+        "F3": 0.13,
+        "F4": 0.11
+      },
+      "cue_action_agreement": 0.47
+    },
+    "B1": {
+      "file": "VisualCogB_Task-1.mat",
+      "sampling_rate_hz": 256,
+      "n_channels": 10,
+      "n_samples": 223005,
+      "duration_s": 871.109,
+      "labels": [
+        "Fz",
+        "F3",
+        "F4",
+        "FzDecon",
+        "F3Decon",
+        "F4Decon",
+        "ECG",
+        "VisCue:L-1/R+1",
+        "Action:L-1/R+1",
+        "TimeStamp"
+      ],
+      "missing_values": 0,
+      "duplicate_timestamps": 0,
+      "timestamp_step_s": 0.00390625,
+      "trials_cue": 100,
+      "trials_action": 100,
+      "cue_left": 48,
+      "cue_right": 52,
+      "channels": {
+        "Fz": {
+          "mean_uV": 33.046,
+          "std_uV": 287.846,
+          "robust_scale_uV": 164.741,
+          "min_uV": -1000.0,
+          "max_uV": 1000.0,
+          "p01_uV": -919.64,
+          "p99_uV": 1000.0,
+          "kurtosis": 3.082,
+          "skewness": -0.712,
+          "saturation_count": 3745
+        },
+        "F3": {
+          "mean_uV": -1.275,
+          "std_uV": 258.824,
+          "robust_scale_uV": 128.725,
+          "min_uV": -595.15,
+          "max_uV": 1000.0,
+          "p01_uV": -344.05,
+          "p99_uV": 1000.0,
+          "kurtosis": 3.994,
+          "skewness": 1.954,
+          "saturation_count": 2246
+        },
+        "F4": {
+          "mean_uV": 1.337,
+          "std_uV": 267.271,
+          "robust_scale_uV": 113.794,
+          "min_uV": -548.12,
+          "max_uV": 1000.0,
+          "p01_uV": -363.12,
+          "p99_uV": 1000.0,
+          "kurtosis": 3.743,
+          "skewness": 1.945,
+          "saturation_count": 2921
+        }
+      },
+      "ecg": {
+        "std_uV": 141.546,
+        "r_peaks": 1033,
+        "heart_rate_bpm": 71.15
+      },
+      "artifact_trial_fraction": {
+        "Fz": 0.25,
+        "F3": 0.29,
+        "F4": 0.32
+      },
+      "cue_action_agreement": 0.98
+    },
+    "B2": {
+      "file": "VisualCogB_Task-2.mat",
+      "sampling_rate_hz": 256,
+      "n_channels": 10,
+      "n_samples": 228330,
+      "duration_s": 891.91,
+      "labels": [
+        "Fz",
+        "F3",
+        "F4",
+        "FzDecon",
+        "F3Decon",
+        "F4Decon",
+        "ECG",
+        "VisCue:L-1/R+1",
+        "TgtAct:L-2/R+2",
+        "TimeStamp"
+      ],
+      "missing_values": 0,
+      "duplicate_timestamps": 0,
+      "timestamp_step_s": 0.00390625,
+      "trials_cue": 100,
+      "trials_action": 100,
+      "cue_left": 50,
+      "cue_right": 50,
+      "channels": {
+        "Fz": {
+          "mean_uV": 4.968,
+          "std_uV": 238.281,
+          "robust_scale_uV": 157.773,
+          "min_uV": -1000.0,
+          "max_uV": 1000.0,
+          "p01_uV": -759.81,
+          "p99_uV": 372.06,
+          "kurtosis": 1.919,
+          "skewness": -1.228,
+          "saturation_count": 350
+        },
+        "F3": {
+          "mean_uV": 31.786,
+          "std_uV": 307.419,
+          "robust_scale_uV": 181.889,
+          "min_uV": -1000.0,
+          "max_uV": 1000.0,
+          "p01_uV": -912.12,
+          "p99_uV": 1000.0,
+          "kurtosis": 2.133,
+          "skewness": -0.762,
+          "saturation_count": 3293
+        },
+        "F4": {
+          "mean_uV": 55.675,
+          "std_uV": 325.301,
+          "robust_scale_uV": 190.531,
+          "min_uV": -1000.0,
+          "max_uV": 1000.0,
+          "p01_uV": -930.54,
+          "p99_uV": 1000.0,
+          "kurtosis": 2.148,
+          "skewness": -0.623,
+          "saturation_count": 5836
+        }
+      },
+      "ecg": {
+        "std_uV": 101.24,
+        "r_peaks": 1063,
+        "heart_rate_bpm": 71.51
+      },
+      "artifact_trial_fraction": {
+        "Fz": 0.15,
+        "F3": 0.18,
+        "F4": 0.24
+      },
+      "cue_action_agreement": 0.48
+    }
+  },
+  "summary": {
+    "datasets": 4,
+    "total_samples": 905337,
+    "total_trials": 400,
+    "total_duration_s": 3536.46,
+    "any_missing_values": false,
+    "any_duplicate_timestamps": false,
+    "any_saturation": true,
+    "mean_artifact_trial_fraction": 0.2283
+  }
+}

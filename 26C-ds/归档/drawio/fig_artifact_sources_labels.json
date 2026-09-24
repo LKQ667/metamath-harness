@@ -1,0 +1,15 @@
+{
+  "n1": "<font style=\"font-size:17px;\">四份脑电记录</font>",
+  "n2": "<font style=\"font-size:17px;\">设备量程饱和</font>",
+  "n3": "<font style=\"font-size:17px;\">运动与电极瞬变</font>",
+  "n4": "<font style=\"font-size:17px;\">心电与慢电位伪迹</font>",
+  "s1": "<font style=\"font-size:17px;\">幅值削顶与平台</font>",
+  "s2": "<font style=\"font-size:17px;\">尖峰瞬变与漂移</font>",
+  "s3": "<font style=\"font-size:17px;\">与心搏同步的波形</font>",
+  "e1": "<font style=\"font-size:12px;\">质量诊断</font>",
+  "e2": "<font style=\"font-size:12px;\">并列来源</font>",
+  "e3": "<font style=\"font-size:12px;\">并列来源</font>",
+  "e4": "<font style=\"font-size:12px;\">表现</font>",
+  "e5": "<font style=\"font-size:12px;\">表现</font>",
+  "e6": "<font style=\"font-size:12px;\">表现</font>"
+}

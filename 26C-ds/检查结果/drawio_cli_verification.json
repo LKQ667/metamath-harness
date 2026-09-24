@@ -1,0 +1,15 @@
+{
+  "executable": "C:\\Program Files\\draw.io\\draw.io.exe",
+  "executable_sha256": "2943cb47ccaed4cfd8a2025f167e6017b7f79bbece6ad046d5b6d545bad336d7",
+  "version": "31.4.5",
+  "version_ok": true,
+  "source_ok": true,
+  "exports": {
+    "png": true,
+    "svg": true,
+    "pdf": true
+  },
+  "cn_text_ok": true,
+  "ok": true,
+  "install_log": []
+}

@@ -1,0 +1,42 @@
+{
+  "name": "fig_q2_laterality_mechanism",
+  "kind": "flowchart",
+  "object": "右指与左指三角刺激的皮层响应",
+  "action": "以水平镜像解释左右源分布差异，并说明三导联对镜像差异的敏感度",
+  "product": "镜像分布机制与导联权重关系图",
+  "criteria": "镜像关系正确、Fz 相消与 F3/F4 权重互换表述准确",
+  "nodes": [
+    "右指三角源分布",
+    "水平镜像映射",
+    "左指三角源分布",
+    "差分 F4−F3 判据",
+    "Fz 位于中线相消",
+    "F3/F4 权重互换",
+    "镜像差异最敏感"
+  ],
+  "edges": [
+    "右指源→镜像映射",
+    "镜像映射→左指源",
+    "左指源→差分判据",
+    "三条机制支撑"
+  ],
+  "main_path": [
+    "右指三角源分布",
+    "水平镜像映射",
+    "左指三角源分布",
+    "差分 F4−F3 判据"
+  ],
+  "unverified": [
+    "机制为模型解释，未在数据上做因果实验验证"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 1,
+  "support_blocks": 3,
+  "stages": 4,
+  "direction": "horizontal"
+}

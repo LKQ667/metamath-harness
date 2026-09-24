@@ -1,0 +1,42 @@
+{
+  "name": "fig_q3_model_framework",
+  "kind": "flowchart",
+  "object": "视觉通路与记忆通路两路输入",
+  "action": "以延迟耦合与前额整合连接双源，并输出头皮观测",
+  "product": "双源认知宏观模型框架图",
+  "criteria": "双源、延迟、增益、整合与观测五要素齐全",
+  "nodes": [
+    "LGN—皮层视觉通路",
+    "海马—前额记忆通路",
+    "延迟耦合与前额整合",
+    "头皮导联观测",
+    "延迟 τ_H",
+    "增益 g_H",
+    "窗口终点：应答前 100 ms"
+  ],
+  "edges": [
+    "视觉通路→记忆通路",
+    "记忆通路→整合",
+    "整合→头皮观测",
+    "参数支撑整合与观测"
+  ],
+  "main_path": [
+    "LGN—皮层视觉通路",
+    "海马—前额记忆通路",
+    "延迟耦合与前额整合",
+    "头皮导联观测"
+  ],
+  "unverified": [
+    "符合项的具体形式与参数取值由问题三结果文件给出，图内只标物理含义"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 1,
+  "support_blocks": 3,
+  "stages": 4,
+  "direction": "horizontal"
+}

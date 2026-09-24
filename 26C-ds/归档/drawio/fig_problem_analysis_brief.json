@@ -1,0 +1,42 @@
+{
+  "name": "fig_problem_analysis",
+  "kind": "flowchart",
+  "object": "视觉刺激与三导头皮观测记录",
+  "action": "沿视觉通路定位三问各自的作用环节",
+  "product": "通路环节与三问任务边界的对应关系图",
+  "criteria": "通路无缺环、三问边界与通路环节对应明确",
+  "nodes": [
+    "视觉刺激",
+    "视网膜与 LGN",
+    "皮层形状区",
+    "头皮三导观测",
+    "问题一去噪与响应提取",
+    "问题二机理与特征",
+    "问题三认知模型与验证"
+  ],
+  "edges": [
+    "刺激→视网膜",
+    "视网膜→皮层",
+    "皮层→头皮",
+    "三问支撑通路"
+  ],
+  "main_path": [
+    "视觉刺激",
+    "视网膜与 LGN",
+    "皮层形状区",
+    "头皮三导观测"
+  ],
+  "unverified": [
+    "三问边界为任务划分，不表示信号的单向流动顺序"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 1,
+  "support_blocks": 3,
+  "stages": 4,
+  "direction": "horizontal"
+}

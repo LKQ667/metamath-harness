@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>数据质量与伪迹来源分析</title>
+<style>
+html,body{margin:0;padding:0;width:fit-content;height:fit-content;background:transparent}
+.fig,.fig *{font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif;
+  box-sizing:border-box;-webkit-font-smoothing:antialiased}
+.fig{width:fit-content;padding:20px 24px 30px;background:transparent;color:#111;
+  --edge:#2b2b2b;--txt:#111;--line:#444;--muted:#555;
+  --ac:hsl(210,42%,45%);--acbg:hsl(210,40%,95%);--no:#b0402f;--r:2px;
+  --nw:170px;--gw:0px;font-size:15px;line-height:1.3}
+.n{border:1px solid var(--edge);background:#fff;color:var(--txt);padding:9px 12px;
+  font-size:15px;font-weight:500;text-align:center;border-radius:var(--r);
+  white-space:nowrap;display:flex;align-items:center;justify-content:center;
+  width:var(--nw);flex:0 0 auto}
+.n.focus{border:1.6px solid var(--ac);background:var(--acbg);color:var(--ac);font-weight:700}
+.n.dec{border:1.6px solid var(--ac);border-radius:3px;font-weight:600}
+.grp{border:1.3px dashed var(--edge);border-radius:3px;padding:10px 13px;
+  display:flex;flex-direction:column;gap:9px;align-items:center;justify-content:flex-start}
+.grp>.gt{font-size:13px;font-weight:700;letter-spacing:1px}
+.grp.acc{border-color:var(--ac)}
+.col{display:flex;flex-direction:column;align-items:center;gap:0}
+.row{display:flex;align-items:stretch;justify-content:center;gap:10px}
+.grid{display:grid;gap:16px 24px;align-items:stretch;justify-items:stretch}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr));min-width:900px}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr));min-width:860px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr));min-width:900px}
+.span2{grid-column:span 2}
+.span3{grid-column:span 3}
+.chev{display:flex;align-items:center;justify-content:center;color:var(--line);
+  font-size:17px;line-height:1;flex:0 0 18px;width:18px}
+.chev.v{padding:1px 0}
+.branch{display:flex;align-items:flex-start;justify-content:center;gap:34px}
+.branch>.col{gap:0}
+.lbl{font-size:13px;color:var(--line);padding:1px 0;text-align:center;white-space:nowrap}
+.lbl.no{color:var(--no)}
+.lbl.acc{color:var(--ac)}
+.dn{display:flex;flex-direction:column;align-items:center}
+.note{font-size:12.5px;color:var(--muted);text-align:center;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="fig" style="--nw:168px">
+
+<div class="grid g3" data-mh-col="1">
+  <div class="n">设备量程饱和</div>
+  <div class="n">运动与电极瞬变</div>
+  <div class="n">心电与慢电位伪迹</div>
+  <div class="col"><div class="chev v">&#9662;</div><div class="lbl">不可修复</div></div>
+  <div class="col"><div class="chev v">&#9662;</div><div class="lbl acc">本文处理</div></div>
+  <div class="col"><div class="chev v">&#9662;</div><div class="lbl">先核验</div></div>
+  <div class="n">剔除饱和采样点</div>
+  <div class="n focus">稳健软截断</div>
+  <div class="n">相关度不足则不扣除</div>
+  <div class="grp" style="--nw:152px;grid-column:span 3"><div class="gt">四类来源与处理取舍</div><div class="row"><div class="n">幅值削顶</div><div class="chev">&#8250;</div><div class="n">尖峰瞬变</div><div class="chev">&#8250;</div><div class="n">心搏同步波形</div><div class="chev">&#8250;</div><div class="n focus">低频慢电位：保留</div></div></div>
+</div>
+
+</div>
+</body>
+</html>

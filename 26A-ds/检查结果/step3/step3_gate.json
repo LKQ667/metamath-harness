@@ -1,0 +1,168 @@
+{
+  "stage": "step3",
+  "ok": true,
+  "checks": [
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_ranges",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_code_distribution",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figures_manifest",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_contract",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "mode": "默认（少重复）",
+        "policy_source": "explicit_state",
+        "stage": "step3",
+        "stage_source": "explicit",
+        "scope": "拟入文（step3 预排版统计）",
+        "n_by_type": {
+          "box_2d": 1,
+          "contour_2d": 1,
+          "distribution_2d": 1,
+          "heatmap_2d": 1,
+          "line_2d": 11,
+          "scatter_2d": 8,
+          "vector_2d": 1
+        },
+        "per_type_items": {
+          "box_2d": [
+            "数据预处理/fig_profile.py"
+          ],
+          "contour_2d": [
+            "Q2/figures_q2.py"
+          ],
+          "distribution_2d": [
+            "数据预处理/fig_profile.py"
+          ],
+          "heatmap_2d": [
+            "数据预处理/fig_profile.py"
+          ],
+          "line_2d": [
+            "Q1/figures_q1.py",
+            "Q2/figures_q2.py",
+            "Q3/figures_q3.py",
+            "数据预处理/fig_profile.py",
+            "灵敏度分析/fig_sensitivity.py"
+          ],
+          "scatter_2d": [
+            "Q1/figures_q1.py",
+            "Q2/figures_q2.py",
+            "Q3/figures_q3.py",
+            "数据预处理/fig_profile.py",
+            "灵敏度分析/fig_sensitivity.py"
+          ],
+          "vector_2d": [
+            "Q2/figures_q2.py"
+          ]
+        },
+        "repeat_types": [
+          "line_2d",
+          "scatter_2d"
+        ],
+        "G": 2,
+        "unknown_types_items": [],
+        "counted_figures": 15
+      }
+    },
+    {
+      "check": "check_python_figure_quality",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_bar_chart_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "禁用",
+        "bar_calls": []
+      }
+    },
+    {
+      "check": "check_python_subplot_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "默认（模型自行判断）",
+        "stage": "step3",
+        "stage_source": "explicit",
+        "sparse_limit": 4,
+        "python_figures": 15,
+        "multi_panel": [
+          {
+            "source": "数据预处理/fig_profile.py",
+            "template_id": "multi_panel_hero_support_template",
+            "panel_count": 4
+          },
+          {
+            "source": "Q1/figures_q1.py",
+            "template_id": "stats_interval_lollipop_template",
+            "panel_count": 4
+          }
+        ],
+        "review_items": []
+      }
+    },
+    {
+      "check": "check_flowchart_required",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_question_assets",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    }
+  ]
+}

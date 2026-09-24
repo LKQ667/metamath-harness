@@ -1,0 +1,12 @@
+{
+  "n1": "<font style=\"font-size:17px;\">视觉刺激</font>",
+  "n2": "<font style=\"font-size:17px;\">视网膜与 LGN</font>",
+  "n3": "<font style=\"font-size:17px;\">皮层形状区</font>",
+  "n4": "<font style=\"font-size:17px;\">头皮三导观测</font>",
+  "s1": "<font style=\"font-size:17px;\">问题一：去噪与响应提取</font>",
+  "s2": "<font style=\"font-size:17px;\">问题二：机理与特征</font>",
+  "s3": "<font style=\"font-size:17px;\">问题三：认知模型与验证</font>",
+  "e4": "<font style=\"font-size:12px;\">问题一</font>",
+  "e5": "<font style=\"font-size:12px;\">问题二</font>",
+  "e6": "<font style=\"font-size:12px;\">问题三</font>"
+}

@@ -1,0 +1,20 @@
+{
+  "check": "check_latex_environment",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "source": "host",
+    "version": "XeTeX 3.141592653-2.6-0.999997 (TeX Live 2025)",
+    "managed": false,
+    "fonts": [
+      "SimSun",
+      "SimHei",
+      "Times New Roman",
+      "Cambria Math"
+    ],
+    "available": true,
+    "deferred_install": false,
+    "install_stage": null
+  }
+}

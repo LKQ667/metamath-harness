@@ -1,0 +1,28 @@
+{
+  "check": "check_figure_table_numbering",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "counterwithout": [
+      "figure",
+      "table"
+    ],
+    "review_required": [
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+      "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。"
+    ]
+  }
+}

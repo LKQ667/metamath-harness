@@ -1,0 +1,222 @@
+{
+  "tolerance": {
+    "abs": 1e-09,
+    "rel": 1e-09
+  },
+  "files": [
+    {
+      "source": "scripts/eeg_lib.py",
+      "appendix": "论文/附录代码/eeg_lib.py"
+    },
+    {
+      "source": "数据预处理/preprocess_eeg.py",
+      "appendix": "论文/附录代码/preprocess_eeg.py"
+    },
+    {
+      "source": "Q1/solve_q1.py",
+      "appendix": "论文/附录代码/solve_q1.py"
+    },
+    {
+      "source": "Q2/solve_q2.py",
+      "appendix": "论文/附录代码/solve_q2.py"
+    },
+    {
+      "source": "Q3/solve_q3.py",
+      "appendix": "论文/附录代码/solve_q3.py"
+    }
+  ],
+  "runs": [
+    {
+      "name": "共享工具与探索性分析",
+      "command": [
+        "python",
+        "数据预处理/eda.py"
+      ],
+      "cwd": ".",
+      "timeout": 900,
+      "files": [
+        "论文/附录代码/eeg_lib.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/eda_results.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "预处理与响应提取主链",
+      "command": [
+        "python",
+        "数据预处理/preprocess_eeg.py"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "files": [
+        "论文/附录代码/preprocess_eeg.py",
+        "论文/附录代码/eeg_lib.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/step1_results.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "问题一求解",
+      "command": [
+        "python",
+        "Q1/solve_q1.py"
+      ],
+      "cwd": ".",
+      "timeout": 1800,
+      "files": [
+        "论文/附录代码/solve_q1.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/q1_results.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "问题二求解",
+      "command": [
+        "python",
+        "Q2/solve_q2.py"
+      ],
+      "cwd": ".",
+      "timeout": 3600,
+      "files": [
+        "论文/附录代码/solve_q2.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/q2_results.json",
+          "type": "json"
+        }
+      ]
+    },
+    {
+      "name": "问题三求解",
+      "command": [
+        "python",
+        "Q3/solve_q3.py"
+      ],
+      "cwd": ".",
+      "timeout": 3600,
+      "files": [
+        "论文/附录代码/solve_q3.py"
+      ],
+      "outputs": [
+        {
+          "path": "results/q3_results.json",
+          "type": "json"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "tolerance": {
+      "abs": 1e-09,
+      "rel": 1e-09
+    },
+    "files": [
+      {
+        "source": "scripts/eeg_lib.py",
+        "appendix": "论文/附录代码/eeg_lib.py",
+        "source_sha256": "53395ab6214f752d665b6f3db81f5ea21d33268ad0773034604b9a5ffc8234b7",
+        "appendix_sha256": "388013cc717d57d3609d66c86a80cc1f867a4e8b3ea2191a0de517d43816ee7e"
+      },
+      {
+        "source": "数据预处理/preprocess_eeg.py",
+        "appendix": "论文/附录代码/preprocess_eeg.py",
+        "source_sha256": "ff74c562f593e06c9fcb601b6d9ede9d17235bc5156df8d1b3034d4ef4738b6b",
+        "appendix_sha256": "6a4d1266d0dd3700775a85aa4561d4277378bb21693a8883a56a408469d6cf26"
+      },
+      {
+        "source": "Q1/solve_q1.py",
+        "appendix": "论文/附录代码/solve_q1.py",
+        "source_sha256": "d4af99aaaf38f6a65cefd265019e09fc9266e86632a4dbf49d40f0647798ac8e",
+        "appendix_sha256": "b770c97177743401f0e1e143988ffdda9aa81f52050c6f04f5fbfb03646bddc9"
+      },
+      {
+        "source": "Q2/solve_q2.py",
+        "appendix": "论文/附录代码/solve_q2.py",
+        "source_sha256": "76bb897ae828cf73dce0d20fc1a25e17370e6042388db4e5d433b05d5680947e",
+        "appendix_sha256": "9d1eeb3cd3cb70fe3b4f5c1f71372747b47c061c687a63677d01c399a5818e3b"
+      },
+      {
+        "source": "Q3/solve_q3.py",
+        "appendix": "论文/附录代码/solve_q3.py",
+        "source_sha256": "e1ad408cfc34edde944c6a4e9020bfa693b80cc7d04dfdbe5b211e1614c1adab",
+        "appendix_sha256": "07eef16b14b3da363e7a4746ea637683e33a944ed8210bdca8bfccfb72c98e47"
+      }
+    ],
+    "runs": [
+      {
+        "name": "共享工具与探索性分析",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/eda_results.json",
+            "type": "json",
+            "original_sha256": "fdf7db1a0f3dfbe74da6c65544671c637ede4aa6825c95e17a790153594815db",
+            "sanitized_sha256": "fdf7db1a0f3dfbe74da6c65544671c637ede4aa6825c95e17a790153594815db"
+          }
+        ]
+      },
+      {
+        "name": "预处理与响应提取主链",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/step1_results.json",
+            "type": "json",
+            "original_sha256": "97ef62ceae45957a9fe7bfcf1283562f58a6e6d16dc98cd6c8e4a8b022d30b18",
+            "sanitized_sha256": "97ef62ceae45957a9fe7bfcf1283562f58a6e6d16dc98cd6c8e4a8b022d30b18"
+          }
+        ]
+      },
+      {
+        "name": "问题一求解",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/q1_results.json",
+            "type": "json",
+            "original_sha256": "3f46a0f6b57face4f8b055fd00bf8c63ba93891064d597c8139a927763c93415",
+            "sanitized_sha256": "3f46a0f6b57face4f8b055fd00bf8c63ba93891064d597c8139a927763c93415"
+          }
+        ]
+      },
+      {
+        "name": "问题二求解",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/q2_results.json",
+            "type": "json",
+            "original_sha256": "685ed89c9b87ec47df8e409b7cb1f51aee5a6318eec0f6992ce4e23e6acce2a2",
+            "sanitized_sha256": "685ed89c9b87ec47df8e409b7cb1f51aee5a6318eec0f6992ce4e23e6acce2a2"
+          }
+        ]
+      },
+      {
+        "name": "问题三求解",
+        "ok": true,
+        "outputs": [
+          {
+            "path": "results/q3_results.json",
+            "type": "json",
+            "original_sha256": "4a54c5045c96a39b1b77fe94c8ce9d3ad3e58de66e5fa563f069f67141fd5863",
+            "sanitized_sha256": "4a54c5045c96a39b1b77fe94c8ce9d3ad3e58de66e5fa563f069f67141fd5863"
+          }
+        ]
+      }
+    ]
+  }
+}

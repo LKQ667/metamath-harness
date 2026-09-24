@@ -1,0 +1,119 @@
+[
+  {
+    "name": "fig_artifact_sources",
+    "exit": 0,
+    "sizes": {
+      "png": 121791,
+      "svg": 199961,
+      "pdf": 36874
+    }
+  },
+  {
+    "name": "fig_experiment_design",
+    "exit": 0,
+    "sizes": {
+      "png": 148774,
+      "svg": 223095,
+      "pdf": 37287
+    }
+  },
+  {
+    "name": "fig_problem_analysis",
+    "exit": 0,
+    "sizes": {
+      "png": 108692,
+      "svg": 170575,
+      "pdf": 29934
+    }
+  },
+  {
+    "name": "fig_q1_denoise_flow",
+    "exit": 0,
+    "sizes": {
+      "png": 127860,
+      "svg": 168095,
+      "pdf": 33362
+    }
+  },
+  {
+    "name": "fig_q1_response_flow",
+    "exit": 0,
+    "sizes": {
+      "png": 88337,
+      "svg": 137026,
+      "pdf": 29992
+    }
+  },
+  {
+    "name": "fig_q2_feature_flow",
+    "exit": 0,
+    "sizes": {
+      "png": 81940,
+      "svg": 125420,
+      "pdf": 23823
+    }
+  },
+  {
+    "name": "fig_q2_laterality_mechanism",
+    "exit": 0,
+    "sizes": {
+      "png": 114271,
+      "svg": 169865,
+      "pdf": 32316
+    }
+  },
+  {
+    "name": "fig_q2_multiscale_model",
+    "exit": 0,
+    "sizes": {
+      "png": 116112,
+      "svg": 182873,
+      "pdf": 30696
+    }
+  },
+  {
+    "name": "fig_q3_application",
+    "exit": 0,
+    "sizes": {
+      "png": 122968,
+      "svg": 180007,
+      "pdf": 33003
+    }
+  },
+  {
+    "name": "fig_q3_estimation_flow",
+    "exit": 0,
+    "sizes": {
+      "png": 90168,
+      "svg": 145050,
+      "pdf": 29217
+    }
+  },
+  {
+    "name": "fig_q3_model_framework",
+    "exit": 0,
+    "sizes": {
+      "png": 135270,
+      "svg": 202016,
+      "pdf": 33940
+    }
+  },
+  {
+    "name": "fig_roadmap",
+    "exit": 0,
+    "sizes": {
+      "png": 617897,
+      "svg": 867048,
+      "pdf": 171981
+    }
+  },
+  {
+    "name": "中文最小验证",
+    "exit": 0,
+    "sizes": {
+      "png": 46301,
+      "svg": 71492,
+      "pdf": 20098
+    }
+  }
+]

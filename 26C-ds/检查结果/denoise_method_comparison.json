@@ -1,0 +1,534 @@
+{
+  "per_dataset": {
+    "A1": {
+      "Fz|P0原始": {
+        "reliability": 0.5095,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.6069
+      },
+      "Fz|P1传统带通剔除": {
+        "reliability": 0.7474,
+        "artifact_suppression": 0.6411,
+        "auc_early": NaN
+      },
+      "Fz|P2小波全域阈值": {
+        "reliability": 0.4952,
+        "artifact_suppression": 0.0131,
+        "auc_early": 0.6169
+      },
+      "Fz|P3低秩稀疏": {
+        "reliability": 0.5087,
+        "artifact_suppression": 0.0213,
+        "auc_early": 0.6029
+      },
+      "Fz|P4心电剔除加权": {
+        "reliability": 0.5095,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.6069
+      },
+      "Fz|P5参考引导收缩": {
+        "reliability": 0.4986,
+        "artifact_suppression": -0.0076,
+        "auc_early": 0.6069
+      },
+      "Fz|P6瞬变插值": {
+        "reliability": 0.6229,
+        "artifact_suppression": 0.2817,
+        "auc_early": 0.6069
+      },
+      "Fz|P7本文组合方案": {
+        "reliability": 0.6433,
+        "artifact_suppression": 0.3019,
+        "auc_early": 0.6069
+      },
+      "F3|P0原始": {
+        "reliability": -0.8569,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5102
+      },
+      "F3|P1传统带通剔除": {
+        "reliability": 0.8141,
+        "artifact_suppression": 0.9028,
+        "auc_early": NaN
+      },
+      "F3|P2小波全域阈值": {
+        "reliability": -0.874,
+        "artifact_suppression": -0.0029,
+        "auc_early": 0.5122
+      },
+      "F3|P3低秩稀疏": {
+        "reliability": -0.9105,
+        "artifact_suppression": -0.0022,
+        "auc_early": 0.5162
+      },
+      "F3|P4心电剔除加权": {
+        "reliability": -0.8569,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5102
+      },
+      "F3|P5参考引导收缩": {
+        "reliability": -0.8568,
+        "artifact_suppression": -0.0647,
+        "auc_early": 0.5122
+      },
+      "F3|P6瞬变插值": {
+        "reliability": 0.6603,
+        "artifact_suppression": 0.6685,
+        "auc_early": 0.5061
+      },
+      "F3|P7本文组合方案": {
+        "reliability": 0.6758,
+        "artifact_suppression": 0.6884,
+        "auc_early": 0.5001
+      },
+      "F4|P0原始": {
+        "reliability": -0.6248,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.4397
+      },
+      "F4|P1传统带通剔除": {
+        "reliability": 0.9602,
+        "artifact_suppression": 0.9061,
+        "auc_early": NaN
+      },
+      "F4|P2小波全域阈值": {
+        "reliability": -0.6528,
+        "artifact_suppression": -0.0062,
+        "auc_early": 0.4437
+      },
+      "F4|P3低秩稀疏": {
+        "reliability": -0.707,
+        "artifact_suppression": 0.0187,
+        "auc_early": 0.5326
+      },
+      "F4|P4心电剔除加权": {
+        "reliability": -0.6248,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.4397
+      },
+      "F4|P5参考引导收缩": {
+        "reliability": -0.623,
+        "artifact_suppression": -0.053,
+        "auc_early": 0.4397
+      },
+      "F4|P6瞬变插值": {
+        "reliability": 0.131,
+        "artifact_suppression": 0.6608,
+        "auc_early": 0.5487
+      },
+      "F4|P7本文组合方案": {
+        "reliability": 0.1494,
+        "artifact_suppression": 0.6758,
+        "auc_early": 0.5407
+      }
+    },
+    "A2": {
+      "Fz|P0原始": {
+        "reliability": 0.9957,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5787
+      },
+      "Fz|P1传统带通剔除": {
+        "reliability": 0.9902,
+        "artifact_suppression": 0.7815,
+        "auc_early": NaN
+      },
+      "Fz|P2小波全域阈值": {
+        "reliability": 0.9963,
+        "artifact_suppression": 0.0079,
+        "auc_early": 0.5787
+      },
+      "Fz|P3低秩稀疏": {
+        "reliability": 0.9966,
+        "artifact_suppression": 0.0127,
+        "auc_early": 0.5706
+      },
+      "Fz|P4心电剔除加权": {
+        "reliability": 0.9957,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5787
+      },
+      "Fz|P5参考引导收缩": {
+        "reliability": 0.9958,
+        "artifact_suppression": -0.0616,
+        "auc_early": 0.5787
+      },
+      "Fz|P6瞬变插值": {
+        "reliability": 0.9935,
+        "artifact_suppression": 0.0332,
+        "auc_early": 0.5787
+      },
+      "Fz|P7本文组合方案": {
+        "reliability": 0.9938,
+        "artifact_suppression": 0.0278,
+        "auc_early": 0.5787
+      },
+      "F3|P0原始": {
+        "reliability": 0.9453,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.584
+      },
+      "F3|P1传统带通剔除": {
+        "reliability": 0.9321,
+        "artifact_suppression": 0.8983,
+        "auc_early": NaN
+      },
+      "F3|P2小波全域阈值": {
+        "reliability": 0.9464,
+        "artifact_suppression": -0.0079,
+        "auc_early": 0.586
+      },
+      "F3|P3低秩稀疏": {
+        "reliability": 0.9691,
+        "artifact_suppression": 0.1889,
+        "auc_early": 0.584
+      },
+      "F3|P4心电剔除加权": {
+        "reliability": 0.9453,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.584
+      },
+      "F3|P5参考引导收缩": {
+        "reliability": 0.983,
+        "artifact_suppression": -0.0792,
+        "auc_early": 0.584
+      },
+      "F3|P6瞬变插值": {
+        "reliability": 0.9881,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5819
+      },
+      "F3|P7本文组合方案": {
+        "reliability": 0.9967,
+        "artifact_suppression": 0.3971,
+        "auc_early": 0.5819
+      },
+      "F4|P0原始": {
+        "reliability": 0.9982,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5369
+      },
+      "F4|P1传统带通剔除": {
+        "reliability": 0.9656,
+        "artifact_suppression": 0.8093,
+        "auc_early": NaN
+      },
+      "F4|P2小波全域阈值": {
+        "reliability": 0.9986,
+        "artifact_suppression": 0.0075,
+        "auc_early": 0.5328
+      },
+      "F4|P3低秩稀疏": {
+        "reliability": 0.9916,
+        "artifact_suppression": 0.0243,
+        "auc_early": 0.5268
+      },
+      "F4|P4心电剔除加权": {
+        "reliability": 0.9982,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5369
+      },
+      "F4|P5参考引导收缩": {
+        "reliability": 0.9973,
+        "artifact_suppression": -0.0126,
+        "auc_early": 0.5348
+      },
+      "F4|P6瞬变插值": {
+        "reliability": 0.9953,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5244
+      },
+      "F4|P7本文组合方案": {
+        "reliability": 0.9972,
+        "artifact_suppression": 0.0534,
+        "auc_early": 0.5223
+      }
+    },
+    "B1": {
+      "Fz|P0原始": {
+        "reliability": -0.8831,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5465
+      },
+      "Fz|P1传统带通剔除": {
+        "reliability": 0.6007,
+        "artifact_suppression": 0.9457,
+        "auc_early": NaN
+      },
+      "Fz|P2小波全域阈值": {
+        "reliability": -0.8864,
+        "artifact_suppression": -0.0013,
+        "auc_early": 0.5444
+      },
+      "Fz|P3低秩稀疏": {
+        "reliability": -0.9418,
+        "artifact_suppression": 0.1294,
+        "auc_early": 0.5344
+      },
+      "Fz|P4心电剔除加权": {
+        "reliability": -0.8831,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5465
+      },
+      "Fz|P5参考引导收缩": {
+        "reliability": -0.9097,
+        "artifact_suppression": -0.0508,
+        "auc_early": 0.5425
+      },
+      "Fz|P6瞬变插值": {
+        "reliability": 0.5852,
+        "artifact_suppression": 0.7621,
+        "auc_early": 0.5384
+      },
+      "Fz|P7本文组合方案": {
+        "reliability": 0.6422,
+        "artifact_suppression": 0.7749,
+        "auc_early": 0.5364
+      },
+      "F3|P0原始": {
+        "reliability": -0.4283,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.4238
+      },
+      "F3|P1传统带通剔除": {
+        "reliability": 0.8758,
+        "artifact_suppression": 0.8623,
+        "auc_early": NaN
+      },
+      "F3|P2小波全域阈值": {
+        "reliability": -0.4364,
+        "artifact_suppression": 0.0008,
+        "auc_early": 0.4278
+      },
+      "F3|P3低秩稀疏": {
+        "reliability": -0.526,
+        "artifact_suppression": 0.0212,
+        "auc_early": 0.4298
+      },
+      "F3|P4心电剔除加权": {
+        "reliability": -0.4283,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.4238
+      },
+      "F3|P5参考引导收缩": {
+        "reliability": -0.4196,
+        "artifact_suppression": -0.0154,
+        "auc_early": 0.4238
+      },
+      "F3|P6瞬变插值": {
+        "reliability": 0.667,
+        "artifact_suppression": 0.5619,
+        "auc_early": 0.4778
+      },
+      "F3|P7本文组合方案": {
+        "reliability": 0.7534,
+        "artifact_suppression": 0.582,
+        "auc_early": 0.4778
+      },
+      "F4|P0原始": {
+        "reliability": -0.1385,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5607
+      },
+      "F4|P1传统带通剔除": {
+        "reliability": 0.9177,
+        "artifact_suppression": 0.8696,
+        "auc_early": NaN
+      },
+      "F4|P2小波全域阈值": {
+        "reliability": -0.1441,
+        "artifact_suppression": 0.0097,
+        "auc_early": 0.5567
+      },
+      "F4|P3低秩稀疏": {
+        "reliability": -0.3019,
+        "artifact_suppression": 0.0401,
+        "auc_early": 0.5547
+      },
+      "F4|P4心电剔除加权": {
+        "reliability": -0.1385,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.5607
+      },
+      "F4|P5参考引导收缩": {
+        "reliability": -0.1157,
+        "artifact_suppression": 0.002,
+        "auc_early": 0.5587
+      },
+      "F4|P6瞬变插值": {
+        "reliability": 0.857,
+        "artifact_suppression": 0.5518,
+        "auc_early": 0.5607
+      },
+      "F4|P7本文组合方案": {
+        "reliability": 0.8901,
+        "artifact_suppression": 0.5805,
+        "auc_early": 0.5607
+      }
+    },
+    "B2": {
+      "Fz|P0原始": {
+        "reliability": 0.9912,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.526
+      },
+      "Fz|P1传统带通剔除": {
+        "reliability": 0.9606,
+        "artifact_suppression": 0.8207,
+        "auc_early": 0.432
+      },
+      "Fz|P2小波全域阈值": {
+        "reliability": 0.9915,
+        "artifact_suppression": 0.007,
+        "auc_early": 0.526
+      },
+      "Fz|P3低秩稀疏": {
+        "reliability": 0.9924,
+        "artifact_suppression": 0.02,
+        "auc_early": 0.52
+      },
+      "Fz|P4心电剔除加权": {
+        "reliability": 0.9912,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.526
+      },
+      "Fz|P5参考引导收缩": {
+        "reliability": 0.9912,
+        "artifact_suppression": -0.0227,
+        "auc_early": 0.526
+      },
+      "Fz|P6瞬变插值": {
+        "reliability": 0.9874,
+        "artifact_suppression": 0.0017,
+        "auc_early": 0.526
+      },
+      "Fz|P7本文组合方案": {
+        "reliability": 0.9903,
+        "artifact_suppression": -0.0184,
+        "auc_early": 0.526
+      },
+      "F3|P0原始": {
+        "reliability": 0.9321,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.438
+      },
+      "F3|P1传统带通剔除": {
+        "reliability": 0.9387,
+        "artifact_suppression": 0.8903,
+        "auc_early": NaN
+      },
+      "F3|P2小波全域阈值": {
+        "reliability": 0.9329,
+        "artifact_suppression": -0.002,
+        "auc_early": 0.436
+      },
+      "F3|P3低秩稀疏": {
+        "reliability": 0.9844,
+        "artifact_suppression": 0.2368,
+        "auc_early": 0.44
+      },
+      "F3|P4心电剔除加权": {
+        "reliability": 0.9321,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.438
+      },
+      "F3|P5参考引导收缩": {
+        "reliability": 0.946,
+        "artifact_suppression": -0.0336,
+        "auc_early": 0.438
+      },
+      "F3|P6瞬变插值": {
+        "reliability": 0.9593,
+        "artifact_suppression": 0.3415,
+        "auc_early": 0.55
+      },
+      "F3|P7本文组合方案": {
+        "reliability": 0.9723,
+        "artifact_suppression": 0.3721,
+        "auc_early": 0.55
+      },
+      "F4|P0原始": {
+        "reliability": 0.7945,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.55
+      },
+      "F4|P1传统带通剔除": {
+        "reliability": 0.9791,
+        "artifact_suppression": 0.9149,
+        "auc_early": NaN
+      },
+      "F4|P2小波全域阈值": {
+        "reliability": 0.7951,
+        "artifact_suppression": 0.0008,
+        "auc_early": 0.548
+      },
+      "F4|P3低秩稀疏": {
+        "reliability": 0.9093,
+        "artifact_suppression": 0.1735,
+        "auc_early": 0.558
+      },
+      "F4|P4心电剔除加权": {
+        "reliability": 0.7945,
+        "artifact_suppression": 0.0,
+        "auc_early": 0.55
+      },
+      "F4|P5参考引导收缩": {
+        "reliability": 0.8103,
+        "artifact_suppression": -0.0077,
+        "auc_early": 0.552
+      },
+      "F4|P6瞬变插值": {
+        "reliability": 0.985,
+        "artifact_suppression": 0.2146,
+        "auc_early": 0.45
+      },
+      "F4|P7本文组合方案": {
+        "reliability": 0.9888,
+        "artifact_suppression": 0.4747,
+        "auc_early": 0.45
+      }
+    }
+  },
+  "aggregate": {
+    "P0原始": {
+      "reliability_mean": 0.2696,
+      "artifact_suppression_mean": 0.0,
+      "auc_early_mean": 0.5251
+    },
+    "P1传统带通剔除": {
+      "reliability_mean": 0.8902,
+      "artifact_suppression_mean": 0.8535,
+      "auc_early_mean": 0.432
+    },
+    "P2小波全域阈值": {
+      "reliability_mean": 0.2635,
+      "artifact_suppression_mean": 0.0022,
+      "auc_early_mean": 0.5258
+    },
+    "P3低秩稀疏": {
+      "reliability_mean": 0.2471,
+      "artifact_suppression_mean": 0.0737,
+      "auc_early_mean": 0.5308
+    },
+    "P4心电剔除加权": {
+      "reliability_mean": 0.2696,
+      "artifact_suppression_mean": 0.0,
+      "auc_early_mean": 0.5251
+    },
+    "P5参考引导收缩": {
+      "reliability_mean": 0.2748,
+      "artifact_suppression_mean": -0.0339,
+      "auc_early_mean": 0.5248
+    },
+    "P6瞬变插值": {
+      "reliability_mean": 0.786,
+      "artifact_suppression_mean": 0.3398,
+      "auc_early_mean": 0.5375
+    },
+    "P7本文组合方案": {
+      "reliability_mean": 0.8078,
+      "artifact_suppression_mean": 0.4092,
+      "auc_early_mean": 0.536
+    }
+  }
+}

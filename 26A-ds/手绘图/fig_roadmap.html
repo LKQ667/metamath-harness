@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+html,body{margin:0;padding:0;width:fit-content;height:fit-content;background:transparent}
+.fig,.fig *{font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif;
+  -webkit-font-smoothing:antialiased;box-sizing:border-box}
+.fig{width:fit-content;height:fit-content;padding:22px 24px;background:transparent;
+  --edge:#1a1a1a; --txt:#111; --line:#333}
+.band{display:flex;flex-direction:column;gap:10px}
+.bandtitle{font-size:15px;font-weight:800;letter-spacing:1px;color:var(--txt);
+  border-bottom:1.2px solid var(--edge);padding-bottom:4px;white-space:nowrap}
+.rowgrid{display:grid;grid-auto-flow:column;grid-auto-columns:max-content;gap:16px;
+  justify-content:start;align-items:stretch}
+.n{border:1px solid var(--edge);border-top:3px solid var(--edge);background:#fff;color:var(--txt);
+  padding:10px 16px;font-size:15px;font-weight:600;text-align:center;border-radius:0;
+  line-height:1.5;white-space:nowrap;min-width:252px;
+  display:flex;align-items:center;justify-content:center}
+.n.plain{border-top:1px solid var(--edge);font-weight:500;min-width:330px}
+.pairrow{display:grid;grid-template-columns:max-content 30px max-content;
+  align-items:center;justify-content:start}
+.harrow{display:flex;align-items:center;justify-content:center}
+.harrow .ln{width:18px;height:1px;background:var(--line)}
+.harrow .tp{width:0;height:0;border-left:8px solid var(--line);
+  border-top:5px solid transparent;border-bottom:5px solid transparent}
+.dn{display:flex;flex-direction:column;align-items:center}
+.dn .ln{width:1px;height:15px;background:var(--line)}
+.dn .tp{width:0;height:0;border-top:7px solid var(--line);
+  border-left:5px solid transparent;border-right:5px solid transparent}
+.stack{display:flex;flex-direction:column;gap:12px}
+.colhead{font-size:15px;font-weight:800;color:var(--txt);text-align:center;
+  border-bottom:1.4px solid var(--edge);padding-bottom:5px;white-space:nowrap;min-width:252px}
+.colhead.wide{min-width:330px}
+.gap{height:13px}
+</style>
+</head>
+<body>
+<div class="fig">
+
+  <div class="band">
+    <div class="bandtitle">一、输入与建模基础</div>
+    <div class="rowgrid">
+      <div class="n" data-mh-row="1">计算图解析<br>Op-Tensor 二部图与固定配置</div>
+      <div class="n" data-mh-row="1">操作级 DAG 收缩<br>跳过 COPY、合并张量中转边</div>
+      <div class="n" data-mh-row="1">结构画像<br>流水线工作量、关键路径</div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div class="band">
+    <div class="bandtitle">二、三问目标与对应模型算法</div>
+    <div class="pairrow">
+      <div class="colhead">子问题与目标</div>
+      <div></div>
+      <div class="colhead wide">模型与求解算法</div>
+    </div>
+    <div class="stack" style="margin-top:10px">
+      <div class="pairrow">
+        <div class="n" data-mh-row="2">问题一　场景 A 无核间同步<br>缩短 Makespan、兼顾额外搬运量</div>
+        <div class="harrow"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="2">保持后代连续的拓扑序 + 连续段切分<br>跨切边数与负载偏差联合代价选切点</div>
+      </div>
+      <div class="pairrow">
+        <div class="n" data-mh-row="3">问题二　场景 B 核间同步<br>L1/UB 容量约束下缩短时延</div>
+        <div class="harrow"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="3">HEFT 式子图分核<br>后向关键路径优先级 + 跨核等待代价</div>
+      </div>
+      <div class="pairrow">
+        <div class="n" data-mh-row="4">问题三　共享只读 L2<br>量化缓存复用对时延的影响</div>
+        <div class="harrow"><div class="ln"></div><div class="tp"></div></div>
+        <div class="n plain" data-mh-row="4">读入边界有效带宽修正 + 切点坐标下降<br>两条候选路线逐用例实测择优</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div class="band">
+    <div class="bandtitle">三、实验验证与结果交付</div>
+    <div class="rowgrid">
+      <div class="n" data-mh-row="5">官方评估程序复核<br>Makespan、搬运量、命中率</div>
+      <div class="n" data-mh-row="5">灵敏度与稳健性分析<br>核数、切分粒度、等待周期</div>
+      <div class="n" data-mh-row="5">结果聚合与论文落版<br>唯一结果源驱动正文附录</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

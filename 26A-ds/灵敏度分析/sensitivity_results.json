@@ -1,0 +1,569 @@
+{
+  "cores": 4,
+  "cases": [
+    "case_093",
+    "case_010",
+    "case_004",
+    "case_057",
+    "case_023",
+    "case_061",
+    "case_044",
+    "case_027",
+    "case_013",
+    "case_088",
+    "case_034",
+    "case_005"
+  ],
+  "singlecore": {
+    "case_093": 74205,
+    "case_010": 86969,
+    "case_004": 392357,
+    "case_057": 59726,
+    "case_023": 122614,
+    "case_061": 77191,
+    "case_044": 154407,
+    "case_027": 2363952,
+    "case_013": 263949,
+    "case_088": 243623,
+    "case_034": 842996,
+    "case_005": 95618
+  },
+  "level_band": {
+    "1": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 62805,
+        "added_bytes": 80652,
+        "speedup": 1.384746
+      },
+      "case_004": {
+        "makespan": 216425,
+        "added_bytes": 8856576,
+        "speedup": 1.812901
+      },
+      "case_057": {
+        "makespan": 59726,
+        "added_bytes": 94216,
+        "speedup": 1.0
+      },
+      "case_023": {
+        "makespan": 122614,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_061": {
+        "makespan": 77191,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1014100,
+        "added_bytes": 36814848,
+        "speedup": 2.331084
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 550872,
+        "added_bytes": 25535992,
+        "speedup": 1.530294
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    },
+    "2": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 62805,
+        "added_bytes": 80652,
+        "speedup": 1.384746
+      },
+      "case_004": {
+        "makespan": 271848,
+        "added_bytes": 8616960,
+        "speedup": 1.443296
+      },
+      "case_057": {
+        "makespan": 59726,
+        "added_bytes": 94216,
+        "speedup": 1.0
+      },
+      "case_023": {
+        "makespan": 122614,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_061": {
+        "makespan": 77191,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1141052,
+        "added_bytes": 15022080,
+        "speedup": 2.07173
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 707827,
+        "added_bytes": 24116648,
+        "speedup": 1.190963
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    },
+    "4": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 62805,
+        "added_bytes": 80652,
+        "speedup": 1.384746
+      },
+      "case_004": {
+        "makespan": 221086,
+        "added_bytes": 5004288,
+        "speedup": 1.77468
+      },
+      "case_057": {
+        "makespan": 59726,
+        "added_bytes": 94216,
+        "speedup": 1.0
+      },
+      "case_023": {
+        "makespan": 122614,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_061": {
+        "makespan": 77191,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1141052,
+        "added_bytes": 15022080,
+        "speedup": 2.07173
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 575829,
+        "added_bytes": 17674768,
+        "speedup": 1.463969
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    },
+    "8": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 62805,
+        "added_bytes": 80652,
+        "speedup": 1.384746
+      },
+      "case_004": {
+        "makespan": 202100,
+        "added_bytes": 1815552,
+        "speedup": 1.9414
+      },
+      "case_057": {
+        "makespan": 59726,
+        "added_bytes": 94216,
+        "speedup": 1.0
+      },
+      "case_023": {
+        "makespan": 122614,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_061": {
+        "makespan": 77191,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1141052,
+        "added_bytes": 15022080,
+        "speedup": 2.07173
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 513308,
+        "added_bytes": 13750606,
+        "speedup": 1.642281
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    }
+  },
+  "safety_margin": {
+    "0.75": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 86969,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_004": {
+        "makespan": 216425,
+        "added_bytes": 8856576,
+        "speedup": 1.812901
+      },
+      "case_057": {
+        "makespan": 59726,
+        "added_bytes": 94216,
+        "speedup": 1.0
+      },
+      "case_023": {
+        "makespan": 122614,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_061": {
+        "makespan": 77191,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1014100,
+        "added_bytes": 36814848,
+        "speedup": 2.331084
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 550872,
+        "added_bytes": 25535992,
+        "speedup": 1.530294
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    },
+    "0.85": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 62805,
+        "added_bytes": 80652,
+        "speedup": 1.384746
+      },
+      "case_004": {
+        "makespan": 216425,
+        "added_bytes": 8856576,
+        "speedup": 1.812901
+      },
+      "case_057": {
+        "makespan": 59726,
+        "added_bytes": 94216,
+        "speedup": 1.0
+      },
+      "case_023": {
+        "makespan": 122614,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_061": {
+        "makespan": 77191,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1014100,
+        "added_bytes": 36814848,
+        "speedup": 2.331084
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 550872,
+        "added_bytes": 25535992,
+        "speedup": 1.530294
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    },
+    "0.95": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 62805,
+        "added_bytes": 80652,
+        "speedup": 1.384746
+      },
+      "case_004": {
+        "makespan": 216425,
+        "added_bytes": 8856576,
+        "speedup": 1.812901
+      },
+      "case_057": {
+        "makespan": 49834,
+        "added_bytes": 256082,
+        "speedup": 1.198499
+      },
+      "case_023": {
+        "makespan": 122614,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_061": {
+        "makespan": 93038,
+        "added_bytes": 2619134,
+        "speedup": 0.829672
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1014100,
+        "added_bytes": 36814848,
+        "speedup": 2.331084
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 550872,
+        "added_bytes": 25535992,
+        "speedup": 1.530294
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    },
+    "1.0": {
+      "case_093": {
+        "makespan": 19779,
+        "added_bytes": 24576,
+        "speedup": 3.751706
+      },
+      "case_010": {
+        "makespan": 62805,
+        "added_bytes": 80652,
+        "speedup": 1.384746
+      },
+      "case_004": {
+        "makespan": 216425,
+        "added_bytes": 8856576,
+        "speedup": 1.812901
+      },
+      "case_057": {
+        "makespan": 49834,
+        "added_bytes": 256082,
+        "speedup": 1.198499
+      },
+      "case_023": {
+        "makespan": 113683,
+        "added_bytes": 4929796,
+        "speedup": 1.078561
+      },
+      "case_061": {
+        "makespan": 93038,
+        "added_bytes": 2619134,
+        "speedup": 0.829672
+      },
+      "case_044": {
+        "makespan": 124268,
+        "added_bytes": 5678624,
+        "speedup": 1.242532
+      },
+      "case_027": {
+        "makespan": 1014100,
+        "added_bytes": 36814848,
+        "speedup": 2.331084
+      },
+      "case_013": {
+        "makespan": 68019,
+        "added_bytes": 24576,
+        "speedup": 3.880519
+      },
+      "case_088": {
+        "makespan": 243623,
+        "added_bytes": 0,
+        "speedup": 1.0
+      },
+      "case_034": {
+        "makespan": 550872,
+        "added_bytes": 25535992,
+        "speedup": 1.530294
+      },
+      "case_005": {
+        "makespan": 95618,
+        "added_bytes": 0,
+        "speedup": 1.0
+      }
+    }
+  },
+  "summary": {
+    "level_band": {
+      "1": {
+        "average_speedup": 1.7445,
+        "min_speedup": 1.0
+      },
+      "2": {
+        "average_speedup": 1.6638,
+        "min_speedup": 1.0
+      },
+      "4": {
+        "average_speedup": 1.7142,
+        "min_speedup": 1.0
+      },
+      "8": {
+        "average_speedup": 1.7429,
+        "min_speedup": 1.0
+      }
+    },
+    "safety_margin": {
+      "0.75": {
+        "average_speedup": 1.7124,
+        "min_speedup": 1.0
+      },
+      "0.85": {
+        "average_speedup": 1.7445,
+        "min_speedup": 1.0
+      },
+      "0.95": {
+        "average_speedup": 1.7468,
+        "min_speedup": 0.8297
+      },
+      "1.0": {
+        "average_speedup": 1.7534,
+        "min_speedup": 0.8297
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "fig_q2_feature_flow",
+  "kind": "flowchart",
+  "object": "早期窗与晚期窗的导联特征",
+  "action": "先分别构造形状编码与空间编码，再拼接为联合特征向量并做线性判别",
+  "product": "联合特征表示与判别流程图",
+  "criteria": "两个编码窗口正确、联合与判别顺序正确",
+  "nodes": [
+    "早期窗 Fz 幅值",
+    "晚期窗 F4−F3 偏侧",
+    "联合特征向量",
+    "线性判别分析",
+    "左右判据"
+  ],
+  "edges": [
+    "早期窗→晚期窗",
+    "晚期窗→联合向量",
+    "联合向量→判别分析",
+    "判别分析→左右判据"
+  ],
+  "main_path": [
+    "早期窗 Fz 幅值",
+    "晚期窗 F4−F3 偏侧",
+    "联合特征向量",
+    "线性判别分析",
+    "左右判据"
+  ],
+  "unverified": [
+    "窗内取值与判别准确率由问题二结果文件给出，图内不重复"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 1,
+  "support_blocks": 0,
+  "stages": 5,
+  "direction": "horizontal"
+}

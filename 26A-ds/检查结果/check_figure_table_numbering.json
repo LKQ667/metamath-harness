@@ -1,0 +1,20 @@
+{
+  "check": "check_figure_table_numbering",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "counterwithout": [
+      "figure",
+      "table"
+    ],
+    "review_required": [
+      "aux 中 tab 前缀 label `tab:q1_makespan`（编号 1）未在任何 table 浮动体内找到，请核对其身份。",
+      "aux 中 tab 前缀 label `tab:q1_speedup`（编号 2）未在任何 table 浮动体内找到，请核对其身份。",
+      "aux 中 tab 前缀 label `tab:q2_makespan`（编号 3）未在任何 table 浮动体内找到，请核对其身份。",
+      "aux 中 tab 前缀 label `tab:q2_speedup`（编号 4）未在任何 table 浮动体内找到，请核对其身份。",
+      "aux 中 tab 前缀 label `tab:q3_time`（编号 5）未在任何 table 浮动体内找到，请核对其身份。",
+      "aux 中 tab 前缀 label `tab:q3_traffic`（编号 6）未在任何 table 浮动体内找到，请核对其身份。"
+    ]
+  }
+}

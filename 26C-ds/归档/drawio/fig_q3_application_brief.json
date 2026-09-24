@@ -1,0 +1,42 @@
+{
+  "name": "fig_q3_application",
+  "kind": "flowchart",
+  "object": "双源认知宏观模型与其导出指标",
+  "action": "由模型导出记忆回路维持强度指标并给出病程定性趋势与局限改进",
+  "product": "模型评价与临床指标导出图",
+  "criteria": "导出链路完整、趋势标注为定性、局限与改进并列",
+  "nodes": [
+    "双源认知宏观模型",
+    "记忆回路维持强度 Φ",
+    "τ_H 与 g_H 病程趋势",
+    "临床指标与评价",
+    "模型局限",
+    "改进方向",
+    "后续验证"
+  ],
+  "edges": [
+    "模型→维持强度指标",
+    "指标→病程趋势",
+    "趋势→临床评价",
+    "局限改进支撑评价"
+  ],
+  "main_path": [
+    "双源认知宏观模型",
+    "记忆回路维持强度 Φ",
+    "τ_H 与 g_H 病程趋势",
+    "临床指标与评价"
+  ],
+  "unverified": [
+    "病程趋势为模型导出的定性关系，未在患者队列数据上验证，图内不做定量外推"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 1,
+  "support_blocks": 3,
+  "stages": 4,
+  "direction": "horizontal"
+}

@@ -1,0 +1,405 @@
+{
+  "stage": "step5",
+  "ok": true,
+  "checks": [
+    {
+      "check": "compile_paper",
+      "ok": true,
+      "errors": [],
+      "details": {
+        "ok": true,
+        "backend": "host",
+        "pdf": "F:\\26华为杯\\26C-ds\\论文\\main.pdf",
+        "log": "F:\\26华为杯\\26C-ds\\论文\\main.log",
+        "aux": "F:\\26华为杯\\26C-ds\\论文\\main.aux",
+        "attempts": [
+          {
+            "attempt": 1,
+            "returncode": 0,
+            "tail": "Initial Win CP for (console input, console output, system): (CP936, CP65001, CP936)\nI changed them all to CP936\nRc files read:\n  NONE\nLatexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.\nLatexmk: Nothing to do for 'main.tex'.\nLatexmk: All targets (main.xdv main.pdf) are up-to-date\n\nReverting Windows console CPs to (in,out) = (936,65001)\n"
+          }
+        ]
+      }
+    },
+    {
+      "check": "check_latex_environment",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "source": "host",
+        "version": "XeTeX 3.141592653-2.6-0.999997 (TeX Live 2025)",
+        "managed": false,
+        "fonts": [
+          "SimSun",
+          "SimHei",
+          "Times New Roman",
+          "Cambria Math"
+        ],
+        "available": true,
+        "deferred_install": false,
+        "install_stage": null
+      }
+    },
+    {
+      "check": "check_stage_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_data_sources",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_absolute_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_no_env_or_cache",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_ranges",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_code_distribution",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figures_manifest",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_figure_contract",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "mode": "禁止重复",
+        "policy_source": "explicit_state",
+        "stage": "step5",
+        "stage_source": "explicit",
+        "scope": "最终入文（step4/5 按实际引用核对）",
+        "n_by_type": {
+          "bar_2d": 1,
+          "contour_2d": 1,
+          "heatmap_2d": 1,
+          "line_2d": 1,
+          "scatter_2d": 1,
+          "vector_2d": 1
+        },
+        "per_type_items": {
+          "bar_2d": [
+            "Q1/solve_q1.py"
+          ],
+          "contour_2d": [
+            "Q3/solve_q3.py"
+          ],
+          "heatmap_2d": [
+            "Q2/solve_q2.py"
+          ],
+          "line_2d": [
+            "Q1/solve_q1.py"
+          ],
+          "scatter_2d": [
+            "Q1/solve_q1.py"
+          ],
+          "vector_2d": [
+            "Q2/solve_q2.py"
+          ]
+        },
+        "repeat_types": [],
+        "G": 0,
+        "unknown_types_items": [],
+        "counted_figures": 6
+      }
+    },
+    {
+      "check": "check_python_figure_quality",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_bar_chart_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "少用",
+        "bar_calls": [
+          {
+            "source": "Q1/solve_q1.py",
+            "line": 162,
+            "call": "bar"
+          },
+          {
+            "source": "Q1/solve_q1.py",
+            "line": 163,
+            "call": "bar"
+          }
+        ]
+      }
+    },
+    {
+      "check": "check_python_subplot_policy",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "policy": "禁用子图",
+        "stage": "step5",
+        "stage_source": "explicit",
+        "sparse_limit": 4,
+        "python_figures": 6,
+        "multi_panel": [],
+        "review_items": []
+      }
+    },
+    {
+      "check": "check_flowchart_required",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_quality_notes",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_question_assets",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_result_consistency",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_abstract_no_formula",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "profile": "huawei",
+        "note": "华为杯不启用国赛摘要禁公式硬门，摘要允许必要符号。"
+      }
+    },
+    {
+      "check": "check_abstract_one_page",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "effective_chars": 815,
+        "minimum_chars": 800,
+        "target_chars": [
+          850,
+          1050
+        ],
+        "start_page": "1",
+        "end_page": "2"
+      }
+    },
+    {
+      "check": "check_paper_emphasis",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_latex_log",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_drawing_contract",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_roadmap_in_paper",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_excellent_paper_visual_reference",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "enabled": true,
+        "status": "matched",
+        "papers": 2,
+        "shots": 10
+      }
+    },
+    {
+      "check": "check_ai_prompt_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_template_adherence",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_section_whitelist",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_model_building_rigor",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_layout_whitespace",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_internal_paths",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_paper_body_forbidden_symbols",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_figure_table_numbering",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "counterwithout": [
+          "figure",
+          "table"
+        ],
+        "review_required": [
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。",
+          "一个 表 浮动体含 caption 但无 label，无法核对其编译编号，请补充 \\label 或人工核对。"
+        ]
+      }
+    },
+    {
+      "check": "check_paper_prose_style",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "soft_word_counts": {
+          "验证": 6,
+          "检验": 12,
+          "核对": 2
+        },
+        "suggestions": [
+          "论文可见论述低频词统计（验证 6 次、检验 12 次、核对 2 次）：这是编辑建议而非失败项。“假设检验”等不可替代专业术语可保留，其余应优先改为与实测数据比较、复算结果一致性、对照边界条件、敏感性分析、稳健性分析、残差分析、交叉比较或检查约束是否满足等具体动作；空泛句请结合具体证据改写。"
+        ]
+      }
+    },
+    {
+      "check": "check_bibliography_sources",
+      "ok": true,
+      "errors": [],
+      "issues": [],
+      "details": {
+        "rejected": [],
+        "bibitem_count": 20,
+        "note": "来源信号与相关性支撑为两道独立核对：程序核对信号存在性，相关性支撑以 source_map 登记与人工复核为准。"
+      }
+    },
+    {
+      "check": "check_support_material_catalog",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_appendix_code_cleanliness",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_appendix_code_equivalence",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_body_page_count_minimum",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_three_round_self_review",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_python_3d_recommendation",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_readme_agent_status",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    },
+    {
+      "check": "check_deliverable_scorecard",
+      "ok": true,
+      "errors": [],
+      "issues": []
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+input_graph: case_033.json
+scene: A
+makespan: 1468451
+num_cores: 2
+data movement: scheduled_copy_bytes=45305568, physical_ddr_bytes=45305568
+core 0: ops=5742, end=1468451
+core 1: ops=5967, end=1467436

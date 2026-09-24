@@ -1,0 +1,40 @@
+{
+  "name": "fig_q1_denoise_flow",
+  "kind": "flowchart",
+  "object": "去噪后的脑电分段",
+  "action": "先校正基线，再按三重条件判定并扣除心电模板，最后做稳健软截断",
+  "product": "窄目标化去噪流程与分支判据图",
+  "criteria": "判据阈值完整、分支明确、显式声明不做高通与带通",
+  "nodes": [
+    "基线校正与 R 波定位",
+    "心电模板三重判定",
+    "模板扣除",
+    "不做高通与带通",
+    "稳健软截断"
+  ],
+  "edges": [
+    "校正→判定",
+    "判定满足→模板扣除",
+    "判定不满足→不做高通带通",
+    "两分支→稳健软截断"
+  ],
+  "main_path": [
+    "基线校正与 R 波定位",
+    "心电模板三重判定",
+    "模板扣除",
+    "稳健软截断"
+  ],
+  "unverified": [
+    "阈值与 10 倍稳健尺度取自已完成的去噪强度扫描记录"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 1,
+  "actors": 1,
+  "support_blocks": 0,
+  "stages": 4,
+  "direction": "horizontal"
+}

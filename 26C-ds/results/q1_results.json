@@ -1,0 +1,868 @@
+{
+  "stage": "q1",
+  "figure_style_font": "Microsoft YaHei",
+  "datasets": {
+    "A1": {
+      "task_cn": "项目一",
+      "group": "A",
+      "channels": {
+        "Fz": {
+          "raw_peak_99_uV": 206.279,
+          "denoised_peak_99_uV": 170.524,
+          "artifact_suppression_ratio": 0.1733,
+          "significant_points_post800": 0,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": 45.4638,
+                "amplitude_se_uV": 82.5612,
+                "latency_ms": 130.78,
+                "width_ms": 162.62
+              },
+              {
+                "amplitude_uV": -59.8722,
+                "amplitude_se_uV": 80.0671,
+                "latency_ms": 200.0,
+                "width_ms": 213.99
+              },
+              {
+                "amplitude_uV": 25.8067,
+                "amplitude_se_uV": 24.9149,
+                "latency_ms": 339.45,
+                "width_ms": 102.14
+              }
+            ],
+            "r2": 0.51607,
+            "rmse_uV": 3.2121,
+            "baseline_uV": 5.4592
+          },
+          "left": {
+            "trials": 54,
+            "p300": {
+              "amplitude_uV": -5.1019,
+              "ci95_low": -14.538,
+              "ci95_high": 3.833
+            },
+            "early": {
+              "amplitude_uV": 3.143,
+              "ci95_low": -3.1738,
+              "ci95_high": 9.5909
+            },
+            "late_mean_uV": 1.6448,
+            "reliability": 0.0541
+          },
+          "right": {
+            "trials": 46,
+            "p300": {
+              "amplitude_uV": 2.6076,
+              "ci95_low": -6.1333,
+              "ci95_high": 9.5553
+            },
+            "early": {
+              "amplitude_uV": -4.9211,
+              "ci95_low": -10.1997,
+              "ci95_high": -0.1613
+            },
+            "late_mean_uV": -2.6824,
+            "reliability": 0.8244
+          },
+          "laterality_index": 1.0
+        },
+        "F3": {
+          "raw_peak_99_uV": 1057.835,
+          "denoised_peak_99_uV": 427.939,
+          "artifact_suppression_ratio": 0.5955,
+          "significant_points_post800": 0,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": 18.9152,
+                "amplitude_se_uV": 1.6974,
+                "latency_ms": 20.0,
+                "width_ms": 299.15
+              },
+              {
+                "amplitude_uV": 3.3699,
+                "amplitude_se_uV": 2.1021,
+                "latency_ms": 156.8,
+                "width_ms": 87.3
+              },
+              {
+                "amplitude_uV": 4.0416,
+                "amplitude_se_uV": 1.2043,
+                "latency_ms": 337.77,
+                "width_ms": 43.51
+              }
+            ],
+            "r2": 0.86683,
+            "rmse_uV": 3.1406,
+            "baseline_uV": -17.4022
+          },
+          "left": {
+            "trials": 54,
+            "p300": {
+              "amplitude_uV": -15.6371,
+              "ci95_low": -50.1082,
+              "ci95_high": 19.6728
+            },
+            "early": {
+              "amplitude_uV": -7.8923,
+              "ci95_low": -33.8447,
+              "ci95_high": 21.6561
+            },
+            "late_mean_uV": -29.653,
+            "reliability": 0.9258
+          },
+          "right": {
+            "trials": 46,
+            "p300": {
+              "amplitude_uV": 14.0182,
+              "ci95_low": -22.6464,
+              "ci95_high": 59.0492
+            },
+            "early": {
+              "amplitude_uV": 14.4529,
+              "ci95_low": -15.7982,
+              "ci95_high": 53.6838
+            },
+            "late_mean_uV": 12.6576,
+            "reliability": -0.7143
+          },
+          "laterality_index": 1.0
+        },
+        "F4": {
+          "raw_peak_99_uV": 1110.208,
+          "denoised_peak_99_uV": 467.081,
+          "artifact_suppression_ratio": 0.5793,
+          "significant_points_post800": 0,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": 7.0911,
+                "amplitude_se_uV": 4.2995,
+                "latency_ms": 69.52,
+                "width_ms": 58.16
+              },
+              {
+                "amplitude_uV": 8.8315,
+                "amplitude_se_uV": 2.2367,
+                "latency_ms": 218.21,
+                "width_ms": 63.23
+              },
+              {
+                "amplitude_uV": 8.6278,
+                "amplitude_se_uV": 6.7193,
+                "latency_ms": 341.61,
+                "width_ms": 43.5
+              }
+            ],
+            "r2": 0.46708,
+            "rmse_uV": 4.015,
+            "baseline_uV": 0.5673
+          },
+          "left": {
+            "trials": 54,
+            "p300": {
+              "amplitude_uV": 0.4486,
+              "ci95_low": -40.2238,
+              "ci95_high": 44.2076
+            },
+            "early": {
+              "amplitude_uV": -0.8182,
+              "ci95_low": -32.9844,
+              "ci95_high": 36.5225
+            },
+            "late_mean_uV": -7.4392,
+            "reliability": -0.1165
+          },
+          "right": {
+            "trials": 46,
+            "p300": {
+              "amplitude_uV": 23.4131,
+              "ci95_low": -16.2463,
+              "ci95_high": 70.4946
+            },
+            "early": {
+              "amplitude_uV": 19.2539,
+              "ci95_low": -5.5294,
+              "ci95_high": 50.6463
+            },
+            "late_mean_uV": 16.681,
+            "reliability": -0.6923
+          },
+          "laterality_index": 0.9624
+        }
+      },
+      "denoise_counts": {
+        "clipped_samples": 4726,
+        "saturated_samples": 11284
+      }
+    },
+    "A2": {
+      "task_cn": "项目二",
+      "group": "A",
+      "channels": {
+        "Fz": {
+          "raw_peak_99_uV": 639.922,
+          "denoised_peak_99_uV": 639.554,
+          "artifact_suppression_ratio": 0.0006,
+          "significant_points_post800": 131,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -133.5263,
+                "amplitude_se_uV": 1.7942,
+                "latency_ms": 20.0,
+                "width_ms": 298.19
+              },
+              {
+                "amplitude_uV": -13.7541,
+                "amplitude_se_uV": 3.2814,
+                "latency_ms": 261.26,
+                "width_ms": 42.56
+              },
+              {
+                "amplitude_uV": -53.4216,
+                "amplitude_se_uV": 4.3465,
+                "latency_ms": 450.0,
+                "width_ms": 81.88
+              }
+            ],
+            "r2": 0.97172,
+            "rmse_uV": 8.7923,
+            "baseline_uV": 128.3646
+          },
+          "left": {
+            "trials": 57,
+            "p300": {
+              "amplitude_uV": 16.6299,
+              "ci95_low": -12.1376,
+              "ci95_high": 46.8567
+            },
+            "early": {
+              "amplitude_uV": 4.0158,
+              "ci95_low": -15.455,
+              "ci95_high": 25.5092
+            },
+            "late_mean_uV": 57.5652,
+            "reliability": 0.9765
+          },
+          "right": {
+            "trials": 43,
+            "p300": {
+              "amplitude_uV": 37.1063,
+              "ci95_low": 7.7925,
+              "ci95_high": 63.8119
+            },
+            "early": {
+              "amplitude_uV": 18.1304,
+              "ci95_low": 0.1337,
+              "ci95_high": 34.5075
+            },
+            "late_mean_uV": 87.2039,
+            "reliability": 0.9701
+          },
+          "laterality_index": 0.3811
+        },
+        "F3": {
+          "raw_peak_99_uV": 1482.851,
+          "denoised_peak_99_uV": 1128.858,
+          "artifact_suppression_ratio": 0.2387,
+          "significant_points_post800": 119,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": 568.3744,
+                "amplitude_se_uV": 82997.8746,
+                "latency_ms": 79.55,
+                "width_ms": 253.98
+              },
+              {
+                "amplitude_uV": -745.305,
+                "amplitude_se_uV": 91951.8391,
+                "latency_ms": 120.0,
+                "width_ms": 300.0
+              },
+              {
+                "amplitude_uV": 205.7531,
+                "amplitude_se_uV": 15179.4563,
+                "latency_ms": 450.0,
+                "width_ms": 300.0
+              }
+            ],
+            "r2": 0.98642,
+            "rmse_uV": 6.7407,
+            "baseline_uV": 87.63
+          },
+          "left": {
+            "trials": 57,
+            "p300": {
+              "amplitude_uV": 35.3408,
+              "ci95_low": -43.9863,
+              "ci95_high": 117.4656
+            },
+            "early": {
+              "amplitude_uV": -10.0892,
+              "ci95_low": -69.9706,
+              "ci95_high": 47.9578
+            },
+            "late_mean_uV": 51.5871,
+            "reliability": 0.4103
+          },
+          "right": {
+            "trials": 43,
+            "p300": {
+              "amplitude_uV": 61.8924,
+              "ci95_low": -1.084,
+              "ci95_high": 111.4068
+            },
+            "early": {
+              "amplitude_uV": 35.7988,
+              "ci95_low": 1.8764,
+              "ci95_high": 64.1278
+            },
+            "late_mean_uV": 166.5305,
+            "reliability": 0.8969
+          },
+          "laterality_index": 0.2731
+        },
+        "F4": {
+          "raw_peak_99_uV": 879.751,
+          "denoised_peak_99_uV": 873.516,
+          "artifact_suppression_ratio": 0.0071,
+          "significant_points_post800": 78,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -749.9336,
+                "amplitude_se_uV": 266022.8705,
+                "latency_ms": 192.89,
+                "width_ms": 287.04
+              },
+              {
+                "amplitude_uV": 851.2366,
+                "amplitude_se_uV": 253853.4392,
+                "latency_ms": 300.0,
+                "width_ms": 300.0
+              },
+              {
+                "amplitude_uV": -300.2454,
+                "amplitude_se_uV": 1095.0974,
+                "latency_ms": 448.08,
+                "width_ms": 192.38
+              }
+            ],
+            "r2": 0.99128,
+            "rmse_uV": 6.2722,
+            "baseline_uV": 97.8136
+          },
+          "left": {
+            "trials": 57,
+            "p300": {
+              "amplitude_uV": 20.1294,
+              "ci95_low": -39.341,
+              "ci95_high": 71.0602
+            },
+            "early": {
+              "amplitude_uV": 1.5043,
+              "ci95_low": -49.0665,
+              "ci95_high": 40.4408
+            },
+            "late_mean_uV": 66.5031,
+            "reliability": 0.936
+          },
+          "right": {
+            "trials": 43,
+            "p300": {
+              "amplitude_uV": 56.9576,
+              "ci95_low": 19.2189,
+              "ci95_high": 90.7189
+            },
+            "early": {
+              "amplitude_uV": 29.6531,
+              "ci95_low": 6.9657,
+              "ci95_high": 49.8006
+            },
+            "late_mean_uV": 122.9511,
+            "reliability": 0.9592
+          },
+          "laterality_index": 0.4777
+        }
+      },
+      "denoise_counts": {
+        "clipped_samples": 580,
+        "saturated_samples": 4650
+      }
+    },
+    "B1": {
+      "task_cn": "项目一",
+      "group": "B",
+      "channels": {
+        "Fz": {
+          "raw_peak_99_uV": 2000.0,
+          "denoised_peak_99_uV": 546.692,
+          "artifact_suppression_ratio": 0.7267,
+          "significant_points_post800": 0,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -10.1625,
+                "amplitude_se_uV": 2.7224,
+                "latency_ms": 20.0,
+                "width_ms": 221.62
+              },
+              {
+                "amplitude_uV": -6.0013,
+                "amplitude_se_uV": 10.2216,
+                "latency_ms": 212.08,
+                "width_ms": 76.84
+              },
+              {
+                "amplitude_uV": -10.3243,
+                "amplitude_se_uV": 6.5227,
+                "latency_ms": 450.0,
+                "width_ms": 67.17
+              }
+            ],
+            "r2": 0.4271,
+            "rmse_uV": 5.7159,
+            "baseline_uV": 9.4091
+          },
+          "left": {
+            "trials": 48,
+            "p300": {
+              "amplitude_uV": -22.4181,
+              "ci95_low": -76.405,
+              "ci95_high": 24.1453
+            },
+            "early": {
+              "amplitude_uV": -18.1369,
+              "ci95_low": -54.5898,
+              "ci95_high": 11.6845
+            },
+            "late_mean_uV": -20.8765,
+            "reliability": -0.0288
+          },
+          "right": {
+            "trials": 52,
+            "p300": {
+              "amplitude_uV": 20.95,
+              "ci95_low": -14.915,
+              "ci95_high": 54.8352
+            },
+            "early": {
+              "amplitude_uV": 8.4741,
+              "ci95_low": -17.239,
+              "ci95_high": 31.528
+            },
+            "late_mean_uV": 32.2713,
+            "reliability": -0.2529
+          },
+          "laterality_index": 1.0
+        },
+        "F3": {
+          "raw_peak_99_uV": 961.526,
+          "denoised_peak_99_uV": 501.947,
+          "artifact_suppression_ratio": 0.478,
+          "significant_points_post800": 0,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -4.4954,
+                "amplitude_se_uV": 0.5948,
+                "latency_ms": 20.0,
+                "width_ms": 186.61
+              },
+              {
+                "amplitude_uV": -8.3759,
+                "amplitude_se_uV": 2.6462,
+                "latency_ms": 225.7,
+                "width_ms": 56.04
+              },
+              {
+                "amplitude_uV": -18.9108,
+                "amplitude_se_uV": 1.4591,
+                "latency_ms": 450.0,
+                "width_ms": 86.79
+              }
+            ],
+            "r2": 0.79524,
+            "rmse_uV": 2.8902,
+            "baseline_uV": 3.9125
+          },
+          "left": {
+            "trials": 48,
+            "p300": {
+              "amplitude_uV": -2.6644,
+              "ci95_low": -42.8462,
+              "ci95_high": 37.9176
+            },
+            "early": {
+              "amplitude_uV": -7.0132,
+              "ci95_low": -36.3366,
+              "ci95_high": 23.0556
+            },
+            "late_mean_uV": 5.6794,
+            "reliability": 0.8202
+          },
+          "right": {
+            "trials": 52,
+            "p300": {
+              "amplitude_uV": -7.6821,
+              "ci95_low": -46.1468,
+              "ci95_high": 31.8609
+            },
+            "early": {
+              "amplitude_uV": -2.284,
+              "ci95_low": -24.4815,
+              "ci95_high": 21.5083
+            },
+            "late_mean_uV": -12.0065,
+            "reliability": -0.6599
+          },
+          "laterality_index": -0.485
+        },
+        "F4": {
+          "raw_peak_99_uV": 888.558,
+          "denoised_peak_99_uV": 468.168,
+          "artifact_suppression_ratio": 0.4731,
+          "significant_points_post800": 0,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -80.308,
+                "amplitude_se_uV": 6851.3602,
+                "latency_ms": 200.0,
+                "width_ms": 279.83
+              },
+              {
+                "amplitude_uV": 94.5117,
+                "amplitude_se_uV": 6629.9301,
+                "latency_ms": 300.0,
+                "width_ms": 300.0
+              },
+              {
+                "amplitude_uV": -34.0002,
+                "amplitude_se_uV": 12.8808,
+                "latency_ms": 450.0,
+                "width_ms": 115.31
+              }
+            ],
+            "r2": 0.85331,
+            "rmse_uV": 3.4221,
+            "baseline_uV": 6.0749
+          },
+          "left": {
+            "trials": 48,
+            "p300": {
+              "amplitude_uV": 27.7258,
+              "ci95_low": -6.61,
+              "ci95_high": 68.524
+            },
+            "early": {
+              "amplitude_uV": 13.4952,
+              "ci95_low": -8.6592,
+              "ci95_high": 40.381
+            },
+            "late_mean_uV": 33.5232,
+            "reliability": 0.8482
+          },
+          "right": {
+            "trials": 52,
+            "p300": {
+              "amplitude_uV": -1.7927,
+              "ci95_low": -38.5347,
+              "ci95_high": 34.2546
+            },
+            "early": {
+              "amplitude_uV": 4.1452,
+              "ci95_low": -18.7175,
+              "ci95_high": 29.3568
+            },
+            "late_mean_uV": -3.4271,
+            "reliability": 0.4676
+          },
+          "laterality_index": -1.0
+        }
+      },
+      "denoise_counts": {
+        "clipped_samples": 4779,
+        "saturated_samples": 8912
+      }
+    },
+    "B2": {
+      "task_cn": "项目二",
+      "group": "B",
+      "channels": {
+        "Fz": {
+          "raw_peak_99_uV": 803.255,
+          "denoised_peak_99_uV": 802.518,
+          "artifact_suppression_ratio": 0.0009,
+          "significant_points_post800": 205,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -582.7059,
+                "amplitude_se_uV": 1065837.5654,
+                "latency_ms": 143.13,
+                "width_ms": 300.0
+              },
+              {
+                "amplitude_uV": 836.8657,
+                "amplitude_se_uV": 1077662.9472,
+                "latency_ms": 300.0,
+                "width_ms": 300.0
+              },
+              {
+                "amplitude_uV": -445.1108,
+                "amplitude_se_uV": 8214.9976,
+                "latency_ms": 403.04,
+                "width_ms": 222.11
+              }
+            ],
+            "r2": 0.99105,
+            "rmse_uV": 6.1355,
+            "baseline_uV": 105.9953
+          },
+          "left": {
+            "trials": 50,
+            "p300": {
+              "amplitude_uV": 60.121,
+              "ci95_low": 6.0971,
+              "ci95_high": 112.409
+            },
+            "early": {
+              "amplitude_uV": 39.898,
+              "ci95_low": 0.6883,
+              "ci95_high": 76.8928
+            },
+            "late_mean_uV": 112.5064,
+            "reliability": 0.9702
+          },
+          "right": {
+            "trials": 50,
+            "p300": {
+              "amplitude_uV": 43.615,
+              "ci95_low": -0.7832,
+              "ci95_high": 83.6605
+            },
+            "early": {
+              "amplitude_uV": 20.5696,
+              "ci95_low": -8.6154,
+              "ci95_high": 47.095
+            },
+            "late_mean_uV": 88.6357,
+            "reliability": 0.9571
+          },
+          "laterality_index": -0.1591
+        },
+        "F3": {
+          "raw_peak_99_uV": 1569.537,
+          "denoised_peak_99_uV": 1201.58,
+          "artifact_suppression_ratio": 0.2344,
+          "significant_points_post800": 71,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -483.6022,
+                "amplitude_se_uV": 2761683.1551,
+                "latency_ms": 163.01,
+                "width_ms": 292.06
+              },
+              {
+                "amplitude_uV": 655.0218,
+                "amplitude_se_uV": 2661243.6864,
+                "latency_ms": 300.0,
+                "width_ms": 300.0
+              },
+              {
+                "amplitude_uV": -294.8237,
+                "amplitude_se_uV": 19734.6531,
+                "latency_ms": 405.69,
+                "width_ms": 225.85
+              }
+            ],
+            "r2": 0.98705,
+            "rmse_uV": 5.8016,
+            "baseline_uV": 75.0159
+          },
+          "left": {
+            "trials": 50,
+            "p300": {
+              "amplitude_uV": 30.6003,
+              "ci95_low": -61.4668,
+              "ci95_high": 113.1232
+            },
+            "early": {
+              "amplitude_uV": 6.0364,
+              "ci95_low": -68.6918,
+              "ci95_high": 65.5303
+            },
+            "late_mean_uV": 81.5223,
+            "reliability": 0.8385
+          },
+          "right": {
+            "trials": 50,
+            "p300": {
+              "amplitude_uV": 66.3876,
+              "ci95_low": -8.4476,
+              "ci95_high": 145.215
+            },
+            "early": {
+              "amplitude_uV": 11.5722,
+              "ci95_low": -21.9721,
+              "ci95_high": 43.1032
+            },
+            "late_mean_uV": 91.4789,
+            "reliability": 0.5428
+          },
+          "laterality_index": 0.369
+        },
+        "F4": {
+          "raw_peak_99_uV": 2000.0,
+          "denoised_peak_99_uV": 1205.217,
+          "artifact_suppression_ratio": 0.3974,
+          "significant_points_post800": 76,
+          "p300_window_ms": [
+            250,
+            500
+          ],
+          "gaussian_fit": {
+            "components": [
+              {
+                "amplitude_uV": -664.3809,
+                "amplitude_se_uV": 1434282.8998,
+                "latency_ms": 200.0,
+                "width_ms": 299.19
+              },
+              {
+                "amplitude_uV": 629.9484,
+                "amplitude_se_uV": 1427214.4235,
+                "latency_ms": 300.0,
+                "width_ms": 300.0
+              },
+              {
+                "amplitude_uV": -164.0063,
+                "amplitude_se_uV": 78.1251,
+                "latency_ms": 450.0,
+                "width_ms": 135.52
+              }
+            ],
+            "r2": 0.98821,
+            "rmse_uV": 8.621,
+            "baseline_uV": 138.5021
+          },
+          "left": {
+            "trials": 50,
+            "p300": {
+              "amplitude_uV": -2.9142,
+              "ci95_low": -92.7694,
+              "ci95_high": 69.1655
+            },
+            "early": {
+              "amplitude_uV": 2.6444,
+              "ci95_low": -58.4673,
+              "ci95_high": 48.8368
+            },
+            "late_mean_uV": 47.0174,
+            "reliability": 0.9697
+          },
+          "right": {
+            "trials": 50,
+            "p300": {
+              "amplitude_uV": 98.4199,
+              "ci95_low": 23.2283,
+              "ci95_high": 186.667
+            },
+            "early": {
+              "amplitude_uV": 12.1623,
+              "ci95_low": -24.5741,
+              "ci95_high": 45.359
+            },
+            "late_mean_uV": 190.0421,
+            "reliability": 0.8695
+          },
+          "laterality_index": 1.0
+        }
+      },
+      "denoise_counts": {
+        "clipped_samples": 893,
+        "saturated_samples": 9479
+      }
+    }
+  },
+  "audit_operations": [
+    "稳健软截断：把超出 10 倍稳健尺度的极端采样点压缩到阈值，其余采样点原样保留，不做高通或带通",
+    "心电伪迹核验：比较 EEG 片段与心电中位模板的相关度，实测最大相关度远低于 0.6 判定阈值，故不引入心电模板扣除",
+    "明确不做频谱滤波：配对检验显示 0.5-30 Hz 带通会使左右可分性平均下降 0.059（p<0.001），因为承载视物信息的低频慢电位被一并去除"
+  ],
+  "figures": {
+    "fig1_erp_curve": {
+      "paths": [
+        "Q1/figures/fig1_erp_curve.svg",
+        "Q1/figures/fig1_erp_curve.pdf",
+        "Q1/figures/fig1_erp_curve.png"
+      ],
+      "dataset_shown": "A2",
+      "note": "曲线取自 A 组项目二记录，该记录响应最强"
+    },
+    "fig2_artifact_interval": {
+      "paths": [
+        "Q1/figures/fig2_artifact_interval.svg",
+        "Q1/figures/fig2_artifact_interval.pdf",
+        "Q1/figures/fig2_artifact_interval.png"
+      ]
+    },
+    "fig3_artifact_count": {
+      "paths": [
+        "Q1/figures/fig3_artifact_count.svg",
+        "Q1/figures/fig3_artifact_count.pdf",
+        "Q1/figures/fig3_artifact_count.png"
+      ]
+    }
+  }
+}

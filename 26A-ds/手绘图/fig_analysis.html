@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+html,body{margin:0;padding:0;width:fit-content;height:fit-content;background:transparent}
+.fig,.fig *{font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif;
+  -webkit-font-smoothing:antialiased;box-sizing:border-box}
+.fig{width:fit-content;height:fit-content;padding:22px 24px;background:transparent;
+  --edge:#1a1a1a; --txt:#111; --line:#333}
+.fig{display:flex;flex-direction:column;gap:0}
+.bandtitle{font-size:15px;font-weight:800;letter-spacing:1px;color:var(--txt);
+  border-bottom:1.2px solid var(--edge);padding-bottom:4px;white-space:nowrap}
+.n{border:1px solid var(--edge);background:#fff;color:var(--txt);
+  padding:10px 16px;font-size:15px;font-weight:600;text-align:center;border-radius:0;
+  line-height:1.5;white-space:nowrap;min-width:250px;
+  display:flex;align-items:center;justify-content:center}
+.n.wide{min-width:300px}
+.n.dec{border:1.8px solid var(--edge);font-weight:800}
+.rowgrid{display:grid;grid-auto-flow:column;grid-auto-columns:max-content;gap:18px;
+  justify-content:center;align-items:stretch}
+.stack{display:flex;flex-direction:column;gap:0;align-items:center}
+.dn{display:flex;flex-direction:column;align-items:center}
+.dn .ln{width:1px;height:16px;background:var(--line)}
+.dn .tp{width:0;height:0;border-top:7px solid var(--line);
+  border-left:5px solid transparent;border-right:5px solid transparent}
+.branch{display:grid;grid-template-columns:max-content max-content;gap:26px;
+  justify-content:center;align-items:start}
+.path{display:flex;flex-direction:column;align-items:center}
+.lbl{font-size:14px;font-weight:700;color:var(--txt);white-space:nowrap;padding:3px 0}
+.mergebar{width:100%;height:1px;background:var(--line);margin:0}
+.loop{display:grid;grid-template-columns:max-content 26px max-content;align-items:center;
+  justify-content:center;gap:0}
+.loopback{display:flex;align-items:center;justify-content:center;
+  border-top:1.3px dashed var(--edge);border-right:1.3px dashed var(--edge);
+  border-bottom:1.3px dashed var(--edge);padding:0 8px;height:100%}
+.loopback .txt{writing-mode:vertical-rl;font-size:13px;font-weight:600;color:var(--txt);letter-spacing:2px}
+.gap{height:12px}
+.legend{font-size:13px;color:#444;white-space:nowrap;padding-top:2px}
+</style>
+</head>
+<body>
+<div class="fig">
+
+  <div class="bandtitle">一、题目给定的耦合结构</div>
+  <div class="gap"></div>
+  <div class="rowgrid">
+    <div class="n" data-mh-row="1">切图决策<br>操作到子图的归属</div>
+    <div class="n" data-mh-row="1">核心分配<br>子图落到哪个 NPU 核</div>
+    <div class="n" data-mh-row="1">核内顺序<br>同核子图执行先后</div>
+  </div>
+  <div class="gap"></div>
+  <div class="rowgrid">
+    <div class="n wide" data-mh-row="2">切分越细：并行空间变大，跨子图搬运变多</div>
+    <div class="n wide" data-mh-row="2">聚合越多：通信减少，并行度与缓存压力变差</div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div class="bandtitle">二、必须同时满足的硬约束</div>
+  <div class="gap"></div>
+  <div class="rowgrid">
+    <div class="n" data-mh-row="3">子图依赖无环<br>否则方案直接判为无效</div>
+    <div class="n" data-mh-row="3">L1/UB 容量<br>不足即自动换出换入</div>
+    <div class="n" data-mh-row="3">共享 DDR 带宽<br>全部核公平分摊 60 B/cycle</div>
+    <div class="n" data-mh-row="3">四流水线并行<br>同流水线串行、异流水线并行</div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div class="bandtitle">三、解耦思路与三问递进</div>
+  <div class="gap"></div>
+  <div class="rowgrid">
+    <div class="n" data-mh-row="4">先定切分<br>无环性由构造保证</div>
+    <div class="n" data-mh-row="4">再定分核<br>按任务级估算完工时间</div>
+    <div class="n" data-mh-row="4">最后排序<br>由依赖图拓扑序确定</div>
+  </div>
+  <div class="gap"></div>
+  <div class="stack">
+    <div class="n wide" data-mh-col="1">问题一　场景 A：跨子图必须经 DDR，同核换任务 100 周期、跨核前驱 1000 周期</div>
+    <div class="dn" data-mh-col="1"><div class="ln"></div><div class="tp"></div></div>
+    <div class="n wide" data-mh-col="1">问题二　场景 B：同核子图合并为一个 Task，跨核仅 500 周期同步延迟</div>
+    <div class="dn" data-mh-col="1"><div class="ln"></div><div class="tp"></div></div>
+    <div class="n wide" data-mh-col="1">问题三　共享只读 L2：重复读取脱离 DDR，有效读带宽升至 250 B/cycle</div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+  <div class="gap"></div>
+
+  <div class="bandtitle">四、算法主线的真实回环</div>
+  <div class="gap"></div>
+  <div class="loop">
+    <div class="loopback"><div class="txt">切点回退重选</div></div>
+    <div></div>
+    <div class="stack">
+      <div class="n wide" data-mh-col="2">生成保持后代连续的拓扑序（重节点优先展开）</div>
+      <div class="dn" data-mh-col="2"><div class="ln"></div><div class="tp"></div></div>
+      <div class="n wide" data-mh-col="2">按“跨切边数 + 负载偏差”联合代价挑选切点</div>
+      <div class="dn" data-mh-col="2"><div class="ln"></div><div class="tp"></div></div>
+      <div class="n dec wide" data-mh-col="2">估算完工时间是否下降</div>
+    </div>
+  </div>
+  <div class="gap"></div>
+  <div class="branch">
+    <div class="path">
+      <div class="lbl">否，窗口内无更优切点</div>
+      <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+      <div class="n wide">冻结切分，输出方案</div>
+    </div>
+    <div class="path">
+      <div class="lbl">是，接受新切点</div>
+      <div class="dn"><div class="ln"></div><div class="tp"></div></div>
+      <div class="n wide">更新边界并重新评估</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

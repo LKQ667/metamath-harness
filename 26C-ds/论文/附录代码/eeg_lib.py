@@ -1,0 +1,172 @@
+from __future__ import annotations
+import sys as _sys
+_sys.dont_write_bytecode = True
+import json
+from pathlib import Path
+import numpy as np
+import scipy.io as sio
+from scipy import signal, stats
+FS = 256
+EEG_CHANNELS = ('Fz', 'F3', 'F4')
+EEG_INDEX = {'Fz': 0, 'F3': 1, 'F4': 2}
+DECON_INDEX = {'Fz': 3, 'F3': 4, 'F4': 5}
+ECG_INDEX = 6
+CUE_INDEX = 7
+ACT_INDEX = 8
+TS_INDEX = 9
+DATASETS = ({'key': 'A1', 'file': 'VisualCogA_Task-1.mat', 'group': 'A', 'task': 1, 'task_cn': '项目一'}, {'key': 'A2', 'file': 'VisualCogA_Task-2.mat', 'group': 'A', 'task': 2, 'task_cn': '项目二'}, {'key': 'B1', 'file': 'VisualCogB_Task-1.mat', 'group': 'B', 'task': 1, 'task_cn': '项目一'}, {'key': 'B2', 'file': 'VisualCogB_Task-2.mat', 'group': 'B', 'task': 2, 'task_cn': '项目二'})
+EPOCH_PRE = 0.2
+EPOCH_POST = 1.0
+
+def data_dir(project: Path) -> Path:
+    return project / 'data'
+
+def raw_path(project: Path, filename: str) -> Path:
+    return data_dir(project) / 'raw' / filename
+
+def load_record(project: Path, filename: str) -> dict:
+    path = raw_path(project, filename)
+    mat = sio.loadmat(str(path))
+    data = np.asarray(mat['data'], dtype=float)
+    fs = int(np.asarray(mat['SampleRate']).ravel()[0])
+    labels = [str(v[0]) for v in np.asarray(mat['DataLabel']).ravel()]
+    return {'data': data, 'fs': fs, 'labels': labels, 'path': path}
+
+def event_onsets(marker: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    idx = np.flatnonzero(marker != 0)
+    if idx.size == 0:
+        return (np.empty(0, dtype=int), np.empty(0, dtype=float))
+    breaks = np.flatnonzero(np.diff(idx) > 1)
+    starts = np.concatenate(([idx[0]], idx[breaks + 1]))
+    values = marker[starts]
+    return (starts.astype(int), values.astype(float))
+
+def epoch_matrix(signal_1d: np.ndarray, onsets: np.ndarray, fs: int=FS, pre: float=EPOCH_PRE, post: float=EPOCH_POST) -> np.ndarray:
+    n_pre = int(round(pre * fs))
+    n_post = int(round(post * fs))
+    valid = onsets[(onsets - n_pre >= 0) & (onsets + n_post <= signal_1d.size)]
+    out = np.empty((valid.size, n_pre + n_post), dtype=float)
+    for i, onset in enumerate(valid):
+        out[i] = signal_1d[onset - n_pre:onset + n_post]
+    return out
+
+def baseline_correct(epochs: np.ndarray, fs: int=FS, pre: float=EPOCH_PRE) -> np.ndarray:
+    n_base = int(round(pre * fs))
+    return epochs - epochs[:, :n_base].mean(axis=1, keepdims=True)
+
+def robust_scale(x: np.ndarray) -> float:
+    med = np.median(x)
+    return float(1.4826 * np.median(np.abs(x - med)))
+
+def bandpass(x: np.ndarray, low: float, high: float, fs: int=FS, order: int=4) -> np.ndarray:
+    nyq = fs / 2.0
+    hi = min(high, nyq * 0.95)
+    sos = signal.butter(order, [low / nyq, hi / nyq], btype='bandpass', output='sos')
+    return signal.sosfiltfilt(sos, x, axis=-1)
+
+def r_peaks(ecg: np.ndarray, fs: int=FS) -> np.ndarray:
+    filtered = bandpass(ecg, 5.0, 15.0, fs=fs)
+    scale = robust_scale(filtered)
+    if scale <= 0:
+        return np.empty(0, dtype=int)
+    height = 3.0 * scale
+    distance = int(0.25 * fs)
+    peaks, _ = signal.find_peaks(filtered, height=height, distance=distance)
+    return peaks.astype(int)
+
+def rpca(matrix: np.ndarray, lam: float | None=None, max_iter: int=300, tol: float=1e-07) -> tuple[np.ndarray, np.ndarray, dict]:
+    m, n = matrix.shape
+    if lam is None:
+        lam = 1.0 / np.sqrt(max(m, n))
+    norm_two = np.linalg.norm(matrix, 2)
+    norm_inf = np.abs(matrix).max()
+    dual_norm = max(norm_two, norm_inf / lam) if lam > 0 else norm_two
+    if dual_norm <= 0:
+        return (matrix.copy(), np.zeros_like(matrix), {'iterations': 0, 'converged': True, 'rank': int(min(m, n))})
+    y = matrix / dual_norm
+    mu = 1.25 / (norm_two if norm_two > 0 else 1.0)
+    mu_bar = mu * 10000000.0
+    rho = 1.5
+    l = np.zeros_like(matrix)
+    s = np.zeros_like(matrix)
+    converged = False
+    it = 0
+    for it in range(1, max_iter + 1):
+        u, sv, vt = np.linalg.svd(matrix - s + y / mu, full_matrices=False)
+        sv_thresh = np.maximum(sv - 1.0 / mu, 0.0)
+        l = u * sv_thresh @ vt
+        residual = matrix - l + y / mu
+        s = np.sign(residual) * np.maximum(np.abs(residual) - lam / mu, 0.0)
+        z = matrix - l - s
+        y = y + mu * z
+        err = np.linalg.norm(z, 'fro') / (np.linalg.norm(matrix, 'fro') + 1e-12)
+        if err < tol:
+            converged = True
+            break
+        mu = min(mu * rho, mu_bar)
+    rank = int(np.sum(sv_thresh > 0)) if 'sv_thresh' in dir() else int(min(m, n))
+    return (l, s, {'iterations': it, 'converged': converged, 'rank': rank, 'lambda': float(lam)})
+
+def trial_artifact_flags(epochs: np.ndarray, z_threshold: float=6.0) -> np.ndarray:
+    scale = robust_scale(epochs.ravel())
+    if scale <= 0:
+        return np.zeros(epochs.shape[0], dtype=bool)
+    peak = np.max(np.abs(epochs), axis=1)
+    return peak > z_threshold * scale
+
+def snr_db(signal_component: np.ndarray, noise_component: np.ndarray) -> float:
+    ps = float(np.var(signal_component))
+    pn = float(np.var(noise_component))
+    if pn <= 0:
+        return float('inf')
+    return float(10.0 * np.log10(ps / pn))
+
+def bootstrap_ci(values: np.ndarray, n_boot: int=2000, alpha: float=0.05, seed: int=20260923, statistic=np.mean) -> tuple[float, float, float]:
+    rng = np.random.default_rng(seed)
+    n = values.shape[0]
+    if n == 0:
+        return (float('nan'), float('nan'), float('nan'))
+    point = float(statistic(values))
+    draws = rng.integers(0, n, size=(n_boot, n))
+    samples = np.array([statistic(values[draws[i]]) for i in range(n_boot)])
+    lo = float(np.quantile(samples, alpha / 2))
+    hi = float(np.quantile(samples, 1 - alpha / 2))
+    return (point, lo, hi)
+
+def fdr_mask(pvals: np.ndarray, alpha: float=0.05) -> np.ndarray:
+    p = np.asarray(pvals, dtype=float)
+    mask = np.zeros(p.shape, dtype=bool)
+    finite = np.isfinite(p)
+    if not finite.any():
+        return mask
+    pv = p[finite]
+    order = np.argsort(pv)
+    ranked = pv[order]
+    m = ranked.size
+    thresholds = alpha * (np.arange(1, m + 1) / m)
+    below = ranked <= thresholds
+    if not below.any():
+        return mask
+    k = np.max(np.flatnonzero(below))
+    selected = order[:k + 1]
+    idx = np.flatnonzero(finite)
+    mask[idx[selected]] = True
+    return mask
+
+def pointwise_ttest(epochs: np.ndarray, n_base: int) -> np.ndarray:
+    n = epochs.shape[0]
+    m = epochs.mean(axis=0)
+    sd = epochs.std(axis=0, ddof=1)
+    se = sd / np.sqrt(n)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        tvals = np.where(se > 0, m / se, 0.0)
+    pvals = 2.0 * stats.t.sf(np.abs(tvals), df=n - 1)
+    return np.asarray(pvals)
+
+def save_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+
+def time_axis(fs: int=FS, pre: float=EPOCH_PRE, post: float=EPOCH_POST) -> np.ndarray:
+    n = int(round(pre * fs)) + int(round(post * fs))
+    return (np.arange(n) - int(round(pre * fs))) / fs

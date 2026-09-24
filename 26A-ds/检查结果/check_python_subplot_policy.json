@@ -1,0 +1,26 @@
+{
+  "check": "check_python_subplot_policy",
+  "ok": true,
+  "errors": [],
+  "issues": [],
+  "details": {
+    "policy": "默认（模型自行判断）",
+    "stage": "step5",
+    "stage_source": "explicit",
+    "sparse_limit": 4,
+    "python_figures": 15,
+    "multi_panel": [
+      {
+        "source": "数据预处理/fig_profile.py",
+        "template_id": "multi_panel_hero_support_template",
+        "panel_count": 4
+      },
+      {
+        "source": "Q1/figures_q1.py",
+        "template_id": "stats_interval_lollipop_template",
+        "panel_count": 4
+      }
+    ],
+    "review_items": []
+  }
+}

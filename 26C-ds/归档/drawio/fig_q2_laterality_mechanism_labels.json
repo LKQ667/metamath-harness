@@ -1,0 +1,12 @@
+{
+  "n1": "<font style=\"font-size:17px;\">右指三角源分布</font>",
+  "n2": "<font style=\"font-size:17px;\">水平镜像映射</font>",
+  "n3": "<font style=\"font-size:17px;\">左指三角源分布</font>",
+  "n4": "<font style=\"font-size:17px;\">差分 F4−F3 判据</font>",
+  "s1": "<font style=\"font-size:17px;\">Fz 位于中线相消</font>",
+  "s2": "<font style=\"font-size:17px;\">F3/F4 权重互换</font>",
+  "s3": "<font style=\"font-size:17px;\">镜像差异最敏感</font>",
+  "e4": "<font style=\"font-size:12px;\">支撑</font>",
+  "e5": "<font style=\"font-size:12px;\">校验</font>",
+  "e6": "<font style=\"font-size:12px;\">约束</font>"
+}

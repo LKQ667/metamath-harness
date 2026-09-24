@@ -1,0 +1,153 @@
+{
+  "stage": "q3",
+  "model": {
+    "identified": {
+      "tau_H_s": 0.271,
+      "g_H": 5.31,
+      "tau_R_s": 0.57,
+      "weighted_sse": 0.024549,
+      "fixed_parameters": {
+        "beta_V": 1.0,
+        "beta_H": 1.0,
+        "gamma": 0.8
+      },
+      "oscillators": {
+        "visual": 120,
+        "hippocampal": 80
+      }
+    }
+  },
+  "datasets": {
+    "A1": {
+      "task_cn": "A组项目一",
+      "correlation": {
+        "Fz": 0.3722,
+        "F3": -0.8968,
+        "F4": -0.4983
+      },
+      "rmse_normalized": {
+        "Fz": 0.6288,
+        "F3": 1.0918,
+        "F4": 0.6322
+      },
+      "mean_correlation": -0.341,
+      "phi_memory_sustain": 0.156268
+    },
+    "A2": {
+      "task_cn": "A组项目二",
+      "correlation": {
+        "Fz": 0.9271,
+        "F3": 0.9138,
+        "F4": 0.9358
+      },
+      "rmse_normalized": {
+        "Fz": 0.1755,
+        "F3": 0.1554,
+        "F4": 0.1643
+      },
+      "mean_correlation": 0.9256,
+      "phi_memory_sustain": 0.156268
+    },
+    "B1": {
+      "task_cn": "B组项目一",
+      "correlation": {
+        "Fz": 0.4378,
+        "F3": 0.3941,
+        "F4": 0.5727
+      },
+      "rmse_normalized": {
+        "Fz": 0.5068,
+        "F3": 0.7968,
+        "F4": 0.2908
+      },
+      "mean_correlation": 0.4682,
+      "phi_memory_sustain": 0.156268
+    },
+    "B2": {
+      "task_cn": "B组项目二",
+      "correlation": {
+        "Fz": 0.9372,
+        "F3": 0.9277,
+        "F4": 0.9267
+      },
+      "rmse_normalized": {
+        "Fz": 0.1379,
+        "F3": 0.1472,
+        "F4": 0.149
+      },
+      "mean_correlation": 0.9305,
+      "phi_memory_sustain": 0.156268
+    }
+  },
+  "validation": {
+    "local_sensitivity": {
+      "tau_H": {
+        "sse_up": 0.024624,
+        "sse_down": 0.024638,
+        "sensitivity": -0.000175
+      },
+      "g_H": {
+        "sse_up": 0.024547,
+        "sse_down": 0.024555,
+        "sensitivity": -1.9e-05
+      },
+      "beta_V": {
+        "sse_up": 0.024218,
+        "sse_down": 0.025025,
+        "sensitivity": -0.001614
+      },
+      "beta_H": {
+        "sse_up": 0.024221,
+        "sse_down": 0.024923,
+        "sensitivity": -0.001405
+      },
+      "gamma": {
+        "sse_up": 0.024522,
+        "sse_down": 0.024577,
+        "sensitivity": -0.000112
+      },
+      "tau_R": {
+        "sse_up": 0.024606,
+        "sse_down": 0.024633,
+        "sensitivity": -0.000135
+      }
+    },
+    "behavioral_stratification": {
+      "应答与提示一致": {
+        "n_datasets": 4,
+        "late_mean_uV": 58.3263
+      },
+      "应答与提示不一致": {
+        "n_datasets": 2,
+        "late_mean_uV": 60.1133
+      }
+    },
+    "cue_action_agreement": {
+      "A1": 1.0,
+      "A2": 0.47,
+      "B1": 0.98,
+      "B2": 0.48
+    },
+    "overall": {
+      "mean_correlation": 0.4958,
+      "max_correlation": 0.9305,
+      "min_correlation": -0.341
+    }
+  },
+  "figures": {
+    "fig6_parameter_contour": {
+      "paths": [
+        "Q3/figures/fig6_parameter_contour.svg",
+        "Q3/figures/fig6_parameter_contour.pdf",
+        "Q3/figures/fig6_parameter_contour.png"
+      ],
+      "sensitivity_copy": [
+        "灵敏度分析/figures/fig6_parameter_contour.svg",
+        "灵敏度分析/figures/fig6_parameter_contour.pdf",
+        "灵敏度分析/figures/fig6_parameter_contour.png"
+      ],
+      "note": "以四份记录平均响应为目标的加权残差平方和曲面，横轴为记忆通路延迟，纵轴为记忆通路增益"
+    }
+  },
+  "figure_style_font": "Microsoft YaHei"
+}

@@ -1,0 +1,1741 @@
+{
+  "meta": {
+    "competition": "2026 中国研究生数学建模竞赛（华为杯）C 题",
+    "title": "服务于脑机接口与精神性疾病诊断的脑电图计算模型",
+    "result_source": "results/final_results.json",
+    "note": "本文件是全项目唯一结果源，论文正文、摘要、README 与各问 result.md 的数值均引用此处。",
+    "data_origin": "四份赛题原始记录的真实计算，未做任何人工调整"
+  },
+  "dataset_overview": {
+    "datasets": 4,
+    "total_samples": 905337,
+    "total_trials": 400,
+    "total_duration_s": 3536.46,
+    "missing_values": false,
+    "duplicate_timestamps": false,
+    "saturation_present": true,
+    "mean_artifact_trial_fraction": 0.2283,
+    "per_dataset": {
+      "A1": {
+        "duration_s": 874.391,
+        "trials": 100,
+        "cue_left": 54,
+        "cue_right": 46,
+        "cue_action_agreement": 1.0,
+        "heart_rate_bpm": 69.85,
+        "artifact_trial_fraction": {
+          "Fz": 0.33,
+          "F3": 0.27,
+          "F4": 0.28
+        },
+        "channel_std_uV": {
+          "Fz": 53.159,
+          "F3": 267.969,
+          "F4": 301.428
+        },
+        "channel_robust_scale_uV": {
+          "Fz": 27.917,
+          "F3": 134.878,
+          "F4": 161.302
+        },
+        "saturation_count": {
+          "Fz": 0,
+          "F3": 4573,
+          "F4": 6711
+        }
+      },
+      "A2": {
+        "duration_s": 899.047,
+        "trials": 100,
+        "cue_left": 57,
+        "cue_right": 43,
+        "cue_action_agreement": 0.47,
+        "heart_rate_bpm": 71.81,
+        "artifact_trial_fraction": {
+          "Fz": 0.19,
+          "F3": 0.13,
+          "F4": 0.11
+        },
+        "channel_std_uV": {
+          "Fz": 190.167,
+          "F3": 290.649,
+          "F4": 275.733
+        },
+        "channel_robust_scale_uV": {
+          "Fz": 133.793,
+          "F3": 178.269,
+          "F4": 153.475
+        },
+        "saturation_count": {
+          "Fz": 0,
+          "F3": 3277,
+          "F4": 1373
+        }
+      },
+      "B1": {
+        "duration_s": 871.109,
+        "trials": 100,
+        "cue_left": 48,
+        "cue_right": 52,
+        "cue_action_agreement": 0.98,
+        "heart_rate_bpm": 71.15,
+        "artifact_trial_fraction": {
+          "Fz": 0.25,
+          "F3": 0.29,
+          "F4": 0.32
+        },
+        "channel_std_uV": {
+          "Fz": 287.846,
+          "F3": 258.824,
+          "F4": 267.271
+        },
+        "channel_robust_scale_uV": {
+          "Fz": 164.741,
+          "F3": 128.725,
+          "F4": 113.794
+        },
+        "saturation_count": {
+          "Fz": 3745,
+          "F3": 2246,
+          "F4": 2921
+        }
+      },
+      "B2": {
+        "duration_s": 891.91,
+        "trials": 100,
+        "cue_left": 50,
+        "cue_right": 50,
+        "cue_action_agreement": 0.48,
+        "heart_rate_bpm": 71.51,
+        "artifact_trial_fraction": {
+          "Fz": 0.15,
+          "F3": 0.18,
+          "F4": 0.24
+        },
+        "channel_std_uV": {
+          "Fz": 238.281,
+          "F3": 307.419,
+          "F4": 325.301
+        },
+        "channel_robust_scale_uV": {
+          "Fz": 157.773,
+          "F3": 181.889,
+          "F4": 190.531
+        },
+        "saturation_count": {
+          "Fz": 350,
+          "F3": 3293,
+          "F4": 5836
+        }
+      }
+    }
+  },
+  "q1_preprocessing": {
+    "method_selected": "稳健软截断（10 倍稳健尺度）",
+    "selection_reason": "配对检验显示该方案相对 0.5-30 Hz 带通方案把左右可分性提高 0.059（t=4.461，p<0.001），相对原始信号提高 0.007（t=3.464，p=0.001），同时把 99 分位单试次峰值压低约三成。",
+    "paired_tests": {
+      "n": 40,
+      "mean_diff": 0.0592,
+      "t": 4.4608,
+      "p": 6.748054510758675e-05,
+      "ci95": [
+        0.033,
+        0.0849
+      ]
+    },
+    "paired_test_vs_raw": {
+      "n": 40,
+      "mean_diff": 0.0071,
+      "t": 3.4638,
+      "p": 0.001308663168694714,
+      "ci95": [
+        0.0032,
+        0.0114
+      ]
+    },
+    "per_dataset_auc": {
+      "A1": {
+        "M0_raw": 0.5515,
+        "M1a_bandpass": 0.5135,
+        "M2_proposed": 0.561,
+        "M1b_bandpass_reject": 0.5489
+      },
+      "A2": {
+        "M0_raw": 0.5785,
+        "M1a_bandpass": 0.4683,
+        "M2_proposed": 0.5811,
+        "M1b_bandpass_reject": 0.4859
+      },
+      "B1": {
+        "M0_raw": 0.514,
+        "M1a_bandpass": 0.5791,
+        "M2_proposed": 0.5306,
+        "M1b_bandpass_reject": 0.5913
+      },
+      "B2": {
+        "M0_raw": 0.5374,
+        "M1a_bandpass": 0.4124,
+        "M2_proposed": 0.5372,
+        "M1b_bandpass_reject": 0.4175
+      }
+    },
+    "strength_sweep": {
+      "C0原始": {
+        "auc_mean": 0.5453,
+        "auc_min": 0.514,
+        "artifact_suppression_mean": 0.0,
+        "reliability_mean": 0.2318
+      },
+      "C1仅心电剔除": {
+        "auc_mean": 0.5453,
+        "auc_min": 0.514,
+        "artifact_suppression_mean": 0.0,
+        "reliability_mean": 0.2318
+      },
+      "C2心电+瞬变20倍": {
+        "auc_mean": 0.5333,
+        "auc_min": 0.488,
+        "artifact_suppression_mean": 0.0642,
+        "reliability_mean": 0.3732
+      },
+      "C3心电+瞬变12倍": {
+        "auc_mean": 0.5493,
+        "auc_min": 0.505,
+        "artifact_suppression_mean": 0.2246,
+        "reliability_mean": 0.6538
+      },
+      "C4心电+瞬变8倍": {
+        "auc_mean": 0.5235,
+        "auc_min": 0.4858,
+        "artifact_suppression_mean": 0.3398,
+        "reliability_mean": 0.7669
+      },
+      "C5心电+截断20倍": {
+        "auc_mean": 0.5466,
+        "auc_min": 0.5192,
+        "artifact_suppression_mean": 0.067,
+        "reliability_mean": 0.2327
+      },
+      "C6心电+截断10倍": {
+        "auc_mean": 0.5525,
+        "auc_min": 0.5306,
+        "artifact_suppression_mean": 0.3254,
+        "reliability_mean": 0.3127
+      }
+    },
+    "drift_methods": {
+      "D0不处理": {
+        "joint_auc": 0.5456,
+        "joint_auc_repaired": 0.516,
+        "early_fz_auc": 0.5645,
+        "late_lat_auc": 0.5712,
+        "late_abs_mean_uV": 163.4825
+      },
+      "D1高通0.3Hz": {
+        "joint_auc": 0.5052,
+        "joint_auc_repaired": 0.545,
+        "early_fz_auc": 0.4831,
+        "late_lat_auc": 0.5147,
+        "late_abs_mean_uV": 42.6967
+      },
+      "D2高通0.5Hz": {
+        "joint_auc": 0.5092,
+        "joint_auc_repaired": 0.5276,
+        "early_fz_auc": 0.5119,
+        "late_lat_auc": 0.5158,
+        "late_abs_mean_uV": 33.5375
+      },
+      "D3高通1.0Hz": {
+        "joint_auc": 0.4732,
+        "joint_auc_repaired": 0.4836,
+        "early_fz_auc": 0.4856,
+        "late_lat_auc": 0.53,
+        "late_abs_mean_uV": 23.7802
+      },
+      "D4带通0.5-30Hz": {
+        "joint_auc": 0.4885,
+        "joint_auc_repaired": 0.5146,
+        "early_fz_auc": 0.4704,
+        "late_lat_auc": 0.5118,
+        "late_abs_mean_uV": 32.8933
+      },
+      "D5中位数去趋势": {
+        "joint_auc": 0.4992,
+        "joint_auc_repaired": 0.4329,
+        "early_fz_auc": 0.4996,
+        "late_lat_auc": 0.4993,
+        "late_abs_mean_uV": 14.147
+      }
+    },
+    "ecg_contamination": {
+      "A1": {
+        "Fz": {
+          "available": true,
+          "corr_median": 0.0115,
+          "corr_max": 0.4081,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 1.7366,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F3": {
+          "available": true,
+          "corr_median": -0.0585,
+          "corr_max": 0.3824,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 0.9781,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F4": {
+          "available": true,
+          "corr_median": -0.0096,
+          "corr_max": 0.4231,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 0.8905,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        }
+      },
+      "A2": {
+        "Fz": {
+          "available": true,
+          "corr_median": 0.265,
+          "corr_max": 0.3656,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 1.3585,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F3": {
+          "available": true,
+          "corr_median": 0.2581,
+          "corr_max": 0.3499,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 0.9298,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F4": {
+          "available": true,
+          "corr_median": 0.2721,
+          "corr_max": 0.35,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 1.1236,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        }
+      },
+      "B1": {
+        "Fz": {
+          "available": true,
+          "corr_median": 0.1096,
+          "corr_max": 0.4197,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 0.8135,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F3": {
+          "available": true,
+          "corr_median": 0.0558,
+          "corr_max": 0.3811,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 1.1758,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F4": {
+          "available": true,
+          "corr_median": 0.0928,
+          "corr_max": 0.3963,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 1.1914,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        }
+      },
+      "B2": {
+        "Fz": {
+          "available": true,
+          "corr_median": 0.2709,
+          "corr_max": 0.4475,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 1.1182,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F3": {
+          "available": true,
+          "corr_median": 0.2373,
+          "corr_max": 0.3739,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 0.8812,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        },
+        "F4": {
+          "available": true,
+          "corr_median": 0.2708,
+          "corr_max": 0.3885,
+          "corr_threshold": 0.6,
+          "amplitude_ratio_median": 1.2308,
+          "trials_exceeding_corr_threshold": 0,
+          "significant": false
+        }
+      }
+    },
+    "denoise_counts": {
+      "A1": {
+        "clipped_samples": 4726,
+        "saturated_samples": 11284
+      },
+      "A2": {
+        "clipped_samples": 580,
+        "saturated_samples": 4650
+      },
+      "B1": {
+        "clipped_samples": 4779,
+        "saturated_samples": 8912
+      },
+      "B2": {
+        "clipped_samples": 893,
+        "saturated_samples": 9479
+      }
+    },
+    "gaussian_fit_r2": {
+      "A1": {
+        "Fz": 0.51607,
+        "F3": 0.86683,
+        "F4": 0.46708
+      },
+      "A2": {
+        "Fz": 0.97172,
+        "F3": 0.98642,
+        "F4": 0.99128
+      },
+      "B1": {
+        "Fz": 0.4271,
+        "F3": 0.79524,
+        "F4": 0.85331
+      },
+      "B2": {
+        "Fz": 0.99105,
+        "F3": 0.98705,
+        "F4": 0.98821
+      }
+    },
+    "artifact_suppression_ratio": {
+      "A1": {
+        "Fz": 0.1733,
+        "F3": 0.5955,
+        "F4": 0.5793
+      },
+      "A2": {
+        "Fz": 0.0006,
+        "F3": 0.2387,
+        "F4": 0.0071
+      },
+      "B1": {
+        "Fz": 0.7267,
+        "F3": 0.478,
+        "F4": 0.4731
+      },
+      "B2": {
+        "Fz": 0.0009,
+        "F3": 0.2344,
+        "F4": 0.3974
+      }
+    },
+    "p300_features": {
+      "A1": {
+        "Fz": {
+          "p300_amplitude_uV": -5.1019,
+          "p300_ci95": [
+            -14.538,
+            3.833
+          ],
+          "left_p300_uV": -5.1019,
+          "right_p300_uV": 2.6076,
+          "laterality_index": 1.0,
+          "significant_points_post800": 0
+        },
+        "F3": {
+          "p300_amplitude_uV": -15.6371,
+          "p300_ci95": [
+            -50.1082,
+            19.6728
+          ],
+          "left_p300_uV": -15.6371,
+          "right_p300_uV": 14.0182,
+          "laterality_index": 1.0,
+          "significant_points_post800": 0
+        },
+        "F4": {
+          "p300_amplitude_uV": 0.4486,
+          "p300_ci95": [
+            -40.2238,
+            44.2076
+          ],
+          "left_p300_uV": 0.4486,
+          "right_p300_uV": 23.4131,
+          "laterality_index": 0.9624,
+          "significant_points_post800": 0
+        }
+      },
+      "A2": {
+        "Fz": {
+          "p300_amplitude_uV": 16.6299,
+          "p300_ci95": [
+            -12.1376,
+            46.8567
+          ],
+          "left_p300_uV": 16.6299,
+          "right_p300_uV": 37.1063,
+          "laterality_index": 0.3811,
+          "significant_points_post800": 131
+        },
+        "F3": {
+          "p300_amplitude_uV": 35.3408,
+          "p300_ci95": [
+            -43.9863,
+            117.4656
+          ],
+          "left_p300_uV": 35.3408,
+          "right_p300_uV": 61.8924,
+          "laterality_index": 0.2731,
+          "significant_points_post800": 119
+        },
+        "F4": {
+          "p300_amplitude_uV": 20.1294,
+          "p300_ci95": [
+            -39.341,
+            71.0602
+          ],
+          "left_p300_uV": 20.1294,
+          "right_p300_uV": 56.9576,
+          "laterality_index": 0.4777,
+          "significant_points_post800": 78
+        }
+      },
+      "B1": {
+        "Fz": {
+          "p300_amplitude_uV": -22.4181,
+          "p300_ci95": [
+            -76.405,
+            24.1453
+          ],
+          "left_p300_uV": -22.4181,
+          "right_p300_uV": 20.95,
+          "laterality_index": 1.0,
+          "significant_points_post800": 0
+        },
+        "F3": {
+          "p300_amplitude_uV": -2.6644,
+          "p300_ci95": [
+            -42.8462,
+            37.9176
+          ],
+          "left_p300_uV": -2.6644,
+          "right_p300_uV": -7.6821,
+          "laterality_index": -0.485,
+          "significant_points_post800": 0
+        },
+        "F4": {
+          "p300_amplitude_uV": 27.7258,
+          "p300_ci95": [
+            -6.61,
+            68.524
+          ],
+          "left_p300_uV": 27.7258,
+          "right_p300_uV": -1.7927,
+          "laterality_index": -1.0,
+          "significant_points_post800": 0
+        }
+      },
+      "B2": {
+        "Fz": {
+          "p300_amplitude_uV": 60.121,
+          "p300_ci95": [
+            6.0971,
+            112.409
+          ],
+          "left_p300_uV": 60.121,
+          "right_p300_uV": 43.615,
+          "laterality_index": -0.1591,
+          "significant_points_post800": 205
+        },
+        "F3": {
+          "p300_amplitude_uV": 30.6003,
+          "p300_ci95": [
+            -61.4668,
+            113.1232
+          ],
+          "left_p300_uV": 30.6003,
+          "right_p300_uV": 66.3876,
+          "laterality_index": 0.369,
+          "significant_points_post800": 71
+        },
+        "F4": {
+          "p300_amplitude_uV": -2.9142,
+          "p300_ci95": [
+            -92.7694,
+            69.1655
+          ],
+          "left_p300_uV": -2.9142,
+          "right_p300_uV": 98.4199,
+          "laterality_index": 1.0,
+          "significant_points_post800": 76
+        }
+      }
+    },
+    "figures": {
+      "fig1_erp_curve": {
+        "paths": [
+          "Q1/figures/fig1_erp_curve.svg",
+          "Q1/figures/fig1_erp_curve.pdf",
+          "Q1/figures/fig1_erp_curve.png"
+        ],
+        "dataset_shown": "A2",
+        "note": "曲线取自 A 组项目二记录，该记录响应最强"
+      },
+      "fig2_artifact_interval": {
+        "paths": [
+          "Q1/figures/fig2_artifact_interval.svg",
+          "Q1/figures/fig2_artifact_interval.pdf",
+          "Q1/figures/fig2_artifact_interval.png"
+        ]
+      },
+      "fig3_artifact_count": {
+        "paths": [
+          "Q1/figures/fig3_artifact_count.svg",
+          "Q1/figures/fig3_artifact_count.pdf",
+          "Q1/figures/fig3_artifact_count.png"
+        ]
+      }
+    }
+  },
+  "q2_computational_model": {
+    "model": {
+      "right": {
+        "shape_response_energy": 1.0,
+        "order_parameter_peak": 0.977549,
+        "order_parameter_mean": 0.823868,
+        "mass_peak": 0.466171,
+        "scalp_peak_equiv": {
+          "F3": 0.259215,
+          "Fz": 0.267406,
+          "F4": 0.247216
+        }
+      },
+      "left": {
+        "shape_response_energy": 1.0,
+        "order_parameter_peak": 0.977549,
+        "order_parameter_mean": 0.823868,
+        "mass_peak": 0.466171,
+        "scalp_peak_equiv": {
+          "F3": 0.247216,
+          "Fz": 0.267406,
+          "F4": 0.259215
+        }
+      },
+      "mirror_relative_error": 0.0,
+      "stimulus_mirror_error": 0.0,
+      "stimulus_nonmirror_difference": 0.027344,
+      "lead_field_sigma": 0.55,
+      "gabor_orientations": 8,
+      "predicted_laterality": {
+        "right_stimulus_F4_minus_F3_peak": 0.01386,
+        "left_stimulus_F4_minus_F3_peak": 0.01386,
+        "opposite_sign": true,
+        "Fz_insensitive_check": 0.0
+      },
+      "slow_pathway": {
+        "tau_s_s": 0.1,
+        "gain": 0.5,
+        "calibration_sse": 1.11165,
+        "predicted_late_over_early_laterality": 1.1166,
+        "observed_late_over_early_laterality": 0.5849,
+        "curve_correlation_with_observed": 0.8718,
+        "rmse_normalized": 1.05435
+      },
+      "laterality_series": {
+        "time_ms": [
+          0.0,
+          3.91,
+          7.81,
+          11.72,
+          15.62,
+          19.53,
+          23.44,
+          27.34,
+          31.25,
+          35.16,
+          39.06,
+          42.97,
+          46.88,
+          50.78,
+          54.69,
+          58.59,
+          62.5,
+          66.41,
+          70.31,
+          74.22,
+          78.12,
+          82.03,
+          85.94,
+          89.84,
+          93.75,
+          97.66,
+          101.56,
+          105.47,
+          109.38,
+          113.28,
+          117.19,
+          121.09,
+          125.0,
+          128.91,
+          132.81,
+          136.72,
+          140.62,
+          144.53,
+          148.44,
+          152.34,
+          156.25,
+          160.16,
+          164.06,
+          167.97,
+          171.88,
+          175.78,
+          179.69,
+          183.59,
+          187.5,
+          191.41,
+          195.31,
+          199.22,
+          203.12,
+          207.03,
+          210.94,
+          214.84,
+          218.75,
+          222.66,
+          226.56,
+          230.47,
+          234.38,
+          238.28,
+          242.19,
+          246.09,
+          250.0,
+          253.91,
+          257.81,
+          261.72,
+          265.62,
+          269.53,
+          273.44,
+          277.34,
+          281.25,
+          285.16,
+          289.06,
+          292.97,
+          296.88,
+          300.78,
+          304.69,
+          308.59,
+          312.5,
+          316.41,
+          320.31,
+          324.22,
+          328.12,
+          332.03,
+          335.94,
+          339.84,
+          343.75,
+          347.66,
+          351.56,
+          355.47,
+          359.38,
+          363.28,
+          367.19,
+          371.09,
+          375.0,
+          378.91,
+          382.81,
+          386.72,
+          390.62,
+          394.53,
+          398.44,
+          402.34,
+          406.25,
+          410.16,
+          414.06,
+          417.97,
+          421.88,
+          425.78,
+          429.69,
+          433.59,
+          437.5,
+          441.41,
+          445.31,
+          449.22,
+          453.12,
+          457.03,
+          460.94,
+          464.84,
+          468.75,
+          472.66,
+          476.56,
+          480.47,
+          484.38,
+          488.28,
+          492.19,
+          496.09,
+          500.0,
+          503.91,
+          507.81,
+          511.72,
+          515.62,
+          519.53,
+          523.44,
+          527.34,
+          531.25,
+          535.16,
+          539.06,
+          542.97,
+          546.88,
+          550.78,
+          554.69,
+          558.59,
+          562.5,
+          566.41,
+          570.31,
+          574.22,
+          578.12,
+          582.03,
+          585.94,
+          589.84,
+          593.75,
+          597.66,
+          601.56,
+          605.47,
+          609.38,
+          613.28,
+          617.19,
+          621.09,
+          625.0,
+          628.91,
+          632.81,
+          636.72,
+          640.62,
+          644.53,
+          648.44,
+          652.34,
+          656.25,
+          660.16,
+          664.06,
+          667.97,
+          671.88,
+          675.78,
+          679.69,
+          683.59,
+          687.5,
+          691.41,
+          695.31,
+          699.22,
+          703.12,
+          707.03,
+          710.94,
+          714.84,
+          718.75,
+          722.66,
+          726.56,
+          730.47,
+          734.38,
+          738.28,
+          742.19,
+          746.09,
+          750.0,
+          753.91,
+          757.81,
+          761.72,
+          765.62,
+          769.53,
+          773.44,
+          777.34,
+          781.25,
+          785.16,
+          789.06,
+          792.97,
+          796.88,
+          800.78,
+          804.69,
+          808.59,
+          812.5,
+          816.41,
+          820.31,
+          824.22,
+          828.12,
+          832.03,
+          835.94,
+          839.84,
+          843.75,
+          847.66,
+          851.56,
+          855.47,
+          859.38,
+          863.28,
+          867.19,
+          871.09,
+          875.0,
+          878.91,
+          882.81,
+          886.72,
+          890.62,
+          894.53,
+          898.44,
+          902.34,
+          906.25,
+          910.16,
+          914.06,
+          917.97,
+          921.88,
+          925.78,
+          929.69,
+          933.59,
+          937.5,
+          941.41,
+          945.31,
+          949.22,
+          953.12,
+          957.03,
+          960.94,
+          964.84,
+          968.75,
+          972.66,
+          976.56,
+          980.47,
+          984.38,
+          988.28,
+          992.19,
+          996.09
+        ],
+        "model": [
+          0.0,
+          -0.2494,
+          -0.43075,
+          -0.5623,
+          -0.65806,
+          -0.68972,
+          -0.71233,
+          -0.72852,
+          -0.74023,
+          -0.74884,
+          -0.75639,
+          -0.76237,
+          -0.76731,
+          -0.77161,
+          -0.77553,
+          -0.77949,
+          -0.78333,
+          -0.78713,
+          -0.79097,
+          -0.79485,
+          -0.7987,
+          -0.80263,
+          -0.80665,
+          -0.81074,
+          -0.81489,
+          -0.81879,
+          -0.82277,
+          -0.82682,
+          -0.83091,
+          -0.83503,
+          -0.83875,
+          -0.84254,
+          -0.84638,
+          -0.85024,
+          -0.85412,
+          -0.85753,
+          -0.861,
+          -0.86452,
+          -0.86806,
+          -0.87162,
+          -0.87466,
+          -0.87777,
+          -0.88092,
+          -0.88409,
+          -0.88726,
+          -0.8899,
+          -0.8926,
+          -0.89531,
+          -0.89803,
+          -0.90073,
+          -0.9029,
+          -0.90511,
+          -0.90734,
+          -0.90956,
+          -0.91176,
+          -0.91346,
+          -0.91521,
+          -0.917,
+          -0.91882,
+          -0.92067,
+          -0.92201,
+          -0.92348,
+          -0.92507,
+          -0.92679,
+          -0.92863,
+          -0.92993,
+          -0.93149,
+          -0.93332,
+          -0.93541,
+          -0.93776,
+          -0.93946,
+          -0.94157,
+          -0.94406,
+          -0.9469,
+          -0.95006,
+          -0.95239,
+          -0.95515,
+          -0.95825,
+          -0.96162,
+          -0.9652,
+          -0.96782,
+          -0.97069,
+          -0.97372,
+          -0.97682,
+          -0.97992,
+          -0.9821,
+          -0.9843,
+          -0.98643,
+          -0.98844,
+          -0.99029,
+          -0.99145,
+          -0.99245,
+          -0.99326,
+          -0.99387,
+          -0.99428,
+          -0.99433,
+          -0.99422,
+          -0.99398,
+          -0.99366,
+          -0.99329,
+          -0.99283,
+          -0.99242,
+          -0.99211,
+          -0.99193,
+          -0.99194,
+          -0.99193,
+          -0.99215,
+          -0.99261,
+          -0.99328,
+          -0.99413,
+          -0.99496,
+          -0.99589,
+          -0.99684,
+          -0.99775,
+          -0.9985,
+          -0.99948,
+          -1.0,
+          -0.99999,
+          -0.99934,
+          -0.99795,
+          -0.99761,
+          -0.99599,
+          -0.99307,
+          -0.98882,
+          -0.98319,
+          -0.98008,
+          -0.97484,
+          -0.96761,
+          -0.95848,
+          -0.94755,
+          -0.94091,
+          -0.93157,
+          -0.91984,
+          -0.90598,
+          -0.89022,
+          -0.88031,
+          -0.86758,
+          -0.85248,
+          -0.83539,
+          -0.81666,
+          -0.8046,
+          -0.79002,
+          -0.77346,
+          -0.75533,
+          -0.736,
+          -0.72329,
+          -0.70861,
+          -0.69246,
+          -0.6752,
+          -0.65717,
+          -0.64511,
+          -0.63158,
+          -0.61696,
+          -0.60153,
+          -0.5855,
+          -0.57469,
+          -0.56259,
+          -0.54948,
+          -0.53552,
+          -0.52086,
+          -0.5109,
+          -0.49951,
+          -0.48687,
+          -0.47316,
+          -0.45847,
+          -0.44842,
+          -0.43664,
+          -0.42336,
+          -0.40878,
+          -0.39305,
+          -0.38224,
+          -0.36955,
+          -0.3553,
+          -0.33974,
+          -0.32311,
+          -0.31163,
+          -0.29843,
+          -0.28384,
+          -0.26818,
+          -0.25169,
+          -0.2402,
+          -0.22734,
+          -0.21345,
+          -0.19882,
+          -0.1837,
+          -0.17295,
+          -0.1613,
+          -0.14905,
+          -0.13644,
+          -0.12366,
+          -0.11434,
+          -0.10459,
+          -0.09462,
+          -0.08459,
+          -0.07462,
+          -0.06717,
+          -0.05962,
+          -0.05206,
+          -0.04461,
+          -0.03732,
+          -0.03174,
+          -0.02621,
+          -0.02078,
+          -0.01549,
+          -0.01039,
+          -0.0064,
+          -0.0025,
+          0.00127,
+          0.0049,
+          0.00838,
+          0.01115,
+          0.01381,
+          0.01637,
+          0.0188,
+          0.0211,
+          0.02297,
+          0.02475,
+          0.02643,
+          0.02801,
+          0.02949,
+          0.0307,
+          0.03183,
+          0.03289,
+          0.03387,
+          0.03478,
+          0.03551,
+          0.03618,
+          0.03679,
+          0.03735,
+          0.03784,
+          0.03823,
+          0.03857,
+          0.03886,
+          0.03911,
+          0.03932,
+          0.03946,
+          0.03956,
+          0.03963,
+          0.03966,
+          0.03966,
+          0.03962,
+          0.03955,
+          0.03946,
+          0.03934,
+          0.0392,
+          0.03903,
+          0.03884,
+          0.03863,
+          0.0384,
+          0.03816,
+          0.0379,
+          0.03762,
+          0.03734,
+          0.03704,
+          0.03673,
+          0.03641
+        ],
+        "observed": [
+          -0.01188,
+          0.00528,
+          0.0078,
+          -0.00732,
+          0.01018,
+          0.02411,
+          0.01835,
+          0.03202,
+          0.03709,
+          0.02638,
+          0.03326,
+          0.03858,
+          0.03396,
+          0.03617,
+          0.02809,
+          0.04195,
+          0.06915,
+          0.04374,
+          0.04806,
+          0.07499,
+          0.06638,
+          0.06944,
+          0.06933,
+          0.0545,
+          0.07297,
+          0.0742,
+          0.07252,
+          0.08462,
+          0.06593,
+          0.0453,
+          0.08075,
+          0.07849,
+          0.06718,
+          0.07419,
+          0.07605,
+          0.0934,
+          0.09008,
+          0.09183,
+          0.10602,
+          0.1028,
+          0.0784,
+          0.10128,
+          0.10672,
+          0.18458,
+          0.20876,
+          0.21647,
+          0.30084,
+          0.42533,
+          0.44668,
+          0.44365,
+          0.44068,
+          0.44443,
+          0.47037,
+          0.47984,
+          0.47926,
+          0.4877,
+          0.49708,
+          0.49496,
+          0.49217,
+          0.49493,
+          0.49139,
+          0.48045,
+          0.49029,
+          0.48693,
+          0.49787,
+          0.52545,
+          0.40971,
+          0.29111,
+          0.412,
+          0.33124,
+          0.32173,
+          0.20213,
+          0.21996,
+          0.21843,
+          0.34298,
+          0.33135,
+          0.21621,
+          0.2319,
+          0.35844,
+          0.36661,
+          0.25591,
+          0.249,
+          0.36614,
+          0.37796,
+          0.12947,
+          0.13234,
+          0.24594,
+          0.12506,
+          0.23552,
+          0.12755,
+          0.11048,
+          0.10667,
+          0.10675,
+          0.0861,
+          0.00069,
+          -0.00101,
+          0.0041,
+          -0.00382,
+          -0.01671,
+          -0.01428,
+          -0.00641,
+          -0.01335,
+          0.00125,
+          -0.00711,
+          -0.00364,
+          -0.01147,
+          -0.00571,
+          -0.00479,
+          -0.00995,
+          0.00923,
+          0.01197,
+          0.01305,
+          0.02678,
+          0.00734,
+          0.00076,
+          0.01946,
+          0.00093,
+          0.13763,
+          0.1514,
+          0.12977,
+          0.12311,
+          0.13983,
+          0.13288,
+          0.11816,
+          0.11778,
+          0.11984,
+          0.12753,
+          0.12462,
+          0.13758,
+          0.14587,
+          0.15372,
+          0.14248,
+          0.15733,
+          0.0315,
+          0.04081,
+          0.04682,
+          0.06082,
+          0.18412,
+          0.19872,
+          0.21516,
+          0.22333,
+          0.23449,
+          0.2557,
+          0.27165,
+          0.27481,
+          0.27176,
+          0.28384,
+          0.30553,
+          0.40817,
+          0.42841,
+          0.46031,
+          0.4504,
+          0.46358,
+          0.48244,
+          0.49743,
+          0.52315,
+          0.53418,
+          0.68341,
+          0.70954,
+          0.7181,
+          0.72479,
+          0.73693,
+          0.75427,
+          0.77609,
+          0.80113,
+          0.80793,
+          0.81402,
+          0.8388,
+          0.86513,
+          0.88067,
+          0.87291,
+          0.88704,
+          0.90922,
+          0.9134,
+          0.91135,
+          0.92641,
+          0.95013,
+          0.94251,
+          0.97091,
+          0.98129,
+          0.9665,
+          0.9688,
+          0.9786,
+          0.98386,
+          0.97724,
+          0.98255,
+          0.89668,
+          0.8955,
+          0.89665,
+          1.0,
+          0.90151,
+          0.91884,
+          0.91713,
+          0.91992,
+          0.92401,
+          0.92155,
+          0.92521,
+          0.92174,
+          0.93079,
+          0.93834,
+          0.93126,
+          0.93076,
+          0.93481,
+          0.94057,
+          0.95518,
+          0.94948,
+          0.95545,
+          0.96281,
+          0.96828,
+          0.96668,
+          0.95098,
+          0.97203,
+          0.95995,
+          0.95518,
+          0.96011,
+          0.95307,
+          0.97385,
+          0.97276,
+          0.9517,
+          0.95809,
+          0.96144,
+          0.97077,
+          0.96201,
+          0.97602,
+          0.97241,
+          0.98018,
+          0.97181,
+          0.97628,
+          0.97369,
+          0.97584,
+          0.96852,
+          0.96277,
+          0.97378,
+          0.98244,
+          0.96629,
+          0.95385,
+          0.94983,
+          0.94132,
+          0.95453,
+          0.95461,
+          0.81412,
+          0.82116,
+          0.95279,
+          0.8088,
+          0.79514,
+          0.79141,
+          0.92203,
+          0.92878,
+          0.77117,
+          0.76807,
+          0.77051,
+          0.74962,
+          0.73726,
+          0.72477,
+          0.72908,
+          0.70408
+        ]
+      },
+      "predicted_late_over_early_laterality": 1.1166,
+      "observed_late_over_early_laterality": 0.5849
+    },
+    "feature_auc": {
+      "auc_joint_mean": 0.5515,
+      "auc_joint_min": 0.525,
+      "auc_joint_max": 0.5792,
+      "auc_shape_only_mean": 0.5575,
+      "auc_shape_only_min": 0.5,
+      "auc_shape_only_max": 0.6136,
+      "auc_space_only_mean": 0.556,
+      "auc_space_only_min": 0.4886,
+      "auc_space_only_max": 0.6108,
+      "windows_ms": {
+        "shape": [
+          80,
+          250
+        ],
+        "space": [
+          250,
+          800
+        ]
+      }
+    },
+    "per_dataset": {
+      "A1": {
+        "task_cn": "项目一",
+        "trials": 100,
+        "auc_joint": 0.5537,
+        "auc_shape_only": 0.6136,
+        "auc_space_only": 0.5478,
+        "discriminant_weights": [
+          -0.01154,
+          -0.00263
+        ],
+        "discriminant_intercept": -0.15173,
+        "f_shape_mean_uV": -2.098,
+        "f_space_mean_uV": 13.8462,
+        "laterality_sign_agreement_with_model": true
+      },
+      "A2": {
+        "task_cn": "项目二",
+        "trials": 100,
+        "auc_joint": 0.5792,
+        "auc_shape_only": 0.5733,
+        "auc_space_only": 0.6108,
+        "discriminant_weights": [
+          0.00376,
+          -0.00083
+        ],
+        "discriminant_intercept": -0.33269,
+        "f_shape_mean_uV": 9.3201,
+        "f_space_mean_uV": -10.237,
+        "laterality_sign_agreement_with_model": true
+      },
+      "B1": {
+        "task_cn": "项目一",
+        "trials": 100,
+        "auc_joint": 0.525,
+        "auc_shape_only": 0.5431,
+        "auc_space_only": 0.4886,
+        "discriminant_weights": [
+          0.0024,
+          -0.00087
+        ],
+        "discriminant_intercept": 0.10447,
+        "f_shape_mean_uV": -3.0466,
+        "f_space_mean_uV": 17.8264,
+        "laterality_sign_agreement_with_model": true
+      },
+      "B2": {
+        "task_cn": "项目二",
+        "trials": 100,
+        "auc_joint": 0.548,
+        "auc_shape_only": 0.5,
+        "auc_space_only": 0.5767,
+        "discriminant_weights": [
+          -0.0012,
+          0.00161
+        ],
+        "discriminant_intercept": -0.02249,
+        "f_shape_mean_uV": 24.2369,
+        "f_space_mean_uV": 32.0292,
+        "laterality_sign_agreement_with_model": true
+      }
+    },
+    "figures": {
+      "fig4_response_heatmap": {
+        "paths": [
+          "Q2/figures/fig4_response_heatmap.svg",
+          "Q2/figures/fig4_response_heatmap.pdf",
+          "Q2/figures/fig4_response_heatmap.png"
+        ],
+        "note": "三导联左右条件均值差的标准化权重，按四个数据集平均"
+      },
+      "fig5_source_field": {
+        "paths": [
+          "Q2/figures/fig5_source_field.svg",
+          "Q2/figures/fig5_source_field.pdf",
+          "Q2/figures/fig5_source_field.png"
+        ],
+        "note": "模型计算的左右刺激皮层响应分布与镜像差异梯度场"
+      }
+    }
+  },
+  "q3_cognitive_model": {
+    "model": {
+      "identified": {
+        "tau_H_s": 0.271,
+        "g_H": 5.31,
+        "tau_R_s": 0.57,
+        "weighted_sse": 0.024549,
+        "fixed_parameters": {
+          "beta_V": 1.0,
+          "beta_H": 1.0,
+          "gamma": 0.8
+        },
+        "oscillators": {
+          "visual": 120,
+          "hippocampal": 80
+        }
+      }
+    },
+    "validation": {
+      "local_sensitivity": {
+        "tau_H": {
+          "sse_up": 0.024624,
+          "sse_down": 0.024638,
+          "sensitivity": -0.000175
+        },
+        "g_H": {
+          "sse_up": 0.024547,
+          "sse_down": 0.024555,
+          "sensitivity": -1.9e-05
+        },
+        "beta_V": {
+          "sse_up": 0.024218,
+          "sse_down": 0.025025,
+          "sensitivity": -0.001614
+        },
+        "beta_H": {
+          "sse_up": 0.024221,
+          "sse_down": 0.024923,
+          "sensitivity": -0.001405
+        },
+        "gamma": {
+          "sse_up": 0.024522,
+          "sse_down": 0.024577,
+          "sensitivity": -0.000112
+        },
+        "tau_R": {
+          "sse_up": 0.024606,
+          "sse_down": 0.024633,
+          "sensitivity": -0.000135
+        }
+      },
+      "behavioral_stratification": {
+        "应答与提示一致": {
+          "n_datasets": 4,
+          "late_mean_uV": 58.3263
+        },
+        "应答与提示不一致": {
+          "n_datasets": 2,
+          "late_mean_uV": 60.1133
+        }
+      },
+      "cue_action_agreement": {
+        "A1": 1.0,
+        "A2": 0.47,
+        "B1": 0.98,
+        "B2": 0.48
+      },
+      "overall": {
+        "mean_correlation": 0.4958,
+        "max_correlation": 0.9305,
+        "min_correlation": -0.341
+      }
+    },
+    "per_dataset": {
+      "A1": {
+        "task_cn": "A组项目一",
+        "correlation": {
+          "Fz": 0.3722,
+          "F3": -0.8968,
+          "F4": -0.4983
+        },
+        "rmse_normalized": {
+          "Fz": 0.6288,
+          "F3": 1.0918,
+          "F4": 0.6322
+        },
+        "mean_correlation": -0.341,
+        "phi_memory_sustain": 0.156268
+      },
+      "A2": {
+        "task_cn": "A组项目二",
+        "correlation": {
+          "Fz": 0.9271,
+          "F3": 0.9138,
+          "F4": 0.9358
+        },
+        "rmse_normalized": {
+          "Fz": 0.1755,
+          "F3": 0.1554,
+          "F4": 0.1643
+        },
+        "mean_correlation": 0.9256,
+        "phi_memory_sustain": 0.156268
+      },
+      "B1": {
+        "task_cn": "B组项目一",
+        "correlation": {
+          "Fz": 0.4378,
+          "F3": 0.3941,
+          "F4": 0.5727
+        },
+        "rmse_normalized": {
+          "Fz": 0.5068,
+          "F3": 0.7968,
+          "F4": 0.2908
+        },
+        "mean_correlation": 0.4682,
+        "phi_memory_sustain": 0.156268
+      },
+      "B2": {
+        "task_cn": "B组项目二",
+        "correlation": {
+          "Fz": 0.9372,
+          "F3": 0.9277,
+          "F4": 0.9267
+        },
+        "rmse_normalized": {
+          "Fz": 0.1379,
+          "F3": 0.1472,
+          "F4": 0.149
+        },
+        "mean_correlation": 0.9305,
+        "phi_memory_sustain": 0.156268
+      }
+    },
+    "figures": {
+      "fig6_parameter_contour": {
+        "paths": [
+          "Q3/figures/fig6_parameter_contour.svg",
+          "Q3/figures/fig6_parameter_contour.pdf",
+          "Q3/figures/fig6_parameter_contour.png"
+        ],
+        "sensitivity_copy": [
+          "灵敏度分析/figures/fig6_parameter_contour.svg",
+          "灵敏度分析/figures/fig6_parameter_contour.pdf",
+          "灵敏度分析/figures/fig6_parameter_contour.png"
+        ],
+        "note": "以四份记录平均响应为目标的加权残差平方和曲面，横轴为记忆通路延迟，纵轴为记忆通路增益"
+      }
+    }
+  },
+  "sensitivity": {
+    "local_sensitivity": {
+      "tau_H": {
+        "sse_up": 0.024624,
+        "sse_down": 0.024638,
+        "sensitivity": -0.000175
+      },
+      "g_H": {
+        "sse_up": 0.024547,
+        "sse_down": 0.024555,
+        "sensitivity": -1.9e-05
+      },
+      "beta_V": {
+        "sse_up": 0.024218,
+        "sse_down": 0.025025,
+        "sensitivity": -0.001614
+      },
+      "beta_H": {
+        "sse_up": 0.024221,
+        "sse_down": 0.024923,
+        "sensitivity": -0.001405
+      },
+      "gamma": {
+        "sse_up": 0.024522,
+        "sse_down": 0.024577,
+        "sensitivity": -0.000112
+      },
+      "tau_R": {
+        "sse_up": 0.024606,
+        "sse_down": 0.024633,
+        "sensitivity": -0.000135
+      }
+    },
+    "parameter_surface_figure": {
+      "paths": [
+        "Q3/figures/fig6_parameter_contour.svg",
+        "Q3/figures/fig6_parameter_contour.pdf",
+        "Q3/figures/fig6_parameter_contour.png"
+      ],
+      "sensitivity_copy": [
+        "灵敏度分析/figures/fig6_parameter_contour.svg",
+        "灵敏度分析/figures/fig6_parameter_contour.pdf",
+        "灵敏度分析/figures/fig6_parameter_contour.png"
+      ],
+      "note": "以四份记录平均响应为目标的加权残差平方和曲面，横轴为记忆通路延迟，纵轴为记忆通路增益"
+    }
+  }
+}

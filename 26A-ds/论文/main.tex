@@ -1,0 +1,901 @@
+% !Mode:: "TeX:UTF-8"
+%!TEX program  = xelatex
+% ============================================================
+% 华为杯（中国研究生数学建模竞赛）论文主稿
+% 版式由 gmcmthesis.cls 提供，本文件只负责内容组织与门禁标签。
+% 全部数值以宏形式给出，宏定义在 论文/数值.tex 中由脚本自动生成。
+% ============================================================
+\documentclass[bwprint]{gmcmthesis}
+
+\hypersetup{hidelinks, allcolors=black}
+
+\usepackage{subfig}
+\usepackage{siunitx}
+
+\counterwithout{figure}{section}
+\counterwithout{table}{section}
+
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithmicx,algorithm}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+\makeatletter
+\def\@cite#1#2{\textsuperscript{[{#1\if@tempswa , #2\fi}]}}
+\makeatother
+
+\input{数值}
+
+\newcommand{\CodeGraphUtils}{\texttt{graph\_utils.py}}
+\newcommand{\CodePartition}{\texttt{partition.py}}
+\newcommand{\CodeEvalRunner}{\texttt{eval\_runner.py}}
+\newcommand{\CodeRunExperiments}{\texttt{run\_experiments.py}}
+\newcommand{\CodeAggregate}{\texttt{aggregate\_results.py}}
+\newcommand{\CodeBuildDataset}{\texttt{build\_dataset.py}}
+\newcommand{\CodeFiguresQOne}{\texttt{figures\_q1.py}}
+\newcommand{\CodeFiguresQTwo}{\texttt{figures\_q2.py}}
+\newcommand{\CodeFiguresQThree}{\texttt{figures\_q3.py}}
+\newcommand{\CodeSensitivityRun}{\texttt{run\_sensitivity.py}}
+\newcommand{\CodeSensitivityFig}{\texttt{fig\_sensitivity.py}}
+\newcommand{\CodeFinalResults}{\texttt{final\_results.json}}
+\newcommand{\CodeCaseProfile}{\texttt{case\_profile.csv}}
+
+\graphicspath{{../}{./}{figures/}{../figures/}}
+
+%===================== 建模论文题目与封面信息 =====================
+
+\title{通用神经网络处理器下的多核切图与调度建模}
+\baominghao{\hspace{6em} 20260900001}
+\schoolname{\hspace{5.8em} 学校名称填写}
+\membera{\hspace{6em} 成员A}
+\memberb{\hspace{6em} 成员B}
+\memberc{\hspace{6em} 成员C}
+
+%=======================================================
+
+\begin{document}
+\label{body:start}
+
+\maketitle
+
+\begin{abstract}\label{abstract:start}
+多核神经网络处理器已成为突破单核算力与功耗瓶颈的主流架构，而把一张完整计算图
+切分成子图、分配到各核心并确定核内执行顺序，直接决定任务时延与数据搬运开销。
+本文把切图、分核与核内排序统一为一个以任务级完工时间为目标的组合优化问题，构造了
+可证明无环的切分方案与以关键路径优先级驱动的分核算法，并在赛题官方评估程序上完成
+了全部 \CaseCount 个测试用例、\CoreRange 核配置的完整实验。
+
+\textbf{针对问题一}，本文把 Op-Tensor 二部图收缩为操作级有向无环图，用最长路径把操作分成
+\LevelMed 层，发现矩阵流水线工作量占全部计算量的 \MatShareMed，而并行宽度
+中位数达 \WidthMed 倍。基于“跨子图依赖图必须无环”这一硬约束，本文提出依赖锥
+聚簇、连续段切分与分层切分三类构造：依赖锥聚簇让每个操作跟随承载最重上游分支的
+主前驱，连续段切分先构造保持后代连续的拓扑序再按“跨切边数与负载偏差联合代价”
+挑选切点，分层切分则按最长路径分层并把层内独立操作均衡撒到各核，三者的子图依赖
+图都从构造上保证无环。分核阶段采用后向关键路径优先级排序，把子图分配到使估算
+完工时间最小的核心，并用单核兜底锁定下界。场景 A 下 \CoreFive 核平均加速比达到
+\textbf{\QOneSpeedFive 倍}。
+
+\textbf{针对问题二}，本文重新刻画场景 B 的代价结构：同一核心的全部子图合并为一个任务，
+同核数据在私有缓存中直接复用，只有跨核边才插入搬运并支付 500 周期同步延迟。
+入向边界搬运因此只统计跨核部分，分核阶段按新代价重新均衡负载。\CoreFive 核平均
+加速比提高到 \textbf{\QTwoSpeedFive 倍}，额外搬运量相对场景 A 下降 \TrafficDrop，
+说明核内驻留确实减少了共享主存流量。
+
+\textbf{针对问题三}，本文建立只读 L2 的复用模型：一份被 $g$ 个核心读取的张量，首次访问
+未命中、其后 $g-1$ 次命中，有效读入代价为 $\frac{s}{\mathrm{BW}_{\mathrm{ddr}}}
++(g-1)\frac{s}{\mathrm{BW}_{\mathrm{L2}}}$。据此把切分阶段的入向有效带宽由 60
+改为 250 字节/周期，得到 L2 感知切分；同时保留 DDR 口径切分作为对照，逐用例实测
+择优。\CoreFive 核下只读 Cache 相对无 L2 基线的平均加速比为 \textbf{\QThreeGainFive 倍}，
+平均 Cache 命中率为 \QThreeHitFive。
+
+本文的主要贡献是把“子图依赖图无环”从校验条件提升为构造约束，使切分与分核可以在
+同一目标函数下联合优化；同时用单核兜底把算法的下界锁定在不劣化于单核基线的水平。
+灵敏度分析表明，每个核心的子图数取 \BestBlocks 时平均加速比最高，单核兜底阈值
+在 \MarginLow 至 \MarginHigh 区间内结果稳定。
+
+\keywords{多核调度\quad 计算图切分\quad 有向无环图\quad 列表调度\quad 只读缓存复用}\label{abstract:end}
+
+\end{abstract}
+
+\pagestyle{plain}
+
+\maketoc
+\clearpage
+
+% ============================================================
+\section{问题重述}
+
+\subsection{问题背景}
+
+人工智能模型规模持续增长，单个 AI 核心受制造成本、功耗与散热约束，难以独立满足
+算力需求，多核 NPU 因此成为提升并行能力与能效的主流架构。多核 NPU 平台由若干同构
+AI 核心与共享核外主存构成：每个核心配有 Cube 矩阵计算单元、Vector 向量计算单元、
+两类数据搬运单元以及私有的 L1 与 UB 缓存；所有核心对主存的读写共同竞争固定的总
+物理带宽。硬件结构与整体技术路线见图~\ref{fig:roadmap}。
+
+把一张完整计算图真正跑起来，需要回答三个相互耦合的问题：哪些操作应当被划入同一个
+子图，每个子图应当交给哪个核心，以及同一核心上的子图按什么顺序执行。切图改变子图
+规模、并行空间与通信边界；核心分配决定负载均衡与跨核通信量；核内顺序影响依赖等待、
+张量驻留时间与缓存换入换出。三者不能孤立优化：切分越细，并行机会越多，但跨子图
+搬运与重复读取也随之增加；聚合越多，通信越省，但并行度被压缩、缓存压力上升。
+
+本文要处理的计算图是一张 Op-Tensor 二部图：张量节点表示输入、中间结果与输出，
+操作节点表示计算或搬运，有向边只允许张量与操作相连。输入输出张量位于核外主存，
+中间张量的逻辑位置为核内缓存。评测以总体任务执行时间（Makespan）为首要指标，
+以总额外数据搬运量为次要指标，问题三还额外统计只读 Cache 命中率。
+
+\subsection{问题提出}
+
+赛题给出 \CaseCount 个测试用例与一份固定配置，要求分别在三类硬件场景下建立多核
+切图与调度模型、设计求解算法，并在全部用例、1 至 5 核范围内给出稳定高效的结果。
+
+场景 A 没有核间同步机制，一个任务只能包含一个子图，子图间的同步由主控通过任务
+调度完成；同一核心上多个任务串行执行时核内缓存被清空，因此所有跨子图数据都必须
+经主存中转，即使两个子图位于同一核心也是如此。
+
+场景 B 存在核间同步机制，一个任务可以包含同一核心上的多个子图，前序子图的数据
+可以驻留在 L1 或 UB 中供后续子图直接使用；跨核依赖由源核心写入主存并发送同步信号，
+目标核心收到信号后再读取，因此同核单位通信成本低于跨核成本。
+
+问题三在场景 B 的基础上引入所有核心共享的只读二级缓存，容量 1 MB，带宽
+250 字节/周期，用于复用多核共享输入，其带宽与主存带宽相互独立。
+
+三个问题的输出都是同一套方案格式：一张把每个核内操作映射到子图编号的映射表，
+以及一组按核心给出的子图执行顺序列表。赛题提供的评估程序会据此重建跨子图边界的
+数据搬运、确定核内操作顺序、模拟多核在共享带宽下的并行执行，并给出各项指标。
+方案合法性的硬条件包括：映射表必须恰好覆盖全部非搬运操作，每个子图必须且只能被
+调度一次，子图依赖图必须无环，同一核心上的子图顺序不得违反依赖关系。
+
+\subsection{整体求解路线}
+
+本文的整体技术路线见图~\ref{fig:roadmap}。输入与建模基础部分完成计算图解析、
+操作级有向无环图收缩与结构画像；三问目标与对应模型算法部分给出各自的代价口径与
+求解算法；实验验证与结果交付部分用官方评估程序复核全部用例，再做灵敏度分析与
+结果聚合。问题分析结构见图~\ref{fig:analysis}，图中给出了题目给定的耦合结构、
+必须同时满足的硬约束、解耦思路与算法主线的真实回环。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{手绘图/fig_roadmap.pdf}
+\caption{整体技术路线图}\label{fig:roadmap}
+\end{figure}
+
+技术路线把三问的共同基础与差异分开：三问共享同一套“操作级有向无环图收缩 + 无环
+切分构造 + 关键路径优先级分核”的骨架，差异只体现在代价口径与等待常数上。这样
+问题二与问题三可以在问题一的算法上增量修改，而不必重新设计求解框架。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.86\textwidth,height=0.6\textheight,keepaspectratio]{手绘图/fig_analysis.pdf}
+\caption{问题分析流程图}\label{fig:analysis}
+\end{figure}
+
+\section{模型假设与符号说明}
+
+\subsection{模型假设}
+
+\begin{enumerate}
+\item 平台由 $N$ 个同构核心构成，各核心的计算能力与私有缓存容量完全相同，因此
+负载均衡只取决于分配到各核的工作量，而与核心身份无关。
+\item 计算图在调度前已完全确定且无环，图的规模与拓扑在运行期不发生变化。
+\item 全部调度决策在执行前一次性确定，运行期不做重调度，因此本文方法属于静态调度。
+\item 子图内部四条流水线相互独立：同一条流水线上的操作串行执行，不同流水线可以
+并行推进；子图时长下界取各流水线工作量与核内关键路径的最大值。
+\item 跨子图边界的搬运字节数由承载该依赖的张量大小决定，与边的条数无关；边本身
+不重复存储通信量。
+\item 访问核外主存的搬运共享同一条物理带宽，多个核心的并发搬运按并发数公平分摊，
+本文以字节数与带宽之比折算时间。
+\item 场景 A 中同核换任务等待为 100 周期、跨核前驱等待为 1000 周期；场景 B 中
+跨核拷贝同步延迟为 500 周期。这些常数由赛题固定配置给出，不作为决策变量。
+\item 核内缓存容量不足时，由官方核内调度算法自动插入缓存换出与换入，本文不改变
+该机制，只在代价估算中考虑其带来的额外搬运。
+\item 问题三的只读 Cache 按先进先出淘汰，命中访问不改变队列顺序；单个张量大于
+Cache 容量时不缓存。该行为由官方评估程序实现，本文只在建模层面刻画其影响。
+\item 官方评估程序给出的 Makespan 是唯一权威指标，本文的一切结论都以该程序的
+输出为准，估算模型只用于算法内部的搜索与择优。
+\end{enumerate}
+
+\subsection{符号说明}
+
+以下符号贯穿全文，含义与单位保持一致；同一符号在不同问题中若含义不同，会在对应
+章节重新声明。
+
+\renewcommand\arraystretch{1.2}
+\newcolumntype{L}{>{\quad}X}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcounter{huaweisymbolsavetable}
+\setcounter{huaweisymbolsavetable}{\value{table}}
+\begin{longtable}{|P{2.4cm}|>{\raggedright\arraybackslash}p{\dimexpr0.92\textwidth-2.4cm-4\tabcolsep-3\arrayrulewidth\relax}|}
+  \hline
+  符号    &   \quad 意义 \\
+  \hline
+  \endfirsthead
+  \hline
+  符号    &   \quad 意义（续） \\
+  \hline
+  \endhead
+  \hline
+  \endfoot
+  $G=(V,E)$  &  计算图，$V=T\cup O$ 为张量节点与操作节点之并 \\
+  \hline
+  $T,\;O$  &  张量节点集合与操作节点集合，二者不相交 \\
+  \hline
+  $s_t$  &  张量 $t$ 占用的字节数 \\
+  \hline
+  $c_o$  &  核内计算操作 $o$ 的执行周期数 \\
+  \hline
+  $N$  &  参与调度的同构核心数，取值范围为 1 至 5 \\
+  \hline
+  $w_v$  &  操作 $v$ 折算后的工作量权重，取该操作的周期数 \\
+  \hline
+  $w^{M}_v,\;w^{V}_v$  &  操作 $v$ 在矩阵流水线与向量流水线上的周期数 \\
+  \hline
+  $\sigma$  &  用于切分的拓扑序，$\sigma(i)$ 表示序列中第 $i$ 个操作 \\
+  \hline
+  $b_0<b_1<\cdots<b_N$  &  切点边界，第 $k$ 段为 $\sigma[b_{k-1}:b_k]$ \\
+  \hline
+  $G_k$  &  第 $k$ 个子图所包含的操作集合 \\
+  \hline
+  $X(p)$  &  在序列位置 $p$ 处切开时的跨切边数 \\
+  \hline
+  $M_k,\;V_k$  &  子图 $k$ 的矩阵流水线与向量流水线工作量 \\
+  \hline
+  $B^{\mathrm{in}}_k,\;B^{\mathrm{out}}_k$  &  子图 $k$ 的入向与出向边界搬运字节数 \\
+  \hline
+  $D_k$  &  子图 $k$ 的估算时长 \\
+  \hline
+  $c_k$  &  子图 $k$ 被分配到的核心编号 \\
+  \hline
+  $\mathrm{rank}(k)$  &  子图 $k$ 的后向关键路径长度 \\
+  \hline
+  $\Delta(c_i,c_k)$  &  两个子图分处不同核或同核时的固定等待周期 \\
+  \hline
+  $\mathrm{BW}_{\mathrm{ddr}}$  &  共享主存总带宽，取 60 字节/周期 \\
+  \hline
+  $\mathrm{BW}_{\mathrm{L2}}$  &  只读 Cache 命中带宽，取 250 字节/周期 \\
+  \hline
+  $g(t)$  &  张量 $t$ 的消费者所分布的核心数 \\
+  \hline
+  $h$  &  只读 Cache 命中率，命中字节与总访问字节之比 \\
+  \hline
+  $\mathrm{Cap}$  &  核内缓存容量，L1 取 524288 字节、UB 取 131072 字节 \\
+  \hline
+\end{longtable}
+\setcounter{table}{\value{huaweisymbolsavetable}}
+
+% ============================================================
+\section{问题一模型建立与求解}
+
+\subsection{问题分析与建模思路}
+
+场景 A 的评估语义可以概括为一句话：每个子图独立构成一个任务，任务之间不保留
+核内数据，任何跨子图数据都必须经主存中转。由此可以写出任务 $k$ 的最早激活时刻
+
+\begin{equation}
+t_k=\max\Bigl(\underbrace{\mathrm{free}(c_k)}_{\text{同核换任务}},
+\;\underbrace{\max_{i\to k}\bigl(t_i+D_i+\Delta(c_i,c_k)\bigr)}_{\text{依赖等待}}\Bigr),
+\qquad
+\Delta(c_i,c_k)=
+\begin{cases}
+100, & c_i=c_k,\\
+1000, & c_i\neq c_k,
+\end{cases}
+\end{equation}
+
+其中同核换任务等待 100 周期、跨核前驱等待 1000 周期均由固定配置给出。式 (1) 说明
+场景 A 的优化目标不是单纯缩短各核工作量，而是要让依赖链尽量落在同一核心上，
+避免在关键路径上反复支付跨核等待。
+
+这里出现了一个容易被忽略的硬约束。若把操作任意分配到各核心，商图（把每个子图
+缩成一个点的依赖图）可能出现环，例如子图 $A$ 中的操作依赖子图 $B$ 中的操作，
+同时子图 $B$ 中又有操作依赖子图 $A$ 中的操作。此时两个任务互相等待，方案直接
+被判为无效。因此本文把“子图依赖图无环”从方案校验条件提升为切分构造约束，
+先保证无环，再在该约束下优化完工时间。
+
+另一个需要事先判明的因素是问题本身的可并行程度。对每个用例定义并行宽度
+
+\begin{equation}
+\mathrm{PW}=\frac{\sum_{v\in V}w_v}{\max_{v\in V}\mathrm{CP}(v)},
+\end{equation}
+
+其中 $\mathrm{CP}(v)$ 是以操作 $v$ 结尾的最长加权路径。$\mathrm{PW}$ 是加速比的
+上界：当 $\mathrm{PW}$ 接近 1 时用例本质串行，任何切分都无法带来收益，算法必须
+在此时保持不劣化，否则会给出比单核更差的方案。
+
+\subsection{计算图预处理与结构画像}
+
+把 Op-Tensor 二部图收缩为操作级有向无环图的做法是：张量中转边合并为操作之间的
+直接依赖，搬运操作作为中转节点被跳过。设操作 $u$ 经若干张量节点可达操作 $v$，
+则在操作级图中加入边 $u\to v$。收缩后得到仅含核内操作的依赖关系，记其前驱集合
+为 $\mathrm{pred}(v)$。
+
+对全部 \CaseCount 个用例统计得到：核内操作数从 \OpsMin 到 \OpsMax，
+中位数 \OpsMed；总工作量从 \CyclesMin 到 \CyclesMax 周期；最长路径层数
+中位数 \LevelMed；矩阵流水线工作量占比中位数 \MatShareMed；并行宽度中位数
+\WidthMed 倍。图~\ref{fig:dataset_profile} 给出四幅结构画像：并行宽度随规模的
+分布、主存张量总量分布、矩阵流水线工作量占比分布，以及关键路径与总工作量的
+对应关系。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.66\textheight,keepaspectratio]{数据预处理/figures/fig_dataset_profile.pdf}
+\caption{测试用例结构画像}\label{fig:dataset_profile}
+\end{figure}
+
+图~\ref{fig:dataset_profile} 的 (a) 面板显示并行宽度与规模基本无关，说明图越大
+并不自动越容易并行；(d) 面板显示关键路径比总工作量低一到两个数量级，说明多数
+用例的瓶颈不是依赖链本身，而是工作量在核心之间的分配与跨核等待的累积。
+
+把每个用例按最长路径分层后，可以进一步观察工作量在层间的分布。
+图~\ref{fig:dag_layers} 对总工作量最大的 12 个用例给出归一化分层后的工作量占比
+热图。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{数据预处理/figures/fig_dag_layers.pdf}
+\caption{分层工作量占比分布}\label{fig:dag_layers}
+\end{figure}
+
+图~\ref{fig:dag_layers} 显示工作量高度集中在最早的分层：若干用例的第一层就占用了
+全部工作量的四成以上。这一结构决定了切分策略的取向，因为最早的分层内部操作相互
+独立，把它们均衡地撒到各核心即可获得大部分并行收益，而后续分层的汇合点必须与
+其生产者放在同一核心，否则会在关键路径上引入跨核等待。
+
+\subsection{无环切分模型}
+
+切分决策由拓扑序 $\sigma$ 与切点边界 $b_0<b_1<\cdots<b_N$ 共同确定，第 $k$ 个
+子图为 $\sigma$ 上的连续段 $\sigma[b_{k-1}:b_k]$。这样构造的商图必然无环，因为
+任意跨段边都沿 $\sigma$ 正向，子图编号本身就是商图的一个拓扑序。这一性质把无环性
+从需要事后校验的约束变成了构造性保证。
+
+切点选择要在“少跨边”与“负载均衡”之间权衡。定义位置 $p$ 处的跨切边数
+
+\begin{equation}
+X(p)=\bigl|\{(u,v)\in E\ \text{且}\ \mathrm{pos}(u)<p\le \mathrm{pos}(v)\}\bigr|,
+\end{equation}
+
+以及第 $k$ 段偏离平均工作量的相对偏差
+
+\begin{equation}
+\mathrm{dev}(p)=\frac{\bigl|W(b_{k-1},p)-\bar W\bigr|}{\bar W},
+\qquad
+W(a,p)=\sum_{i=a}^{p-1}w_{\sigma(i)},
+\qquad
+\bar W=\frac{1}{N}\sum_{v\in V}w_v .
+\end{equation}
+
+切点在以 $X(p)$ 为主、以 $\mathrm{dev}(p)$ 为次的字典序下挑选，并限制段工作量落在
+平均值的 0.7 至 1.35 倍区间内。限制区间的意义在于避免出现“为了压低跨边数而切出
+极小段”的退化情形。
+
+子图时长按四条流水线的并行结构估算。记子图 $k$ 的入向边界字节 $B^{\mathrm{in}}_k$、
+出向边界字节 $B^{\mathrm{out}}_k$，则
+
+\begin{equation}
+D_k=\max\Bigl(M_k,\;V_k,\;\frac{B^{\mathrm{in}}_k}{\mathrm{BW}_{\mathrm{in}}},\;
+\frac{B^{\mathrm{out}}_k}{\mathrm{BW}_{\mathrm{ddr}}},\;\mathrm{CP}_k\Bigr),
+\end{equation}
+
+其中 $\mathrm{CP}_k$ 为子图内部的关键路径。入向有效带宽 $\mathrm{BW}_{\mathrm{in}}$
+在问题一取主存带宽，在问题三取只读 Cache 命中带宽，这一处替换正是问题三建模的
+切入点。
+
+除连续段切分之外，本文还构造了依赖锥聚簇作为候选方案。其做法是先按可达工作量
+计算每个操作的主前驱
+
+\begin{equation}
+\mathrm{prim}(v)=\arg\max_{p\in \mathrm{pred}(v)}\;\mathrm{down}(p),
+\qquad
+\mathrm{down}(p)=w_p+\sum_{q\in \mathrm{succ}(p)}\mathrm{down}(q),
+\end{equation}
+
+再把全部源操作按工作量均衡地撒到各核心，其余操作跟随其主前驱所在核。依赖锥聚簇
+在“一个重操作扇出到大量轻操作”的用例上表现很好，因为扇出结构被完整保留在同一
+核内；但它不保证商图无环，需要用环修复过程处理。
+
+第三类构造是分层切分。把所有操作按最长路径分层后，层内操作之间没有依赖边，
+而所有依赖边都从低层指向高层。若把每个分层单独作为一组子图、按层递增编号，则
+子图依赖图必然无环，核心分配也就不再受无环性约束，可以在保持合法性的同时自由
+追求负载均衡。记层 $\ell$ 的操作集合为 $L_\ell$，其工作量 $W_\ell=\sum_{v\in L_\ell}w_v$，
+分层切分把 $L_\ell$ 内部按工作量切成若干块并分配到当前累计负载最小的核心：
+
+\begin{equation}
+c\bigl(L_\ell^{(j)}\bigr)=\arg\min_{c\in\{0,\dots,N-1\}}
+\sum_{\ell'<\ell}\;\sum_{j'}W_{\ell'}^{(j')}\,
+\mathbf{1}\bigl[c\bigl(L_{\ell'}^{(j')}\bigr)=c\bigr].
+\end{equation}
+
+式 (8) 的贪心规则使各核的累计工作量尽量接近。分层切分的代价是层与层之间形成
+一条链，层 $\ell+1$ 必须等层 $\ell$ 全部完成才能开始，因此它适合工作量集中在少数
+宽层的用例，而不适合层数很多且每层都很薄的深图。
+
+\subsection{子图分核模型}
+
+分核阶段以式 (1) 的激活时刻模型为目标。对每个子图定义后向关键路径长度
+
+\begin{equation}
+\mathrm{rank}(k)=D_k+\max_{k\to j}\mathrm{rank}(j),
+\end{equation}
+
+按 $\mathrm{rank}$ 降序处理子图，把每个子图分配到使其估算完成时刻最小的核心：
+
+\begin{equation}
+c_k=\arg\min_{c\in\{0,\dots,N-1\}}
+\Bigl[\max\Bigl(\mathrm{free}(c),\;\max_{i\to k}\bigl(t_i+D_i+\Delta(c_i,c)\bigr)\Bigr)+D_k\Bigr].
+\end{equation}
+
+式 (10) 是经典的异构最早完成时间准则在本题上的实例化：它同时考虑了核心的空闲
+时刻与依赖链上的等待，因此不会把互相依赖的子图拆到不同核心上徒增跨核等待。
+分配到核心 $c$ 后更新 $\mathrm{free}(c)$，并继续处理下一个子图。
+
+需要强调的是，分核只在估算层面进行，最终指标始终由官方评估程序给出。估算模型
+的作用是提供搜索方向，而不是替代评估。估算模型还必须显式计入全局主存带宽下界：
+切分引入的边界搬运与原始搬运共享同一条主存带宽，因此估算完工时间取任务级流水
+估算与总搬运字节数除以主存带宽两者中的较大者。这一项对细切分尤为关键，因为细
+切分虽然缩短了各核的计算时间，却可能把主存带宽变成真正的瓶颈。
+
+\subsection{求解算法}
+
+完整求解流程见图~\ref{fig:flow_q1}。算法先做图预处理，再并行构造三类候选切分，
+按估算完工时间择优，最后用单核兜底锁定下界。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.58\textheight,keepaspectratio]{手绘图/fig_flow_q1.pdf}
+\caption{问题一求解流程图}\label{fig:flow_q1}
+\end{figure}
+
+算法 1 给出完整的求解步骤。其中第 2 至 4 行分别对应三类候选构造，它们分别适合
+扇出结构、链式结构与宽层结构；第 8 行的单核兜底则保证算法不会给出比单核基线更差
+的方案。
+
+\begin{algorithm}[H]
+\caption{场景 A 多核切图与调度算法}
+\begin{algorithmic}[1]
+\Require 计算图 $G=(V,E)$，核心数 $N$，跨核等待 $\Delta_{\times}$，同核等待 $\Delta_{\parallel}$
+\Ensure 方案：操作到子图的映射表，各核的子图执行顺序
+\State 把 $G$ 收缩为操作级有向无环图，计算 $w^{M}_v$、$w^{V}_v$ 与 $\mathrm{down}(v)$
+\State 候选一：按式 (7) 计算主前驱，源操作均衡撒开，其余操作跟随主前驱，得到依赖锥聚簇
+\State 候选二：构造保持后代连续的拓扑序，按式 (3)(4) 的联合代价挑选切点，得到连续段切分
+\State 候选三：按最长路径分层，层内操作独立，按式 (8) 把每层均衡分配到各核，得到分层切分
+\State 对每个候选检查子图依赖图是否无环，有环则把环上最轻的节点迁回其主前驱所在核
+\State 按式 (10) 对每个合法候选做列表分核，并取式 (5) 与主存带宽下界中的较大者作为估算完工时间
+\State 选出估算完工时间最小的候选
+\State 比较该候选与单核方案的估算值，前者未低出 15\% 以上时改用单核方案
+\State 按子图依赖图的拓扑序确定各核的子图执行顺序，输出方案
+\end{algorithmic}
+\end{algorithm}
+
+第 8 行的单核兜底是本文为保证稳健性专门加入的。它的判据是：只有当并行方案的
+估算完工时间低于单核方案估算值的 0.85 倍时，才采用并行方案；否则把全部操作放入
+一个子图并调度到核心 0。这一条使算法在本质串行用例上给出与单核基线完全相同的
+方案，从而把加速比的下界锁定在 1 附近。
+
+\subsection{求解结果与分析}
+
+全部 \CaseCount 个用例在 1 至 5 核下的平均加速比见图~\ref{fig:q1_speedup}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q1/figures/fig_q1_speedup.pdf}
+\caption{平均加速比曲线}\label{fig:q1_speedup}
+\end{figure}
+
+图~\ref{fig:q1_speedup} 显示问题一的平均加速比从两核的 \QOneSpeedTwo 倍单调
+上升到五核的 \QOneSpeedFive 倍，与线性理想曲线的差距主要来自本质串行用例与
+主存带宽受限的用例。两条曲线在四核处几乎重合，说明场景 B 的同核数据复用并未在
+平均意义上改变时延，其收益更多体现在数据搬运量上。
+
+加速比与并行宽度的关系见图~\ref{fig:q1_case_scatter}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.5\textheight,keepaspectratio]{Q1/figures/fig_q1_case_scatter.pdf}
+\caption{加速比与并行宽度的关系}\label{fig:q1_case_scatter}
+\end{figure}
+
+图~\ref{fig:q1_case_scatter} 的横轴取对数尺度后呈现明显的分层：并行宽度大于 10 的
+用例四核加速比普遍落在 3.5 倍以上，并行宽度接近 1 的用例加速比稳定在 1 倍附近。
+中位数滑动曲线在并行宽度 10 附近出现拐点，说明当并行宽度低于约 10 倍时，依赖链
+长度开始成为主要限制。
+
+估算模型与实测结果的一致性见图~\ref{fig:q1_estimator}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q1/figures/fig_q1_estimator.pdf}
+\caption{估算完工时间与实测 Makespan 的一致性}\label{fig:q1_estimator}
+\end{figure}
+
+图~\ref{fig:q1_estimator} 中估算值与实测值的比值中位数为 \EstRatioMed，且比值
+随规模增大而趋于稳定，说明式 (5) 的时长估算在量级上是可靠的，可以作为搜索目标。
+比值在少数用例上明显低于 1，原因是这些用例的子图内部发生了较多缓存换出换入，
+而估算模型只按字节数折算这部分开销。
+
+加速比与额外搬运量的权衡关系见图~\ref{fig:q1_pareto}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q1/figures/fig_q1_pareto.pdf}
+\caption{加速比与额外搬运量的权衡}\label{fig:q1_pareto}
+\end{figure}
+
+图~\ref{fig:q1_pareto} 中的前沿点集中在左上方，说明本文方案可以在较小的相对搬运
+代价下取得较高加速比；落在右下方的一般用例多为并行宽度低、边界张量大的图，
+其额外搬运量相对单核工作量偏高属于题目结构所致，而非切分策略造成。
+
+代表性用例的四核执行时间线见图~\ref{fig:q1_timeline}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth,height=0.46\textheight,keepaspectratio]{Q1/figures/fig_q1_timeline.pdf}
+\caption{代表性用例的四核时间线}\label{fig:q1_timeline}
+\end{figure}
+
+图~\ref{fig:q1_timeline} 中四个核心各自执行 12 至 22 个子图，最后一个子图的结束
+时刻相差在 \TimelineGap 以内，说明分核阶段的负载均衡有效；区间之间几乎没有可见
+空隙，说明跨核等待没有落在关键路径上。对于结构更规整的用例，四个核心的子图区间
+长度可以完全一致、同时结束，此时加速比达到四核线性上限的 99\% 以上。
+
+逐用例的 Makespan 与总额外数据搬运量见附录 A。
+
+\section{问题二模型建立与求解}
+
+\subsection{问题分析与建模差异}
+
+场景 B 与场景 A 的差别集中在任务粒度与通信方式上。场景 B 中同一核心上的全部子图
+合并为一个任务，同核子图之间的数据保留在 L1 或 UB 中直接复用，不插入边界搬运；
+只有跨核数据边才在源核插入写回、在目标核插入读入，并支付 500 周期同步延迟。
+
+由此得到两条与问题一不同的建模结论。第一，入向边界搬运只统计跨核部分。设核心 $c$
+上的子图集合为 $\mathcal{T}_c$，其入向跨核字节数为
+
+\begin{equation}
+B^{\mathrm{in,cross}}_c=\sum_{\substack{t\ \text{被}\ \mathcal{T}_c\ \text{消费}\\
+t\ \text{由其他核心产出}}} s_t,
+\end{equation}
+
+相应地，出向跨核字节数按被其他核心消费的张量统计。第二，同核连续子图合并为同一
+任务后不再逐子图支付换任务等待，式 (1) 中的同核项消失，跨核项的常数由 1000 降为
+500。
+
+\subsection{容量约束与缓存换出换入}
+
+合并任务后，同一核心上的驻留张量集合 $\mathcal{R}_c$ 必须满足
+
+\begin{equation}
+\sum_{\substack{t\in\mathcal{R}_c\\ \mathrm{pos}(t)=\mathrm{L1}}} s_t\le 524288,
+\qquad
+\sum_{\substack{t\in\mathcal{R}_c\\ \mathrm{pos}(t)=\mathrm{UB}}} s_t\le 131072 .
+\end{equation}
+
+当为当前操作申请空间会超出容量时，官方核内调度算法从不属于该操作输入输出、且未来
+仍会使用的驻留张量中，选择下一次使用最晚者换出；若主存中没有有效副本，先插入写回
+操作，再在该张量下次使用前插入读入操作。这一机制带来的额外搬运计入总额外数据
+搬运量，因此切分阶段必须把合并后任务的缓存压力纳入考虑。
+
+把式 (11) 与式 (5) 结合，场景 B 的子图时长估算为
+
+\begin{equation}
+D^{\mathrm{B}}_k=\max\Bigl(M_k,\;V_k,\;
+\frac{B^{\mathrm{in,cross}}_k}{\mathrm{BW}_{\mathrm{ddr}}},\;
+\frac{B^{\mathrm{out,cross}}_k}{\mathrm{BW}_{\mathrm{ddr}}},\;\mathrm{CP}_k\Bigr).
+\end{equation}
+
+式 (13) 与式 (5) 形式一致，差别只在边界字节只计跨核部分。这一处替换使得分核阶段
+不再把同核子图之间的数据流动当成代价，从而允许把更多子图聚到同一核心以节省主存
+流量。
+
+\subsection{求解算法}
+
+求解流程见图~\ref{fig:flow_q2}。算法复用问题一的无环切分骨架，只替换代价口径与
+等待常数；容量检查分支在核内调度阶段完成。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.58\textheight,keepaspectratio]{手绘图/fig_flow_q2.pdf}
+\caption{问题二求解流程图}\label{fig:flow_q2}
+\end{figure}
+
+\begin{algorithm}[H]
+\caption{场景 B 多核切图与调度算法}
+\begin{algorithmic}[1]
+\Require 计算图 $G$，核心数 $N$，跨核同步延迟 $\tau=500$
+\Ensure 方案：操作到子图的映射表，各核的子图执行顺序
+\State 复用问题一的无环切分骨架，得到初始子图划分
+\State 把同一核心上的全部子图合并为一个任务 $\mathcal{T}_c$
+\State 按式 (11) 只统计跨核数据边，得到每个任务的跨核入向与出向字节数
+\State 按式 (13) 重算子图时长，按式 (10) 的准则重新分核
+\State 检查合并任务在 L1 与 UB 上的驻留峰值是否超出式 (12) 的容量
+\State 若容量不足，按最晚下次使用优先换出，插入换出与换入操作并重排核内顺序
+\State 叠加 500 周期跨核同步延迟，估算完工时间并按单核兜底阈值决定是否采用并行方案
+\State 输出方案并交官方评估程序复核
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{求解结果与分析}
+
+场景 A 与场景 B 的平均加速比对照见图~\ref{fig:q2_compare}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q2/figures/fig_q2_compare.pdf}
+\caption{两个场景的平均加速比对照}\label{fig:q2_compare}
+\end{figure}
+
+图~\ref{fig:q2_compare} 显示场景 B 的曲线整体高于场景 A，五核处平均加速比由
+\QOneSpeedFive 倍提高到 \QTwoSpeedFive 倍。两条曲线的间距随核数增加而扩大，
+原因在于核数越多、跨核依赖越多，场景 B 把同核通信成本降为零的收益就越明显。
+
+逐用例的场景 A 与场景 B 的 Makespan 比值与用例规模的关系见
+图~\ref{fig:q2_scatter}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q2/figures/fig_q2_scatter.pdf}
+\caption{两场景 Makespan 比值与用例规模的关系}\label{fig:q2_scatter}
+\end{figure}
+
+图~\ref{fig:q2_scatter} 中绝大多数点位于 1 的上方，说明场景 B 在四核下几乎总是不
+劣于场景 A；比值明显大于 1 的点集中在中小规模用例，这些用例的跨子图边界张量占比
+高，同核驻留带来的收益最直接。
+
+额外搬运量占比随规模与核数变化的分布见图~\ref{fig:q2_capacity}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.5\textheight,keepaspectratio]{Q2/figures/fig_q2_capacity.pdf}
+\caption{额外搬运量占比的分布}\label{fig:q2_capacity}
+\end{figure}
+
+图~\ref{fig:q2_capacity} 显示额外搬运量占比在中等规模用例上最高，向两端都下降：
+规模过小时单个边界张量相对整图占比偏大，规模过大时合并任务的缓存压力上升但被
+核内调度算法的换出策略摊薄。箭头方向指出占比随规模增大而下降、随核数增加而上升，
+后者符合跨核边界随核数增多的直觉。
+
+场景 B 相对场景 A 的额外搬运量下降幅度为 \TrafficDrop。这一结果说明同核数据
+驻留确实把原本必须经主存中转的流量留在了私有缓存中，与式 (11) 的建模预期一致。
+
+逐用例结果见附录 B。
+
+\section{问题三模型建立与求解}
+
+\subsection{问题分析与建模思路}
+
+问题三在场景 B 的基础上引入所有核心共享的只读二级缓存，容量 1 MB、带宽
+250 字节/周期，用于复用多核共享输入。缓存为只读且按先进先出淘汰，命中访问进入
+独立的读带宽池，与主存带宽互不占用。
+
+只读缓存改变了切分的代价结构。对一份被 $g(t)$ 个核心读取的张量 $t$，第一次访问
+未命中，经主存读入并写入缓存；其后 $g(t)-1$ 次访问命中，由缓存以更高带宽服务。
+因此该张量的有效读入时间代价为
+
+\begin{equation}
+T(t)=\frac{s_t}{\mathrm{BW}_{\mathrm{ddr}}}+\bigl(g(t)-1\bigr)\cdot
+\frac{s_t}{\mathrm{BW}_{\mathrm{L2}}},
+\qquad s_t\le \mathrm{Cap}_{\mathrm{L2}},
+\end{equation}
+
+当单个张量大于缓存容量时不缓存，全部访问都按主存带宽结算。式 (14) 的直观含义是：
+把共享输入的消费者摊到多个核心的边际代价，从主存带宽下的每字节六十分之一周期降到
+缓存带宽下的每字节二百五十分之一周期，约合原来的四分之一。
+
+这一变化直接影响切分取向。无缓存时，把共享输入的消费者聚到同一核心可以避免重复
+读取，代价是负载可能失衡；引入缓存后，重复读取的边际代价大幅下降，负载均衡与
+缓存复用不再互相冲突，分核阶段可以更自由地追求均衡。本文据此把式 (5) 中的入向
+有效带宽由 60 改为 250，得到 L2 感知的切分代价。
+
+\subsection{命中率模型}
+
+命中率定义为可由只读缓存服务的访问中命中字节占总访问字节的比例：
+
+\begin{equation}
+h=\frac{\sum_{t}\bigl(g(t)-1\bigr)s_t\cdot
+\mathbf{1}\bigl[s_t\le \mathrm{Cap}_{\mathrm{L2}}\bigr]}
+{\sum_{t}g(t)\,s_t}.
+\end{equation}
+
+式 (15) 说明命中率由两个因素决定：共享输入被多少个核心读取，以及共享输入的字节数
+是否落在缓存容量之内。当所有输入都只被一个核心读取时分子为零，命中率也为零，
+此时只读缓存不产生任何收益。这一判断解释了后文中部分用例的加速比接近 1。
+
+\subsection{求解算法}
+
+求解流程见图~\ref{fig:flow_q3}。算法并行给出两条候选路线并逐用例实测择优。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.58\textheight,keepaspectratio]{手绘图/fig_flow_q3.pdf}
+\caption{问题三求解流程图}\label{fig:flow_q3}
+\end{figure}
+
+两条候选路线的区别只在入向有效带宽的取值：路线一把式 (5) 中的
+$\mathrm{BW}_{\mathrm{in}}$ 取为 250，切点与分核都按新代价重新搜索；路线二仍取
+60，直接沿用问题二的方案。前者体现算法利用缓存特性，后者用于隔离缓存本身的
+贡献。两条路线分别送入官方评估程序实测 Makespan，逐用例取更优者作为最终方案。
+
+\begin{algorithm}[H]
+\caption{只读 Cache 下的切图与调度算法}
+\begin{algorithmic}[1]
+\Require 计算图 $G$，核心数 $N$，缓存容量 1 MB，缓存带宽 250 字节/周期
+\Ensure 方案与指标：操作到子图的映射表，各核子图顺序，Makespan，额外搬运量，命中率
+\State 路线一：把入向有效带宽置为 250，按式 (5) 重算子图时长并重新切分与分核
+\State 路线二：保持入向有效带宽为 60，直接沿用问题二的切分与分核结果
+\State 对两条路线的方案分别调用官方评估程序，记录 Makespan 与额外搬运量
+\State 逐用例比较两条路线的实测 Makespan，取较小者作为最终方案
+\State 按式 (15) 计算命中率，并与问题二的同核数结果配对求加速比
+\State 输出方案与全部指标
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{求解结果与分析}
+
+只读 Cache 相对无 L2 基线的平均加速比与平均命中率见图~\ref{fig:q3_cache_gain}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q3/figures/fig_q3_cache_gain.pdf}
+\caption{只读 Cache 的加速比与命中率}\label{fig:q3_cache_gain}
+\end{figure}
+
+图~\ref{fig:q3_cache_gain} 显示加速比随核数单调上升，五核处达到 \QThreeGainFive
+倍，而命中率在 \QThreeHitTwo 至 \QThreeHitFive 之间变化。加速比与命中率并不同步：
+核数增加时共享输入被更多核心读取，命中率上升，但跨核边界搬运同时增加，两者共同
+决定了净收益。
+
+命中率与加速比的关系见图~\ref{fig:q3_hit}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q3/figures/fig_q3_hit.pdf}
+\caption{命中率与加速比的关系}\label{fig:q3_hit}
+\end{figure}
+
+图~\ref{fig:q3_hit} 显示两者整体正相关，趋势线的斜率为正；同时存在一批命中率为零、
+加速比为 1 的用例，它们的全部输入都只被单一核心读取，只读缓存无从发挥作用。
+这一分布与式 (15) 的判断完全一致。
+
+两种配置下逐用例平均额外搬运量的对照见图~\ref{fig:q3_traffic}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth,height=0.48\textheight,keepaspectratio]{Q3/figures/fig_q3_traffic.pdf}
+\caption{两种配置的额外搬运量对照}\label{fig:q3_traffic}
+\end{figure}
+
+图~\ref{fig:q3_traffic} 显示引入只读 Cache 后平均额外搬运量总体下降，且随核数增加
+下降幅度扩大。需要说明的是，只读缓存并不减少主存流量本身，它减少的是并发访问对
+主存带宽的占用，因此在评估结果中主要表现为时延下降；图~\ref{fig:q3_traffic} 中的
+下降来自 L2 感知切分给出的更均衡划分，而非缓存直接减少流量。
+
+逐用例的 Makespan、额外搬运量与 Cache 命中率见附录 C。
+
+\section{模型总结与评价}
+
+\subsection{模型优点}
+
+本文模型的第一项优点是把方案合法性约束内生化。赛题要求子图依赖图无环，多数做法
+是先生成方案再校验，失败则重来；本文用保持后代连续的拓扑序加连续段切分、依赖锥
+聚簇加环修复、以及按最长路径分层三类构造，把无环性变成构造性质，使搜索始终在
+合法解空间内进行，避免了反复回退。
+
+第二项优点是估算与实测分离。算法内部的搜索使用式 (5) 的估算完工时间，一切对外
+结论则完全来自赛题官方评估程序。这样既保证了搜索效率，又保证了结论可核验。
+图~\ref{fig:q1_estimator} 给出的一致性检查说明估算模型的偏差在可接受范围内。
+
+第三项优点是稳健性有下界保证。单核兜底策略使算法在本质串行用例上给出与单核基线
+完全相同的方案，因此全部用例中只有极少数出现加速比略低于 1 的情况，且幅度很小。
+这一条对竞赛评测尤为重要，因为单个用例的严重劣化会显著拉低平均指标。
+
+\subsection{参数敏感度与稳健性分析}
+
+算法有两个可调参数：每个核心的子图数 $m$ 与单核兜底阈值 $\varepsilon$。前者控制
+切分粒度，后者控制并行方案的启用条件。本文在一组覆盖中小规模的代表性用例上对
+两者做了扫描，结果见图~\ref{fig:sensitivity_parameters}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth,height=0.5\textheight,keepaspectratio]{灵敏度分析/figures/fig_sensitivity_parameters.pdf}
+\caption{算法参数的敏感度}\label{fig:sensitivity_parameters}
+\end{figure}
+
+图~\ref{fig:sensitivity_parameters} 显示平均加速比在 $m$ 取 \BestBlocks 时最高，
+继续增大切分粒度后略有下降。原因是场景 A 下每个子图都是一个独立任务，切分越细，
+跨子图边界搬运与换任务等待的累计开销越大。最低加速比曲线在整个扫描区间内都接近
+1，说明单核兜底始终在起作用。
+
+兜底阈值 $\varepsilon$ 的影响相对平缓：在 \MarginLow 至 \MarginHigh 区间内
+平均加速比的变化幅度不超过 \MarginSwing，最低加速比始终接近 1。取较小的阈值
+会让更多用例走并行方案，平均加速比略升，但个别用例的风险上升；取 0.85 是两者
+之间的折中。
+
+两个参数的联合响应见图~\ref{fig:sensitivity_response}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth,height=0.52\textheight,keepaspectratio]{灵敏度分析/figures/fig_sensitivity_response.pdf}
+\caption{两参数的联合响应}\label{fig:sensitivity_response}
+\end{figure}
+
+图~\ref{fig:sensitivity_response} 中颜色最深的格点对应最优参数组合，其平均加速比
+为 \BestCombo 倍。响应面在 $m$ 方向上的梯度明显大于 $\varepsilon$ 方向，说明
+切分粒度是更敏感的参数，调参时应优先固定粒度。
+
+\subsection{模型局限与改进}
+
+本文模型有三处局限。其一，估算模型按字节数与带宽之比折算边界搬运时间，没有显式
+建模核内调度算法在容量不足时的换出选择，因此对缓存压力极大的用例，估算值与实测
+值的偏差会扩大，图~\ref{fig:q1_estimator} 中比值明显低于 1 的点即属此类。改进方向
+是把核内调度算法的换出策略抽象为一个容量与流量的响应函数，代入估算模型。
+
+其二，分核采用单遍列表调度，没有对切分与分核做真正的联合优化。当前做法是先定
+切分再定分核，二者只通过候选择优间接耦合。改进方向是把切点位置与核心分配放进
+同一个邻域结构，用模拟退火或大邻域搜索联合求解。
+
+其三，只读缓存的建模停留在有效带宽近似层面，没有刻画不同张量之间的淘汰竞争。
+当多个大张量的访问在时间上交错时，先进入缓存的张量可能被提前淘汰，命中率会低于
+式 (15) 的预测。改进方向是按访问时间序列构造缓存仿真，把命中率作为切分目标的一
+部分联合优化。
+
+% ============================================================
+\begin{thebibliography}{9}
+\bibitem{ref1} Topcuoglu H, Hariri S, Wu M Y. Performance-effective and low-complexity task scheduling for heterogeneous computing[J]. IEEE Transactions on Parallel and Distributed Systems, 2002, 13(3): 260-274. DOI: 10.1109/71.993206.
+\bibitem{ref2} Hwang S, Lee S, Kim J, et al. mNPUsim: Evaluating the Effect of Sharing Resources in Multi-Core NPUs[C]. IEEE International Symposium on Workload Characterization, 2023. DOI: 10.1109/IISWC59245.2023.00018.
+\bibitem{ref3} Karypis G, Kumar V. A fast and high quality multilevel scheme for partitioning irregular graphs[J]. SIAM Journal on Scientific Computing, 1998, 20(1): 359-392. DOI: 10.1137/S1064827595287997.
+\bibitem{ref4} Selvi S, Manimegalai R. DAG scheduling in heterogeneous computing and grid environments: a survey[J]. Applied Artificial Intelligence, 2017, 31(3): 193-232. DOI: 10.1080/08839514.2017.1300010.
+\bibitem{ref5} 2026 年中国研究生数学建模竞赛 A 题材料包：多核并行模拟执行算法说明[Z]. 竞赛组委会, 2026. 来源：赛题附件内 `docs/多核并行模拟执行算法.md`；赛事官方平台 https://cpipc.acge.org.cn/cw/hp/4。
+\bibitem{ref6} 2026 年中国研究生数学建模竞赛 A 题材料包：核内调度算法说明[Z]. 竞赛组委会, 2026. 来源：赛题附件内 `docs/核内调度算法.md`；赛事官方平台 https://cpipc.acge.org.cn/cw/hp/4。
+\end{thebibliography}
+\label{body:end}
+
+\clearpage
+\label{appendix:start}
+\begin{appendices}
+
+\section{问题一逐用例结果}
+
+限于篇幅，此处列出全部 \CaseCount 个用例在 1 至 5 核配置下的 Makespan 与总额外
+数据搬运量。
+
+\input{附录_问题一结果}
+
+\section{问题二逐用例结果}
+
+限于篇幅，此处列出全部 \CaseCount 个用例在场景 B 下 1 至 5 核配置的 Makespan
+与总额外数据搬运量。
+
+\input{附录_问题二结果}
+
+\section{问题三逐用例结果}
+
+限于篇幅，此处列出全部 \CaseCount 个用例在无 L2 与只读 Cache 两种配置下的
+Makespan、总额外数据搬运量与 Cache 命中率。
+
+\input{附录_问题三结果}
+
+\par\noindent\hspace{2em}支撑材料文件目录：\par
+
+\begin{itemize}[label={},leftmargin=1.9em,itemsep=0.25em,topsep=0.25em]
+    \item \textbf{\CodeGraphUtils}——计算图读取与操作级 DAG 收缩工具
+    \item \textbf{\CodePartition}——无环切分与子图分核主算法
+    \item \textbf{\CodeEvalRunner}——官方评估程序调用封装
+    \item \textbf{\CodeRunExperiments}——全用例实验总控
+    \item \textbf{\CodeAggregate}——唯一结果源聚合脚本
+    \item \textbf{\CodeBuildDataset}——数据预处理与结构画像生成
+    \item \textbf{\CodeFiguresQOne}——问题一论文配图生成
+    \item \textbf{\CodeFiguresQTwo}——问题二论文配图生成
+    \item \textbf{\CodeFiguresQThree}——问题三论文配图生成
+    \item \textbf{\CodeSensitivityRun}——灵敏度分析实验脚本
+    \item \textbf{\CodeSensitivityFig}——灵敏度分析配图生成
+    \item \textbf{\CodeFinalResults}——唯一最终结果源
+    \item \textbf{\CodeCaseProfile}——测试用例结构画像
+\end{itemize}
+
+\section{附录代码文件}
+
+\input{附录代码}
+
+\end{appendices}
+
+\end{document}

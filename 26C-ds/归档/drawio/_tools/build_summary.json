@@ -1,0 +1,146 @@
+[
+  {
+    "name": "fig_roadmap",
+    "build_exit": 0,
+    "template_id": "dual-panel-bilevel",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_problem_analysis",
+    "build_exit": 0,
+    "template_id": "main-chain-support",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_experiment_design",
+    "build_exit": 0,
+    "template_id": "dual-swimlane",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_artifact_sources",
+    "build_exit": 0,
+    "template_id": "main-chain-support",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q1_denoise_flow",
+    "build_exit": 0,
+    "template_id": "branch-decision",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q1_response_flow",
+    "build_exit": 0,
+    "template_id": "horizontal-stage-chain",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q2_multiscale_model",
+    "build_exit": 0,
+    "template_id": "dual-swimlane",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q2_laterality_mechanism",
+    "build_exit": 0,
+    "template_id": "main-chain-support",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q2_feature_flow",
+    "build_exit": 0,
+    "template_id": "horizontal-stage-chain",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q3_model_framework",
+    "build_exit": 0,
+    "template_id": "main-chain-support",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q3_estimation_flow",
+    "build_exit": 0,
+    "template_id": "horizontal-stage-chain",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "fig_q3_application",
+    "build_exit": 0,
+    "template_id": "main-chain-support",
+    "build_ok": true,
+    "build_errors": [],
+    "validate_exit": 0,
+    "validate": {
+      "ok": true,
+      "errors": []
+    }
+  }
+]

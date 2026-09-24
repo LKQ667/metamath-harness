@@ -1,0 +1,31 @@
+{
+  "source_files": [
+    "data/raw/VisualCogA_Task-1.mat",
+    "data/raw/VisualCogA_Task-2.mat",
+    "data/raw/VisualCogB_Task-1.mat",
+    "data/raw/VisualCogB_Task-2.mat"
+  ],
+  "segmentation": {
+    "event": "VisCue 标记起始点",
+    "pre_s": 0.2,
+    "post_s": 1.0,
+    "sampling_rate_hz": 256
+  },
+  "baseline": "刺激前 0.2 s 窗口均值逐试次扣除",
+  "operations": [
+    "稳健软截断：把超出 10 倍稳健尺度的极端采样点压缩到阈值，其余采样点原样保留，不做高通或带通",
+    "心电伪迹核验：比较 EEG 片段与心电中位模板的相关度，实测最大相关度远低于 0.6 判定阈值，故不引入心电模板扣除",
+    "明确不做频谱滤波：配对检验显示 0.5-30 Hz 带通会使左右可分性平均下降 0.059（p<0.001），因为承载视物信息的低频慢电位被一并去除"
+  ],
+  "not_used": [
+    "通道 4-6（FzDecon/F3Decon/F4Decon）设备自带滤波输出不进入建模链路"
+  ],
+  "derived_outputs": [
+    "data/derived/epochs_A1.npz",
+    "data/derived/epochs_A2.npz",
+    "data/derived/epochs_B1.npz",
+    "data/derived/epochs_B2.npz",
+    "data/derived/erp_features.csv"
+  ],
+  "no_manual_adjustment": true
+}

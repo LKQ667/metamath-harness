@@ -1,0 +1,40 @@
+{
+  "name": "fig_experiment_design",
+  "kind": "flowchart",
+  "object": "项目一与项目二的脑电记录及 10 通道语义分组",
+  "action": "对照两个项目的提示条件、时序结构与一致率差异",
+  "product": "采集结构说明与两项目对照关系图",
+  "criteria": "通道语义分组完整、两项目条件差异可辨",
+  "nodes": [
+    "F3 / Fz / F4 三导采集",
+    "10 通道语义分组",
+    "原始信号、设备滤波、心电、事件、时间戳",
+    "项目一提示位置已知",
+    "项目二仅知形状",
+    "一致率约 1.00 与 0.48"
+  ],
+  "edges": [
+    "采集→分组",
+    "分组→通道明细",
+    "项目一→项目二",
+    "两项目条件对照"
+  ],
+  "main_path": [
+    "三导采集",
+    "10 通道语义分组",
+    "两项目一致率对照"
+  ],
+  "unverified": [
+    "一致率数值取自赛题给定条件，图内只作对照标注"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 2,
+  "support_blocks": 0,
+  "stages": 3,
+  "direction": "horizontal"
+}

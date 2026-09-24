@@ -1,0 +1,42 @@
+{
+  "name": "fig_q2_multiscale_model",
+  "kind": "flowchart",
+  "object": "头皮三导观测信号",
+  "action": "由介观集群与宏观同步逐级前向计算得到头皮观测",
+  "product": "横向五级串联机理框图，各级标注时间尺度与数学对象",
+  "criteria": "五级齐全、时间尺度单调递进、层级对象明确",
+  "nodes": [
+    "LGN 时空滤波",
+    "形状选择与除法归一化",
+    "Wilson–Cowan 介观集群",
+    "Kuramoto 同步与序参数",
+    "头皮导联场观测"
+  ],
+  "edges": [
+    "滤波→形状选择",
+    "形状选择→介观集群",
+    "介观集群→宏观同步",
+    "宏观同步→头皮观测"
+  ],
+  "main_path": [
+    "LGN 时空滤波",
+    "形状选择与除法归一化",
+    "Wilson–Cowan 介观集群",
+    "Kuramoto 同步与序参数",
+    "头皮导联场观测"
+  ],
+  "unverified": [
+    "时间尺度为各级的定性量级标注，非拟合得到的数值",
+    "第 6 个内容框为尺度跨度汇总标注，不引入新的计算层级"
+  ],
+  "panels": 1,
+  "side_head": 0,
+  "output_banner": 0,
+  "focus_stage": 0,
+  "feedback": 0,
+  "branches": 0,
+  "actors": 2,
+  "support_blocks": 0,
+  "stages": 5,
+  "direction": "horizontal"
+}

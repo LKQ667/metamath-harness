@@ -1,0 +1,12 @@
+{
+  "h1": "<font style=\"font-size:17px;\">五级串联 · 前三级：微观与介观</font>",
+  "h2": "<font style=\"font-size:17px;\">五级串联 · 后两级：宏观与观测</font>",
+  "a1": "<font style=\"font-size:17px;\">LGN 时空滤波（毫秒级）</font>",
+  "a2": "<font style=\"font-size:17px;\">形状选择与除法归一化（十毫秒级）</font>",
+  "a3": "<font style=\"font-size:17px;\">Wilson–Cowan 介观集群（百毫秒级）</font>",
+  "b1": "<font style=\"font-size:17px;\">Kuramoto 同步与序参数（秒级）</font>",
+  "b2": "<font style=\"font-size:17px;\">头皮导联场观测</font>",
+  "b3": "<font style=\"font-size:17px;\">尺度跨度：毫秒 → 秒</font>",
+  "e5": "<font style=\"font-size:12px;\">层间衔接</font>",
+  "e6": "<font style=\"font-size:12px;\">层间衔接</font>"
+}

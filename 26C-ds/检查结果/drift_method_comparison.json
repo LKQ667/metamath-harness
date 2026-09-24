@@ -1,0 +1,224 @@
+{
+  "per_dataset": {
+    "A1": {
+      "D0不处理": {
+        "joint_auc": 0.5622,
+        "joint_auc_repaired": 0.508,
+        "early_fz_auc": 0.6069,
+        "late_lat_auc": 0.5824,
+        "late_abs_mean_uV": 96.395
+      },
+      "D1高通0.3Hz": {
+        "joint_auc": 0.5866,
+        "joint_auc_repaired": 0.5785,
+        "early_fz_auc": 0.6129,
+        "late_lat_auc": 0.395,
+        "late_abs_mean_uV": 23.096
+      },
+      "D2高通0.5Hz": {
+        "joint_auc": 0.5505,
+        "joint_auc_repaired": 0.4999,
+        "early_fz_auc": 0.5888,
+        "late_lat_auc": 0.4656,
+        "late_abs_mean_uV": 18.66
+      },
+      "D3高通1.0Hz": {
+        "joint_auc": 0.389,
+        "joint_auc_repaired": 0.4153,
+        "early_fz_auc": 0.4031,
+        "late_lat_auc": 0.4578,
+        "late_abs_mean_uV": 13.394
+      },
+      "D4带通0.5-30Hz": {
+        "joint_auc": 0.4312,
+        "joint_auc_repaired": 0.4373,
+        "early_fz_auc": 0.4292,
+        "late_lat_auc": 0.4799,
+        "late_abs_mean_uV": 17.956
+      },
+      "D5中位数去趋势": {
+        "joint_auc": 0.4475,
+        "joint_auc_repaired": 0.399,
+        "early_fz_auc": 0.3845,
+        "late_lat_auc": 0.5425,
+        "late_abs_mean_uV": 10.196
+      }
+    },
+    "A2": {
+      "D0不处理": {
+        "joint_auc": 0.5575,
+        "joint_auc_repaired": 0.5616,
+        "early_fz_auc": 0.5787,
+        "late_lat_auc": 0.628,
+        "late_abs_mean_uV": 178.606
+      },
+      "D1高通0.3Hz": {
+        "joint_auc": 0.3775,
+        "joint_auc_repaired": 0.4788,
+        "early_fz_auc": 0.3655,
+        "late_lat_auc": 0.5011,
+        "late_abs_mean_uV": 51.159
+      },
+      "D2高通0.5Hz": {
+        "joint_auc": 0.4958,
+        "joint_auc_repaired": 0.5617,
+        "early_fz_auc": 0.5205,
+        "late_lat_auc": 0.4909,
+        "late_abs_mean_uV": 39.48
+      },
+      "D3高通1.0Hz": {
+        "joint_auc": 0.4413,
+        "joint_auc_repaired": 0.4263,
+        "early_fz_auc": 0.4513,
+        "late_lat_auc": 0.5515,
+        "late_abs_mean_uV": 28.088
+      },
+      "D4带通0.5-30Hz": {
+        "joint_auc": 0.508,
+        "joint_auc_repaired": 0.5781,
+        "early_fz_auc": 0.5123,
+        "late_lat_auc": 0.4806,
+        "late_abs_mean_uV": 38.601
+      },
+      "D5中位数去趋势": {
+        "joint_auc": 0.4648,
+        "joint_auc_repaired": 0.4205,
+        "early_fz_auc": 0.4852,
+        "late_lat_auc": 0.4949,
+        "late_abs_mean_uV": 15.999
+      }
+    },
+    "B1": {
+      "D0不处理": {
+        "joint_auc": 0.5407,
+        "joint_auc_repaired": 0.5163,
+        "early_fz_auc": 0.5465,
+        "late_lat_auc": 0.4964,
+        "late_abs_mean_uV": 140.163
+      },
+      "D1高通0.3Hz": {
+        "joint_auc": 0.5867,
+        "joint_auc_repaired": 0.5887,
+        "early_fz_auc": 0.5199,
+        "late_lat_auc": 0.6268,
+        "late_abs_mean_uV": 32.726
+      },
+      "D2高通0.5Hz": {
+        "joint_auc": 0.5565,
+        "joint_auc_repaired": 0.6189,
+        "early_fz_auc": 0.5081,
+        "late_lat_auc": 0.5967,
+        "late_abs_mean_uV": 26.828
+      },
+      "D3高通1.0Hz": {
+        "joint_auc": 0.5446,
+        "joint_auc_repaired": 0.6049,
+        "early_fz_auc": 0.5299,
+        "late_lat_auc": 0.5848,
+        "late_abs_mean_uV": 19.806
+      },
+      "D4带通0.5-30Hz": {
+        "joint_auc": 0.5727,
+        "joint_auc_repaired": 0.6189,
+        "early_fz_auc": 0.5081,
+        "late_lat_auc": 0.5947,
+        "late_abs_mean_uV": 26.84
+      },
+      "D5中位数去趋势": {
+        "joint_auc": 0.4765,
+        "joint_auc_repaired": 0.436,
+        "early_fz_auc": 0.5787,
+        "late_lat_auc": 0.3598,
+        "late_abs_mean_uV": 13.409
+      }
+    },
+    "B2": {
+      "D0不处理": {
+        "joint_auc": 0.522,
+        "joint_auc_repaired": 0.478,
+        "early_fz_auc": 0.526,
+        "late_lat_auc": 0.578,
+        "late_abs_mean_uV": 238.766
+      },
+      "D1高通0.3Hz": {
+        "joint_auc": 0.47,
+        "joint_auc_repaired": 0.534,
+        "early_fz_auc": 0.434,
+        "late_lat_auc": 0.536,
+        "late_abs_mean_uV": 63.806
+      },
+      "D2高通0.5Hz": {
+        "joint_auc": 0.434,
+        "joint_auc_repaired": 0.43,
+        "early_fz_auc": 0.43,
+        "late_lat_auc": 0.51,
+        "late_abs_mean_uV": 49.182
+      },
+      "D3高通1.0Hz": {
+        "joint_auc": 0.518,
+        "joint_auc_repaired": 0.488,
+        "early_fz_auc": 0.558,
+        "late_lat_auc": 0.526,
+        "late_abs_mean_uV": 33.833
+      },
+      "D4带通0.5-30Hz": {
+        "joint_auc": 0.442,
+        "joint_auc_repaired": 0.424,
+        "early_fz_auc": 0.432,
+        "late_lat_auc": 0.492,
+        "late_abs_mean_uV": 48.176
+      },
+      "D5中位数去趋势": {
+        "joint_auc": 0.608,
+        "joint_auc_repaired": 0.476,
+        "early_fz_auc": 0.55,
+        "late_lat_auc": 0.6,
+        "late_abs_mean_uV": 16.984
+      }
+    }
+  },
+  "aggregate": {
+    "D0不处理": {
+      "joint_auc": 0.5456,
+      "joint_auc_repaired": 0.516,
+      "early_fz_auc": 0.5645,
+      "late_lat_auc": 0.5712,
+      "late_abs_mean_uV": 163.4825
+    },
+    "D1高通0.3Hz": {
+      "joint_auc": 0.5052,
+      "joint_auc_repaired": 0.545,
+      "early_fz_auc": 0.4831,
+      "late_lat_auc": 0.5147,
+      "late_abs_mean_uV": 42.6967
+    },
+    "D2高通0.5Hz": {
+      "joint_auc": 0.5092,
+      "joint_auc_repaired": 0.5276,
+      "early_fz_auc": 0.5119,
+      "late_lat_auc": 0.5158,
+      "late_abs_mean_uV": 33.5375
+    },
+    "D3高通1.0Hz": {
+      "joint_auc": 0.4732,
+      "joint_auc_repaired": 0.4836,
+      "early_fz_auc": 0.4856,
+      "late_lat_auc": 0.53,
+      "late_abs_mean_uV": 23.7802
+    },
+    "D4带通0.5-30Hz": {
+      "joint_auc": 0.4885,
+      "joint_auc_repaired": 0.5146,
+      "early_fz_auc": 0.4704,
+      "late_lat_auc": 0.5118,
+      "late_abs_mean_uV": 32.8933
+    },
+    "D5中位数去趋势": {
+      "joint_auc": 0.4992,
+      "joint_auc_repaired": 0.4329,
+      "early_fz_auc": 0.4996,
+      "late_lat_auc": 0.4993,
+      "late_abs_mean_uV": 14.147
+    }
+  }
+}

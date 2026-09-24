@@ -1,0 +1,11 @@
+{
+  "n1": "<font style=\"font-size:17px;\">基线校正与 R 波定位</font>",
+  "d1": "<font style=\"font-size:17px;\">心电模板三重判定</font>",
+  "n2": "<font style=\"font-size:17px;\">模板扣除</font>",
+  "n3": "<font style=\"font-size:17px;\">不做高通与带通</font>",
+  "n4": "<font style=\"font-size:17px;\">稳健软截断</font>",
+  "e1": "<font style=\"font-size:12px;\">中位模板</font>",
+  "e2": "<font style=\"font-size:12px;\">满足：相关度>0.6、幅度>6 倍、增益合理</font>",
+  "e3": "<font style=\"font-size:12px;\">不满足</font>",
+  "e5": "<font style=\"font-size:12px;\">10 倍稳健尺度</font>"
+}
