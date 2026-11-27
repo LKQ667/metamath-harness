@@ -6,41 +6,51 @@ import YAML from 'yaml';
 
 const workspaceRoot = resolve(import.meta.dirname, '../../../');
 const skillRoot = resolve(workspaceRoot, '.dsh/skills/image-to-editable-ppt');
-const presetFile = resolve(workspaceRoot, '.dsh/.agent-presets/editable-ppt/agent.cordis.yml');
-// DSH 0.1.2-rc.1 把 standard preset 移入 dsh-agent-presets 子包；保留旧路径作回退探测。
+const webPatch = resolve(workspaceRoot, '.dsh/profiles/web/cordis.patch.yml');
 const npmRoot = resolve(process.env.APPDATA ?? '', 'npm', 'node_modules', '@deepseek-ai', 'dsh');
-const standardCandidates = [
-  resolve(npmRoot, 'node_modules', '@deepseek-ai', 'dsh-agent-presets', 'presets', 'standard', 'agent.cordis.yml'),
-  resolve(npmRoot, 'config', 'agent-presets', 'standard', 'agent.cordis.yml'),
-];
-const { access } = await import('node:fs/promises');
-const standardFile = await (async () => {
-  for (const candidate of standardCandidates) {
-    try { await access(candidate); return candidate; } catch {}
+const standardPatchPath = resolve(npmRoot, 'node_modules', '@deepseek-ai', 'dsh-web-app', 'presets', 'standard.patch.yml');
+
+const customYamlTags = {
+  logLevel: 'silent',
+  customTags: [{ tag: '!js', resolve: (str) => ({ __jsExpr: str }) }, { tag: '!!js', resolve: (str) => ({ __jsExpr: str }) }],
+};
+
+async function findPresetPlugins(filePath, presetId) {
+  const raw = await readFile(filePath, 'utf8');
+  const doc = YAML.parse(raw, customYamlTags);
+  for (const row of doc ?? []) {
+    const items = Array.isArray(row?.insert) ? row.insert : [row];
+    for (const item of items) {
+      if (item?.name === '@deepseek-ai/dsh-agent-preset' && item?.config?.id === presetId) {
+        return item.config.plugins;
+      }
+    }
   }
-  throw new Error(`standard preset 不存在：${standardCandidates.join(' 或 ')}`);
-})();
-const ids = (text) => [...text.matchAll(/^\s*- id:\s*([^\s]+)\s*$/gm)].map((match) => match[1]);
+  throw new Error(`未在 ${filePath} 中找到预设 ${presetId}`);
+}
 
 test('editable-ppt Persona 声明 DSH 当前连接边界但不复制工具 schema', async () => {
-  const source = await readFile(presetFile, 'utf8');
-  assert.match(source, /DSH 当前生图连接/);
-  assert.match(source, /editable_ppt_image/);
-  assert.match(source, /禁止 Codex 和任何后端回退/);
-  assert.match(source, /任务开始时锁定/);
+  const plugins = await findPresetPlugins(webPatch, 'editable-ppt');
+  const personaText = plugins.find((row) => row.id === 'persona')?.config?.prefix ?? '';
+  assert.match(personaText, /DSH 当前生图连接/);
+  assert.match(personaText, /editable_ppt_image/);
+  assert.match(personaText, /禁止 Codex 和任何后端回退/);
+  assert.match(personaText, /任务开始时锁定/);
   // Persona 保持短小：不含枚举 schema、错误矩阵或执行步骤清单。
-  assert.doesNotMatch(source, /additionalProperties|"enum"|codex_backend_forbidden|dsh_current_cli_forbidden/);
-  // 0.1.5-rc.2 起 persona 文本字段为 config.prefix（旧版为 text）。
-  const personaText = source.match(/prefix: >-\n((?: {6}.+\n?)+)/)?.[1] ?? '';
+  assert.doesNotMatch(personaText, /additionalProperties|"enum"|codex_backend_forbidden|dsh_current_cli_forbidden/);
   assert.ok(personaText.length > 0 && personaText.length < 800, `Persona 应保持短小，当前 ${personaText.length} 字符`);
 });
 
 test('editable-ppt roster 与官方 standard 无差异（仅 Persona 文本不同）', async () => {
-  const [source, baseline] = await Promise.all([readFile(presetFile, 'utf8'), readFile(standardFile, 'utf8')]);
-  assert.deepEqual(ids(source), ids(baseline));
-  // 不仅比较 ID，避免官方新增配置被旧快照悄悄丢弃。
-  const withoutPersona = (text) => YAML.parse(text, { logLevel: 'silent' }).filter((row) => row.id !== 'persona');
-  assert.deepEqual(withoutPersona(source), withoutPersona(baseline));
+  const [source, baseline] = await Promise.all([
+    findPresetPlugins(webPatch, 'editable-ppt'),
+    findPresetPlugins(standardPatchPath, 'standard'),
+  ]);
+  assert.deepEqual(source.map((r) => r.id), baseline.map((r) => r.id));
+  assert.deepEqual(
+    source.filter((row) => row.id !== 'persona'),
+    baseline.filter((row) => row.id !== 'persona'),
+  );
 });
 
 test('dsh-current Worker 分支：锁定连接、串行、import 校验哈希、失败 passed:false，且无 Codex/config/Key 建议', async () => {

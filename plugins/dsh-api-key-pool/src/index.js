@@ -1,16 +1,20 @@
 import Schema from '@deepseek-ai/schemastery';
 import { assertCompatibleHarnessVersion, detectHarnessVersion } from './version.js';
 import { installApiKeyPoolHost } from './host.js';
+import { API_KEY_POOL_SCHEMA_TAG, ApiKeyPoolSchema } from './schema.js';
 
 export const name = 'api-key-pool';
 
 export const inject = ['credentials', 'settings'];
 
-/** 插件配置：共存模式默认开启；独立号池 Profile 可显式启用独占路由。 */
+/** 插件配置：共存模式默认开启；DSH 0.2.2+ volatile 字段支持原生 settings.yaml 迁移与即时更新。 */
 export const Config = Schema.object({
   profileLabel: Schema.string().description('健康端点返回的 profile 标签（如 web 或 web-key-pool）；留空则返回 null'),
   exclusivePoolRoutes: Schema.boolean().default(false)
     .description('独占号池路由：拒绝所有非 pool-* 请求；仅独立号池 Profile 启用'),
+  schema: Schema.string().default(API_KEY_POOL_SCHEMA_TAG).volatile(),
+  allowLoopbackHttpForTests: Schema.boolean().default(false).volatile(),
+  pools: Schema.any().default({}).volatile(),
 });
 
 /** Host 分面入口；版本门通过后才注册服务与 Remote。 */

@@ -39,15 +39,24 @@ export function buildOpenCodeRtProfile(ids, verifiedVisionModels = []) {
   return Object.freeze({ displayName: 'OpenCode RT', apiKeyEnv: OPENCODE_RT_CREDENTIAL, api: 'openai-completions', baseURL: OPENCODE_RT_ENDPOINT, defaultInput: ['text'], models });
 }
 
+function readSettingsNs(settings, ns) {
+  if (typeof settings?.get === 'function') return settings.get(ns);
+  if (typeof settings?.describe === 'function') {
+    const entry = settings.describe({ redactSecrets: false }).find((item) => item.ns === ns);
+    return entry?.value;
+  }
+  return undefined;
+}
+
 export class OpenCodeRtService {
   constructor({ settings, credentials, fetchImpl = globalThis.fetch } = {}) { this.settings = settings; this.credentials = credentials; this.fetch = fetchImpl; this.last = undefined; }
   configuredModels() {
-    const profile = this.settings.get('llm-pi-ai')?.providers?.[OPENCODE_RT_PROVIDER];
+    const profile = readSettingsNs(this.settings, 'llm-pi-ai')?.providers?.[OPENCODE_RT_PROVIDER];
     return Array.isArray(profile?.models) ? profile.models.map((model) => model.id).filter((id) => typeof id === 'string') : [];
   }
   status() {
     const configured = this.configuredModels();
-    const verified = this.settings.get('mathmodel-opencode-rt')?.verifiedVisionModels ?? [];
+    const verified = readSettingsNs(this.settings, 'mathmodel-opencode-rt')?.verifiedVisionModels ?? [];
     return Object.freeze({ schema: 'dsh.mathmodel.opencode-rt/v1', endpoint: OPENCODE_RT_MODELS_ENDPOINT, configuredModels: configured, visionCandidates: CATALOG.filter((model) => model.visionSupported).map((model) => model.id), verifiedVisionModels: verified.filter((id) => configured.includes(id)), ...(this.last ? { last: this.last } : {}) });
   }
   async refresh({ signal } = {}) {
@@ -56,7 +65,7 @@ export class OpenCodeRtService {
     catch { if (signal?.aborted) throw fail('cancelled', 'OpenCode 模型刷新已取消'); throw fail('models_unavailable', '无法连接 OpenCode 模型接口'); }
     if (!response?.ok) throw fail('models_http_error', `OpenCode 模型接口请求失败（HTTP ${response?.status ?? '未知'}）`);
     const ids = parseOpenCodeModels(await response.json());
-    const verified = this.settings.get('mathmodel-opencode-rt')?.verifiedVisionModels ?? [];
+    const verified = readSettingsNs(this.settings, 'mathmodel-opencode-rt')?.verifiedVisionModels ?? [];
     const profile = buildOpenCodeRtProfile(ids, verified);
     if (profile.models.length === 0) throw fail('no_supported_models', '官方模型清单中没有可安全接入 opencode-rt 的模型');
     await this.settings.mutate('llm-pi-ai', [{ op: 'set', path: ['providers', OPENCODE_RT_PROVIDER], value: profile }]);
@@ -87,7 +96,7 @@ export class OpenCodeRtService {
     } catch { if (signal?.aborted) throw fail('cancelled', '识图验收已取消'); throw fail('vision_unavailable', '无法连接 OpenCode 识图接口'); }
     if (!response?.ok) throw fail('vision_http_error', `模型未通过识图验收（HTTP ${response?.status ?? '未知'}）`);
     if (!textOf((await response.json())?.choices?.[0]?.message?.content)) throw fail('vision_invalid_response', '模型返回为空，未通过识图验收');
-    const current = this.settings.get('mathmodel-opencode-rt')?.verifiedVisionModels ?? [];
+    const current = readSettingsNs(this.settings, 'mathmodel-opencode-rt')?.verifiedVisionModels ?? [];
     const verified = [...new Set([...current, model])];
     await this.settings.update('mathmodel-opencode-rt', { verifiedVisionModels: verified });
     await this.settings.mutate('llm-pi-ai', [{ op: 'set', path: ['providers', OPENCODE_RT_PROVIDER], value: buildOpenCodeRtProfile(this.configuredModels(), verified) }]);

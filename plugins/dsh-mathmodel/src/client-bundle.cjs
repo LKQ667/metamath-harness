@@ -209,13 +209,22 @@ async function browserDraftPayload(file) {
 
 function currentInputState(input) {
   const state = input?.state?.getSnapshot?.();
-  if (!state || !Array.isArray(state.imageIds)) throw new Error('输入草稿已不可用，请重试');
-  return state;
+  const ids = Array.isArray(state?.attachmentIds) ? state.attachmentIds : state?.imageIds;
+  if (!state || !Array.isArray(ids)) throw new Error('输入草稿已不可用，请重试');
+  return { ...state, imageIds: ids };
 }
 
 function createManualVisionActions({ stage, workspaceOf, draftImages, releaseDraftImages, inputForSession, notify, encodeImage = browserDraftPayload }) {
   return {
     notify,
+    imageAttachmentIds(ids) {
+      if (!Array.isArray(ids) || ids.length === 0) return [];
+      try {
+        return draftImages(ids).map((attachment) => attachment.id ?? null).filter(Boolean);
+      } catch {
+        return [];
+      }
+    },
     async stageToDraft({ sessionId, imageIds }) {
       if (!Array.isArray(imageIds) || imageIds.length === 0) throw new Error('请先添加至少一张图片');
       const workspace = workspaceOf(sessionId);
@@ -228,7 +237,8 @@ function createManualVisionActions({ stage, workspaceOf, draftImages, releaseDra
       const liveImageIds = new Set(latest.imageIds);
       if (!imageIds.every((id) => liveImageIds.has(id))) throw new Error('图片草稿已变更，未写入附图结果');
       input.setDraft(appendStagedImagesDraft(latest.draft, result?.files));
-      for (const id of imageIds) input.removeImage(id);
+      const removeFn = typeof input.removeAttachment === 'function' ? (id) => input.removeAttachment(id) : (id) => input.removeImage(id);
+      for (const id of imageIds) removeFn(id);
       releaseDraftImages(attachments);
       input.notify?.('info', `已附图 ${result.files.length} 张；发送后模型将调用视觉工具查看原图。`);
       return result;
@@ -1001,9 +1011,14 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         )), document.body);
       }
 
-      function ManualVisionDraftButton({ input, sessionId, actions }) {
+      function ManualVisionDraftButton({ input, useInput, sessionId, actions }) {
         const [busy, setBusy] = React.useState(false);
-        const imageIds = input?.imageIds ?? [];
+        const liveAttachmentIds = typeof useInput === 'function'
+          ? useInput((state) => state?.attachmentIds ?? state?.imageIds ?? [])
+          : (input?.attachmentIds ?? input?.imageIds ?? []);
+        const imageIds = typeof actions?.imageAttachmentIds === 'function'
+          ? actions.imageAttachmentIds(liveAttachmentIds)
+          : liveAttachmentIds;
         if (imageIds.length === 0) return null;
         const stage = async () => {
           setBusy(true);
@@ -1060,7 +1075,7 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         'conversation',
       ];
       const pass = Object.freeze({ parse: (value) => value });
-      const codec = Object.freeze({ mode: 'strict', typeSymbol: 'mathmodel#json', schema: pass });
+      const codec = Object.freeze({ mode: 'strict', typeSymbol: 'mathmodel#json', schema: pass, create: () => pass });
       const param = (name) => ({ name, wire: name, source: 'json', codec });
       const descriptor = (service, method, parameters = []) => ({
         id: `@deepseek-harness/dsh-mathmodel#${service}/${method}`,
@@ -1130,8 +1145,19 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
           current?.abort.abort();
           const abort = new AbortController();
           const promise = (async () => {
+            const listSkills = async () => {
+              if (typeof sessions.using === 'function' && sessions.binding?.(sessionId) !== undefined) {
+                return await sessions.using(sessionId, { source: 'mathmodelSkillCatalog', signal: abort.signal }, async (reference) => {
+                  abort.signal.throwIfAborted();
+                  const state = reference.binding.session.getSnapshot();
+                  if (state.openState !== 'open') throw state.openError ?? new Error(`session "${sessionId}" is not open`);
+                  return await skillsRemote.list({ sessionId }, abort.signal);
+                });
+              }
+              return await skillsRemote.list({ sessionId }, abort.signal);
+            };
             const [skillsResult, cardsResult] = await Promise.all([
-              skillsRemote.list({ sessionId }, abort.signal),
+              listSkills(),
               unwrapRemote(mathmodelCards.list(), 'mathmodelCards/list'),
             ]);
             if (!skillsResult.ok) throw new Error(`skill.list failed: ${skillsResult.error.code}`);
@@ -1185,8 +1211,18 @@ if (typeof window !== 'undefined' && window.__ModuleLoader__) {
         const manualVisionActions = createManualVisionActions({
           stage: (images, workspace) => unwrapRemote(mathmodelManualVision.stage(images, workspace), 'mathmodelManualVision/stage'),
           workspaceOf: (sessionId) => sessions.list?.getSnapshot?.().byId[sessionId]?.cwd,
-          draftImages: (imageIds) => conversation.draftImages(imageIds),
-          releaseDraftImages: (attachments) => conversation.releaseDraftImages(attachments),
+          draftImages: (imageIds) => {
+            if (typeof conversation.resolveDraftAttachments === 'function') {
+              return conversation.resolveDraftAttachments(imageIds).filter((attachment) => attachment?.kind === 'image');
+            }
+            return conversation.draftImages(imageIds);
+          },
+          releaseDraftImages: (attachments) => {
+            if (typeof conversation.releaseDraftAttachments === 'function') {
+              return conversation.releaseDraftAttachments(attachments);
+            }
+            return conversation.releaseDraftImages(attachments);
+          },
           inputForSession: (sessionId) => {
             const actx = sessions.scope(sessionId);
             if (!actx) throw new Error('当前会话已不可用，请重试');

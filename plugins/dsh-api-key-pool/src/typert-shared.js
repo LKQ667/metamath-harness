@@ -9,10 +9,13 @@ import { z } from 'zod';
 
 const PACKAGE = '@deepseek-harness/dsh-api-key-pool';
 
-const result = (symbol) => ({ mode: 'strict', typeSymbol: symbol, schema: z.unknown() });
+const result = (symbol) => {
+  const schema = z.unknown();
+  return { mode: 'strict', typeSymbol: symbol, schema, create: () => schema };
+};
 const parameter = (name, schema = z.string()) => ({
   name, wire: name, source: 'json',
-  codec: { mode: 'strict', typeSymbol: `api-key-pool#${name}`, schema },
+  codec: { mode: 'strict', typeSymbol: `api-key-pool#${name}`, schema, create: () => schema },
 });
 const invocation = (service, method, parameters = []) => ({
   id: `${PACKAGE}#${service}/${method}`,

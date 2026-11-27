@@ -1,34 +1,19 @@
 /**
  * dsh-client-ui-skins — Host side.
  *
- * Registers the `ui-skins` settings namespace so the browser half can persist
- * the active skin choice through the ordinary settings transport. The actual
- * skins live in the client bundle; this Host file is deliberately thin.
- *
- * DSH 0.1.2-rc.1 适配（2026-09-04）：`@deepseek-ai/dsh-settings` 移除了模块级
- * `settingsNamespace` 工厂，`SettingsProvider.register` 直接接受 namespace 字符串。
+ * DSH 0.2.2-rc.5 适配（2026-11-27）：`@deepseek-ai/dsh-settings` 自动从导出
+ * Config schema 的 `.volatile()` 字段投影配置表单，不再调用已移除的 `settings.register`。
+ * 皮肤实际状态、FX 与内置壁纸仍保留在本地派生 `lib/client.js` 与浏览器 localStorage。
  */
 import z from "@deepseek-ai/schemastery";
 
-/** Settings namespace owned by the skins plugin. */
 export const SKINS_SETTINGS_NAMESPACE = "ui-skins";
-/** Field carrying the active skin id ("system" = none). */
 export const SKIN_FIELD = "skin";
-/** Default: no skin, native appearance. */
 export const DEFAULT_SKIN = "system";
 
-/** Durable skins schema; also the wire envelope the browser scope validates against. */
-export const SkinsSettingsSchema = z.object({
-  [SKIN_FIELD]: z.string().default(DEFAULT_SKIN),
+export const Config = z.object({
+  [SKIN_FIELD]: z.string().default(DEFAULT_SKIN).volatile(),
 });
+export const SkinsSettingsSchema = Config;
 
-/**
- * Register the durable skin section when the optional settings service is
- * composed.
- * @param ctx - Host context.
- */
-export function apply(ctx) {
-  ctx.inject(["settings"], (settingsCtx) => {
-    settingsCtx.settings.register(SKINS_SETTINGS_NAMESPACE, SkinsSettingsSchema);
-  });
-}
+export function apply() {}

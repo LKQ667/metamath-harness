@@ -103,7 +103,7 @@
       }
 
       const pass = Object.freeze({ parse: (value) => value });
-      const codec = Object.freeze({ mode: 'strict', typeSymbol: 'api-key-pool#json', schema: pass });
+      const codec = Object.freeze({ mode: 'strict', typeSymbol: 'api-key-pool#json', schema: pass, create: () => pass });
       const param = (name) => ({ name, wire: name, source: 'json', codec });
       const descriptor = (service, method, parameters = []) => ({
         id: `@deepseek-harness/dsh-api-key-pool#${service}/${method}`,
@@ -809,8 +809,8 @@
         return result;
       };
 
-      function ApiKeyPoolCard({ remote }) {
-        const [open, setOpen] = React.useState(false);
+      function ApiKeyPoolCard({ remote, defaultOpen = false }) {
+        const [open, setOpen] = React.useState(Boolean(defaultOpen));
         const [data, setData] = React.useState(null);
         const [error, setError] = React.useState(null);
         const [busy, setBusy] = React.useState(false);
@@ -1036,6 +1036,39 @@
           throw new Error('dsh-api-key-pool: Remote 挂载后不可用');
         }
 
+        ctx.slots.inject('plugins.bundle.config', () =>
+          ctx.slots.register(
+            {
+              name: 'plugins.bundle.config',
+              key: '@deepseek-harness/dsh-api-key-pool',
+              inject: () => ({ remote, defaultOpen: true }),
+            },
+            ApiKeyPoolCard,
+          ),
+        );
+        ctx.slots.inject('plugins.row.config', () =>
+          ctx.slots.register(
+            {
+              name: 'plugins.row.config',
+              key: '@deepseek-harness/dsh-api-key-pool#api-key-pool',
+              inject: () => ({ remote, defaultOpen: true }),
+            },
+            ApiKeyPoolCard,
+          ),
+        );
+        ctx.slots.inject('settings.section', () =>
+          ctx.slots.register(
+            {
+              name: 'settings.section',
+              id: 'api-key-pool',
+              order: 65,
+              label: () => 'API Key 号池',
+              inject: () => ({ remote, defaultOpen: true }),
+            },
+            ApiKeyPoolCard,
+          ),
+        );
+        // 兼容旧单测：若宿主声明了 settings.plugin.item 则继续注册。
         ctx.slots.inject('settings.plugin.item', () =>
           ctx.slots.register(
             {

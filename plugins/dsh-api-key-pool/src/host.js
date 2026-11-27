@@ -428,15 +428,54 @@ export function makeHealthRoutes(service) {
 // Host 安装：接线 settings/llm/webServer 与守卫。
 // ---------------------------------------------------------------------------
 
+function createPoolSettingsScope(ctx, config) {
+  if (typeof ctx.settings?.register === 'function') {
+    return ctx.settings.register(API_KEY_POOL_NAMESPACE, ApiKeyPoolSchema, {
+      applies: 'live',
+      validate: assertServiceablePoolConfig,
+    });
+  }
+  if (typeof ctx.settings?.configure === 'function' && typeof ctx.effect === 'function') {
+    ctx.effect(() => ctx.settings.configure({ auto: false }, ctx.fiber), 'dsh-api-key-pool: settings presentation');
+  }
+  const ns = ctx.fiber?.entry?.options?.id ?? API_KEY_POOL_NAMESPACE;
+  const readVolatile = (field, fallback) => (typeof field?.get === 'function' ? field.get() : (field ?? fallback));
+  const readSection = () => validatePoolConfig({
+    schema: readVolatile(config?.schema, 'dsh.api-key-pool/v1'),
+    allowLoopbackHttpForTests: readVolatile(config?.allowLoopbackHttpForTests, false),
+    pools: readVolatile(config?.pools, {}),
+  });
+  const listeners = new Set();
+  if (typeof ctx.on === 'function') {
+    ctx.on('loader/volatile-update', () => {
+      for (const listener of listeners) listener();
+    });
+  }
+  return {
+    get: () => readSection(),
+    replace: async (section) => {
+      const normalized = validatePoolConfig(section);
+      assertServiceablePoolConfig(normalized);
+      await ctx.settings.replace(ns, {
+        schema: normalized.schema,
+        allowLoopbackHttpForTests: normalized.allowLoopbackHttpForTests,
+        pools: normalized.pools,
+      });
+      for (const listener of listeners) listener();
+    },
+    watch: (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+  };
+}
+
 export function installApiKeyPoolHost(ctx, config = {}) {
   const profileLabel = typeof config?.profileLabel === 'string' && config.profileLabel.length > 0
     ? config.profileLabel
     : null;
 
-  const scope = ctx.settings.register(API_KEY_POOL_NAMESPACE, ApiKeyPoolSchema, {
-    applies: 'live',
-    validate: assertServiceablePoolConfig,
-  });
+  const scope = createPoolSettingsScope(ctx, config);
 
   const service = new ApiKeyPoolService({
     settings: scope,

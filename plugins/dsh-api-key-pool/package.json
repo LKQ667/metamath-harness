@@ -1,7 +1,7 @@
 {
   "name": "@deepseek-harness/dsh-api-key-pool",
-  "version": "0.3.0-metamath.5",
-  "description": "DeepSeek Harness 0.1.5-rc.2 API Key 号池插件（原生共存/独立 Profile，多 Key 轮询/冷却/失败切换/Web 管理）",
+  "version": "0.3.0-metamath.6",
+  "description": "DeepSeek Harness 0.2.2-rc.5 API Key 号池插件（原生共存/独立 Profile，多 Key 轮询/冷却/失败切换/Web 管理）",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -30,51 +30,45 @@
     },
     "client": {
       "inject": [
-        "@deepseek-ai/dsh-client-runtime"
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-plugin-manager",
+        "@deepseek-ai/dsh-client-ui-settings"
       ],
       "platform": "web"
     }
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24.9"
   },
   "dependencies": {
-    "@deepseek-ai/cordis": "4.0.2",
-    "@deepseek-ai/dsh-credentials": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-settings": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
-    "@deepseek-ai/schemastery": "3.18.2",
+    "@deepseek-ai/cordis": "^4.1.0",
+    "@deepseek-ai/dsh-credentials": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-settings": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-typert-protocol": "0.2.2-rc.5",
+    "@deepseek-ai/schemastery": "^3.18.5",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-attachment": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-authorization": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-invariants": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-launch-environment": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-llm": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-llm-pi-ai": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-timeout": "0.1.5-rc.2",
-    "@earendil-works/pi-ai": "^0.85.1"
+    "@deepseek-ai/dsh-attachment": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-authorization": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-launch-environment": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-llm": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-llm-pi-ai": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-timeout": "0.2.2-rc.5",
+    "@earendil-works/pi-ai": "^1.6.1"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-llm": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-llm-pi-ai": "0.1.5-rc.2",
-    "@earendil-works/pi-ai": "^0.85.1"
+    "@deepseek-ai/dsh": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-llm": "0.2.2-rc.5",
+    "@deepseek-ai/dsh-llm-pi-ai": "0.2.2-rc.5",
+    "@earendil-works/pi-ai": "^1.6.1"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-llm": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-llm-pi-ai": {
-      "optional": true
-    },
-    "@earendil-works/pi-ai": {
-      "optional": true
-    }
+    "@deepseek-ai/dsh": { "optional": true },
+    "@deepseek-ai/dsh-llm": { "optional": true },
+    "@deepseek-ai/dsh-llm-pi-ai": { "optional": true },
+    "@earendil-works/pi-ai": { "optional": true }
   },
   "scripts": {
     "build": "node scripts/build.mjs",

@@ -1,9 +1,19 @@
+import Schema from '@deepseek-ai/schemastery';
 import { assertCompatibleHarnessVersion, detectHarnessVersion } from './version.js';
-import { installMathmodelHost } from './host.js';
+import { installMathmodelHost, ImageConnectionsSchema, ProviderSettingsSchema } from './host.js';
+import { OpenCodeRtSettingsSchema } from './opencode-rt.js';
 
 export const name = 'dsh-mathmodel';
 
 export const inject = ['credentials', 'settings'];
+
+/** DSH 0.2.2+ 插件 Config：skillRoot 为静态路径，其余三个子域为 volatile 即时可写配置。 */
+export const Config = Schema.object({
+  skillRoot: Schema.string().description('Skill 目录根路径'),
+  providers: ProviderSettingsSchema.volatile(),
+  imageConnections: ImageConnectionsSchema.volatile(),
+  opencodeRt: OpenCodeRtSettingsSchema.volatile(),
+});
 
 /** Host 分面入口；仅在版本门通过后注册服务与 Remote。 */
 export function apply(ctx, config) {

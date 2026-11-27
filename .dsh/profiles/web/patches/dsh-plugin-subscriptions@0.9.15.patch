@@ -1,0 +1,118 @@
+diff --git a/lib/index.d.ts b/lib/index.d.ts
+--- a/lib/index.d.ts
++++ b/lib/index.d.ts
+@@ -20,6 +20,19 @@
+ export type { RateLimitConfig, RateLimitWait } from './providers/rate-limit.js';
+ export type { ProviderStatus } from './auth/rpc.js';
+ export type { AntigravitySession, ClaudeSession, CodexSession, CopilotSession, GrokSession, ProviderId } from './auth/store.js';
++export interface SubscriptionSessionSnapshot {
++    accessToken: string;
++    accountId?: string;
++}
++export interface SubscriptionSessions {
++    describe(provider: 'codex' | 'grok'): Promise<{ configured: boolean }>;
++    resolve(provider: 'codex' | 'grok', options?: { force?: boolean; signal?: AbortSignal }): Promise<SubscriptionSessionSnapshot>;
++}
++declare module '@deepseek-ai/cordis' {
++    interface Context {
++        subscriptionSessions: SubscriptionSessions;
++    }
++}
+ export declare const name = "dsh-plugin-subscriptions";
+ export declare const inject: string[];
+ /** Default maximum provider idle time while one stream read is outstanding. */
+@@ -35,6 +48,8 @@
+     providers?: ProviderId[];
+     /** Maximum provider idle time while one stream read is outstanding (default five minutes). */
+     streamIdleTimeoutMs?: number;
++    /** Register the package image_generate tool; defaults to true. */
++    registerImageTool?: boolean;
+     /**
+      * How long Anthropic keeps the Claude conversation cache after its last use:
+      * `'5m'` (default, the API's own default) or `'1h'`. One hour writes cache
+diff --git a/lib/index.js b/lib/index.js
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -16792,6 +16792,7 @@
+ 	]),
+ 	codexClientVersion: z.string(),
+ 	streamIdleTimeoutMs: z.number().min(1).default(DEFAULT_STREAM_IDLE_TIMEOUT_MS),
++	registerImageTool: z.boolean().default(true),
+ 	claudePromptCacheTtl: z.union(["5m", "1h"]).default(DEFAULT_PROMPT_CACHE_TTL),
+ 	claudeDeferTools: z.array(z.string()).default([]),
+ 	rateLimit: z.object({
+@@ -17274,6 +17275,7 @@
+ 	const handles = /* @__PURE__ */ new Map();
+ 	const adapters = /* @__PURE__ */ new Map();
+ 	const accountTokens = /* @__PURE__ */ new Map();
++	const subscriptionTokenManagers = /* @__PURE__ */ new Map();
+ 	let poolHealth;
+ 	let poolUsage;
+ 	let poolAdapter;
+@@ -17368,6 +17370,7 @@
+ 			});
+ 			codexTokens = tokens;
+ 			accountTokens.set("codex", tokens);
++			subscriptionTokenManagers.set("codex", tokens);
+ 			usageFetchers.codex = async (account, signal) => {
+ 				const session = await tokens.session(account);
+ 				const usage = await fetchCodexUsage(session, proxiedFetch, signal);
+@@ -17465,6 +17468,7 @@
+ 			});
+ 			grokTokens = tokens;
+ 			accountTokens.set("grok", tokens);
++			subscriptionTokenManagers.set("grok", tokens);
+ 			usageFetchers.grok = async (account, signal) => fetchGrokUsage(await tokens.session(account), proxiedFetch, signal);
+ 			const adapter = new GrokAdapter({
+ 				models: catalog.grok,
+@@ -17561,6 +17565,24 @@
+ 		}
+ 	};
+ 	observeUsageFetchers(usageFetchers, trackUsage);
++	const subscriptionSessions = Object.freeze({
++		async describe(provider) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			const tokens = subscriptionTokenManagers.get(provider);
++			return Object.freeze({ configured: tokens !== void 0 && await tokens.defaultAccount() !== void 0 });
++		},
++		async resolve(provider, options = {}) {
++			if (provider !== "codex" && provider !== "grok") throw new Error(`subscriptionSessions: unsupported provider ${provider}`);
++			const tokens = subscriptionTokenManagers.get(provider);
++			if (tokens === void 0) throw new Error(`dsh-plugin-subscriptions: provider ${provider} is not enabled`);
++			const session = await tokens.session(void 0, options.force === true);
++			return Object.freeze({
++				accessToken: session.accessToken,
++				...provider === "codex" ? { accountId: session.accountId } : {}
++			});
++		}
++	});
++	ctx.effect(() => ctx.reflect.provide("subscriptionSessions", subscriptionSessions), "dsh-plugin-subscriptions: subscription session service");
+ 	const poolConfig = config.pool;
+ 	const autoAccounts = poolConfig?.autoAccounts ?? poolConfig?.autoFamilies ?? true;
+ 	if (poolConfig?.enabled !== false && adapters.size >= 1) {
+@@ -17920,7 +17942,7 @@
+ 			const result = registerWithAlias(toolsCtx.tools, definition);
+ 			if (result !== void 0) registeredNames.set(definition.name, result.name);
+ 		}
+-		if (codexTokens !== void 0 || grokTokens !== void 0) {
++		if (config.registerImageTool !== false && (codexTokens !== void 0 || grokTokens !== void 0)) {
+ 			const result = registerWithAlias(toolsCtx.tools, createImageGenerateTool({
+ 				imagePool,
+ 				...codexTokens === void 0 ? {} : { codexTokens },
+diff --git a/lib/client.js b/lib/client.js
+--- a/lib/client.js
++++ b/lib/client.js
+@@ -11032,13 +11032,6 @@
+ 		key: SUBSCRIPTIONS_PANEL_ID,
+ 		inject: pageInjected
+ 	}, SubscriptionsPage));
+-	const toolviewInjected = () => ({ load: createImageLoader(connection.rpc) });
+-	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+-		name: "tool.call.toolview",
+-		key: "image_generate",
+-		locale: NS,
+-		inject: toolviewInjected
+-	}, ImageGenerateToolview));
+ 	const videoToolviewInjected = () => ({ loadVideo: createVideoLoader(connection.rpc) });
+ 	ctx.slots.inject("tool.call.toolview", () => ctx.slots.register({
+ 		name: "tool.call.toolview",

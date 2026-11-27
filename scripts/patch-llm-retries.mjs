@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
-export const SUPPORTED_VERSION = '0.1.5-rc.2';
+export const SUPPORTED_VERSION = '0.2.2-rc.5';
 export const TARGET_RETRIES = 6;
 const ANCHOR = /\bconst DEFAULT_MAX_RETRIES = (\d+);/gu;
 

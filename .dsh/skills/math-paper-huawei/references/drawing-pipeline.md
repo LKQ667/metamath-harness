@@ -13,17 +13,18 @@
 
 ## 做题前选路
 
-每个项目在正式做题前必须询问一次并只接受以下三个选项：`Draw.io 绘图`、`HTML 矢量成图`、`AI 全自动绘图`（卡片 `drawing_mode` 选项 `Draw.io成图+AI概念提示词`/`Draw.io成图` 对应 `drawio`，`HTML矢量成图` 对应 `html`，`AI全自动绘图` 对应 `ai`）。选择后立即写入项目根目录 `项目状态.json` 和 `figures/manifest.json` 顶层，至少包含：
+做题前按卡片锁定值、项目已有一致记录、默认 `drawio` 的顺序自动选路，不询问用户（卡片 `Draw.io成图+AI概念提示词`/`Draw.io成图` 对应 `drawio`，`HTML矢量成图` 对应 `html`，`AI全自动绘图` 对应 `ai`）。选路后立即写入项目根目录 `项目状态.json` 和 `figures/manifest.json` 顶层，记录选择来源，至少包含：
 
 ```json
 {
   "drawing_mode": "drawio",
   "drawing_mode_locked": true,
-  "drawing_mode_confirmed": true
+  "drawing_mode_confirmed": true,
+  "drawing_mode_source": "auto_default"
 }
 ```
 
-`drawing_mode` 取值只能是 `drawio`、`html`、`ai` 之一。旧项目缺少记录时必须补问，不得根据现有文件推断。两处记录不一致、未确认、未锁定或非数据绘图混用模式时，停止执行。Python 数据图始终沿用既有链路，不参与选路。
+`drawing_mode` 取值只能是 `drawio`、`html`、`ai` 之一，`drawing_mode_source` 取 `card`、`project` 或 `auto_default`。旧项目缺记录或两处记录不一致时，先用有效卡片值恢复；没有卡片值则取已有有效锁定值，两处有效值冲突时选 `drawio` 并记录冲突和修复。`drawing_mode_confirmed=true` 表示本次选路已校验并锁定，不表示用户另行确认。非数据绘图混用模式时自动修复并重跑门禁；修复前不得交付。Python 数据图始终沿用既有链路，不参与选路。
 
 ## 统一 manifest
 

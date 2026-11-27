@@ -1,3 +1,7 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+import YAML from 'yaml';
 import Schema from '@deepseek-ai/schemastery';
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol';
 import { CardRegistry, SkillHelpCatalog } from './cards/registry.js';
@@ -185,17 +189,164 @@ export class MathmodelManualVisionGateway extends TypertRemoteService {
 }
 remote(MathmodelManualVisionGateway, 'stage');
 
+function readLegacyMathmodelSections(ctx) {
+  const home = ctx?.get?.('profileContext')?.home ?? ctx?.profileContext?.home ?? process.env.DSH_HOME ?? join(homedir(), '.dsh');
+  if (!home) return {};
+  for (const fname of ['settings.yaml.imported', 'settings.yaml']) {
+    const file = join(home, fname);
+    if (!existsSync(file)) continue;
+    try {
+      const parsed = YAML.parse(readFileSync(file, 'utf8'));
+      if (parsed && typeof parsed === 'object') {
+        return {
+          providers: parsed[PROVIDER_SETTINGS_NAMESPACE],
+          imageConnections: parsed[IMAGE_CONNECTIONS_NAMESPACE],
+          opencodeRt: parsed['mathmodel-opencode-rt'],
+        };
+      }
+    } catch { /* ignore unreadable legacy file */ }
+  }
+  return {};
+}
+
+function createMathmodelSettingsAdapters(ctx, config) {
+  if (typeof ctx.settings?.register === 'function') {
+    const settingsScope = ctx.settings.register(PROVIDER_SETTINGS_NAMESPACE, ProviderSettingsSchema, {
+      applies: 'live',
+      validate: (value) => new ProviderSettingsFacade({ get: () => value }).describe(),
+    });
+    const imageConnectionsScope = ctx.settings.register(IMAGE_CONNECTIONS_NAMESPACE, ImageConnectionsSchema, {
+      applies: 'live',
+      validate: (value) => { validateImageConnections(value); },
+    });
+    ctx.settings.register('mathmodel-opencode-rt', OpenCodeRtSettingsSchema, { applies: 'live' });
+    return {
+      settingsScope,
+      imageConnectionsScope,
+      hasV2UserSection: () => {
+        try {
+          const descriptor = ctx.settings.describe({ redactSecrets: true }).find((entry) => entry.ns === IMAGE_CONNECTIONS_NAMESPACE);
+          return descriptor?.user !== undefined;
+        } catch {
+          return false;
+        }
+      },
+      openCodeSettings: ctx.settings,
+    };
+  }
+  if (typeof ctx.settings?.configure === 'function' && typeof ctx.effect === 'function') {
+    ctx.effect(() => ctx.settings.configure({ auto: false }, ctx.fiber), 'dsh-mathmodel: settings presentation');
+  }
+  const ns = ctx.fiber?.entry?.options?.id ?? 'mathmodel';
+  const readVolatile = (field, fallback) => (typeof field?.get === 'function' ? field.get() : (field ?? fallback));
+  const emptyV2 = () => ({ schema: IMAGE_CONNECTIONS_SCHEMA_TAG, activeConnectionId: '', connections: [] });
+  const descriptorOf = () => {
+    try {
+      return ctx.settings.describe({ redactSecrets: true }).find((entry) => entry.ns === ns);
+    } catch {
+      return undefined;
+    }
+  };
+  const hasUserField = (field) => {
+    const user = descriptorOf()?.user;
+    return Boolean(user && typeof user === 'object' && Object.prototype.hasOwnProperty.call(user, field));
+  };
+  const settingsScope = {
+    get: () => readVolatile(config?.providers, DEFAULT_PROVIDER_SETTINGS),
+    update: async (patch) => {
+      const next = { ...settingsScope.get(), ...patch };
+      new ProviderSettingsFacade({ get: () => next }).describe();
+      await ctx.settings.mutate(ns, [{ op: 'set', path: ['providers'], value: next }]);
+    },
+    replace: async (section) => {
+      const next = new ProviderSettingsFacade({ get: () => section }).describe();
+      await ctx.settings.mutate(ns, [{ op: 'set', path: ['providers'], value: next }]);
+    },
+  };
+  const imageConnectionsScope = {
+    get: () => readVolatile(config?.imageConnections, emptyV2()),
+    replace: async (section) => {
+      validateImageConnections(section);
+      await ctx.settings.mutate(ns, [{ op: 'set', path: ['imageConnections'], value: section }]);
+    },
+  };
+  const openCodeSettings = {
+    get: (targetNs) => {
+      if (targetNs === 'mathmodel-opencode-rt') {
+        return readVolatile(config?.opencodeRt, { verifiedVisionModels: [] });
+      }
+      return ctx.settings.describe({ redactSecrets: false }).find((entry) => entry.ns === targetNs)?.value;
+    },
+    update: async (targetNs, patch) => {
+      if (targetNs === 'mathmodel-opencode-rt') {
+        const next = { ...(readVolatile(config?.opencodeRt, { verifiedVisionModels: [] }) ?? {}), ...patch };
+        await ctx.settings.mutate(ns, [{ op: 'set', path: ['opencodeRt'], value: next }]);
+        return;
+      }
+      await ctx.settings.update(targetNs, patch);
+    },
+    mutate: async (targetNs, ops) => await ctx.settings.mutate(targetNs, ops),
+    describe: (opts) => ctx.settings.describe(opts),
+  };
+
+  // 一次性迁移旧 settings.yaml(.imported) 中的非秘密生图连接与旧供应商配置（不覆盖已有新配置）。
+  const migrateOnce = async () => {
+    // 稍微让位，避免与 SettingsForms.importLegacyDocument 并发写 cordis.patch.yml 冲突。
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    const legacy = readLegacyMathmodelSections(ctx);
+    const ops = [];
+    if (!hasUserField('providers') && legacy.providers && typeof legacy.providers === 'object') {
+      try {
+        const clean = new ProviderSettingsFacade({ get: () => legacy.providers }).describe();
+        ops.push({ op: 'set', path: ['providers'], value: JSON.parse(JSON.stringify(clean)) });
+      } catch (err) {
+        ctx.logger?.warn?.('[dsh-mathmodel] 跳过旧 providers 迁移：%s', err instanceof Error ? err.message : String(err));
+      }
+    }
+    if (!hasUserField('imageConnections') && legacy.imageConnections && typeof legacy.imageConnections === 'object') {
+      try {
+        let clean;
+        try {
+          clean = validateImageConnections(legacy.imageConnections);
+        } catch (firstErr) {
+          if (firstErr?.code === 'active_not_ready') {
+            clean = validateImageConnections({ ...legacy.imageConnections, activeConnectionId: '' });
+          } else {
+            throw firstErr;
+          }
+        }
+        ops.push({ op: 'set', path: ['imageConnections'], value: JSON.parse(JSON.stringify(clean)) });
+      } catch (err) {
+        ctx.logger?.warn?.('[dsh-mathmodel] 跳过旧 imageConnections 迁移：%s', err instanceof Error ? err.message : String(err));
+      }
+    }
+    if (!hasUserField('opencodeRt') && legacy.opencodeRt && typeof legacy.opencodeRt === 'object') {
+      const verified = Array.isArray(legacy.opencodeRt.verifiedVisionModels)
+        ? legacy.opencodeRt.verifiedVisionModels.filter((x) => typeof x === 'string') : [];
+      ops.push({ op: 'set', path: ['opencodeRt'], value: { verifiedVisionModels: verified } });
+    }
+    if (ops.length > 0) {
+      await ctx.settings.mutate(ns, ops);
+      ctx.logger?.info?.('[dsh-mathmodel] 已从旧 settings.yaml 迁移 %d 项非秘密配置到 Profile 配置', ops.length);
+    }
+  };
+  if (ctx?.root?.loader?.await) {
+    ctx.root.loader.await().then(() => migrateOnce()).catch((err) => {
+      ctx.logger?.warn?.('[dsh-mathmodel] 旧配置一次性迁移跳过：%s', err instanceof Error ? err.message : String(err));
+    });
+  }
+
+  return {
+    settingsScope,
+    imageConnectionsScope,
+    hasV2UserSection: () => hasUserField('imageConnections'),
+    openCodeSettings,
+  };
+}
+
 export function installMathmodelHost(ctx, config = {}) {
   const skillRoot = config.skillRoot;
-  const settingsScope = ctx.settings.register(PROVIDER_SETTINGS_NAMESPACE, ProviderSettingsSchema, {
-    applies: 'live',
-    validate: (value) => new ProviderSettingsFacade({ get: () => value }).describe(),
-  });
-  const imageConnectionsScope = ctx.settings.register(IMAGE_CONNECTIONS_NAMESPACE, ImageConnectionsSchema, {
-    applies: 'live',
-    validate: (value) => { validateImageConnections(value); },
-  });
-  ctx.settings.register('mathmodel-opencode-rt', OpenCodeRtSettingsSchema, { applies: 'live' });
+  const { settingsScope, imageConnectionsScope, hasV2UserSection, openCodeSettings } = createMathmodelSettingsAdapters(ctx, config);
   const credentials = new CredentialFacade(ctx.credentials);
   const cards = new MathModelCardsRemote(new CardRegistry(skillRoot), new SkillHelpCatalog(skillRoot));
   const preflight = new PreflightService();
@@ -206,21 +357,14 @@ export function installMathmodelHost(ctx, config = {}) {
     credentialStore,
     credentialProvider: ctx.credentials,
     subscriptionSessions: () => ctx.get('subscriptionSessions'),
-    hasV2UserSection: () => {
-      try {
-        const descriptor = ctx.settings.describe({ redactSecrets: true }).find((entry) => entry.ns === IMAGE_CONNECTIONS_NAMESPACE);
-        return descriptor?.user !== undefined;
-      } catch {
-        return false;
-      }
-    },
+    hasV2UserSection,
   });
   const runtime = Object.freeze({
     vision: new VisionService({ credentials: ctx.credentials }),
     image: new ImageGenerationService({ connections: imageConnections }),
   });
-  const openCodeRt = new OpenCodeRtService({ settings: ctx.settings, credentials: ctx.credentials });
-  const storedKeyModelDiscovery = new StoredKeyModelDiscoveryService({ settings: ctx.settings, credentials: ctx.credentials });
+  const openCodeRt = new OpenCodeRtService({ settings: openCodeSettings, credentials: ctx.credentials });
+  const storedKeyModelDiscovery = new StoredKeyModelDiscoveryService({ settings: openCodeSettings, credentials: ctx.credentials });
 
   ctx.effect(() => ctx.reflect.provide('mathmodelRuntime', runtime), 'dsh-mathmodel: runtime');
   new MathmodelCardsGateway(ctx, cards);

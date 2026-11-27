@@ -4,7 +4,7 @@
 - 固定提交：`ac638c38b8eda56947ce2d997ffc4f50d432763d`
 - 上游版本：`0.1.6`
 - 本地版本：`0.1.6-metamath.1`
-- 许可证：上游 `package.json` 声明 `MIT`；固定提交未附独立 LICENSE 正文，发布或再分发前必须复核上游许可证文件。
+- 许可证：上游固定提交的 `package.json` 声明 `MIT`。合仓迁移后由[独立上游仓库](https://github.com/NinjaSln-labs/dsh-knowledge-sqlite)补齐许可证，本插件的 [LICENSE](LICENSE) 逐字保留其 MIT 正文与版权声明，对应迁移提交 `de65415fc3ff803648b396359d1a6a9cb727af35`，并与上游 `knowledge-sqlite-v0.1.7` 的许可证一致。
 
 ## 本地差异
 

@@ -1,5 +1,5 @@
-# MetaMath Harness 一键安装与启动
-# 前提：Node.js >= 22 与 Git（缺失时脚本会给出 winget 一行安装指引）
+﻿# MetaMath Harness 一键安装与启动
+# 前提：Node.js >= 24.9.0 与 Git（缺失时脚本会给出 winget 一行安装指引）
 # 用法：
 #   .\install.ps1            安装全部组件并启动 Web 界面（首次推荐）
 #   .\install.ps1 -NoStart   只安装，不启动
@@ -14,7 +14,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $Repo = $PSScriptRoot
-$DshVersion = '0.1.5-rc.2'
+$DshVersion = '0.2.2-rc.5'
+$MinimumNodeVersion = [version]'24.9.0'
 $EditPptBin = Join-Path $Repo '.dsh\runtime\bin'
 $env:PATH = "$EditPptBin;$env:PATH"
 
@@ -24,15 +25,17 @@ function Fail([string]$msg) { Write-Host "    $msg" -ForegroundColor Red; exit 1
 
 if (-not $StartOnly) {
     # ---------- 1. 前置工具检查 ----------
-    Step '检查前置工具（Node.js >= 22）'
+    Step '检查前置工具（Node.js >= 24.9.0）'
     if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-        Fail "未找到 Node.js。请先安装 Node >= 22（winget install OpenJS.NodeJS.LTS，或从 https://nodejs.org 下载 MSI），完成后重新打开终端再执行本脚本。"
+        Fail "未找到 Node.js。请先安装 Node.js >= 24.9.0（winget install OpenJS.NodeJS.LTS，或从 https://nodejs.org 下载 MSI），完成后重新打开终端再执行本脚本。"
     }
     if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
         Write-Host '    提示：未检测到 Git，可继续安装；以后如需 git pull 更新，请自行安装 Git。' -ForegroundColor Yellow
     }
-    $nodeMajor = [int]((node --version).TrimStart('v').Split('.')[0])
-    if ($nodeMajor -lt 22) { Fail "Node.js 版本过低（当前主版本 $nodeMajor，需要 >= 22）。请运行：winget install OpenJS.NodeJS" }
+    $nodeVersion = [version]((node --version).Trim().TrimStart('v'))
+    if ($nodeVersion -lt $MinimumNodeVersion) {
+        Fail "Node.js 版本过低（当前 $nodeVersion，需要 >= $MinimumNodeVersion）。请运行：winget install OpenJS.NodeJS.LTS"
+    }
     $gitInfo = if (Get-Command git -ErrorAction SilentlyContinue) { ' / ' + (git --version) } else { '' }
     Ok "Node $(node --version)$gitInfo"
 
@@ -59,17 +62,9 @@ if (-not $StartOnly) {
         Ok "官方本体安装完成 $(dsh --version)"
     }
 
-    # 临时模型目录适配：上游原生收录后脚本自动跳过；版本或语义漂移时失败关闭。
-    Step '同步 DeepSeek 官方与 OpenCode Go 模型目录'
-    $dshCommand = Get-Command dsh -ErrorAction Stop
-    $dshRoot = Join-Path (Split-Path $dshCommand.Source -Parent) 'node_modules\@deepseek-ai\dsh'
-    $dshHome = Join-Path $Repo '.dsh'
-    node (Join-Path $Repo 'scripts\ensure-v41-models.mjs') $dshRoot $dshHome
-    if ($LASTEXITCODE -ne 0) { Fail 'DeepSeek V4.1 Flash 模型目录适配失败。' }
-    Ok '两个官方渠道均已提供 DeepSeek V4.1 Flash，无需手工添加'
-
     # ---------- 4. 构建本地插件 ----------
-    Step '构建本地插件（数学建模 / API Key 号池 / 跨会话知识库 / Antigravity 桥接 / WorkBuddy / Trae / OpenCode 会话 / Cline 免费 / Qoder）'
+    Step '准备本地插件'
+    $webDependencies = (Get-Content -LiteralPath (Join-Path $Repo '.dsh\profiles\web\package.json') -Raw -Encoding UTF8 | ConvertFrom-Json).dependencies
     $localPlugins = @(
         @{ Name = 'dsh-mathmodel';            Package = '@deepseek-harness/dsh-mathmodel';      Dir = 'dsh-mathmodel';            Artifact = 'lib\index.js' },
         @{ Name = 'dsh-api-key-pool';         Package = '@deepseek-harness/dsh-api-key-pool';   Dir = 'dsh-api-key-pool';         Artifact = 'lib\index.js' },
@@ -79,28 +74,38 @@ if (-not $StartOnly) {
         @{ Name = 'dsh-connect-trae';         Package = 'dsh-connect-trae';                     Dir = 'dsh-connect-trae';         Artifact = 'lib\index.js' },
         @{ Name = 'dsh-opencode-session';     Package = 'dsh-opencode-session';                 Dir = 'dsh-opencode-session';     Artifact = 'lib\index.js' },
         @{ Name = 'dsh-cline-free-provider';  Package = '@jiesou/dsh-cline-free-provider';      Dir = 'dsh-cline-free-provider';  Artifact = 'lib\index.js' },
-        @{ Name = 'dsh-provider-qoder';       Package = 'dsh-provider-qoder';                   Dir = 'dsh-provider-qoder';       Artifact = 'lib\index.js' }
-    )
+        @{ Name = 'dsh-provider-qoder';       Package = 'dsh-provider-qoder';                   Dir = 'dsh-provider-qoder';       Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-client-ui-skins'; Package = 'dsh-client-ui-skins'; Dir = 'dsh-client-ui-skins'; Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-cline-key-card'; Package = 'dsh-cline-key-card'; Dir = 'dsh-cline-key-card'; Artifact = 'lib\index.js' },
+        @{ Name = 'dsh-free-search'; Package = 'dsh-free-search'; Dir = 'dsh-free-search'; Artifact = 'lib\index.js' }
+    ) | Where-Object { $webDependencies.($_.Package) -like 'file:*' }
     foreach ($plugin in $localPlugins) {
         $pluginDir = Join-Path $Repo (Join-Path 'plugins' $plugin.Dir)
+        $pluginPackage = Get-Content -LiteralPath (Join-Path $pluginDir 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+        $artifact = Join-Path $pluginDir $plugin.Artifact
+        # 已打包插件可能声明了 build，发行目录只包含运行文件。
+        if (-not ($pluginPackage.scripts.build -and (Test-Path -LiteralPath (Join-Path $pluginDir 'src') -PathType Container))) {
+            if (-not (Test-Path -LiteralPath $artifact -PathType Leaf)) { Fail "发布包缺少插件入口：$($plugin.Name)" }
+            continue
+        }
         Push-Location $pluginDir
         try {
             cmd /c "npm install --no-fund --no-audit 2>&1" | Select-Object -Last 1 | Write-Host
             if ($LASTEXITCODE -ne 0) { Fail "插件依赖安装失败：$($plugin.Name)" }
             cmd /c "npm run build 2>&1" | Select-Object -Last 1 | Write-Host
-            if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $pluginDir $plugin.Artifact))) { Fail "插件构建失败：$($plugin.Name)" }
+            if ($LASTEXITCODE -ne 0 -or -not (Test-Path $artifact -PathType Leaf)) { Fail "插件构建失败：$($plugin.Name)" }
         } finally {
             Pop-Location
         }
     }
-    Ok '本地插件构建完成'
+    Ok '本地插件入口就绪'
 
     # ---------- 5. 安装 Web Profile 依赖 ----------
     Step '安装 Web Profile 依赖（原生 3080 / 独立号池 3081）'
     $profileDirs = @('.dsh\profiles\web', '.dsh-key-pool\profiles\web-key-pool')
     foreach ($relativeProfile in $profileDirs) {
         $profileDir = Join-Path $Repo $relativeProfile
-        $profilePackage = Get-Content (Join-Path $profileDir 'package.json') -Raw | ConvertFrom-Json
+        $profilePackage = Get-Content (Join-Path $profileDir 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
         foreach ($dependency in $profilePackage.dependencies.psobject.Properties) {
             if ($dependency.Value -notlike 'file:*') { continue }
             $installed = Join-Path (Join-Path $profileDir 'node_modules') ($dependency.Name -replace '/', '\')
@@ -171,48 +176,4 @@ if (-not $StartOnly) {
 if ($NoStart) { Write-Host "`n未启动（-NoStart）。日常启动：.\install.ps1 -StartOnly`n" -ForegroundColor Yellow; exit 0 }
 
 # ---------- 8. 启动 Web ----------
-Step "启动 Web 界面（端口 $Port）"
-$env:DSH_HOME = Join-Path $Repo '.dsh'
-Ok "DSH_HOME = $env:DSH_HOME"
-
-# 毫秒级端口探活（Test-NetConnection 在网卡较多的机器上单次可达 13 秒）
-$portOpen = $false
-$tcp = New-Object Net.Sockets.TcpClient
-try {
-    $task = $tcp.ConnectAsync('127.0.0.1', $Port)
-    if ($task.Wait(500) -and $tcp.Connected) { $portOpen = $true }
-} catch {} finally { $tcp.Close() }
-
-if ($portOpen) {
-    Ok "端口 $Port 已有服务监听，直接复用"
-} else {
-    # 优先直接拉起 node（省去嵌套 PowerShell 冷启动约 1 秒），找不到时回退原方式
-    $started = $false
-    $dshCmd = Get-Command dsh -ErrorAction SilentlyContinue
-    $nodeCmd = Get-Command node -ErrorAction SilentlyContinue
-    if ($dshCmd -and $nodeCmd) {
-        $dshBin = Join-Path (Split-Path $dshCmd.Source -Parent) 'node_modules\@deepseek-ai\dsh\lib\bin.js'
-        if (Test-Path $dshBin) {
-            $server = Start-Process -WindowStyle Minimized -PassThru -FilePath $nodeCmd.Source -ArgumentList @($dshBin, 'web', '--port', "$Port")
-            Ok "服务进程已启动（PID $($server.Id)，关闭其窗口即可停止服务）"
-            $started = $true
-        }
-    }
-    if (-not $started) {
-        $server = Start-Process -WindowStyle Minimized -PassThru powershell -ArgumentList @(
-            '-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-NoExit', '-Command',
-            "`$env:DSH_HOME = '$env:DSH_HOME'; dsh web --port $Port"
-        )
-        Ok "服务进程已启动（PID $($server.Id)，关闭其窗口即可停止服务）"
-    }
-}
-
-$ready = $false
-foreach ($i in 1..900) {
-    try { $r = Invoke-WebRequest "http://127.0.0.1:$Port" -UseBasicParsing -TimeoutSec 1; if ($r.StatusCode -eq 200) { $ready = $true; break } } catch { Start-Sleep -Milliseconds 100 }
-}
-if (-not $ready) { Fail "服务在 90 秒内未就绪。请检查弹出的 PowerShell 窗口中的错误信息。" }
-Ok '服务已就绪'
-Start-Process "http://127.0.0.1:$Port"
-Write-Host "`n==> MetaMath Harness 已启动：http://127.0.0.1:$Port`n" -ForegroundColor Cyan
-Write-Host "    首次使用请在 Web 设置中配置自己的模型供应商与 API Key（Key 只存本机）。`n" -ForegroundColor Yellow
+& (Join-Path $Repo '启动-MetaMath-Harness.ps1') -Port $Port

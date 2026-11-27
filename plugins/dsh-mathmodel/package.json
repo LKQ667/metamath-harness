@@ -1,7 +1,7 @@
 {
   "name": "@deepseek-harness/dsh-mathmodel",
-  "version": "0.1.2",
-  "description": "DeepSeek Harness 0.1.5-rc.2 数学建模模式插件",
+  "version": "0.2.0",
+  "description": "DeepSeek Harness 0.2.2-rc.5 数学建模模式插件",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -34,26 +34,26 @@
     "client": {
       "platform": "web",
       "inject": [
-        "@deepseek-ai/dsh-client-runtime",
         "@deepseek-ai/dsh-client-ui-input-trigger",
         "@deepseek-ai/dsh-client-ui-conversation",
-        "@deepseek-ai/dsh-api-remotes"
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-api-session-controller"
       ]
     }
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24.9"
   },
   "dependencies": {
-    "@deepseek-ai/cordis": "4.0.2",
-    "@deepseek-ai/dsh-invariants": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-typert-protocol": "0.1.5-rc.2",
-    "@deepseek-ai/schemastery": "3.18.2",
+    "@deepseek-ai/cordis": "^4.1.0",
+    "@deepseek-ai/dsh-typert-protocol": "0.2.2-rc.5",
+    "@deepseek-ai/schemastery": "^3.18.5",
     "yaml": "^2.8.1",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh": "0.1.5-rc.2"
+    "@deepseek-ai/dsh": "0.2.2-rc.5"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh": {

@@ -1,11 +1,25 @@
 {
   "name": "dsh-opencode-session",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
+  "description": "DSH 0.2.2-rc.5 OpenCode 动态会话请求头修复（基于官方 llm-pi-ai/request-headers 钩子）",
   "type": "module",
   "main": "lib/index.js",
-  "files": ["lib", "cordis.patch.yml", "README.md"],
-  "scripts": {"build": "node scripts/build.mjs", "test": "node --test test/*.test.mjs"},
-  "peerDependencies": {"@deepseek-ai/dsh-llm-pi-ai": "0.1.5-rc.2"},
-  "dsh": {"bundle": {"patch": "cordis.patch.yml"}, "engines": {"dsh": "0.1.5-rc.2"}}
+  "files": [
+    "lib/*.js",
+    "cordis.patch.yml"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "cordis.patch.yml"
+    },
+    "engines": {
+      "dsh": "0.2.2-rc.5"
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT",
+  "private": true
 }

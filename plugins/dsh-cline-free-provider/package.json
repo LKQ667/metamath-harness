@@ -1,7 +1,8 @@
 {
   "name": "@jiesou/dsh-cline-free-provider",
-  "version": "0.1.19-metamath.1",
-  "description": "Cline free models provider for dsh: scan the Cline model catalog dynamically and serve the :free models through the harness LLM seam",
+  "version": "0.1.23-metamath.1",
+  "description": "Free-tier Cline LLM provider for DeepSeek Harness (with MetaMath multi-key failover pool)",
+  "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,38 +11,14 @@
       "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
-    "./package.json": "./package.json",
-    "./cordis.patch.yml": "./cordis.patch.yml"
+    "./package.json": "./package.json"
   },
   "files": [
-    "lib",
+    "lib/",
     "cordis.patch.yml",
-    "README.md",
-    "README.en.md",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
-  "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc --noEmit",
-    "test": "node --test test/failover.test.mjs",
-    "release": "npm run build && npm version patch && git push --follow-tags && npm publish"
-  },
-  "keywords": [
-    "dsh",
-    "dsh-plugin",
-    "deepseek-harness",
-    "cline",
-    "llm-provider",
-    "dsh-bundle"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jiesou/dsh-cline-free-provider.git"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
@@ -49,17 +26,15 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.0.1 <5",
-    "@deepseek-ai/dsh-credentials": ">=0.1.6-alpha.1 <0.2",
-    "@deepseek-ai/dsh-launch-environment": ">=0.1.6-alpha.1 <0.2",
-    "@deepseek-ai/dsh-llm": ">=0.1.6-alpha.1 <0.2",
-    "@deepseek-ai/dsh-llm-pi-ai": ">=0.1.6-alpha.1 <0.2",
-    "@deepseek-ai/dsh-settings": ">=0.1.6-alpha.1 <0.2",
-    "@deepseek-ai/dsh-util-values": ">=0.1.6-alpha.1 <0.2",
-    "@deepseek-ai/schemastery": "^3.18.1",
-    "@earendil-works/pi-ai": "^0.85.1"
+    "@deepseek-ai/dsh-credentials": ">=0.2.0-rc.2 <0.3",
+    "@deepseek-ai/dsh-launch-environment": ">=0.2.0-rc.2 <0.3",
+    "@deepseek-ai/dsh-llm": ">=0.2.0-rc.2 <0.3",
+    "@deepseek-ai/dsh-llm-pi-ai": ">=0.2.0-rc.2 <0.3",
+    "@deepseek-ai/dsh-util-values": ">=0.2.0-rc.2 <0.3",
+    "@deepseek-ai/schemastery": ">=3.18.1 <4",
+    "@earendil-works/pi-ai": ">=1.0.0 <2"
   },
-  "devDependencies": {
-    "@types/node": "^22.20.1",
-    "typescript": "^5.9.3"
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-credentials": { "optional": true }
   }
 }

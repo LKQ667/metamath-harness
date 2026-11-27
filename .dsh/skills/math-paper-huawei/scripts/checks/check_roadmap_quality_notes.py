@@ -53,7 +53,7 @@ def main() -> int:
     for item in roadmap_items:
         source = str(item.get("source", "")).lower()
         qa = item.get("qa")
-        if str(item.get("generator", "")).lower() not in {"drawio", "imagegen", "image gen", "openai-imagegen"}:
+        if str(item.get("generator", "")).lower() not in {"drawio", "html", "imagegen", "image gen", "openai-imagegen"}:
             errors.append("技术路线图 generator 必须与 Draw.io/AI 锁定模式一致。")
         if "flowchart" not in str(item.get("chart_family", "")).lower():
             errors.append("技术路线图 manifest 必须标注 `chart_family=flowchart` 或等价值。")

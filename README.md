@@ -79,6 +79,14 @@
 
 > 💬 QQ 交流群：**635765940**
 
+## 最近更新（2026-11-27）
+
+- **Windows 源码安装升级到 DeepSeek Harness 0.2.2-rc.5。** 准备 Node.js 24.9.0 或更新的兼容版本，解压源码后双击 `install.cmd`。桌面入口复用 Web 的本机认证流程。模型账号和 API Key 仍须在自己的设备上配置。
+- **模式与独立号池适配新版。** 在 Web 模式选择器可用数学建模、图片生成和图片转可编辑 PPT。独立号池继续从号池启动脚本进入，可按需配置自己的连接。源码包附带 35 份通过目录校验的内置示例论文。
+- **适配模型与工具连接。** 使用不同桌面客户端或订阅服务时，打开对应插件的设置页，按提示登录或配置连接。相关上游包括 [Antigravity（amlyczz，MIT）](https://github.com/amlyczz/dsh-agy-link)、[Trae（dingminhua，MIT）](https://github.com/dingminhua/dsh-connect-trae)、[Qoder（mo-n，MIT）](https://github.com/mo-n/dsh-provider-qoder)、[WorkBuddy（corrinehu，MIT）](https://github.com/corrinehu/dsh-workbuddy-connect)、[免费搜索（DDDMUC，MIT）](https://github.com/DDDMUC/dsh-free-search) 和 [订阅连接（V1ki，MIT）](https://github.com/V1ki/dsh-plugin-subscriptions)。
+- **保留知识库和会话深链。** 知识库用于在本机保存和检索跨会话知识。会话可通过 Web 中的深链入口回到指定会话。上游为 [知识库（NinjaSln-labs，MIT）](https://github.com/NinjaSln-labs/dsh-knowledge-sqlite)、[会话深链（PwnKY，MIT）](https://github.com/PwnKY/dsh-session-link) 和 [侧栏工作台（omdsh-dev，MIT）](https://github.com/omdsh-dev/DSH-better-sidebar)。
+- **本次更新为源码。** 旧版便携运行包可继续从历史发布下载，本次源码归档不包含便携运行时、仅供本地使用的预设，以及未取得再分发许可的第三方技能。
+
 ## 最近更新（2026-09-20，官方本体升级）
 
 - **一键安装的官方本体升级到 `0.1.5-rc.2`，修复版本号滞后**：此前安装脚本虽已在 `0.1.5-rc.2` 上开发验证，锁定的却还是旧版 `0.1.2-rc.1`——全新电脑装出来会与内置的模型通道插件不匹配（按上游文档会直接启动失败），已升级到旧版的老用户重跑一次完整安装即可升回新版。日常已正常使用的用户无需任何操作。配套的模型目录适配脚本也已在新版官方本体上实测通过（OpenCode Go 自动加入 DeepSeek V4.1 Flash，重复运行自动跳过）。

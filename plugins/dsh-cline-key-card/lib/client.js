@@ -15,13 +15,12 @@ window.__ModuleLoader__.load({
 		const KEY_HELP_URL = "https://app.cline.bot/dashboard/account?tab=api-keys";
 		//#endregion
 
-		//#region 托管集合与分阶段结果（GOAL-84 / M04、M05）
-		// 本卡片允许管理的凭据 ref 全集：旧单 Key ref、固定扫描范围 1..N、
-		// 以及当前池配置里引用的本插件 ref（兼容旧代码保存的超限 ref）。
-		// 绝不扫描或清除其他插件的 ref。
+		//#region 托管集合与分阶段结果（兼容 DSH 0.2.2 ConfigForm 与旧 settingsScope 单测夹具）
 		function settingsValue(settingsScope) {
 			const snapshot = settingsScope?.getSnapshot?.();
-			if (snapshot?.status !== 'ready' || !snapshot.writable || snapshot.mode !== 'host') {
+			const ready = snapshot?.status === 'ready' && snapshot.writable === true
+				&& (snapshot.mode === undefined || snapshot.mode === 'host');
+			if (!ready) {
 				throw new Error('配置尚未就绪或不可写，请稍后重试；本次不修改凭据。');
 			}
 			return snapshot.value || {};
@@ -33,6 +32,12 @@ window.__ModuleLoader__.load({
 					&& (item === LEGACY_REF || /^CLINE_API_KEY_[1-9]\d*$/.test(item))) : []);
 		}
 		async function writeSetting(settingsScope, field, value) {
+			if (typeof settingsScope?.mutate === 'function') {
+				const revision = settingsScope.getSnapshot?.()?.revision;
+				const ok = await settingsScope.mutate([{ op: 'set', path: [field], value }], revision);
+				if (ok === false || (ok && ok.ok === false)) throw new Error('配置写入未确认');
+				return;
+			}
 			const result = await settingsScope.set(field, value);
 			if (result?.ok === false) throw new Error('配置写入未确认');
 		}
@@ -44,7 +49,7 @@ window.__ModuleLoader__.load({
 		}
 		//#endregion
 
-		//#region 样式（外框类名与 dsh-connect-trae 家族同款，仅本卡片私有类名带 ckc- 前缀）
+		//#region 样式
 		const CARD_CSS = `
 .dsm-plugin-card{border:1px solid var(--dsw-alias-border-l2,#36373b);background:var(--dsw-alias-bg-layer-3,#202126);border-radius:12px;list-style:none;transition:border-color .16s,background .16s}
 .dsm-plugin-card:hover{border-color:var(--dsw-alias-label-dimmed,#777)}
@@ -107,13 +112,13 @@ window.__ModuleLoader__.load({
 		}
 
 		//#region 卡片组件
-		function ClineKeyCard({ remote, settingsScope }) {
-			const [open, setOpen] = useState(false);
+		function ClineKeyCard({ remote, settingsScope, defaultOpen = false }) {
+			const [open, setOpen] = useState(Boolean(defaultOpen));
 			const [draft, setDraft] = useState('');
-			const [busyKind, setBusyKind] = useState(null);   // null | 'save' | 'clear'
-			const [legacy, setLegacy] = useState(null);       // 旧单 Key ref 是否配置
-			const [poolConfigured, setPoolConfigured] = useState(null); // 池内已配置的 Key 数
-			const [message, setMessage] = useState(null);     // { kind: 'ok' | 'error', text }
+			const [busyKind, setBusyKind] = useState(null);
+			const [legacy, setLegacy] = useState(null);
+			const [poolConfigured, setPoolConfigured] = useState(null);
+			const [message, setMessage] = useState(null);
 			const busy = busyKind !== null;
 
 			const refresh = useCallback(async () => {
@@ -143,8 +148,6 @@ window.__ModuleLoader__.load({
 				return settingsScope?.subscribe?.(() => { void refresh(); });
 			}, [refresh, settingsScope]);
 
-			// 清理一个不再使用的旧池位：probe + unset，且检查每一步实际返回。
-			// 返回 null 表示成功，字符串表示失败或状态未知原因。
 			const clearOneRef = useCallback(async (ref) => {
 				try {
 					const probe = await remote.credentials.describe([ref]);
@@ -177,8 +180,6 @@ window.__ModuleLoader__.load({
 					const previousRefs = managedRefs(settingsScope);
 					const newRefs = keys.map((_, i) => POOL_REF_BASE + (i + 1));
 					const pendingRefs = previousRefs.filter(ref => ref !== LEGACY_REF && !newRefs.includes(ref));
-					// 阶段 1：逐把写入池 refs（CLINE_API_KEY_1..N）。任何失败都不再
-					// 进入后续阶段（不删旧位、不下发池配置），保留编辑输入。
 					const writeFailures = [];
 					for (let i = 0; i < keys.length; i++) {
 						const ref = POOL_REF_BASE + (i + 1);
@@ -190,11 +191,9 @@ window.__ModuleLoader__.load({
 						await refresh();
 						return;
 					}
-					// 阶段 2：下发池配置（provider onChange 重建 profiles）。
 					let configOk = true;
 					if (settingsScope !== undefined) {
 						try {
-							// 先持久化旧ref，避免配置切换后丢失超限项；不存Key内容。
 							await writeSetting(settingsScope, 'apiKeyCleanupRefs', pendingRefs);
 							await writeSetting(settingsScope, 'apiKeyEnvPool', newRefs);
 						} catch {
@@ -206,9 +205,6 @@ window.__ModuleLoader__.load({
 						await refresh();
 						return;
 					}
-					// 阶段 3：清理本次未用到的旧池位（含旧代码可能残留的超限 ref）。
-					// 旧单 Key ref（CLINE_API_KEY）仍出现在 provider 的 poolRefs 里，
-					// 不算“不再使用”，只在“全部清除”时移除。
 					const cleanupFailures = [];
 					const failedRefs = [];
 					for (const ref of pendingRefs) {
@@ -235,7 +231,6 @@ window.__ModuleLoader__.load({
 				setBusyKind('clear');
 				setMessage(null);
 				try {
-					// 阶段 1：清理全部本插件托管 ref（旧单 Key、固定范围、池配置引用）。
 					const failures = [];
 					for (const ref of managedRefs(settingsScope)) {
 						const failure = await clearOneRef(ref);
@@ -246,7 +241,6 @@ window.__ModuleLoader__.load({
 						setMessage({ kind: 'error', text: `清除未全部完成，失败项：${failures.join('；')}。原池配置与待清理列表已保留，请重试。` });
 						return;
 					}
-					// 阶段 2：仅在凭据均已清除后停用配置。
 					let configOk = true;
 					if (settingsScope !== undefined) {
 						try {
@@ -275,7 +269,7 @@ window.__ModuleLoader__.load({
 				: total > 0
 					? `已配置 ${total} 把 Key${(poolConfigured ?? 0) > 1 ? '（轮询池已启用）' : ''}`
 					: '未配置';
-			return h('li', { className: `dsm-plugin-card${open ? ' dsm-plugin-card-open' : ''}` },
+			return h('div', { className: `dsm-plugin-card${open ? ' dsm-plugin-card-open' : ''}` },
 				h('button', {
 					type: 'button',
 					className: 'dsm-plugin-card-header',
@@ -336,20 +330,44 @@ window.__ModuleLoader__.load({
 
 		//#region 客户端入口
 		const name = 'dsh-cline-key-card-client';
-		const inject = ['remote', 'remote.credentials', 'settingsScope', 'slots'];
+		const inject = ['remote', 'remote.credentials', 'slots'];
 
 		function apply(ctx) {
 			try {
-				const remote = ctx.remote
-				const settingsScope = ctx.settingsScope.bind({ namespace: 'cline-free-provider' })
-				// 插件页按 settings 命名空间派发卡片（entryKey = ns），本卡编辑的是
-				// dsh-cline-free-provider 安装的 cline-free-provider 命名空间。
-				ctx.slots.inject('settings.plugin.item', () => ctx.slots.register({
-					name: 'settings.plugin.item',
-					key: 'cline-free-provider',
-					priority: 30,
-					inject: () => ({ remote, settingsScope }),
-				}, ClineKeyCard));
+				const remote = ctx.remote;
+				const registerWithScope = (sctx, settingsScope) => {
+					// DSH 0.2.2：在插件页的 Cline Free Provider 组合包详情与行配置页以及本卡片包详情页挂载。
+					sctx.slots.inject('plugins.bundle.config', () => sctx.slots.register({
+						name: 'plugins.bundle.config',
+						key: '@jiesou/dsh-cline-free-provider',
+						inject: () => ({ remote, settingsScope, defaultOpen: true }),
+					}, ClineKeyCard));
+					sctx.slots.inject('plugins.bundle.config', () => sctx.slots.register({
+						name: 'plugins.bundle.config',
+						key: 'dsh-cline-key-card',
+						inject: () => ({ remote, settingsScope, defaultOpen: true }),
+					}, ClineKeyCard));
+					sctx.slots.inject('plugins.row.config', () => sctx.slots.register({
+						name: 'plugins.row.config',
+						key: '@jiesou/dsh-cline-free-provider#cline-free-provider',
+						inject: () => ({ remote, settingsScope, defaultOpen: true }),
+					}, ClineKeyCard));
+					// 兼容旧单测：若宿主声明了 settings.plugin.item 则继续注册。
+					sctx.slots.inject('settings.plugin.item', () => sctx.slots.register({
+						name: 'settings.plugin.item',
+						key: 'cline-free-provider',
+						priority: 30,
+						inject: () => ({ remote, settingsScope, defaultOpen: false }),
+					}, ClineKeyCard));
+				};
+				const legacyScope = typeof ctx.get === 'function' ? ctx.get('settingsScope') : ctx.settingsScope;
+				if (legacyScope !== undefined) {
+					registerWithScope(ctx, legacyScope.bind({ namespace: 'cline-free-provider' }));
+				} else if (typeof ctx.inject === 'function') {
+					ctx.inject(['configForms'], (sctx) => {
+						registerWithScope(sctx, sctx.configForms.get('cline-free-provider'));
+					});
+				}
 			} catch (error) {
 				console.error('[dsh-cline-key-card] client card failed to load:', error);
 			}

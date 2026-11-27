@@ -1,10 +1,13 @@
 import { z } from 'zod';
 
 const PACKAGE = '@deepseek-harness/dsh-mathmodel';
-const result = (symbol) => ({ mode: 'strict', typeSymbol: symbol, schema: z.unknown() });
+const result = (symbol) => {
+  const schema = z.unknown();
+  return { mode: 'strict', typeSymbol: symbol, schema, create: () => schema };
+};
 const parameter = (name, schema = z.string()) => ({
   name, wire: name, source: 'json',
-  codec: { mode: 'strict', typeSymbol: `mathmodel#${name}`, schema },
+  codec: { mode: 'strict', typeSymbol: `mathmodel#${name}`, schema, create: () => schema },
 });
 const invocation = (service, method, parameters = []) => ({
   id: `${PACKAGE}#${service}/${method}`,

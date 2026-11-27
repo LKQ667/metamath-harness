@@ -1,6 +1,6 @@
 {
   "name": "dsh-client-ui-skins",
-  "version": "0.1.9",
+  "version": "0.1.9-metamath.1",
   "description": "DSH skin plugin: built-in skins + custom image skins, pure client plugin (no source patch)",
   "type": "module",
   "main": "lib/index.js",
@@ -36,15 +36,21 @@
       ],
       "platform": "web",
       "immediately": true
+    },
+    "engines": {
+      "dsh": "0.2.2-rc.5"
     }
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-client-store": "*",
-    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-settings": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-store": ">=0.2.2-rc.5 <0.3.0-0",
+    "@deepseek-ai/dsh-client-ui-slots": ">=0.2.2-rc.5 <0.3.0-0",
+    "@deepseek-ai/dsh-settings": ">=0.2.2-rc.5 <0.3.0-0",
     "@deepseek-ai/schemastery": "^3.18.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "dsh": ">=0.2.2-rc.5 <0.3.0-0"
+  }
 }

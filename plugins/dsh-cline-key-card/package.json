@@ -1,14 +1,7 @@
 {
   "name": "dsh-cline-key-card",
-  "displayName": "Cline Free Key 卡片",
-  "description": "为 dsh-cline-free-provider 提供设置页 Key 输入卡片（官方模型页不渲染第三方命名空间的 Key 输入框）。",
-  "version": "0.2.0",
-  "license": "MIT",
-  "keywords": [
-    "dsh-plugin",
-    "deepseek-harness",
-    "cline"
-  ],
+  "version": "0.3.0",
+  "description": "设置/插件页 Cline 免费模型 API Key 管理卡片（支持多 Key 轮询池，适配 DSH 0.2.2-rc.5）",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -17,7 +10,7 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "lib",
+    "lib/",
     "cordis.patch.yml"
   ],
   "dsh": {
@@ -27,9 +20,14 @@
     "client": {
       "inject": [
         "@deepseek-ai/dsh-api-remotes",
-        "@deepseek-ai/dsh-client-ui-renderer"
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-plugin-manager",
+        "@deepseek-ai/dsh-client-ui-slots"
       ],
       "platform": "web"
     }
-  }
+  },
+  "license": "MIT",
+  "private": true
 }

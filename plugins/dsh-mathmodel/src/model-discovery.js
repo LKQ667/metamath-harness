@@ -48,7 +48,10 @@ export class StoredKeyModelDiscoveryService {
   async discover(provider, { signal } = {}) {
     const route = typeof provider === 'string' ? provider.trim() : '';
     if (!/^[a-z0-9][a-z0-9-]*$/.test(route)) throw fail('invalid_provider', '供应商标识无效');
-    const profile = this.settings.get('llm-pi-ai')?.providers?.[route];
+    const piAiSection = typeof this.settings?.get === 'function'
+      ? this.settings.get('llm-pi-ai')
+      : this.settings?.describe?.({ redactSecrets: false })?.find((item) => item.ns === 'llm-pi-ai')?.value;
+    const profile = piAiSection?.providers?.[route];
     if (!profile || typeof profile !== 'object') throw fail('provider_not_found', '未找到该已配置供应商');
     if (!LISTABLE_PROTOCOLS.has(profile.api ?? 'openai-completions')) throw fail('discovery_unsupported', '该 API 协议不支持自动获取模型，请手动添加模型');
     if (typeof profile.baseURL !== 'string' || !profile.baseURL.trim()) throw fail('invalid_base_url', '请先填写该供应商的 API 地址');
